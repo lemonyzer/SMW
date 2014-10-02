@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: e194d2567f0d6e843bce0e8a5b2fb3e5
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - photonCharacterSelectorPrefab: {instanceID: 0}
+  - myAudioSource: {instanceID: 0}
+  - roomBackgroundMusic: {fileID: 8300000, guid: 2bc6cdddccfb16945b056e22c734b402,
+      type: 3}
+  - beepAudioClip: {fileID: 8300000, guid: b32260aeb36074a47b14ecac9127147c, type: 3}
+  - goAudioClip: {fileID: 8300000, guid: 07d29e5d0c848bb4d9db85c3a9c50520, type: 3}
+  - gameBackgroundMusic: {fileID: 8300000, guid: 54c039b585a29a346bcc221fef43a819,
+      type: 3}
+  - characterInUseAudioClip: {fileID: 8300000, guid: c3ec25b23331eae408e58215b22de1e9,
+      type: 3}
+  - characterSelectedSuccessfulyAudioClip: {fileID: 8300000, guid: 3af272644200346498d08ce471580526,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
