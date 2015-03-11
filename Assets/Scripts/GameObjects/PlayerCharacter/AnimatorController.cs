@@ -204,12 +204,12 @@ public class AnimatorController : MonoBehaviour {
 		anim.SetBool(hash.headJumpedBool,true);
 		SetCharacterColliderHeadJumped();
 
-		myCharacter.rigidbody2D.velocity = Vector2.zero;
+		myCharacter.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 	}
 
 	void DeadAnimationPhysics()
 	{
-		rigidbody2D.velocity = new Vector2(0f, 10f);
+		GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 10f);
 	}
 
 	void GameOver() 
@@ -217,8 +217,8 @@ public class AnimatorController : MonoBehaviour {
 		AudioSource.PlayClipAtPoint(gameOverSound,transform.position,1);
 		Debug.Log (this.gameObject.name + ": GameOver");
 
-		myCharacter.rigidbody2D.fixedAngle = false;
-		myCharacter.rigidbody2D.AddTorque(20);
+		myCharacter.GetComponent<Rigidbody2D>().fixedAngle = false;
+		myCharacter.GetComponent<Rigidbody2D>().AddTorque(20);
 		stopControlls();
 		StartCoroutine(PlayerGameOver());		// nach gameovertime character nicht mehr fallen lassen, kinematic setzen und ausserhalb camera einblenden (resourcen schonen)
 	}
@@ -226,9 +226,9 @@ public class AnimatorController : MonoBehaviour {
 	IEnumerator PlayerGameOver()
 	{
 		yield return new WaitForSeconds(5f);
-		myCharacter.renderer.enabled = false;
-		myCharacter.rigidbody2D.isKinematic = true;
-		myCharacter.rigidbody2D.velocity = Vector2.zero;
+		myCharacter.GetComponent<Renderer>().enabled = false;
+		myCharacter.GetComponent<Rigidbody2D>().isKinematic = true;
+		myCharacter.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 	}
 
 	IEnumerator SpawnAnimationTime()

@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Star : WithPower {
+public class Star : ItemWithPower {
 	
 	//	public GameObject item;
 	
-	public RPCMode rpcMode = RPCMode.All;
+	public RPCMode rpcMode = RPCMode.All;	// eigentlich brauch die Einsammelinfo nur der betroffende Spieler, ABER andere Spieler sollen sehen das er im Rage modus ist!
 	
 	public int itemId = ItemLibrary.starID;
 	//public Power powerScript = new Rage();						// <--- Item-Power Zuordnung		<-- geht nicht!
@@ -15,7 +15,14 @@ public class Star : WithPower {
 	
 	public override void Collecting(GameObject itemGO, PlatformCharacter collector)
 	{
-		
+		if(Network.peerType == NetworkPeerType.Disconnected)
+		{
+			//offline, collecting??
+			//collector.CollectedItem(itemGO, );
+			return;
+
+		}
+
 		collector.myNetworkView.RPC("CollectedItem", rpcMode, itemId);			// Serverseitig
 		
 		// rpc geht von collctor aus 				-> Client weiß wer!
@@ -27,7 +34,7 @@ public class Star : WithPower {
 		// könnte noch interface oder oberklasse mit destroyaftercollecting stayaftercollecting erweitern...
 		if(Network.isServer)
 		{
-			Network.RemoveRPCs(itemGO.networkView.viewID);
+			Network.RemoveRPCs(itemGO.GetComponent<NetworkView>().viewID);
 			Network.Destroy(itemGO.gameObject);
 		}
 	}

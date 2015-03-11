@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -87,9 +88,17 @@ public class NetworkedPlayer : MonoBehaviour
 		characterPredictedPosBoxCollider = transform.Find("PredictedBoxCollider");
 	}
 
+	bool initialComplete = false;
+
 	void Start()
 	{
-
+		if( ownerScript.owner == Network.player )
+		{
+			//TODO: wird nicht ausgeführt, da owner noch nicht gesetzt ist!!
+			// mit setzen des owners, UI Elemente erstellen bzw initialisieren
+			InitConnectionInfo();
+			initialComplete = true;
+		}
 	}
 
 	bool correctedPosition = false;
@@ -536,6 +545,7 @@ public class NetworkedPlayer : MonoBehaviour
 											// not used because i'm now using OnSerilizeNetworkView (send 15 times per second) and is unreliable
 	void Update()
 	{
+		UpdateConnectionInfo();
 		LastPosAndPrediction();
 
 		// in OnSerializeView() --- unreliable/reliable posibility! ...
@@ -712,12 +722,12 @@ public class NetworkedPlayer : MonoBehaviour
 					olderPackageReceivedCount++;
 				}
 			}
-			else if(networkView.stateSynchronization == NetworkStateSynchronization.ReliableDeltaCompressed)
+			else if(GetComponent<NetworkView>().stateSynchronization == NetworkStateSynchronization.ReliableDeltaCompressed)
 			{
 				// reliable Connection - receiving in correct Order (always latest package is received)
 				bufferState( new networkState( position, info.timestamp, inputHorizontal, inputJump ) );
 			}
-			else if(networkView.stateSynchronization == NetworkStateSynchronization.Off)
+			else if(GetComponent<NetworkView>().stateSynchronization == NetworkStateSynchronization.Off)
 			{
 				// this is an RPC (always reliable in Unity 4.5 NetworkViews)
 				bufferState( new networkState( position, info.timestamp, inputHorizontal, inputJump ) );
@@ -784,32 +794,103 @@ public class NetworkedPlayer : MonoBehaviour
 	}
 
 
-	void OnGUI()
+//	void OnGUI()
+//	{
+//		// OnGUI
+//		//				Debug.Log("TripTime (FromServer)= " + stateBuffer[0].tripTime + "\nresulting prediction Steps =" + steps);
+//		//				Debug.Log("Each Step takes Time.fixedDeltaTime: " + Time.fixedDeltaTime + " ms)");
+//
+//		// beste wär wenn server tripTime von anderem Client ebenfalls sendet: otherClient -> server -> this client
+//		// aktuell nur server -> this client
+//		if( Network.isServer)
+//			return;
+//		if( ownerScript.owner == Network.player)
+//		{
+//			GUILayout.Space(160);
+//			GUILayout.FlexibleSpace();
+//			GUILayout.Box("LastTripTime = " + ((double)(stateBuffer[0].tripTime)*1000).ToString("#### ms") + "\nresulting prediction Steps =" + ((double)(stateBuffer[0].tripTime/Time.fixedDeltaTime)).ToString("#.#"));
+//			GUILayout.Box("LastTripTime = " + ((double)(stateBuffer[0].tripTime)*1000).ToString("#### ms") + "\nresulting prediction Steps =" + (GetPastState(Network.time - stateBuffer[0].tripTime)+1));
+//			// kann sein das LastTripTime nicht im avgTripTime eingerechnet wurde da der avg zum anderen zeitpunkt berechnet wird und da das neuste paket noch nicht angekommen ist. 
+//			//TODO // lösung -> avg immer bei ankommendem paket berechnen!
+//			GUILayout.Box("avgTripTime = " + ((double)(avgTripTime*1000)).ToString("#### ms") + "\nresulting avg prediction Steps =" + ((double)(avgTripTime/Time.fixedDeltaTime)).ToString("#.#"));
+//			GUILayout.Box("avgTripTime = " + ((double)(avgTripTime*1000)).ToString("#### ms") + "\nresulting avg prediction Steps =" + ((GetPastState(Network.time - avgTripTime)+1)));
+//			GUILayout.Box("maxTripTime = " + maxTripTime.ToString("0.###") + "\nresulting avg prediction Steps =" + ((double)(maxTripTime/Time.fixedDeltaTime)).ToString("#"));
+//			GUILayout.Box("maxTripTime = " + maxTripTime.ToString("0.###") + "\nresulting avg prediction Steps =" + (GetPastState(Network.time - maxTripTime)+1));
+//			GUILayout.FlexibleSpace();
+//		}
+//	}
+	double avgTripTime = 0;
+	double maxTripTime = 0;
+
+	public GameObject prefabConnectionInfo;
+	public GameObject goCanvasConnectionInfo;
+	public Text txtLastTripTime;
+	public Text txtLastTripTimeSteps;
+	public Text txtLastTripTimeSteps2;
+	public Text txtAvarageTripTime;
+	public Text txtAvarageTripTimeSteps;
+	public Text txtAvarageTripTimeSteps2;
+	public Text txtMaxTripTime;
+	public Text txtMaxTripTimeSteps;
+	public Text txtMaxTripTimeSteps2;
+
+	public bool showConnectionInfo = true;
+
+	void InitConnectionInfo()
 	{
-		// OnGUI
-		//				Debug.Log("TripTime (FromServer)= " + stateBuffer[0].tripTime + "\nresulting prediction Steps =" + steps);
-		//				Debug.Log("Each Step takes Time.fixedDeltaTime: " + Time.fixedDeltaTime + " ms)");
+		if(prefabConnectionInfo != null)
+		{
+			goCanvasConnectionInfo = Instantiate(prefabConnectionInfo, Vector3.zero, Quaternion.identity) as GameObject;
+
+			string parentGO = "ConnectionInfo/";
+
+			txtLastTripTime = goCanvasConnectionInfo.transform.FindChild(parentGO+"txtLastTripTime").GetComponent<Text>();
+			txtLastTripTimeSteps = goCanvasConnectionInfo.transform.FindChild(parentGO+"txtLastTripTimeSteps").GetComponent<Text>();
+			txtLastTripTimeSteps2 = goCanvasConnectionInfo.transform.FindChild(parentGO+"txtLastTripTimeSteps2").GetComponent<Text>();
+
+			txtAvarageTripTime = goCanvasConnectionInfo.transform.FindChild(parentGO+"txtAvarageTripTime").GetComponent<Text>();
+			txtAvarageTripTimeSteps = goCanvasConnectionInfo.transform.FindChild(parentGO+"txtAvarageTripTimeSteps").GetComponent<Text>();
+			txtAvarageTripTimeSteps2 = goCanvasConnectionInfo.transform.FindChild(parentGO+"txtAvarageTripTimeSteps2").GetComponent<Text>();
+
+			txtMaxTripTime = goCanvasConnectionInfo.transform.FindChild(parentGO+"txtMaxTripTime").GetComponent<Text>();
+			txtMaxTripTimeSteps = goCanvasConnectionInfo.transform.FindChild(parentGO+"txtMaxTripTimeSteps").GetComponent<Text>();
+			txtMaxTripTimeSteps2 = goCanvasConnectionInfo.transform.FindChild(parentGO+"txtMaxTripTimeSteps2").GetComponent<Text>();
+		}
+	}
+
+	void UpdateConnectionInfo()
+	{
+		if(!showConnectionInfo)
+			return;
+
+		if(!initialComplete)
+		{
+			//TODO !!!
+			// initialisierung der UI Ebene nach instanzierung von character!!!! SONST gibts hier exceptions!!
+			Start ();
+		}
 
 		// beste wär wenn server tripTime von anderem Client ebenfalls sendet: otherClient -> server -> this client
 		// aktuell nur server -> this client
+
 		if( Network.isServer)
 			return;
 		if( ownerScript.owner == Network.player)
 		{
-			GUILayout.Space(160);
-			GUILayout.FlexibleSpace();
-			GUILayout.Box("LastTripTime = " + ((double)(stateBuffer[0].tripTime)*1000).ToString("#### ms") + "\nresulting prediction Steps =" + ((double)(stateBuffer[0].tripTime/Time.fixedDeltaTime)).ToString("#.#"));
-			GUILayout.Box("LastTripTime = " + ((double)(stateBuffer[0].tripTime)*1000).ToString("#### ms") + "\nresulting prediction Steps =" + (GetPastState(Network.time - stateBuffer[0].tripTime)+1));
+			txtLastTripTime.text = ((double)(stateBuffer[0].tripTime)*1000).ToString("#### ms");
+			txtLastTripTimeSteps.text = ((double)(stateBuffer[0].tripTime/Time.fixedDeltaTime)).ToString("#.#");
+			txtLastTripTimeSteps2.text = (GetPastState(Network.time - stateBuffer[0].tripTime)+1).ToString();
 			// kann sein das LastTripTime nicht im avgTripTime eingerechnet wurde da der avg zum anderen zeitpunkt berechnet wird und da das neuste paket noch nicht angekommen ist. 
 			//TODO // lösung -> avg immer bei ankommendem paket berechnen!
-			GUILayout.Box("avgTripTime = " + ((double)(avgTripTime*1000)).ToString("#### ms") + "\nresulting avg prediction Steps =" + ((double)(avgTripTime/Time.fixedDeltaTime)).ToString("#.#"));
-			GUILayout.Box("avgTripTime = " + ((double)(avgTripTime*1000)).ToString("#### ms") + "\nresulting avg prediction Steps =" + ((GetPastState(Network.time - avgTripTime)+1)));
-			GUILayout.Box("maxTripTime = " + maxTripTime.ToString("0.###") + "\nresulting avg prediction Steps =" + ((double)(maxTripTime/Time.fixedDeltaTime)).ToString("#"));
-			GUILayout.Box("maxTripTime = " + maxTripTime.ToString("0.###") + "\nresulting avg prediction Steps =" + (GetPastState(Network.time - maxTripTime)+1));
-			GUILayout.FlexibleSpace();
+
+			txtAvarageTripTime.text = ((double)(avgTripTime*1000)).ToString("#### ms");
+			txtAvarageTripTimeSteps.text = ((double)(avgTripTime/Time.fixedDeltaTime)).ToString("#.#");
+			txtAvarageTripTimeSteps2.text = ((GetPastState(Network.time - avgTripTime)+1)).ToString();
+
+			txtMaxTripTime.text = maxTripTime.ToString("0.###");
+			txtMaxTripTimeSteps.text = ((double)(maxTripTime/Time.fixedDeltaTime)).ToString("#");
+			txtMaxTripTimeSteps2.text = (GetPastState(Network.time - maxTripTime)+1).ToString();
 		}
 	}
-	double avgTripTime = 0;
-	double maxTripTime = 0;
 
 }

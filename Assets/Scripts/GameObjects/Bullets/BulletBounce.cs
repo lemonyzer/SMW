@@ -56,6 +56,6 @@ public class BulletBounce : MonoBehaviour {
 
 	void Bounce()
 	{
-		this.transform.parent.rigidbody2D.velocity = new Vector3(moveDirection.x * moveSpeed.x, moveSpeed.y,0);
+		this.transform.parent.GetComponent<Rigidbody2D>().velocity = new Vector3(moveDirection.x * moveSpeed.x, moveSpeed.y,0);
 	}
 }

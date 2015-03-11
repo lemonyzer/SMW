@@ -26,10 +26,10 @@ public class NetworkRigidbody : MonoBehaviour {
 		// Send data to server
 		if (stream.isWriting)
 		{
-			Vector3 pos = rigidbody.position;
-			Quaternion rot = rigidbody.rotation;
-			Vector3 velocity = rigidbody.velocity;
-			Vector3 angularVelocity = rigidbody.angularVelocity;
+			Vector3 pos = GetComponent<Rigidbody>().position;
+			Quaternion rot = GetComponent<Rigidbody>().rotation;
+			Vector3 velocity = GetComponent<Rigidbody>().velocity;
+			Vector3 angularVelocity = GetComponent<Rigidbody>().angularVelocity;
 			stream.Serialize(ref pos);
 			stream.Serialize(ref velocity);
 			stream.Serialize(ref rot);
@@ -129,10 +129,10 @@ public class NetworkRigidbody : MonoBehaviour {
 			{
 				float axisLength = extrapolationLength * latest.angularVelocity.magnitude * Mathf.Rad2Deg;
 				Quaternion angularRotation = Quaternion.AngleAxis(axisLength, latest.angularVelocity);
-				rigidbody.position = latest.pos + latest.velocity * extrapolationLength;
-				rigidbody.rotation = angularRotation * latest.rot;
-				rigidbody.velocity = latest.velocity;
-				rigidbody.angularVelocity = latest.angularVelocity;
+				GetComponent<Rigidbody>().position = latest.pos + latest.velocity * extrapolationLength;
+				GetComponent<Rigidbody>().rotation = angularRotation * latest.rot;
+				GetComponent<Rigidbody>().velocity = latest.velocity;
+				GetComponent<Rigidbody>().angularVelocity = latest.angularVelocity;
 			}
 		}
 	}

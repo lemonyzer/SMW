@@ -183,16 +183,19 @@ public class Rage : Power {
 	{
 		if(invincibleSound != null)
 		{
-			gameController.audio.Stop();
-			invincibleSound.audio.Play();
+			gameController.GetComponent<AudioSource>().Stop();
+			invincibleSound.GetComponent<AudioSource>().Play();
+//			this.GetComponent<AudioSource>().clip = invincibleAudioClip;
+//			this.GetComponent<AudioSource>().PlayOneShot(invincibleAudioClip);
+
 		}
 		
 		if(invincibleAudioClip != null)
 		{
-			gameController.audio.Stop();
-			this.audio.loop = true;
-			this.audio.clip = invincibleAudioClip;
-			this.audio.Play();
+			gameController.GetComponent<AudioSource>().Pause();
+			this.GetComponent<AudioSource>().loop = true;
+			this.GetComponent<AudioSource>().clip = invincibleAudioClip;
+			this.GetComponent<AudioSource>().Play();
 		}
 	}
 	
@@ -200,13 +203,13 @@ public class Rage : Power {
 	{
 		if(invincibleSound != null)
 		{
-			invincibleSound.audio.Stop();
-			gameController.audio.Play();
+			invincibleSound.GetComponent<AudioSource>().Stop();
+			gameController.GetComponent<AudioSource>().Play();
 		}
 		if(invincibleAudioClip != null)
 		{
-			this.audio.Stop();
-			gameController.audio.Play();
+			this.GetComponent<AudioSource>().Stop();
+			gameController.GetComponent<AudioSource>().Play();
 		}
 	}
 	

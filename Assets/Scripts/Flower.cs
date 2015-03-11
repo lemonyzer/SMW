@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Flower : WithPower {
+public class Flower : ItemWithPower {
 	
-	public RPCMode rpcMode = RPCMode.All;
-	
+	public RPCMode rpcMode = RPCMode.All; // eigentlich brauch die Einsammelinfo nur der betroffende Spieler, ABER andere Spieler sollen sehen das er schießen kann!
 	
 	public int itemId = ItemLibrary.flowerID;
 	public Shoot powerScript;
@@ -24,7 +23,7 @@ public class Flower : WithPower {
 		// könnte noch interface oder oberklasse mit destroyaftercollecting stayaftercollecting erweitern...
 		if(Network.isServer)
 		{
-			Network.RemoveRPCs(itemGO.networkView.viewID);
+			Network.RemoveRPCs(itemGO.GetComponent<NetworkView>().viewID);
 			Network.Destroy(itemGO.gameObject);
 		}
 	}

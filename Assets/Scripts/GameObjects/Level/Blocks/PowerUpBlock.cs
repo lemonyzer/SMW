@@ -74,7 +74,7 @@ public class PowerUpBlock : MonoBehaviour {
 								ReleasingRandomPowerUp();
 							}
 							else
-								networkView.RPC("ReleasingRandomPowerUp", RPCMode.All);			// PowerUpBlock animation setzen, Item selbst wird über Network.instantiated
+								GetComponent<NetworkView>().RPC("ReleasingRandomPowerUp", RPCMode.All);			// PowerUpBlock animation setzen, Item selbst wird über Network.instantiated
 						}
 					//}
 					//else
@@ -152,7 +152,7 @@ public class PowerUpBlock : MonoBehaviour {
 		}
 		if(Network.isServer)
 		{
-			networkView.RPC("BlockReloaded", RPCMode.All);
+			GetComponent<NetworkView>().RPC("BlockReloaded", RPCMode.All);
 		}
 	}
 
@@ -173,10 +173,10 @@ public class PowerUpBlock : MonoBehaviour {
 			//Returns a random integer number between min [inclusive] and max [exclusive]
 			int i = Random.Range(0, powerups.Length);
 			powerupClone = (GameObject)Instantiate( powerups[i], transform.position + offset, Quaternion.identity );
-			if(powerupClone.rigidbody2D != null)
+			if(powerupClone.GetComponent<Rigidbody2D>() != null)
 			{
 				int direction = RandomSign();
-				powerupClone.rigidbody2D.velocity = new Vector2(direction*10f,8f);
+				powerupClone.GetComponent<Rigidbody2D>().velocity = new Vector2(direction*10f,8f);
 				//powerupClone.rigidbody2D.AddForce(new Vector2(-250.0f,350.0f));
 			}
 			else
@@ -196,10 +196,10 @@ public class PowerUpBlock : MonoBehaviour {
 			powerupClone = (GameObject)Network.Instantiate( powerups[i], transform.position + offset, Quaternion.identity,0 );
 			//powerupClone = (GameObject)PhotonNetwork.Instantiate( powerups[i].name, transform.position + offset, Quaternion.identity,0 );
 			//GameObject powerupClone = (GameObject)Instantiate(powerups[i],transform.position + offset ,Quaternion.identity);
-			if(powerupClone.rigidbody2D != null)
+			if(powerupClone.GetComponent<Rigidbody2D>() != null)
 			{
 				int direction = RandomSign();
-				powerupClone.rigidbody2D.velocity = new Vector2(direction*10f,8f);
+				powerupClone.GetComponent<Rigidbody2D>().velocity = new Vector2(direction*10f,8f);
 				//powerupClone.rigidbody2D.AddForce(new Vector2(-250.0f,350.0f));
 			}
 			else

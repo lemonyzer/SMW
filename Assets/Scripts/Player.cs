@@ -7,10 +7,10 @@ public class Player
 {
 	private int id;
 	private string name;
-	private PhotonPlayer photonPlayer;
+//	private PhotonPlayer photonPlayer;
 	private NetworkPlayer networkPlayer;
 	private GameObject characterSelector;
-	private PhotonView characterSelectorPhotonView;
+//	private PhotonView characterSelectorPhotonView;
 	private Character character;
 	private Character characterClone;			// Liste von Characteren
 	//	private bool isAI;
@@ -20,6 +20,18 @@ public class Player
 	private int kills;
 	private int deads;
 	//	private int 
+
+	private GameObject uiSlot;
+
+	public void setUISlot(GameObject slot)
+	{
+		this.uiSlot = slot;
+	}
+
+	public GameObject getUISlot()
+	{
+		return uiSlot;
+	}
 
 
 	public void addHealth(int value)
@@ -36,26 +48,26 @@ public class Player
 	}
 
 //	// Construcor Photon Network, Character Selector
-	public Player(PhotonPlayer player, GameObject characterSelector)
-	{
-		this.photonPlayer = player;
-		this.characterSelectorPhotonView = characterSelector.GetComponent<PhotonView>();
-		this.id = photonPlayer.ID;
-		this.name = photonPlayer.name;
-		this.characterSelector = characterSelector;
-		this.character = null;
-	}
+//	public Player(PhotonPlayer player, GameObject characterSelector)
+//	{
+//		this.photonPlayer = player;
+//		this.characterSelectorPhotonView = characterSelector.GetComponent<PhotonView>();
+//		this.id = photonPlayer.ID;
+//		this.name = photonPlayer.name;
+//		this.characterSelector = characterSelector;
+//		this.character = null;
+//	}
 
 //	 CharacterSelector information gets lost if creating a new Player() instance ...
 
 	// Construcor Photon Network
-	public Player(PhotonPlayer player, Character character)
-	{
-		this.photonPlayer = player;
-		this.id = photonPlayer.ID;
-		this.name = photonPlayer.name;
-		this.character = character;
-	}
+//	public Player(PhotonPlayer player, Character character)
+//	{
+//		this.photonPlayer = player;
+//		this.id = photonPlayer.ID;
+//		this.name = photonPlayer.name;
+//		this.character = character;
+//	}
 
 	// Construcor Unity Network
 	public Player(NetworkPlayer player, Character character)
@@ -131,10 +143,10 @@ public class Player
 	//		characterPrefab = prefab;
 	//	}
 
-	public PhotonPlayer getPhotonPlayer()
-	{
-		return photonPlayer;
-	}
+//	public PhotonPlayer getPhotonPlayer()
+//	{
+//		return photonPlayer;
+//	}
 
 	public NetworkPlayer getNetworkPlayer()
 	{

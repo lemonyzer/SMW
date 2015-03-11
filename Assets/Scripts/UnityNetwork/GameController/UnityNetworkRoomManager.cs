@@ -67,7 +67,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 				return;
 			}
 			
-			if(networkView != null)
+			if(GetComponent<NetworkView>() != null)
 			{
 				// Unity Network disconnect
 				
@@ -179,7 +179,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 			GameObject character = syncedLocalPersistentPlayerDictionary.TryGetCharacterGameObject(networkPlayer);
 			if(character != null)
 			{
-				character.renderer.enabled = enabled;
+				character.GetComponent<Renderer>().enabled = enabled;
 			}
 		}
 	}
@@ -463,7 +463,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 			//			}
 			
 			// sync Dictionary with MasterClient
-			myNetworkView.RPC("UpdateCurrentPlayerCharacter", RPCMode.AllBuffered, realOwner, characterPrefabName, playerCharacterGameObject.networkView.viewID);	// ??? OthersBuffered
+			myNetworkView.RPC("UpdateCurrentPlayerCharacter", RPCMode.AllBuffered, realOwner, characterPrefabName, playerCharacterGameObject.GetComponent<NetworkView>().viewID);	// ??? OthersBuffered
 			
 			// Get the networkview of this new transform
 			NetworkView newObjectsNetworkView = playerCharacterGameObject.GetComponent<NetworkView>();
@@ -567,7 +567,11 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 	{
 		Debug.Log(disconnectedNetworkPlayer.ipAddress + " (disconnected)");
 
-		
+		// TODO DONE
+		// OnPlayerDisconnected() wird auch an GameObjects ausgeführt die kein NetworkView Komponente besitzen!!!
+		// funktion wird in ConnectionStats direkt eingebunden, kein unnötiger GameObject.Find("") aufruf!
+		//
+		//GameObject.Find("GUI").GetComponent<ConnectionStats>().RemovePlayer(disconnectedNetworkPlayer);
 		
 		// wenn MasterClient disconnected kann er keinem mehr sagen das er gegangen ist!
 		// neuer MasterClient muss alten verabschieden, sync Dictionary!!!
@@ -615,7 +619,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 			
 			if(networkPlayerCharacter != null)
 			{
-				Network.RemoveRPCs(networkPlayerCharacter.networkView.viewID);
+				Network.RemoveRPCs(networkPlayerCharacter.GetComponent<NetworkView>().viewID);
 				Network.RemoveRPCs(networkPlayer);
 				Network.DestroyPlayerObjects(networkPlayer);
 				Network.Destroy(networkPlayerCharacter);
@@ -717,7 +721,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		// Server Only!
 		if(Network.isServer)
 		{
-			Network.RemoveRPCs(go.networkView.viewID);
+			Network.RemoveRPCs(go.GetComponent<NetworkView>().viewID);
 			Network.Destroy(go);
 		}
 	}
@@ -889,8 +893,11 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 	
 	private Rect windowPlayerDictionaryRect = new Rect(20, 25, Screen.width-40, 200);
 	private Rect windowPlayerInfoGUIRect = new Rect(80f,10f,Screen.width-160,90);
-	
-	void OnGUI()
+
+	/// <summary>
+	/// OFFs the on GU.
+	/// </summary>
+	void OFFOnGUI()
 	{
 		if(syncedLocalPersistentPlayerDictionary == null)
 		{

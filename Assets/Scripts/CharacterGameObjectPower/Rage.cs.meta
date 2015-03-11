@@ -1,8 +1,14 @@
 fileFormatVersion: 2
 guid: 59bd82727776b95449d131961a343f09
+timeCreated: 1425916331
+licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - invincibleAudioClip: {fileID: 8300000, guid: 75427089c752cd64c9ed01aca54adbf1,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

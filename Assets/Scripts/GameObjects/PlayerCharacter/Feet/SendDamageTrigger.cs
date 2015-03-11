@@ -97,7 +97,7 @@ public class SendDamageTrigger : MonoBehaviour {
 							else
 							{
 								Debug.LogWarning(targetCharacterGameObject.name + " durchspringt " + myCharacterGameObject.name + ", feet-head trigger zählt nicht als angriff");
-								Debug.Log(myCharacterGameObject.name + " " + myCharacterGameObject.rigidbody2D.velocity.y + " < " + targetCharacterGameObject.rigidbody2D.velocity.y + " " + targetCharacterGameObject.name);
+								Debug.Log(myCharacterGameObject.name + " " + myCharacterGameObject.GetComponent<Rigidbody2D>().velocity.y + " < " + targetCharacterGameObject.GetComponent<Rigidbody2D>().velocity.y + " " + targetCharacterGameObject.name);
 							}
 							//targetCharacterGameObject.GetComponent<HealthController>().ApplyDamage(damageValue,true);
 

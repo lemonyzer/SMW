@@ -98,7 +98,7 @@ public class StatsManager : MonoBehaviour {
 			winEffect.SetActive(true);
 			winEffect.transform.position = gameWinner.transform.position;
 			winEffect.transform.parent = gameWinner.transform;
-			winEffect.renderer.sortingLayerID = sortingLayer.guiSortingLayer;
+			winEffect.GetComponent<Renderer>().sortingLayerID = sortingLayer.guiSortingLayer;
 		}
 		if(winEffect2 != null)
 		{
@@ -107,7 +107,7 @@ public class StatsManager : MonoBehaviour {
 			winEffect2.transform.parent = gameWinner.transform;
 			foreach(Transform child in winEffect2.transform)
 			{
-				child.renderer.sortingLayerID = sortingLayer.guiSortingLayer;
+				child.GetComponent<Renderer>().sortingLayerID = sortingLayer.guiSortingLayer;
 			}
 		}
 		if(winSound != null) {

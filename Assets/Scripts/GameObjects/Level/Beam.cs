@@ -39,7 +39,7 @@ public class Beam : MonoBehaviour {
 //				Debug.Log(beamCollider.Length + " Beamcollider");
 //				Debug.Log(beamCollider[0].center);
 //				Debug.Log(beamCollider[1].center);
-				if(beamCollider[0].center.x <= beamCollider[1].center.x)
+				if(beamCollider[0].offset.x <= beamCollider[1].offset.x)
 				{
 					// alles ok, collider mit index 0 = links, collider mit index 1 = rechts
 				}
@@ -69,8 +69,8 @@ public class Beam : MonoBehaviour {
 //		leftBeamZoneX = backgroundCenterPositionX - (backgroundWidth * 0.5f) + saveBeamOffsetX;	// + !!!
 //		rightBeamZoneX = backgroundCenterPositionX + (backgroundWidth * 0.5f) - saveBeamOffsetX;	// - !!!
 		//transform position fehlt
-		leftBeamZoneX = transform.position.x + beamCollider[0].center.x + beamCollider[0].size.x*0.5f + saveBeamOffsetX;
-		rightBeamZoneX = transform.position.x + beamCollider[1].center.x - beamCollider[0].size.x*0.5f - saveBeamOffsetX;
+		leftBeamZoneX = transform.position.x + beamCollider[0].offset.x + beamCollider[0].size.x*0.5f + saveBeamOffsetX;
+		rightBeamZoneX = transform.position.x + beamCollider[1].offset.x - beamCollider[0].size.x*0.5f - saveBeamOffsetX;
 //		Debug.Log(backgroundSpriteRenderer.bounds);
 //		Debug.Log(leftBeamZoneX);
 //		Debug.Log(rightBeamZoneX);

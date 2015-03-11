@@ -25,7 +25,7 @@ public class PushSkript : MonoBehaviour {
 	void Start () {
 		myCharacter = this.gameObject.transform;
 
-		myRigidBody2D = myCharacter.rigidbody2D;
+		myRigidBody2D = myCharacter.GetComponent<Rigidbody2D>();
 		if(myRigidBody2D == null)
 			Debug.LogError(myCharacter.name + " hat kein RigidBody2D");
 

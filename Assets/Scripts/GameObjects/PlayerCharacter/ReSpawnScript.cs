@@ -139,10 +139,10 @@ public class ReSpawnScript : MonoBehaviour {
 	{
 		if(debugSpawn && myCharacter.name.StartsWith("Carbuncle"))
 			Debug.LogWarning("StartSpawnAnimation()");
-		myCharacter.renderer.enabled = false;				// sieht besser aus
+		myCharacter.GetComponent<Renderer>().enabled = false;				// sieht besser aus
 
 		// neue Position halten
-		rigidbody2D.isKinematic = true;
+		GetComponent<Rigidbody2D>().isKinematic = true;
 
 		if(Network.isServer)
 		{
@@ -155,7 +155,7 @@ public class ReSpawnScript : MonoBehaviour {
 
 		// Kinematic = true, alle Collider & Trigger aus
 		SetSpawnAnimationCharacterCollider();
-		myCharacter.renderer.enabled = true;				// sieht besser aus
+		myCharacter.GetComponent<Renderer>().enabled = true;				// sieht besser aus
 	}
 
 	void SetSpawnPosition()

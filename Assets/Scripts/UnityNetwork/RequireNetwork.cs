@@ -1,16 +1,34 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class RequireNetwork : MonoBehaviour
 {
-	void OnGUI()
+
+	public Slider slots;
+	public Toggle listenServer;
+	public Toggle tglUseNat;
+	public Text port;
+	public GameObject panelStartServer;
+
+	public void Start()
 	{
 		if( Network.peerType == NetworkPeerType.Disconnected )
 		{
-			if( GUILayout.Button("Start Server (20 Client Slots + 'Serverslot')", GUILayout.Width(Screen.width), GUILayout.Height(Screen.height)))
-			{
-				Network.InitializeServer( 20, 25005, true );
-			}
+			panelStartServer.SetActive (true);
 		}
+	}
+
+	public void StartServer()
+	{
+		if( Network.peerType == NetworkPeerType.Disconnected )
+		{
+			Network.InitializeServer( int.Parse(slots.value.ToString()), 25005, tglUseNat.isOn );
+			Debug.Log ("useNat = " + tglUseNat.isOn.ToString());
+			Debug.Log ("Slots = " + int.Parse(slots.value.ToString()));
+
+			panelStartServer.SetActive (false);
+		}
+
 	}
 }

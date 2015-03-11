@@ -95,29 +95,29 @@ public class DictionaryScreen : MonoBehaviour
 			//			GUIStyle textStyle = clientStyle;
 			//			GUILayout.Label (player.getPhotonPlayer().name +
 			//			                 (player.getPhotonPlayer().isMasterClient ? " MasterClient":" Client"), guiStyle);
-			if(player.getPhotonPlayer() == PhotonNetwork.player)
-			{
-				masterStyle.fontStyle = FontStyle.Bold;
-				clientStyle.fontStyle = FontStyle.Bold;
-				clientSmallStyle.fontStyle = FontStyle.Bold;
-				masterSmallStyle.fontStyle = FontStyle.Bold;
-			}
-			else
-			{
-				masterStyle.fontStyle = FontStyle.Normal;
-				clientStyle.fontStyle = FontStyle.Normal;
-				clientSmallStyle.fontStyle = FontStyle.Normal;
-				masterSmallStyle.fontStyle = FontStyle.Normal;
-			}
-			if(player.getPhotonPlayer().isMasterClient)
-			{
-				//				textStyle = masterStyle;
-				GUILayout.Label (player.getPhotonPlayer().name + " MasterClient", masterStyle);
-			}
-			else
-			{
-				GUILayout.Label (player.getPhotonPlayer().name + " Client", clientStyle);
-			}
+//			if(player.getPhotonPlayer() == PhotonNetwork.player)
+//			{
+//				masterStyle.fontStyle = FontStyle.Bold;
+//				clientStyle.fontStyle = FontStyle.Bold;
+//				clientSmallStyle.fontStyle = FontStyle.Bold;
+//				masterSmallStyle.fontStyle = FontStyle.Bold;
+//			}
+//			else
+//			{
+//				masterStyle.fontStyle = FontStyle.Normal;
+//				clientStyle.fontStyle = FontStyle.Normal;
+//				clientSmallStyle.fontStyle = FontStyle.Normal;
+//				masterSmallStyle.fontStyle = FontStyle.Normal;
+//			}
+//			if(player.getPhotonPlayer().isMasterClient)
+//			{
+//				//				textStyle = masterStyle;
+//				GUILayout.Label (player.getPhotonPlayer().name + " MasterClient", masterStyle);
+//			}
+//			else
+//			{
+//				GUILayout.Label (player.getPhotonPlayer().name + " Client", clientStyle);
+//			}
 			GUILayout.Space(20);
 			if(player.getCharacterSelector() != null)
 				GUILayout.Label( "charSelector: Yes", masterStyle);

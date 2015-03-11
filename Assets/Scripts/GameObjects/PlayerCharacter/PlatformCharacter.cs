@@ -128,11 +128,18 @@ public class PlatformCharacter : MonoBehaviour {
 //		maxSpeed = newMaxSpeed;
 //	}
 
+	/// <summary>
+	/// Gets the max speed.
+	/// </summary>
+	/// <returns>The max speed.</returns>
 	public float getMaxSpeed()
 	{
 		return maxSpeed;
 	}
 
+	/// <summary>
+	/// Awake this instance.
+	/// </summary>
 	void Awake()
 	{
 		myGroundStopperCollider = transform.Find(Tags.groundStopper).GetComponent<BoxCollider2D>();
@@ -167,6 +174,9 @@ public class PlatformCharacter : MonoBehaviour {
 //		whatIsGround |= 1 << layer.destroyAbleBlock;
 //	}
 
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
 	void Start() {
 		anim = GetComponent<Animator>();
 		ownerScript = GetComponent<RealOwner>();
@@ -177,8 +187,10 @@ public class PlatformCharacter : MonoBehaviour {
 		}
 	}
 
-
 	// FixedUpdate is called once per frame
+	/// <summary>
+	/// Enables Movement Offline
+	/// </summary>
 	void FixedUpdate () {
 		if(Network.isClient)
 			return;
@@ -202,6 +214,10 @@ public class PlatformCharacter : MonoBehaviour {
 
 	bool beamEnabled = true;
 
+	/// <summary>
+	/// Checks Characterposition and beams if nessesary.
+	/// No Unity physics engine needed (no trigger no collider)
+	/// </summary>
 	void CheckBeam()
 	{
 		if(!beamEnabled)
@@ -228,6 +244,11 @@ public class PlatformCharacter : MonoBehaviour {
 
 	Collider2D[] foundColliderArray = new Collider2D[1];
 
+	/// <summary>
+	/// Checks the position of Character.
+	/// grounded, walled
+	/// Disables Platformcollider while jumping
+	/// </summary>
 	void CheckPosition()
 	{
 
@@ -236,16 +257,16 @@ public class PlatformCharacter : MonoBehaviour {
 
 		Vector2 groundedOffset = new Vector2(0f,0.5f);
 
-		Vector2 playerColliderTopLeftPos = new Vector2(transform.position.x - bodyCollider2D.size.x*0.5f + bodyCollider2D.center.x,
+		Vector2 playerColliderTopLeftPos = new Vector2(transform.position.x - bodyCollider2D.size.x*0.5f + bodyCollider2D.offset.x,
 		                                               transform.position.y);	// Collider Top Left
 		
-		Vector2 playerColliderBottomRightPos = new Vector2(transform.position.x + bodyCollider2D.size.x*0.5f + bodyCollider2D.center.x,
+		Vector2 playerColliderBottomRightPos = new Vector2(transform.position.x + bodyCollider2D.size.x*0.5f + bodyCollider2D.offset.x,
 		                                                   transform.position.y - spriteRenderer.bounds.extents.y*1.2f);	// Collider Bottom Right
 
-		Vector2 playerColliderTopRightPos = new Vector2(transform.position.x + bodyCollider2D.size.x*0.5f + bodyCollider2D.center.x,
+		Vector2 playerColliderTopRightPos = new Vector2(transform.position.x + bodyCollider2D.size.x*0.5f + bodyCollider2D.offset.x,
 		                                               transform.position.y);	// Collider Top Right
 		
-		Vector2 playerColliderBottomLeftPos = new Vector2(transform.position.x - bodyCollider2D.size.x*0.5f + bodyCollider2D.center.x,
+		Vector2 playerColliderBottomLeftPos = new Vector2(transform.position.x - bodyCollider2D.size.x*0.5f + bodyCollider2D.offset.x,
 		                                                   transform.position.y - spriteRenderer.bounds.extents.y*1.2f);	// Collider Bottom Left
 
 //		Debug.DrawLine(playerColliderTopLeftPos, playerColliderBottomRightPos, Color.yellow);
@@ -363,6 +384,13 @@ public class PlatformCharacter : MonoBehaviour {
 	private bool overrideGrounded = false;
 	private bool overrideGroundedValue = false;
 
+
+	/// <summary>
+	/// Simulation, first checks Position (ground, walled states)
+	/// Updates Animation
+	/// use Input and Move (Translation)
+	/// checks Beam after Movement
+	/// </summary>
 	public void Simulate()
 	{
 		CheckPosition();
@@ -430,8 +458,15 @@ public class PlatformCharacter : MonoBehaviour {
 		}
 		CheckBeam ();
 	}
+
+
 	bool hasHorizontalInputShown = false;
 	bool hasNoHorizontalInputShown = false;
+
+	/// <summary>
+	/// Simulates the animation.
+	/// </summary>
+
 	void SimulateAnimation()
 	{
 		anim.SetBool(hash.groundedBool, grounded);
@@ -476,6 +511,10 @@ public class PlatformCharacter : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Syncs the jump on all NetworkPlayer
+	/// </summary>
+
 	[RPC]
 	public void SyncJump()
 	{
@@ -493,6 +532,10 @@ public class PlatformCharacter : MonoBehaviour {
 			anim.SetBool(hash.groundedBool,false);
 		}
 	}
+
+	/// <summary>
+	/// Syncs the wall jump.
+	/// </summary>
 
 	[RPC]
 	public void SyncWallJump()
@@ -557,15 +600,15 @@ public class PlatformCharacter : MonoBehaviour {
 	[RPC]
 	void DeactivateKinematic()
 	{
-		gameObject.rigidbody2D.isKinematic = false;
-		gameObject.rigidbody2D.WakeUp();
+		gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
+		gameObject.GetComponent<Rigidbody2D>().WakeUp();
 	}
 	
 	[RPC]
 	void ActivateKinematic()
 	{
-		gameObject.rigidbody2D.isKinematic = true;
-		gameObject.rigidbody2D.WakeUp();
+		gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+		gameObject.GetComponent<Rigidbody2D>().WakeUp();
 	}
 	
 	[RPC]
@@ -780,7 +823,7 @@ public class PlatformCharacter : MonoBehaviour {
 		
 		bulletGameObject.GetComponent<AuthoritativeBullet>().ownerCharacter = this.gameObject;// important!!!
 		bulletGameObject.GetComponent<AuthoritativeBullet>().moveDirection = new Vector3(this.transform.localScale.x,0,0);
-		bulletGameObject.rigidbody2D.velocity = new Vector3(this.transform.localScale.x * AuthoritativeBullet.moveSpeed.x,1 * AuthoritativeBullet.moveSpeed.y,1* AuthoritativeBullet.moveSpeed.z);
+		bulletGameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(this.transform.localScale.x * AuthoritativeBullet.moveSpeed.x,1 * AuthoritativeBullet.moveSpeed.y,1* AuthoritativeBullet.moveSpeed.z);
 
 	}
 
@@ -875,7 +918,7 @@ public class PlatformCharacter : MonoBehaviour {
 			
 			bulletGameObject.GetComponent<AuthoritativeBullet>().ownerCharacter = this.gameObject;// important!!!
 			bulletGameObject.GetComponent<AuthoritativeBullet>().moveDirection = new Vector3(this.transform.localScale.x,0,0);
-			bulletGameObject.rigidbody2D.velocity = new Vector3(this.transform.localScale.x * AuthoritativeBullet.moveSpeed.x,1 * AuthoritativeBullet.moveSpeed.y,1* AuthoritativeBullet.moveSpeed.z);
+			bulletGameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(this.transform.localScale.x * AuthoritativeBullet.moveSpeed.x,1 * AuthoritativeBullet.moveSpeed.y,1* AuthoritativeBullet.moveSpeed.z);
 			
 			if(bulletsLeftCount > 0)
 				StartCoroutine(SpawnBullet());
@@ -944,7 +987,7 @@ public class PlatformCharacter : MonoBehaviour {
 
 		if(server())
 		{
-			networkView.RPC("SpawnAnimationDelay", RPCMode.All, currentLevel.getRandomSpawnPosition() );			// wenn server jetzt schon rpc mit spawnposition sended
+			GetComponent<NetworkView>().RPC("SpawnAnimationDelay", RPCMode.All, currentLevel.getRandomSpawnPosition() );			// wenn server jetzt schon rpc mit spawnposition sended
 																											// und reSpawnDelay > triptime
 																											// kann syncron auf allen clients die spawnanimation starten
 																											// ansonsten, nur auf server spawndelay coroutine starten// und nach ablauf rpc an alle clients startanimation
@@ -992,7 +1035,7 @@ public class PlatformCharacter : MonoBehaviour {
 	{
 		if(debugSpawn && this.transform.name.StartsWith("Carbuncle"))
 			Debug.LogWarning("StartSpawnAnimation()");
-		this.transform.renderer.enabled = false;				// sieht besser aus macht eigentlich kein unterschied, da kein neuer frame erstellt wird bis render aktiviert wird
+		this.transform.GetComponent<Renderer>().enabled = false;				// sieht besser aus macht eigentlich kein unterschied, da kein neuer frame erstellt wird bis render aktiviert wird
 		
 		// neue Position halten
 		//rigidbody2D.isKinematic = true;				// BUG BUG BUG BUG BUG
@@ -1034,7 +1077,7 @@ public class PlatformCharacter : MonoBehaviour {
 		/* Ki und Controlls deaktivieren */
 		isDead = true;
 		
-		this.transform.renderer.enabled = true;				// sieht besser aus macht eigentlich kein unterschied, da kein neuer frame seit dem deaktivieren erzeugt wurde
+		this.transform.GetComponent<Renderer>().enabled = true;				// sieht besser aus macht eigentlich kein unterschied, da kein neuer frame seit dem deaktivieren erzeugt wurde
 	}
 	
 	void LateUpdate()
@@ -1068,6 +1111,13 @@ public class PlatformCharacter : MonoBehaviour {
 			// in spawnProtection
 			spriteRenderer.color = spawnProtectionAnimation[0];
 		}
+
+		transform.FindChild(Tags.lastReceivedPos).GetComponent<SpriteRenderer>().sprite = spriteRenderer.sprite;
+		transform.FindChild(Tags.lastReceivedPos).GetComponent<SpriteRenderer>().color = new Color(1f,0f,0f,0.5f);
+		transform.FindChild(Tags.predictedBoxCollider).GetComponent<SpriteRenderer>().sprite = spriteRenderer.sprite;
+		transform.FindChild(Tags.predictedBoxCollider).GetComponent<SpriteRenderer>().color = new Color(0f,0f,0f,0.5f);
+		transform.FindChild(Tags.boxCollider).GetComponent<SpriteRenderer>().sprite = spriteRenderer.sprite;
+		transform.FindChild(Tags.boxCollider).GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0.5f);
 	}
 
 	void SpawnProtection()
@@ -1215,7 +1265,7 @@ public class PlatformCharacter : MonoBehaviour {
 
 		if(server())
 		{
-			networkView.RPC("SpawnAnimationDelay", RPCMode.All, currentLevel.getRandomSpawnPosition() );			// wenn server jetzt schon rpc mit spawnposition sended
+			GetComponent<NetworkView>().RPC("SpawnAnimationDelay", RPCMode.All, currentLevel.getRandomSpawnPosition() );			// wenn server jetzt schon rpc mit spawnposition sended
 			// und reSpawnDelay > triptime
 			// kann syncron auf allen clients die spawnanimation starten
 			// ansonsten, nur auf server spawndelay coroutine starten// und nach ablauf rpc an alle clients startanimation

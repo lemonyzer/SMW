@@ -181,9 +181,22 @@ public class PlayerDictionary : ScriptableObject {
 			Debug.Log(networkPlayer.guid + " added to Dictionary.");
 		}
 	}
-	
+
+	//TODO full consistent integration!
+	ConnectionStats conStats;
+	GameObject guiGO;
 	public void RemovePlayer( NetworkPlayer networkPlayer )
 	{
+		guiGO = GameObject.Find("GUI");
+		if(guiGO != null)
+		{
+			conStats = guiGO.GetComponent<ConnectionStats>();
+			if(conStats != null)
+			{
+				conStats.RemovePlayer(networkPlayer);
+			}
+		}
+
 		Player removedPlayer = null;
 		
 		if(playerDictionary.TryGetValue(networkPlayer, out removedPlayer))

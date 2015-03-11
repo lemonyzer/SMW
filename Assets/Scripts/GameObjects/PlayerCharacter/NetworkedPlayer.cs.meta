@@ -1,8 +1,24 @@
 fileFormatVersion: 2
 guid: e6fca22785f4f404db0a477d3b8e1998
+timeCreated: 1426077970
+licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - prefabConnectionInfo: {fileID: 173648, guid: 3db5d9c25bdc1f345a523c636f7efaa3,
+      type: 2}
+  - goCanvasConnectionInfo: {instanceID: 0}
+  - txtLastTripTime: {instanceID: 0}
+  - txtLastTripTimeSteps: {instanceID: 0}
+  - txtLastTripTimeSteps2: {instanceID: 0}
+  - txtAvarageTripTime: {instanceID: 0}
+  - txtAvarageTripTimeSteps: {instanceID: 0}
+  - txtAvarageTripTimeSteps2: {instanceID: 0}
+  - txtMaxTripTime: {instanceID: 0}
+  - txtMaxTripTimeSteps: {instanceID: 0}
+  - txtMaxTripTimeSteps2: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

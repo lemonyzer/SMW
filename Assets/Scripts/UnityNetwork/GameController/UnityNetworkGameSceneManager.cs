@@ -178,7 +178,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 
 		if(!string.IsNullOrEmpty(characterPrefabName))
 		{
-			characterPrefab = (GameObject) Resources.LoadAssetAtPath("Assets/Prefabs/PlayerCharacter/UnityNetwork/"+characterPrefabName+".prefab", typeof(GameObject));
+			characterPrefab = (GameObject) Resources.Load("Assets/Prefabs/PlayerCharacter/UnityNetwork/"+characterPrefabName+".prefab", typeof(GameObject));
 		}
 
 		if(characterPrefab != null)
@@ -187,7 +187,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 			GameObject playerCharacterGameObject = (GameObject) Network.Instantiate( characterPrefab, spawnPosition, Quaternion.identity,0 );
 			
 			// update Dictionary of all clients with
-			myNetworkView.RPC("UpdateCurrentPlayerCharacter", RPCMode.AllBuffered, realOwner, characterPrefabName, playerCharacterGameObject.networkView.viewID);
+			myNetworkView.RPC("UpdateCurrentPlayerCharacter", RPCMode.AllBuffered, realOwner, characterPrefabName, playerCharacterGameObject.GetComponent<NetworkView>().viewID);
 			
 			// Get the networkview of this new transform
 			NetworkView newObjectsview = playerCharacterGameObject.GetComponent<NetworkView>();
@@ -471,7 +471,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 				return;
 			}
 			
-			if(networkView != null)
+			if(GetComponent<NetworkView>() != null)
 			{
 				// Unity Network disconnect
 				

@@ -26,10 +26,10 @@ public class NetworkRigidbody2D : MonoBehaviour {
 		// Send data to server
 		if (stream.isWriting)
 		{
-			Vector3 pos = rigidbody2D.position;
-			float rot = rigidbody2D.rotation;
-			Vector3 velocity = rigidbody2D.velocity;
-			float angularVelocity = rigidbody2D.angularVelocity;
+			Vector3 pos = GetComponent<Rigidbody2D>().position;
+			float rot = GetComponent<Rigidbody2D>().rotation;
+			Vector3 velocity = GetComponent<Rigidbody2D>().velocity;
+			float angularVelocity = GetComponent<Rigidbody2D>().angularVelocity;
 			stream.Serialize(ref pos);
 			stream.Serialize(ref velocity);
 			stream.Serialize(ref rot);
@@ -114,7 +114,7 @@ public class NetworkRigidbody2D : MonoBehaviour {
 					// if t=0 => lhs is used directly
 					transform.localPosition = Vector3.Lerp(lhs.pos, rhs.pos, t);
 					//transform.localRotation = new Vector3(0,0,Mathf.Lerp(lhs.rot, rhs.rot, t));
-					rigidbody2D.rotation = Mathf.Lerp(lhs.rot, rhs.rot, t);
+					GetComponent<Rigidbody2D>().rotation = Mathf.Lerp(lhs.rot, rhs.rot, t);
 					return;
 				}
 			}
@@ -130,10 +130,10 @@ public class NetworkRigidbody2D : MonoBehaviour {
 			{
 				//float axisLength = extrapolationLength * latest.angularVelocity * Mathf.Rad2Deg;
 				float angularRotation = latest.angularVelocity;
-				rigidbody2D.position = latest.pos + latest.velocity * extrapolationLength;
-				rigidbody2D.rotation = angularRotation * latest.rot;
-				rigidbody2D.velocity = latest.velocity;
-				rigidbody2D.angularVelocity = latest.angularVelocity;
+				GetComponent<Rigidbody2D>().position = latest.pos + latest.velocity * extrapolationLength;
+				GetComponent<Rigidbody2D>().rotation = angularRotation * latest.rot;
+				GetComponent<Rigidbody2D>().velocity = latest.velocity;
+				GetComponent<Rigidbody2D>().angularVelocity = latest.angularVelocity;
 			}
 		}
 	}

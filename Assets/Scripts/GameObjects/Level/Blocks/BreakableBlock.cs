@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BreakableBlock : Photon.MonoBehaviour {
+public class BreakableBlock : MonoBehaviour {
 	
 	public string targetTag = "Head";
 
@@ -16,8 +16,11 @@ public class BreakableBlock : Photon.MonoBehaviour {
 	private GameObject gameController;
 	private Layer layer;
 
+	NetworkView myNView;
+
 	void Awake()
 	{
+		myNView = this.GetComponent<NetworkView>();
 		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
 		layer = gameController.GetComponent<Layer>();
 
@@ -33,7 +36,7 @@ public class BreakableBlock : Photon.MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if(PhotonNetwork.isMasterClient)
+		if(Network.isServer)
 		{
 			Debug.Log("OnTriggerEnter2D: " + other.name);
 			if(other.gameObject.layer == layer.head)
@@ -43,10 +46,10 @@ public class BreakableBlock : Photon.MonoBehaviour {
 				if(HeadTriggerUnderBlock(other))
 				{
 					// velocity funktioniert nicht, da Player Collider mit BlockCollider collidiert und velocity = 0 setzt!
-					if(other.gameObject.transform.parent.rigidbody2D.velocity.y >= 0f)			// nur zerstören wenn Spieler nach oben springt
+					if(other.gameObject.transform.parent.GetComponent<Rigidbody2D>().velocity.y >= 0f)			// nur zerstören wenn Spieler nach oben springt
 					{
 //						other.gameObject.transform.parent.rigidbody2D.velocity = Vector2.zero;	// collision simulieren (player stoppt bei trigger erkennung kurz)
-						photonView.RPC("Breaking", PhotonTargets.AllBuffered);				// all buffered, level is changeing!!
+						myNView.RPC("Breaking", RPCMode.AllBuffered);				// all buffered, level is changeing!!
 					}
 					else
 					{
@@ -95,26 +98,26 @@ public class BreakableBlock : Photon.MonoBehaviour {
 		else
 			Debug.LogError("no Destroy Sound set in Unity Inspector!");
 
-		myBlock.renderer.enabled = false;
+		myBlock.GetComponent<Renderer>().enabled = false;
 		myBlockCollider.enabled = false;
 //		myTriggerZone.enabled = false;
 		
 		Vector3 offset = new Vector3(0f,0f,0f);
 		GameObject cloneTopLeft = (GameObject)Instantiate(destroyedBlockPrefab,transform.position+offset, Quaternion.identity);
-		cloneTopLeft.rigidbody2D.AddForce(new Vector2(-250.0f,350.0f));
-		cloneTopLeft.rigidbody2D.AddTorque(1000f);
+		cloneTopLeft.GetComponent<Rigidbody2D>().AddForce(new Vector2(-250.0f,350.0f));
+		cloneTopLeft.GetComponent<Rigidbody2D>().AddTorque(1000f);
 		
 		GameObject cloneTopRight = (GameObject)Instantiate(destroyedBlockPrefab,transform.position+offset, Quaternion.identity);
-		cloneTopRight.rigidbody2D.AddForce(new Vector2(+250.0f,350.0f));
-		cloneTopRight.rigidbody2D.AddTorque(-1000f);
+		cloneTopRight.GetComponent<Rigidbody2D>().AddForce(new Vector2(+250.0f,350.0f));
+		cloneTopRight.GetComponent<Rigidbody2D>().AddTorque(-1000f);
 		
 		GameObject cloneBottomLeft = (GameObject)Instantiate(destroyedBlockPrefab,transform.position+offset, Quaternion.identity);
-		cloneBottomLeft.rigidbody2D.AddForce(new Vector2(-150.0f,150.0f));
-		cloneBottomLeft.rigidbody2D.AddTorque(1000f);
+		cloneBottomLeft.GetComponent<Rigidbody2D>().AddForce(new Vector2(-150.0f,150.0f));
+		cloneBottomLeft.GetComponent<Rigidbody2D>().AddTorque(1000f);
 		
 		GameObject cloneBottomRight = (GameObject)Instantiate(destroyedBlockPrefab,transform.position+offset, Quaternion.identity);
-		cloneBottomRight.rigidbody2D.AddForce(new Vector2(+150.0f,150.0f));
-		cloneBottomRight.rigidbody2D.AddTorque(-1000f);
+		cloneBottomRight.GetComponent<Rigidbody2D>().AddForce(new Vector2(+150.0f,150.0f));
+		cloneBottomRight.GetComponent<Rigidbody2D>().AddTorque(-1000f);
 		
 		Destroy(cloneTopLeft,destroyedBlockPrefabStayTime);
 		Destroy(cloneTopRight,destroyedBlockPrefabStayTime);

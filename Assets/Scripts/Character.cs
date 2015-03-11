@@ -10,7 +10,7 @@ public class Character : IComparable<Character>
 	private bool isAI;
 
 	private NetworkView gameObjectsNetworkView;
-	private PhotonView gameObjectsPhotonView;
+//	private PhotonView gameObjectsPhotonView;
 
 	private string characterName;
 
@@ -48,7 +48,7 @@ public class Character : IComparable<Character>
 		this.isAI = isAI;
 		this.characterName = instantiatedPrefab.name;
 
-		this.gameObjectsPhotonView = instantiatedPrefab.GetComponent<PhotonView>();
+//		this.gameObjectsPhotonView = instantiatedPrefab.GetComponent<PhotonView>();
 
 		this.spriteRenderer = instantiatedPrefab.GetComponent<SpriteRenderer> ();
 
@@ -132,15 +132,15 @@ public class Character : IComparable<Character>
 		return characterGameObject;
 	}
 
-	public PhotonView getGameObjectsPhotonView()
-	{
-		return gameObjectsPhotonView;
-	}
+//	public PhotonView getGameObjectsPhotonView()
+//	{
+//		return gameObjectsPhotonView;
+//	}
 
-	public int getGameObjectsViewID()
-	{
-		return gameObjectsPhotonView.viewID;
-	}
+//	public int getGameObjectsViewID()
+//	{
+//		return gameObjectsPhotonView.viewID;
+//	}
 
 	public void setPrefab(GameObject prefab)
 	{

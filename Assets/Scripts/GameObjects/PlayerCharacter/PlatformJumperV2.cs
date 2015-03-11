@@ -69,11 +69,11 @@ public class PlatformJumperV2 : MonoBehaviour {
 
 	void CalculateColliderEdges()
 	{
-		playerBodyColliderTopLeftPos = new Vector2(transform.position.x - bodyCollider.size.x*0.5f + bodyCollider.center.x,
-		                                           transform.position.y + bodyCollider.size.y*0.5f + bodyCollider.center.y);	// Collider Top Left
+		playerBodyColliderTopLeftPos = new Vector2(transform.position.x - bodyCollider.size.x*0.5f + bodyCollider.offset.x,
+		                                           transform.position.y + bodyCollider.size.y*0.5f + bodyCollider.offset.y);	// Collider Top Left
 		
-		playerBodyColliderBottomRightPos = new Vector2(transform.position.x + bodyCollider.size.x*0.5f + bodyCollider.center.x,
-		                                               transform.position.y - bodyCollider.size.y*0.5f + bodyCollider.center.y);	// Collider Bottom Right
+		playerBodyColliderBottomRightPos = new Vector2(transform.position.x + bodyCollider.size.x*0.5f + bodyCollider.offset.x,
+		                                               transform.position.y - bodyCollider.size.y*0.5f + bodyCollider.offset.y);	// Collider Bottom Right
 
 //		playerBodyColliderBottomLeftPos = new Vector2(transform.position.x - bodyCollider.size.x*0.5f + bodyCollider.center.x,
 //		                                              transform.position.y - bodyCollider.size.y*0.5f + bodyCollider.center.y);	// Collider Bottom Left
@@ -231,7 +231,7 @@ public class PlatformJumperV2 : MonoBehaviour {
 
 		bool ignore = false;
 
-		if(rigidbody2D.velocity.y > 0)
+		if(GetComponent<Rigidbody2D>().velocity.y > 0)
 			ignore = true;
 		else
 			ignore = false;

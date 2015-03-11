@@ -31,7 +31,7 @@ public class RageTrigger : MonoBehaviour {
 					if(other.gameObject.name == Tags.powerUpHitArea)
 					{
 						// other gameObject is child from a Character
-						if(!other.transform.parent.GetComponent<RageModus>().isInRageModus)
+						if(!other.transform.parent.GetComponent<Rage>().isInRageModus)
 						{
 							if(!other.transform.parent.GetComponent<PlatformCharacter>().isDead)			//TODO not needed, if collider is deactivated during respawn-spawnProtection!
 							{

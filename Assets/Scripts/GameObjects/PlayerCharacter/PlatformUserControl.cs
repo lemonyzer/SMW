@@ -96,13 +96,19 @@ public class PlatformUserControl : MonoBehaviour {
 	private float inputKeyboardVertical = 0f;
 	private bool inputKeyboardJump = false;                    
 	private bool inputKeyboardPower = false;
-	
+
+	/// <summary>
+	/// Awake this instance.
+	/// </summary>
 	void Awake()
 	{
 		realOwner = GetComponent<RealOwner>();
 	}
 	
 	// Use this for initialization
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
 	void Start() {
 		
 		analogStickTexture = (GUITexture) Instantiate(prefabAnalogStickTexture);		// needed? pre-instantiete in hierachie?!
@@ -121,7 +127,10 @@ public class PlatformUserControl : MonoBehaviour {
 		                                   0,
 		                                   0);
 	}
-	
+
+	/// <summary>
+	/// 
+	/// </summary>
 	void ApplicationPlatformInputCheck()
 	{
 		/**
@@ -167,6 +176,9 @@ public class PlatformUserControl : MonoBehaviour {
 	public bool simulate = false;
 
 	// Update is called once per frame
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
 	void Update() {
 		// Wenn jeder Character ein UserControl script hat muss abgefragt werden ob der Character dem lokalen Spieler gehört
 		if(Network.peerType == NetworkPeerType.Disconnected || Network.player == realOwner.owner)
@@ -184,7 +196,10 @@ public class PlatformUserControl : MonoBehaviour {
 			this.enabled = false;
 		}
 	}
-	
+
+	/// <summary>
+	/// Combines the input of Touch and Keyboard.
+	/// </summary>
 	void CombineInput()
 	{
 		if(keyPressed)
@@ -254,7 +269,10 @@ public class PlatformUserControl : MonoBehaviour {
 		// limit combination to [-1,1]
 		Mathf.Clamp(inputHorizontal, -1, +1);    // kein cheaten möglich mit touch+keyboard steuerung
 	}
-	
+
+	/// <summary>
+	/// Keyboard this instance.
+	/// </summary>
 	void Keyboard() {
 		inputKeyboardHorizontal = Input.GetAxis ("Horizontal");
 		inputKeyboardVertical = Input.GetAxis ("Vertical");
@@ -269,12 +287,18 @@ public class PlatformUserControl : MonoBehaviour {
 			inputKeyboardPower = Input.GetKeyDown (KeyCode.E);
 		}
 	}
-	
+
+	/// <summary>
+	/// Touch this instance.
+	/// </summary>
 	void Touch()
 	{
 		AnalogStickAndButton();
 	}
-	
+
+	/// <summary>
+	/// Analogs the stick and button.
+	/// </summary>
 	void AnalogStickAndButton() {
 		// muss auf false gesetzt werden, da schleife beendet wird wenn touch gefunden
 		buttonAIsPressed = false;
@@ -540,6 +564,9 @@ public class PlatformUserControl : MonoBehaviour {
 	// GUITexture sind nicht dem CharacterGameObject untergeordnet (Child), da sich dessen Position ändert und 
 	// im child die position immer auf Vector3.zero gesetzt werden müsste um die GUITexture korrekt auf dem Display
 	// anzeigen zu lassen.
+	/// <summary>
+	/// Raises the destroy event.
+	/// </summary>
 	void OnDestroy()
 	{
 		if(analogStickTexture != null)

@@ -69,7 +69,7 @@ public class StarScript : ItemScript {
 		{
 			if(this.gameObject != null)
 			{
-				Network.RemoveRPCs(this.networkView.viewID);
+				Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
 				Network.Destroy(this.gameObject);
 			}
 			else
