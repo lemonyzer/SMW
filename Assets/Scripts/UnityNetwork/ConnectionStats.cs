@@ -171,6 +171,7 @@ public class ConnectionStats : MonoBehaviour {
 					currentSlot = canvasSlot.GetComponent<PlayerStats>();
 
 					currentSlot.slotName.text = currentClient.ipAddress;
+					currentSlot.slotWho.text = "Client";
 					//currentSlot.slotName.text = "Client";
 					currentSlot.lastPing.text = Network.GetLastPing(currentClient).ToString();
 					currentSlot.avgPing.text = Network.GetAveragePing(currentClient).ToString();
@@ -256,12 +257,13 @@ public class ConnectionStats : MonoBehaviour {
 					{
 						if(currentOwnerScript.owner == Network.connections[0])
 						{
-							currentSlot.slotName.text = "Server";
+							currentSlot.slotWho.text = "Server";
 						}
 						else
 						{
-							currentSlot.slotName.text = "other Client";
+							currentSlot.slotWho.text = "other Client";
 						}
+						currentSlot.slotName.text = currentOwnerScript.owner.ipAddress;
 
 						NetworkedPlayer netScript = go.GetComponent<NetworkedPlayer>();
 						
@@ -292,7 +294,8 @@ public class ConnectionStats : MonoBehaviour {
 				else
 				{
 					name = "my Client";
-					currentSlot.slotName.text = "my Client";
+					currentSlot.slotName.text = Network.player.externalIP;
+					currentSlot.slotWho.text = "my Client";
 					// character gehört local player
 					
 					NetworkedPlayer netScript = go.GetComponent<NetworkedPlayer>();
