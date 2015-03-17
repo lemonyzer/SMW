@@ -119,31 +119,31 @@ public class PlayerDictionary : ScriptableObject {
 		return null;
 	}
 
-	public GameObject TryGetCharacterSelectorGameObject( NetworkPlayer networkPlayer )
-	{
-		Player player = null;
-		
-		if( playerDictionary.TryGetValue(networkPlayer, out player) )
-		{
-			// Key NetworkPlayer has Value in Dictionary
-			
-			if(player.getCharacterSelector() != null)
-			{
-				// GameObject (CharacterSelector) found
-				// Player has CharacterSelector
-				return player.getCharacterSelector();
-			}
-			else
-			{
-				// no CharacterSelector
-				Debug.LogError(networkPlayer.guid + " has Player but no CharacterSelector set in Dictionary!!!");
-			}
-		}
-		{
-			Debug.LogError(networkPlayer.guid + " has no Player set in Dictionary!!!");
-		}
-		return null;
-	}
+//	public GameObject TryGetCharacterSelectorGameObject( NetworkPlayer networkPlayer )
+//	{
+//		Player player = null;
+//		
+//		if( playerDictionary.TryGetValue(networkPlayer, out player) )
+//		{
+//			// Key NetworkPlayer has Value in Dictionary
+//			
+//			if(player.getCharacterSelector() != null)
+//			{
+//				// GameObject (CharacterSelector) found
+//				// Player has CharacterSelector
+//				return player.getCharacterSelector();
+//			}
+//			else
+//			{
+//				// no CharacterSelector
+//				Debug.LogError(networkPlayer.guid + " has Player but no CharacterSelector set in Dictionary!!!");
+//			}
+//		}
+//		{
+//			Debug.LogError(networkPlayer.guid + " has no Player set in Dictionary!!!");
+//		}
+//		return null;
+//	}
 
 	public bool PrefabInUse( string prefabFileName )
 	{

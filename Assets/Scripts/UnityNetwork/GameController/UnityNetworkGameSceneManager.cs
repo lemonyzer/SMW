@@ -427,11 +427,11 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 //			{
 				GUILayout.Label (player.getNetworkPlayer().ipAddress + " Client", clientStyle);
 //			}
-			GUILayout.Space(20);
-			if(player.getCharacterSelector() != null)
-				GUILayout.Label( "charSelector: Yes", masterStyle);
-			else
-				GUILayout.Label( "charSelector: NO", clientStyle);
+//			GUILayout.Space(20);
+//			if(player.getCharacterSelector() != null)
+//				GUILayout.Label( "charSelector: Yes", masterStyle);
+//			else
+//				GUILayout.Label( "charSelector: NO", clientStyle);
 			
 			GUILayout.Space(20);
 			if(player.getCharacter() != null)
@@ -545,7 +545,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 		if (Network.isServer)
 		{
 			GameObject networkPlayerCharacter = playerDictionary.TryGetCharacterGameObject(networkPlayer);
-			GameObject characterSelector = playerDictionary.TryGetCharacterSelectorGameObject(networkPlayer);
+//			GameObject characterSelector = playerDictionary.TryGetCharacterSelectorGameObject(networkPlayer);
 			
 			if(networkPlayerCharacter != null)
 			{
@@ -556,15 +556,15 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 			{
 				Debug.LogWarning(networkPlayer.ipAddress + " had no CharacterGameObject!");
 			}
-			if(characterSelector != null)
-			{
-				Network.Destroy(characterSelector);
-				Debug.Log("MasterClient: " + characterSelector.name + " destroyed!");
-			}
-			else
-			{
-				Debug.LogWarning(networkPlayer.ipAddress + " had no CharacterSelectorGameObject!");
-			}
+//			if(characterSelector != null)
+//			{
+//				Network.Destroy(characterSelector);
+//				Debug.Log("MasterClient: " + characterSelector.name + " destroyed!");
+//			}
+//			else
+//			{
+//				Debug.LogWarning(networkPlayer.ipAddress + " had no CharacterSelectorGameObject!");
+//			}
 		}
 	}
 

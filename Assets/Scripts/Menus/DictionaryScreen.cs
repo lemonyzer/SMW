@@ -118,11 +118,11 @@ public class DictionaryScreen : MonoBehaviour
 //			{
 //				GUILayout.Label (player.getPhotonPlayer().name + " Client", clientStyle);
 //			}
-			GUILayout.Space(20);
-			if(player.getCharacterSelector() != null)
-				GUILayout.Label( "charSelector: Yes", masterStyle);
-			else
-				GUILayout.Label( "charSelector: NO", clientStyle);
+//			GUILayout.Space(20);
+//			if(player.getCharacterSelector() != null)
+//				GUILayout.Label( "charSelector: Yes", masterStyle);
+//			else
+//				GUILayout.Label( "charSelector: NO", clientStyle);
 			
 			GUILayout.Space(20);
 			if(player.getCharacter() != null)

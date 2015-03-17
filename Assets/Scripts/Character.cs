@@ -5,6 +5,10 @@ using System;
 [System.Serializable]
 public class Character : IComparable<Character>
 {
+	public int id;
+	public int name;
+	public bool inUse;
+
 	private string prefabFilename;
 	private GameObject characterGameObject;
 	private bool isAI;

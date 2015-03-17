@@ -9,8 +9,6 @@ public class Player
 	private string name;
 //	private PhotonPlayer photonPlayer;
 	private NetworkPlayer networkPlayer;
-	private GameObject characterSelector;
-//	private PhotonView characterSelectorPhotonView;
 	private Character character;
 	private Character characterClone;			// Liste von Characteren
 	//	private bool isAI;
@@ -153,11 +151,11 @@ public class Player
 		return networkPlayer;
 	}
 
-	public GameObject getCharacterSelector()
-	{
-		return characterSelector;
-	}
-	
+//	public GameObject getCharacterSelector()
+//	{
+//		return characterSelector;
+//	}
+//	
 	public Character getCharacter()
 	{
 		return character;
@@ -166,6 +164,21 @@ public class Player
 	public void setCharacter(Character character)
 	{
 		this.character = character;
+	}
+
+	/*************************************************/
+
+	public CharacterAvatar characterAvatarScript;
+
+	public UiSlotScript uiSlotScript;
+
+	// Construcor Unity Network
+	public Player(NetworkPlayer player, CharacterAvatar character)
+	{
+		this.networkPlayer = player;
+		this.name = networkPlayer.ToString (); 
+		this.id = int.Parse(name);
+		this.characterAvatarScript = character;
 	}
 
 }

@@ -615,7 +615,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		if (Network.isServer)
 		{
 			GameObject networkPlayerCharacter = syncedLocalPersistentPlayerDictionary.TryGetCharacterGameObject(networkPlayer);
-			GameObject characterSelector = syncedLocalPersistentPlayerDictionary.TryGetCharacterSelectorGameObject(networkPlayer);
+//			GameObject characterSelector = syncedLocalPersistentPlayerDictionary.TryGetCharacterSelectorGameObject(networkPlayer);
 			
 			if(networkPlayerCharacter != null)
 			{
@@ -629,15 +629,15 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 			{
 				Debug.LogWarning(networkPlayer.ipAddress + " had no CharacterGameObject!");
 			}
-			if(characterSelector != null)
-			{
-				Network.Destroy(characterSelector);
-				Debug.Log("MasterClient: " + characterSelector.name + " destroyed!");
-			}
-			else
-			{
-				Debug.LogWarning(networkPlayer.ipAddress + " had no CharacterSelectorGameObject!");
-			}
+//			if(characterSelector != null)
+//			{
+//				Network.Destroy(characterSelector);
+//				Debug.Log("MasterClient: " + characterSelector.name + " destroyed!");
+//			}
+//			else
+//			{
+//				Debug.LogWarning(networkPlayer.ipAddress + " had no CharacterSelectorGameObject!");
+//			}
 		}
 	}
 	

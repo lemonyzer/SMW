@@ -7,6 +7,8 @@ using System.Collections.Generic;
 public class ConnectToGame : MonoBehaviour
 {
 
+	string nextScene = Scenes.unityNetworkCharacterSelection;
+
 	public Text textIP;
 	public Text textExternalIP;
 	public Text textNatStatus;
@@ -393,7 +395,8 @@ public class ConnectToGame : MonoBehaviour
 	{
 		Debug.Log( "Connected to server" );
 		// this is the NetworkLevelLoader we wrote earlier in the chapter – pauses the network, loads the level, waits for the level to finish, and then unpauses the network
-		NetworkLevelLoader.Instance.LoadLevel( Scenes.unityNetworkGameRoom );
+		//NetworkLevelLoader.Instance.LoadLevel( Scenes.unityNetworkGameRoom );
+		NetworkLevelLoader.Instance.LoadLevel( nextScene );
 	}
 
 	private bool hosting = false;
@@ -420,7 +423,7 @@ public class ConnectToGame : MonoBehaviour
 		}
 
 		Debug.Log( "Server initialized" );
-		NetworkLevelLoader.Instance.LoadLevel( Scenes.unityNetworkGameRoom );
+		NetworkLevelLoader.Instance.LoadLevel( nextScene );
 	}
 
 	string myIP = "unknown";
@@ -443,6 +446,11 @@ public class ConnectToGame : MonoBehaviour
 //			Network.Connect( tmpIp, hosts[i].port );
 //		}
 		Network.Connect( inputServerAdress.text, port );
+	}
+
+	public void Connect_Button(string host)
+	{
+		Network.Connect( host, port );
 	}
 
 	public void HostOnline()
