@@ -5,6 +5,17 @@ using System.Collections.Generic;
 
 public class TeamAndCharacterSelection : MonoBehaviour {
 
+	public Button btnStart;
+	public string nextScene = Scenes.unityNetworkGame;
+
+//	public class Team {
+//	
+//		public Color color;
+//		public int id;
+//
+//	}
+//
+//	Team[] teams;
 
 	[SerializeField] InputField messageWindow;
 	Queue<string> messages;
@@ -41,6 +52,7 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 
 	void Server()
 	{
+		btnStart.gameObject.SetActive(true);
 		serverSlot = (GameObject) Instantiate(ServerSlotPrefab, Vector3.zero, Quaternion.identity);
 		serverSlot.GetComponent<UiSlotScript>().next.gameObject.SetActive(false);
 		serverSlot.transform.SetParent(SlotPanel.transform,false);
@@ -58,6 +70,27 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		Destroy(serverSlot);
 		serverHasPlayer = false;
 		OnPlayerDisconnected(Network.player);
+	}
+
+	public void Start_Button()
+	{
+		myNetworkView.RPC("Start_Rpc", RPCMode.AllBuffered, nextScene);
+	}
+
+	[RPC]
+	void Start_Rpc(string nextScene)
+	{
+		this.nextScene = nextScene;
+
+		// MessageQueue pausieren
+
+		// Level laden
+
+		// MessageQueue fortsetzen
+
+		// auf alle Spieler warten, Timeout 5 Sekunden
+
+		// RPC -> Clients SyncStart() .. 3, 2, 1, GO ...
 	}
 	
 	// Update is called once per frame
@@ -395,6 +428,16 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 
 	void Awake()
 	{
+//		teams = new Team[4];
+//		teams[0].color = Color.red;
+//		teams[0].id = 0;
+//		teams[1].color = Color.green;
+//		teams[1].id = 1;
+//		teams[2].color = Color.yellow;
+//		teams[2].id = 2;
+//		teams[3].color = Color.blue;
+//		teams[3].id = 3;
+
 		playerDictionary = new Dictionary<NetworkPlayer, Player>();
 		myCharacterLibrary = GetComponent<CharacterLibrary>();
 

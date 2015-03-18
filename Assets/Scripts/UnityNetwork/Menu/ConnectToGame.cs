@@ -13,6 +13,7 @@ public class ConnectToGame : MonoBehaviour
 	public Text textExternalIP;
 	public Text textNatStatus;
 
+	public Toggle toggleNat;
 	public GameObject NatResultPanel;
 	public Text textNatTestStatus;
 	public Text textNatTestResult;
@@ -23,7 +24,7 @@ public class ConnectToGame : MonoBehaviour
 	public InputField inputServerAdress;
 
 	private string registeredGameName = "smw";
-	private string registeredGameType = "smw_alpha";
+	private string registeredGameType = "smw_alpha_0.1";
 	private string registeredGameComment = "classic";
 
 	private string testStatus = "Testing network connection capabilities.";
@@ -84,6 +85,11 @@ public class ConnectToGame : MonoBehaviour
 		myIP = Network.player.ipAddress;
 		myExternalIP = Network.player.externalIP;
 		Network.Disconnect();
+
+		Debug.Log(myIP);
+		Debug.Log(myExternalIP);
+
+
 //		if(Network.HavePublicAddress())
 //		{
 //			myExternalIP = Network.player.externalIP;
@@ -132,13 +138,22 @@ public class ConnectToGame : MonoBehaviour
 
 	void Start()
 	{
+		textIP.text = "IP: " +myIP;
+		textExternalIP.text = "External IP: " + myExternalIP;
 //		UPnPPortMapping();
 		// immediately request a list of hosts
 		refreshHostList();
 	}
 
-	void refreshHostList()
+	public void refreshHostList()
 	{
+		// clear current connect buttons
+		Transform contentPanel = ScrollViewServerlistContentPanel.transform;
+		for(int i=contentPanel.childCount-1; i >=0; i--)
+		{
+			Destroy(contentPanel.GetChild(i).gameObject);
+		}
+
 		// let the user know we are awaiting results from the master server
 		loadingHostList = true;
 		MasterServer.ClearHostList();
@@ -152,6 +167,105 @@ public class ConnectToGame : MonoBehaviour
 		{
 			// received the host list, no longer awaiting results
 			loadingHostList = false;
+
+			HostData[] hosts = MasterServer.PollHostList();
+			for( int i = 0; i < hosts.Length; i++ )
+			{
+				string tmpIp = "";
+				int x = 0;
+				while (x < hosts[i].ip.Length) {
+					tmpIp = hosts[i].ip[x] + " ";
+					x++;
+				}
+
+				GameObject tempBtn = (GameObject) Instantiate(prefabButtonConnectToHost);
+				tempBtn.transform.SetParent(ScrollViewServerlistContentPanel.transform,false);
+				string serverString = "";
+				ConnectButtonScript tmpBtnScript = tempBtn.GetComponent<ConnectButtonScript>();
+				tmpBtnScript.hostip = tmpIp;
+				tmpBtnScript.hostport = hosts[i].port;
+				tmpBtnScript.useNat = hosts[i].useNat;
+				serverString += hosts[i].gameName + ", " + tmpIp + ":";
+				serverString += hosts[i].port + "\nYou need NAT: ";
+				serverString += hosts[i].useNat.ToString() + " ";
+				//serverString += hosts[i].guid + " ";
+
+				tempBtn.transform.FindChild("Serverinfo Label").GetComponent<Text>().text = serverString;
+			}
+		}
+	}
+
+	public GameObject prefabButtonConnectToHost;
+	public GameObject ScrollViewServerlistContentPanel;
+
+
+	void Update_Serverlist12312()
+	{
+		if( loadingHostList )
+		{
+			// destroy all elemets
+
+			// add one element says loading...
+			GUILayout.Label( "Loading..." );
+		}
+		else
+		{
+			scrollPos = GUILayout.BeginScrollView( scrollPos, GUILayout.ExpandWidth( true ), GUILayout.ExpandHeight( true ) );
+			
+			HostData[] hosts = MasterServer.PollHostList();
+			for( int i = 0; i < hosts.Length; i++ )
+			{
+				string tmpIp = "";
+				int x = 0;
+				while (x < hosts[i].ip.Length) {
+					tmpIp = hosts[i].ip[x] + " ";
+					x++;
+				}
+
+				if( GUILayout.Button( hosts[i].gameName + " " + tmpIp + ":" + hosts[i].port + " useNAT:" + hosts[i].useNat.ToString(), GUILayout.ExpandWidth( true ), GUILayout.MinHeight(minButtonHeight) ) )
+				{
+//					if(tmpIp == myExternalIP)
+//					{
+//						//myExtrenalIP kann fälschlischerweiße die Interne sein!!! 
+//						//vorher prüfen!
+//						Debug.LogWarning("same IP");
+//						// host kann hinter gleichem router sitzen und ist vielleicht direkt erreichbar
+//						if(useNatToConnect)
+//						{
+//							//connect over nat punchthrough/hairpinning/relay
+//							Network.Connect( hosts[i].guid );
+//						}
+//						else
+//						{
+//							//ignoriere, connect over hairpinning
+//							Debug.Log("same ip "+ tmpIp +"! connect over hairpinning");
+//							Network.Connect( tmpIp );
+//						}
+//					}
+//					else
+//					{
+						if(useNatToConnect)
+						{
+							Debug.Log("Connecting to " + hosts[i].guid + " with help of NAT punchthrough" );
+							Network.Connect( hosts[i].guid );
+						}
+						else if(false)
+						{
+							Network.Connect( hosts[i] );
+						}
+						else
+						{
+							Debug.Log("Connecting to " + tmpIp + " no NAT punchthrough" );
+							Network.Connect( tmpIp, hosts[i].port );
+						}
+//					}
+				}
+			}
+			
+			if( hosts.Length == 0 )
+			{
+				GUILayout.Label( "No servers running" );
+			}
 		}
 	}
 
@@ -448,10 +562,17 @@ public class ConnectToGame : MonoBehaviour
 		Network.Connect( inputServerAdress.text, port );
 	}
 
-	public void Connect_Button(string host)
+	public void ConnectWithIp_Button(string host, int port)
 	{
 		Network.Connect( host, port );
 	}
+
+	public void ConnectWithGUID_Button(string hostGUID)
+	{
+		Network.Connect( hostGUID );
+	}
+
+	public InputField gameName;
 
 	public void HostOnline()
 	{
@@ -459,7 +580,7 @@ public class ConnectToGame : MonoBehaviour
 		hosting = true;
 		Network.InitializeServer( clientSlots, port, useNat );
 		//MasterServer.RegisterHost(registeredGameType, registeredGameName + " " + port.ToString() + " NAT:" + useNat.ToString() , registeredGameComment);
-		MasterServer.RegisterHost(registeredGameType, registeredGameName + " useNat=" + useNat, registeredGameComment);
+		MasterServer.RegisterHost(registeredGameType, gameName.text + " useNat=" + useNat, registeredGameComment);
 		
 		//			You can call RegisterHost more than once while a server is running 
 		//			to update the information stored on the Master Server. For example, 
@@ -476,7 +597,7 @@ public class ConnectToGame : MonoBehaviour
 
 	public void NatTest()
 	{
-		NatResultPanel.SetActive(true);
+		ShowNatResultPanel(true);
 		if(!doneTesting)
 		{
 			// test lief noch nicht
@@ -503,6 +624,18 @@ public class ConnectToGame : MonoBehaviour
 		//			to update the information stored on the Master Server. For example, 
 		//			if the server changes to a new level, you might call RegisterHost 
 		//			again to update the lobby.
+	}
+
+	void ShowNatResultPanel(bool enable)
+	{
+		NatResultPanel.SetActive(enable);
+	}
+
+	public Button btnNatResultOk;
+
+	void ShowNatResultPanelButtonOk(bool enable)
+	{
+		btnNatResultOk.gameObject.SetActive(enable);
 	}
 
 	public void TestConnection() {
@@ -585,6 +718,9 @@ public class ConnectToGame : MonoBehaviour
 			else
 				shouldEnableNatMessage = "NAT punchthrough not needed";
 			testStatus = "Done testing";
+			ShowNatResultPanel(true);
+			ShowNatResultPanelButtonOk(true);
+			toggleNat.isOn = useNat;
 		}
 
 		textNatTestStatus.text = "Test Status: " + testStatus;
@@ -643,6 +779,14 @@ public class ConnectToGame : MonoBehaviour
 	bool serverRunning = false;
 	void Update()
 	{
+		if(currentTestRunning)
+			TestConnection();
+		else
+		{
+			if(Network.HavePublicAddress())
+				textExternalIP.text = "External IP: " + Network.player.externalIP;
+		}
+
 		if(headlessServer)
 		{
 			if(serverRunning)

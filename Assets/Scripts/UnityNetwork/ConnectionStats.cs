@@ -107,8 +107,8 @@ public class ConnectionStats : MonoBehaviour {
 			{
 				int randomColor = Random.Range(0,statsSlots.Length);
 				GameObject statsSlot = Instantiate(statsSlots[randomColor].gameObject, Vector3.zero, Quaternion.identity) as GameObject;
-				statsSlot.transform.SetParent(StatsPanel.transform);
-				statsSlot.transform.localScale = Vector3.one;
+				statsSlot.transform.SetParent(StatsPanel.transform,false);
+				//statsSlot.transform.localScale = Vector3.one;
 				
 
 				dictionary.Add(player, statsSlot);
