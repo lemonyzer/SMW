@@ -6,7 +6,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 
 	// was ist wenn in diesem Moment PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary == null ist ?!
 	// wird die Referenz automatisch erneuert?
-	PlayerDictionary playerDictionary = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary;
+	//PlayerDictionary playerDictionary = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary;
 	
 	// was ist wenn in diesem Moment GameState.currentState == null ist ?!
 	// wird die Referenz automatisch erneuert?
@@ -96,7 +96,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {																			// ???? 
 		Debug.LogWarning(this.ToString() + ": Start");
-		if(playerDictionary != null)
+		if(PlayerDictionaryManager._instance != null)
 		{
 			// auf allen Clients ausführen
 			
@@ -112,7 +112,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 			
 			//PROBLEM	// was passiert wenn Client lange Sceneläd und RPC UpdateCurrentPlayerCharacter vor diesem aufruf ausführt?!!!!!
 			// ???? dieser client dürfte darf kein MasterClient werden da er keine Referenz zu dem neuen GameObject des players hat!!!
-			playerDictionary.RemoveAllPlayerCharacerGameObjects();
+			PlayerDictionaryManager._instance.RemoveAllPlayerCharacerGameObjects();
 
 			//SOLUTION	// erst jetzt Communication fortsetzen! Buffered RPC's kommen jetzt erst rein
 			Network.isMessageQueueRunning = true;
@@ -139,8 +139,9 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 				Debug.Log("SpawnAllPlayerCharacter working On: " + currentNetworkPlayer.ipAddress);
 				string currPrefabFilename = null;
 				Player currPlayer = null;
-				currPlayer = playerDictionary.GetPlayer(currentNetworkPlayer);
-				if(currPlayer != null)
+				//currPlayer = playerDictionary.GetPlayer(currentNetworkPlayer);
+				//if(currPlayer != null)
+				if(PlayerDictionaryManager._instance.TryGetPlayer(currentNetworkPlayer, out currPlayer))
 				{
 					currPrefabFilename = currPlayer.getCharacter().getPrefabFilename();
 					if( !string.IsNullOrEmpty(currPrefabFilename) )
@@ -243,12 +244,14 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 			return;				// ?????????????????????????????????????????? konsistenz ?!! only add if all infos found!
 		}
 		
-		Player player = playerDictionary.GetPlayer(currentNetworkPlayer);
-		if(player == null)
+		//Player player = playerDictionary.GetPlayer(currentNetworkPlayer);
+		//if(player == null)
+		Player player;
+		if(PlayerDictionaryManager._instance.TryGetPlayer(currentNetworkPlayer, out player))
 		{
 			// player was not in Dictionary
 			player = new Player(currentNetworkPlayer, character);
-			playerDictionary.AddPlayer(currentNetworkPlayer, player);
+			PlayerDictionaryManager._instance.AddPlayer(currentNetworkPlayer, player);
 		}
 		else
 		{
@@ -288,7 +291,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 
 	void OnGUI()
 	{
-		if(playerDictionary == null)
+		if(PlayerDictionaryManager._instance == null)
 		{
 			return;
 		}
@@ -296,7 +299,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 		if (!Network.isClient && !Network.isServer)
 			return;
 		
-		if (playerDictionary.Values() == null)
+		if (PlayerDictionaryManager._instance.Values() == null)
 			return;
 		
 		// FullScreen 0,0 = Left,Top
@@ -316,7 +319,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 		//		GUILayout.BeginArea (new Rect(0,Screen.height-100f,PhotonNetwork.room.playerCount*200,100));
 		GUILayout.BeginHorizontal ();
 		// Schleife über Spielerliste
-		foreach(Player player in playerDictionary.Values())
+		foreach(Player player in PlayerDictionaryManager._instance.Values())
 		{
 			GUILayout.BeginHorizontal (GUILayout.Width(200));
 			if(player.getNetworkPlayer() == Network.player)
@@ -390,13 +393,13 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 		 **/
 		GUILayout.BeginVertical ();
 		GUILayout.Label ("Connected clients: " + Network.connections.Length + " / " + Network.maxConnections, guiStyle);
-		GUILayout.Label ("Selected characters: " + playerDictionary.Values().Count + " / " + Network.connections.Length, guiStyle);
+		GUILayout.Label ("Selected characters: " + PlayerDictionaryManager._instance.Values().Count + " / " + Network.connections.Length, guiStyle);
 		//		if(PhotonNetwork.isMasterClient)
 		//			GUILayout.Label ("isMasterClient! "+ PhotonNetwork.player.name, guiStyle);
 		//		else
 		//			GUILayout.Label ("isClient! "+ PhotonNetwork.player.name, guiStyle);
 		
-		foreach(Player player in playerDictionary.Values())
+		foreach(Player player in PlayerDictionaryManager._instance.Values())
 		{
 			GUILayout.BeginHorizontal();
 			//			GUIStyle textStyle = clientStyle;
@@ -536,7 +539,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 			Debug.LogError("cant remove from Dictionary!!");
 			return;
 		}
-		playerDictionary.RemovePlayer(networkPlayer);
+		PlayerDictionaryManager._instance.RemovePlayer(networkPlayer);
 	}
 	
 	void RemovePlayer(NetworkPlayer networkPlayer)
@@ -544,7 +547,7 @@ public class UnityNetworkGameSceneManager : MonoBehaviour {
 		Debug.LogWarning("RemovePlayer " + networkPlayer.ipAddress);
 		if (Network.isServer)
 		{
-			GameObject networkPlayerCharacter = playerDictionary.TryGetCharacterGameObject(networkPlayer);
+			GameObject networkPlayerCharacter = PlayerDictionaryManager._instance.TryGetCharacterGameObject(networkPlayer);
 //			GameObject characterSelector = playerDictionary.TryGetCharacterSelectorGameObject(networkPlayer);
 			
 			if(networkPlayerCharacter != null)

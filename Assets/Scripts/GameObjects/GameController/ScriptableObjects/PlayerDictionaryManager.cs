@@ -5,26 +5,26 @@ using System.Collections.Generic;
 public class PlayerDictionaryManager : MonoBehaviour {
 
 
-	public static PlayerDictionary syncedLocalPersistentPlayerDictionary;
+	public static PlayerDictionary _instance;
 
 	void Awake()
 	{
 		Debug.LogWarning(this.ToString() + ": Awake()");
-		if(syncedLocalPersistentPlayerDictionary == null)
+		if(_instance == null)
 		{
 			// PlayerDictionary doesn't exist
 			// this should haben in first time PhotonLobby!
-			syncedLocalPersistentPlayerDictionary = (PlayerDictionary)ScriptableObject.CreateInstance (typeof(PlayerDictionary));
-			Debug.Log(this.ToString() +": syncedLocalPersistentPlayerDictionary instantiert!");
+			_instance = (PlayerDictionary)ScriptableObject.CreateInstance (typeof(PlayerDictionary));
+			Debug.Log(this.ToString() +": _instance instantiert!");
 		}
 		else
 		{
 			// PlayerDictionary already exists
 			// this should haben in PhotonRoom, GameScene and second time PhotonLobby!
 			// in PhotonLobby clear PlayerDictionary!!! else they would be exist in next created/joined Room!!!!
-			Debug.LogWarning(this.ToString() +": syncedLocalPersistentPlayerDictionary is already instantiated!");
+			Debug.LogWarning(this.ToString() +": _instance is already instantiated!");
 
-			List<Player> buffer = new List<Player> ( syncedLocalPersistentPlayerDictionary.Values() );
+			List<Player> buffer = new List<Player> ( _instance.Values() );
 			foreach(Player player in buffer)
 			{
 				Debug.Log(this.ToString() +": " + player.getName() + " in PlayerDictionary gefunden!");
@@ -35,8 +35,8 @@ public class PlayerDictionaryManager : MonoBehaviour {
 			   Application.loadedLevelName == Scenes.unityNetworkRace)
 			{
 				// wenn aktuelles Level PhotonLobby ist, lösche alle Einträge aus PlayerDictionary
-				syncedLocalPersistentPlayerDictionary.RemoveAll();
-				Debug.LogWarning(this.ToString() +": syncedLocalPersistentPlayerDictionary.RemoveAll() executed!!!");
+				_instance.RemoveAll();
+				Debug.LogWarning(this.ToString() +": _instance.RemoveAll() executed!!!");
 			}
 		}
 	}
@@ -56,11 +56,11 @@ public class PlayerDictionaryManager : MonoBehaviour {
 	 **/
 //	void Reset()
 //	{
-//		// playerDictionary leeren, wenn Scene Photon Room gestartet wurde
+//		// _instance leeren, wenn Scene Photon Room gestartet wurde
 //		// muss wieder gefüllt werden oder einfach nicht löschen!
 //		
-//		if(syncedLocalPersistentPlayerDictionary != null)
-//			syncedLocalPersistentPlayerDictionary.RemoveAll();
+//		if(_instance != null)
+//			_instance.RemoveAll();
 //	}
 	
 	
@@ -87,12 +87,12 @@ public class PlayerDictionaryManager : MonoBehaviour {
 //			setNumberOfGameSlots (slots);
 //		}
 //		
-//		if (syncedLocalPersistentPlayerDictionary == null) {
+//		if (_instance == null) {
 //			// ScriptableObject wurde seit Appstart noch nicht erzeugt.
 //			// Spätestens in CharacterSelectionScene erfolgt die erste Instanzierung!!!
 //			initValues = true;
 //			// instanz kann sceneübergrifend verwendet werden (wenn dieses Script in Scene eingebaut ist (am GameController zB.))
-//			syncedLocalPersistentPlayerDictionary = (PlayerDictionary)ScriptableObject.CreateInstance (typeof(PlayerDictionary));
+//			_instance = (PlayerDictionary)ScriptableObject.CreateInstance (typeof(PlayerDictionary));
 //			Debug.Log ("ScriptableObject GameObjectsPlayerDictionary erzeugt");
 //        }
 //        if (initValues) {
@@ -111,17 +111,17 @@ public class PlayerDictionaryManager : MonoBehaviour {
 	 **/
 	void Reset()
 	{
-		// playerDictionary leeren, wenn Scene Photon Room gestartet wurde
+		// _instance leeren, wenn Scene Photon Room gestartet wurde
 		// muss wieder gefüllt werden oder einfach nicht löschen!
-		if (syncedLocalPersistentPlayerDictionary == null)
+		if (_instance == null)
 		{
 			Debug.LogWarning("Dictionary is NULL!");
-			//			syncedLocalPersistentPlayerDictionary = (PlayerDictionary)ScriptableObject.CreateInstance (typeof(PlayerDictionary));
+			//			_instance = (PlayerDictionary)ScriptableObject.CreateInstance (typeof(PlayerDictionary));
 		}
 		
-		if(syncedLocalPersistentPlayerDictionary != null)
+		if(_instance != null)
 		{
-			syncedLocalPersistentPlayerDictionary.RemoveAll();
+			_instance.RemoveAll();
             Debug.LogWarning("AutoReset clearing Dictionary!");
         }
     }
@@ -131,7 +131,7 @@ public class PlayerDictionaryManager : MonoBehaviour {
 	 **/
 	void AutoReset()
 	{
-		// playerDictionary leeren, wenn Scene Photon Room gestartet wurde
+		// _instance leeren, wenn Scene Photon Room gestartet wurde
 		// muss wieder gefüllt werden oder einfach nicht löschen!
 		if( Application.loadedLevelName != Scenes.photonRoomAuthorative ||
 		   Application.loadedLevelName != Scenes.photonLevel1)
@@ -139,9 +139,9 @@ public class PlayerDictionaryManager : MonoBehaviour {
 			return;
 		}
 		
-		if(syncedLocalPersistentPlayerDictionary != null)
+		if(_instance != null)
 		{
-			syncedLocalPersistentPlayerDictionary.RemoveAll();
+			_instance.RemoveAll();
             Debug.LogWarning("AutoReset clearing Dictionary!");
         }
     }

@@ -58,7 +58,7 @@ public class DictionaryScreen : MonoBehaviour
 		avatarStyle.fixedHeight = 64f;
 	}
 
-	PlayerDictionary syncedLocalPersistentPlayerDictionary = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary;
+	PlayerDictionary syncedLocalPersistentPlayerDictionary = PlayerDictionaryManager._instance;
 
 
 

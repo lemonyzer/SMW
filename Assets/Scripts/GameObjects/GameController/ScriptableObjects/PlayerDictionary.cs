@@ -17,18 +17,9 @@ public class PlayerDictionary : ScriptableObject {
 
 	Dictionary<NetworkPlayer, Player> playerDictionary = new Dictionary<NetworkPlayer, Player>();
 
-//	public void SetCharacterSelector(GameObject characterSelector, Player player)
-//	{
-//		List<Player> buffer = new List<Player>(gameObjectsPlayerDictionary.Values);
-//		foreach( Player currPlayer in buffer )
-//		{
-//			if( currPlayer == player )
-//			{
-//
-//			}
-//		}
-//	}
-
+	/// <summary>
+	/// Removes all player characer game objects.
+	/// </summary>
 	public void RemoveAllPlayerCharacerGameObjects()
 	{
 		List<NetworkPlayer> buffer = new List<NetworkPlayer>(playerDictionary.Keys);
@@ -48,6 +39,11 @@ public class PlayerDictionary : ScriptableObject {
 		}
 	}
 
+	/// <summary>
+	/// Tries the get character prefab filename.
+	/// </summary>
+	/// <returns>The get character prefab filename.</returns>
+	/// <param name="networkPlayer">Network player.</param>
 	public string TryGetCharacterPrefabFilename ( NetworkPlayer networkPlayer )
 	{
 		Player player = null;
@@ -84,6 +80,11 @@ public class PlayerDictionary : ScriptableObject {
 		return null;
 	}
 
+	/// <summary>
+	/// Tries the get character game object.
+	/// </summary>
+	/// <returns>The get character game object.</returns>
+	/// <param name="networkPlayer">Network player.</param>
 	public GameObject TryGetCharacterGameObject( NetworkPlayer networkPlayer )
 	{
 		Player player = null;
@@ -119,32 +120,11 @@ public class PlayerDictionary : ScriptableObject {
 		return null;
 	}
 
-//	public GameObject TryGetCharacterSelectorGameObject( NetworkPlayer networkPlayer )
-//	{
-//		Player player = null;
-//		
-//		if( playerDictionary.TryGetValue(networkPlayer, out player) )
-//		{
-//			// Key NetworkPlayer has Value in Dictionary
-//			
-//			if(player.getCharacterSelector() != null)
-//			{
-//				// GameObject (CharacterSelector) found
-//				// Player has CharacterSelector
-//				return player.getCharacterSelector();
-//			}
-//			else
-//			{
-//				// no CharacterSelector
-//				Debug.LogError(networkPlayer.guid + " has Player but no CharacterSelector set in Dictionary!!!");
-//			}
-//		}
-//		{
-//			Debug.LogError(networkPlayer.guid + " has no Player set in Dictionary!!!");
-//		}
-//		return null;
-//	}
-
+	/// <summary>
+	/// Prefabs the in use.
+	/// </summary>
+	/// <returns><c>true</c>, if in use was prefabed, <c>false</c> otherwise.</returns>
+	/// <param name="prefabFileName">Prefab file name.</param>
 	public bool PrefabInUse( string prefabFileName )
 	{
 		List<Player> buffer = new List<Player>(playerDictionary.Values);
@@ -164,6 +144,11 @@ public class PlayerDictionary : ScriptableObject {
 
 	}
 
+	/// <summary>
+	/// Adds the player.
+	/// </summary>
+	/// <param name="networkPlayer">Network player.</param>
+	/// <param name="player">Player.</param>
 	public void AddPlayer(NetworkPlayer networkPlayer, Player player)
 	{
 		Player currentPlayer = null;
@@ -185,8 +170,16 @@ public class PlayerDictionary : ScriptableObject {
 	//TODO full consistent integration!
 	ConnectionStats conStats;
 	GameObject guiGO;
+
+	/// <summary>
+	/// Removes the player.
+	/// </summary>
+	/// <param name="networkPlayer">Network player.</param>
 	public void RemovePlayer( NetworkPlayer networkPlayer )
 	{
+		//TODO
+		//TODO begin
+		//TODO
 		guiGO = GameObject.Find("GUI");
 		if(guiGO != null)
 		{
@@ -196,6 +189,9 @@ public class PlayerDictionary : ScriptableObject {
 				conStats.RemovePlayer(networkPlayer);
 			}
 		}
+		//TODO
+		//TODO end
+		//TODO
 
 		Player removedPlayer = null;
 		
@@ -249,18 +245,25 @@ public class PlayerDictionary : ScriptableObject {
 			playerDictionary.Add(key, value);
 		}
 	}
-	
-	public Player GetPlayer(NetworkPlayer networkPlayer)
+
+	/// <summary>
+	/// Gets the player.
+	/// </summary>
+	/// <returns>The player.</returns>
+	/// <param name="networkPlayer">Network player.</param>
+	public bool TryGetPlayer(NetworkPlayer networkPlayer, out Player player)
 	{
 		Player currentValue = null;
-		Player result = null;
+		player = null;
+//		Player result = null;
 
 		if(playerDictionary.TryGetValue(networkPlayer, out currentValue))
 		{
-			result = currentValue;
+			player = currentValue;
+			return true;
 		}
 		
-		return result;
+		return false;
 	}
 
 	public Dictionary<NetworkPlayer, Player>.KeyCollection Keys()

@@ -24,7 +24,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 	/**
 	 *  CharacterPrefab GameObjects in  GameScene
 	 **/
-	PlayerDictionary syncedLocalPersistentPlayerDictionary;// = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary;
+//	PlayerDictionary syncedLocalPersistentPlayerDictionary;// = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary;
 	
 	
 	// nicht mehr static ?!
@@ -176,7 +176,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		// Server: Network.connections contains only the clients
 		foreach(NetworkPlayer networkPlayer in Network.connections)
 		{
-			GameObject character = syncedLocalPersistentPlayerDictionary.TryGetCharacterGameObject(networkPlayer);
+			GameObject character = PlayerDictionaryManager._instance.TryGetCharacterGameObject(networkPlayer);
 			if(character != null)
 			{
 				character.GetComponent<Renderer>().enabled = enabled;
@@ -228,7 +228,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		else
 			Debug.LogWarning("room Background Music in roomManager not set in the Inspector");
 
-		syncedLocalPersistentPlayerDictionary = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary;
+//		syncedLocalPersistentPlayerDictionary = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary;
 //		Player server = new Player(Network.player, null);																		// WTF ???
 //		syncedLocalPersistentPlayerDictionary.AddPlayer(Network.player,server);
 	}
@@ -295,13 +295,13 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		foreach(NetworkPlayer currentNetworkPlayer in Network.connections)
 		{
 			NetworkViewID viewID;			// PROBLEM ??????????????????????????????????????????????????????????????????????????????????????????????????????????
-			characterPrefabFilename = syncedLocalPersistentPlayerDictionary.TryGetCharacterPrefabFilename(currentNetworkPlayer);
+			characterPrefabFilename = PlayerDictionaryManager._instance.TryGetCharacterPrefabFilename(currentNetworkPlayer);
 			if(string.IsNullOrEmpty(characterPrefabFilename))
 				return;
 			
 			// only sync, if NetworkPlayer has Character
 			
-			characterGameObject = syncedLocalPersistentPlayerDictionary.TryGetCharacterGameObject(currentNetworkPlayer);
+			characterGameObject = PlayerDictionaryManager._instance.TryGetCharacterGameObject(currentNetworkPlayer);
 			characterGameObjectNetworkView = characterGameObject.GetComponent<NetworkView>();
 			if(characterGameObjectNetworkView != null)
 			{	
@@ -358,7 +358,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		}
 		syncedCharacter = new Character (prefabFilename, characterGameObject, false);
 		syncedPlayer = new Player (syncedNetworkPlayer, syncedCharacter);
-		syncedLocalPersistentPlayerDictionary.AddPlayer (syncedNetworkPlayer, syncedPlayer);
+		PlayerDictionaryManager._instance.AddPlayer (syncedNetworkPlayer, syncedPlayer);
 	}
 	
 	public void SpawnAuthorativeCharacterSelector(NetworkPlayer realOwner)
@@ -527,12 +527,14 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 			return;				// ?????????????????????????????????????????? konsistenz ?!! only add if all infos found!
 		}
 		
-		Player player = syncedLocalPersistentPlayerDictionary.GetPlayer(currentNetworkPlayer);
-		if(player == null)
+		Player player;
+		//Player player = syncedLocalPersistentPlayerDictionary.GetPlayer(currentNetworkPlayer);
+		//if(player == null)
+		if(PlayerDictionaryManager._instance.TryGetPlayer(currentNetworkPlayer, out player))
 		{
 			// player was not in Dictionary
 			player = new Player(currentNetworkPlayer, character);
-			syncedLocalPersistentPlayerDictionary.AddPlayer(currentNetworkPlayer, player);
+			PlayerDictionaryManager._instance.AddPlayer(currentNetworkPlayer, player);
 		}
 		else
 		{
@@ -604,7 +606,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		}
 		else
 		{
-			syncedLocalPersistentPlayerDictionary.RemovePlayer(disconnectedPlayer);
+			PlayerDictionaryManager._instance.RemovePlayer(disconnectedPlayer);
 		}
 	}
 	
@@ -614,7 +616,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		Debug.LogWarning("RemovePlayer " + networkPlayer.ipAddress);
 		if (Network.isServer)
 		{
-			GameObject networkPlayerCharacter = syncedLocalPersistentPlayerDictionary.TryGetCharacterGameObject(networkPlayer);
+			GameObject networkPlayerCharacter = PlayerDictionaryManager._instance.TryGetCharacterGameObject(networkPlayer);
 //			GameObject characterSelector = syncedLocalPersistentPlayerDictionary.TryGetCharacterSelectorGameObject(networkPlayer);
 			
 			if(networkPlayerCharacter != null)
@@ -679,7 +681,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 				
 				// Check if player aready have a Character
 				Debug.Log(this.ToString() + ": " + player.ipAddress);
-				GameObject currentCharacter = syncedLocalPersistentPlayerDictionary.TryGetCharacterGameObject(player);
+				GameObject currentCharacter = PlayerDictionaryManager._instance.TryGetCharacterGameObject(player);
 				if(currentCharacter != null)
 				{
 					RemoveCurrentCharacterGameObject(currentCharacter);	// only on server
@@ -730,8 +732,9 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 	void RemoveCurrentCharacterFromDictionary(NetworkPlayer disconnectingPlayer)
 	{
 		Debug.Log("Removing Current Character From Dictionary: " + disconnectingPlayer.ipAddress);
-		Player player = syncedLocalPersistentPlayerDictionary.GetPlayer(disconnectingPlayer);
-		if(player != null)
+		Player player;
+		if(PlayerDictionaryManager._instance.TryGetPlayer(disconnectingPlayer, out player))
+		//if(player != null)
 		{
 			player.setCharacter(null);
 		}
@@ -776,7 +779,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		// Charactere der Clients checken
 		foreach(NetworkPlayer networkPlayer in Network.connections)
 		{
-			if( syncedLocalPersistentPlayerDictionary.TryGetCharacterPrefabFilename(networkPlayer) == characterPrefabName)
+			if( PlayerDictionaryManager._instance.TryGetCharacterPrefabFilename(networkPlayer) == characterPrefabName)
 			{
 				return true;
 			}
@@ -786,7 +789,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 	
 	public bool PlayerHasValidCharacter( NetworkPlayer networkPlayer )
 	{
-		string playerPrefabName = syncedLocalPersistentPlayerDictionary.TryGetCharacterPrefabFilename(networkPlayer);
+		string playerPrefabName = PlayerDictionaryManager._instance.TryGetCharacterPrefabFilename(networkPlayer);
 		if(!string.IsNullOrEmpty(playerPrefabName))
 		{
 			// Dictionary hat einen Eintrag, Spieler hat Character gewählt.
@@ -878,7 +881,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		{
 			foreach(NetworkPlayer player in Network.connections)
 			{
-				if(string.IsNullOrEmpty(syncedLocalPersistentPlayerDictionary.TryGetCharacterPrefabFilename(player)) )
+				if(string.IsNullOrEmpty(PlayerDictionaryManager._instance.TryGetCharacterPrefabFilename(player)) )
 				{
 					return false;
 				}
@@ -899,11 +902,11 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 	/// </summary>
 	void OFFOnGUI()
 	{
-		if(syncedLocalPersistentPlayerDictionary == null)
+		if(PlayerDictionaryManager._instance == null)
 		{
 			return;
 		}
-		List<Player> buffer = new List<Player> ( syncedLocalPersistentPlayerDictionary.Values() );
+		List<Player> buffer = new List<Player> ( PlayerDictionaryManager._instance.Values() );
 		if (Network.peerType == NetworkPeerType.Disconnected)
 			return;
 		if (buffer == null)
@@ -934,7 +937,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 	
 	void WindowPlayerInfoGUI(int windowID)
 	{
-		List<Player> buffer = new List<Player> ( syncedLocalPersistentPlayerDictionary.Values() );
+		List<Player> buffer = new List<Player> ( PlayerDictionaryManager._instance.Values() );
 		/**
 		 * Player Info
 		 **/
@@ -998,7 +1001,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 	
 	void WindowPlayerDictionary(int windowID)
 	{
-		List<Player> buffer = new List<Player> ( syncedLocalPersistentPlayerDictionary.Values() );
+		List<Player> buffer = new List<Player> ( PlayerDictionaryManager._instance.Values() );
 		/**
 		 * Connection Info
 		 **/

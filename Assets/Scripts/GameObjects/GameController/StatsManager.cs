@@ -161,23 +161,25 @@ public class StatsManager : MonoBehaviour {
 	{
 		//if(GameState.currentState == GameState.States.Running)
         //{
-			if(attackersRealOwner != null &&
-			   victimsRealOwner != null)
-			{
-				Player playerAttacker = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary.GetPlayer(attackersRealOwner);
-				Player playerVictim = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary.GetPlayer(victimsRealOwner);
-			
-				//AnimatorController victimsAnimationController = playerVictim.getCharacter().getGameObject().GetComponent<AnimatorController>();
-				//victimsAnimationController.HeadJumpAnimation();
-				PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
-				victimCharacterScript.HeadJumpVictim();
+		if(attackersRealOwner != null &&
+		   victimsRealOwner != null)
+		{
+			Player playerAttacker;
+			Player playerVictim;
+			PlayerDictionaryManager._instance.TryGetPlayer(attackersRealOwner, out playerAttacker);
+			PlayerDictionaryManager._instance.TryGetPlayer(victimsRealOwner, out playerVictim);
+		
+			//AnimatorController victimsAnimationController = playerVictim.getCharacter().getGameObject().GetComponent<AnimatorController>();
+			//victimsAnimationController.HeadJumpAnimation();
+			PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
+			victimCharacterScript.HeadJumpVictim();
 
-				AddKill(playerAttacker, playerVictim);
-			}
-			else
-			{
-				Debug.LogError("Character ohne RealOwner beteiligt! BOT?");
-			}
+			AddKill(playerAttacker, playerVictim);
+		}
+		else
+		{
+			Debug.LogError("Character ohne RealOwner beteiligt! BOT?");
+		}
 		//}
     }
 
@@ -218,16 +220,18 @@ public class StatsManager : MonoBehaviour {
 	{
 		//if(GameState.currentState == GameState.States.Running)
 		//{
-			Player playerAttacker = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary.GetPlayer(attackersRealOwner);
-			Player playerVictim = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary.GetPlayer(victimsRealOwner);
+		Player playerAttacker;
+		Player playerVictim;
+		PlayerDictionaryManager._instance.TryGetPlayer(attackersRealOwner, out playerAttacker);
+		PlayerDictionaryManager._instance.TryGetPlayer(victimsRealOwner, out playerVictim);
 			
-			//AnimatorController victimsAnimationController = playerVictim.getCharacter().getGameObject().GetComponent<AnimatorController>();
-			//victimsAnimationController.InvincibleAttackAnimation();
+		//AnimatorController victimsAnimationController = playerVictim.getCharacter().getGameObject().GetComponent<AnimatorController>();
+		//victimsAnimationController.InvincibleAttackAnimation();
 
-			PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
-			victimCharacterScript.InvincibleAttackVictim();
-			
-			AddKill(playerAttacker, playerVictim);
+		PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
+		victimCharacterScript.InvincibleAttackVictim();
+		
+		AddKill(playerAttacker, playerVictim);
         //}
     }
 
@@ -270,13 +274,14 @@ public class StatsManager : MonoBehaviour {
 		//{
 //			TODO animation für attacker (combos, nemesis, blood...)
 //			Player playerAttacker = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary.GetPlayer(attackersRealOwner);
-			Player playerVictim = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary.GetPlayer(victimsRealOwner);
+		Player playerVictim;
+		PlayerDictionaryManager._instance.TryGetPlayer(victimsRealOwner, out playerVictim);
 			
 			//AnimatorController victimsAnimationController = playerVictim.getCharacter().getGameObject().GetComponent<AnimatorController>();
 			//victimsAnimationController.InvincibleAttackAnimation();
 
-			PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
-			victimCharacterScript.InvincibleAttackVictim();
+		PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
+		victimCharacterScript.InvincibleAttackVictim();
 			
 			//AddKill(playerAttacker, playerVictim);
 		//}
@@ -285,8 +290,13 @@ public class StatsManager : MonoBehaviour {
 	[RPC]
 	public void SyncBulletHit(NetworkPlayer attackersRealOwner, NetworkPlayer victimsRealOwner)
 	{
-		Player playerAttacker = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary.GetPlayer(attackersRealOwner);
-		Player playerVictim = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary.GetPlayer(victimsRealOwner);
+		Player playerVictim;
+		PlayerDictionaryManager._instance.TryGetPlayer(victimsRealOwner, out playerVictim);
+
+		Player playerAttacker;
+		PlayerDictionaryManager._instance.TryGetPlayer(attackersRealOwner, out playerAttacker);
+//		Player playerAttacker = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary.GetPlayer(attackersRealOwner);
+//		Player playerVictim = PlayerDictionaryManager.syncedLocalPersistentPlayerDictionary.GetPlayer(victimsRealOwner);
 		AddKill(playerAttacker, playerVictim);
 	}
 

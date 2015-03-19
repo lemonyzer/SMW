@@ -9,6 +9,7 @@ public class CharacterLibrary : MonoBehaviour {
 	// Initialisierung
 	void Awake()
 	{
+		DontDestroyOnLoad(this);
 		for(int i=0; i < characters.Length; i++)
 		{
 			characters[i].GetComponent<CharacterAvatar>().id = i;

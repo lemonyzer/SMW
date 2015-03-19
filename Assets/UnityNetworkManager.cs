@@ -10,12 +10,14 @@ public class UnityNetworkManager : MonoBehaviour {
 		//TODO there is no ButtonNextCharacterScript at the beginning... is this a Problem??
 		ButtonNextCharacterScript.OnClicked += NextCharacter_Button;
 		ButtonServerJoinGameScript.OnClicked += ServerJoins_Button;
+		ButtonStartLoadingGameScene.OnClicked += StartLoadingGameScene_Button;
 	}
 
 	void OnDisable()
 	{
 		ButtonNextCharacterScript.OnClicked -= NextCharacter_Button;
 		ButtonServerJoinGameScript.OnClicked -= ServerJoins_Button;
+		ButtonStartLoadingGameScene.OnClicked -= StartLoadingGameScene_Button;
 	}
 
 
@@ -74,7 +76,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	 * Server is authoritative to avoid conflicts and syncs it with all Clients
 	 *
 	 **/
-	public Dictionary<NetworkPlayer, Player> playerDictionary;
+	//public Dictionary<NetworkPlayer, Player> playerDictionary;
 	
 
 	/// <summary>
@@ -82,8 +84,8 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// </summary>
 	void Awake()
 	{
-		playerDictionary = new Dictionary<NetworkPlayer, Player>();
-		myCharacterLibrary = GetComponent<CharacterLibrary>();
+		//playerDictionary = new Dictionary<NetworkPlayer, Player>();
+		myCharacterLibrary = GameObject.Find ("CharacterLibrary").GetComponent<CharacterLibrary>();
 		
 		SlotPanel = GameObject.Find("SlotPanel");
 	}
@@ -105,7 +107,8 @@ public class UnityNetworkManager : MonoBehaviour {
 
 		if(Network.peerType == NetworkPeerType.Server)
 		{
-			Server();
+			if(Application.loadedLevelName == Scenes.unityNetworkCharacterSelection)
+				Server();
 		}
 	}
 
@@ -158,9 +161,9 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// <summary>
 	/// Start_s the button.
 	/// </summary>
-	public void Start_Button()
+	public void StartLoadingGameScene_Button()
 	{
-		myNetworkView.RPC("Start_Rpc", RPCMode.AllBuffered, nextScene);
+		myNetworkView.RPC("StartLoadingGameScene_Rpc", RPCMode.AllBuffered, nextScene);
 	}
 
 	//TODO persistent object (atleast playerDictionary)
@@ -169,17 +172,21 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="nextScene">Next scene.</param>
 	[RPC]
-	void Start_Rpc(string nextScene)
+	void StartLoadingGameScene_Rpc(string nextScene)
 	{
 		this.nextScene = nextScene;
 
 		// MessageQueue pausieren
+		Network.isMessageQueueRunning = false;
 
 		// Level laden
+		Application.LoadLevel(nextScene);
 
 		// MessageQueue fortsetzen
+		//TODO ausgelagert UnityNetworkGameLevelManager
 
 		// auf alle Spieler warten, Timeout 5 Sekunden
+		//TODO ausgelagert UnityNetworkGameLevelManager
 
 		// RPC -> Clients SyncStart() .. 3, 2, 1, GO ...
 	}
@@ -403,7 +410,7 @@ public class UnityNetworkManager : MonoBehaviour {
 			newPlayer.uiSlotScript.UpdateSlot(newPlayer);
 			
 			// register newPlayer in PlayerDictionary
-			playerDictionary.Add(netPlayer, newPlayer);
+			PlayerDictionaryManager._instance.AddPlayer(netPlayer, newPlayer);
 			
 		}
 		else
@@ -421,7 +428,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		foreach(NetworkPlayer currentNetPlayer in Network.connections)
 		{
 			Player currentPlayer;
-			if(playerDictionary.TryGetValue(currentNetPlayer, out currentPlayer))
+			if(PlayerDictionaryManager._instance.TryGetPlayer(currentNetPlayer, out currentPlayer))
 			{
 				// found Player in playerDictionary
 				myNetworkView.RPC("OnPlayerConnected_Rpc", netPlayer, currentNetPlayer, currentPlayer.characterAvatarScript.id);
@@ -431,7 +438,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		if(serverHasPlayer)
 		{
 			Player currentPlayer;
-			if(playerDictionary.TryGetValue(Network.player, out currentPlayer))
+			if(PlayerDictionaryManager._instance.TryGetPlayer(Network.player, out currentPlayer))
 			{
 				myNetworkView.RPC("OnPlayerConnected_Rpc", netPlayer, Network.player, currentPlayer.characterAvatarScript.id);
 			}
@@ -468,7 +475,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		{
 			try
 			{
-				playerDictionary.Remove(netPlayer);
+				PlayerDictionaryManager._instance.RemovePlayer(netPlayer);
 				disconnectedPlayer.characterAvatarScript.inUse = false;
 				Destroy(disconnectedPlayer.uiSlotScript.gameObject);
 			}
@@ -553,7 +560,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	Player GetPlayer(NetworkPlayer netPlayer)
 	{
 		Player player;
-		if(playerDictionary.TryGetValue(netPlayer, out player))
+		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
 			return player;
 		else
 			return null;
