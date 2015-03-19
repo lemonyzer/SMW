@@ -3,10 +3,8 @@ using System.Collections;
 
 public class SpecialInput : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+	//TODO events (dont need to spam update)
+	//TODO is WRONG??
 	
 	// Update is called once per frame
 	void Update () {
@@ -23,10 +21,12 @@ public class SpecialInput : MonoBehaviour {
 			}
 			else if(Network.peerType == NetworkPeerType.Server)
 			{
-				foreach(NetworkPlayer netPlayer in Network.connections)
-				{
-					Network.CloseConnection(netPlayer, true);
-				}
+//				foreach(NetworkPlayer netPlayer in Network.connections)
+//				{
+//					Network.CloseConnection(netPlayer, true);
+//				}
+				Network.Disconnect();
+				MasterServer.UnregisterHost();
 			}
 			Application.LoadLevel(Scenes.mainmenu);
 		}

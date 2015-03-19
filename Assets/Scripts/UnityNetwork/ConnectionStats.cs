@@ -18,10 +18,10 @@ public class ConnectionStats : MonoBehaviour {
 	public GameObject[] statsSlots;	
 	public List<GameObject> statsSlotList;	
 
-	public GameObject statsSlot1;
-	public GameObject statsSlot2;
-	public GameObject statsSlot3;
-	public GameObject statsSlot4;
+//	public GameObject statsSlot1;
+//	public GameObject statsSlot2;
+//	public GameObject statsSlot3;
+//	public GameObject statsSlot4;
 
 	void Awake()
 	{
@@ -30,7 +30,6 @@ public class ConnectionStats : MonoBehaviour {
 
 	void Start()
 	{
-		StatsPanel = GameObject.FindGameObjectWithTag("StatsPanel");
 
 		dictionary = new Dictionary<NetworkPlayer, GameObject>();
 		statsSlotList = new List<GameObject>();
@@ -50,18 +49,18 @@ public class ConnectionStats : MonoBehaviour {
 		//Rebuild();
 	}
 
-	public void Rebuild()
-	{
-
-		foreach(GameObject go in statsSlots)
-		{
-			go.transform.localScale = Vector3.one;
-			LayoutRebuilder.MarkLayoutForRebuild (go.transform as RectTransform);
-		}
-
-		LayoutRebuilder.MarkLayoutForRebuild (StatsPanel.transform as RectTransform);
-		Debug.Log("rebuild UI request");
-	}
+//	public void Rebuild()
+//	{
+//
+//		foreach(GameObject go in statsSlots)
+//		{
+//			go.transform.localScale = Vector3.one;
+//			LayoutRebuilder.MarkLayoutForRebuild (go.transform as RectTransform);
+//		}
+//
+//		LayoutRebuilder.MarkLayoutForRebuild (StatsPanel.transform as RectTransform);
+//		Debug.Log("rebuild UI request");
+//	}
 
 //	void Start()
 //	{

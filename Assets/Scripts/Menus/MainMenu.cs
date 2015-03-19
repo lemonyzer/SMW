@@ -28,7 +28,7 @@ public class MainMenu : MonoBehaviour {
 
 	public void Multiplayer()
 	{
-		nextLevel = Scenes.unityNetworkLobby;
+		nextLevel = Scenes.unityNetworkConnectLobby;
 	}
 
 	public void MultiplayerRace()

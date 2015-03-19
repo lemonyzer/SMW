@@ -9,23 +9,6 @@ public class UiSlotScript : MonoBehaviour {
 	public Button playerIdAndColor;
 	public Button next;
 
-	GameObject gameController;
-
-	void Awake()
-	{
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-	}
-
-	public void btn_Next()
-	{
-		gameController.GetComponent<TeamAndCharacterSelection>().NextCharacter_Button();
-	}
-
-	public void btn_ServerJoins()
-	{
-		gameController.GetComponent<TeamAndCharacterSelection>().ServerJoins_Button();
-	}
-
 	public void UpdateSlot(Player player)
 	{
 		characterName.text = player.characterAvatarScript.name;

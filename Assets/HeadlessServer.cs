@@ -6,9 +6,9 @@ public class HeadlessServer : MonoBehaviour {
 	void Start () {
 		if(Application.loadedLevelName == Scenes.mainmenu)
 		{
-			Application.LoadLevel(Scenes.unityNetworkLobby);
+			Application.LoadLevel(Scenes.unityNetworkConnectLobby);
 		}
-		else if(Application.loadedLevelName == Scenes.unityNetworkLobby)
+		else if(Application.loadedLevelName == Scenes.unityNetworkConnectLobby)
 		{
 			this.GetComponent<ConnectToGame>().StartHeadlessServer();
 		}

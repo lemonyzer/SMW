@@ -7,6 +7,7 @@ public class CharacterAvatar : MonoBehaviour {
 	public string name;
 	public bool inUse;
 	public NetworkPlayer selector;
+	public GameObject prefabUnityCharacter;
 
 	void Awake()
 	{

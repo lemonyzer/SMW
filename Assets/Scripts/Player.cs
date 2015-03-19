@@ -5,6 +5,7 @@ using System;
 [System.Serializable]
 public class Player
 {
+	public bool loadingLevelComplete = false;
 	private int id;
 	private string name;
 //	private PhotonPlayer photonPlayer;

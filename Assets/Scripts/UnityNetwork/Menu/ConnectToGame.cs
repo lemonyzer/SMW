@@ -6,6 +6,16 @@ using System.Collections.Generic;
 
 public class ConnectToGame : MonoBehaviour
 {
+	void OnEnable()
+	{
+		ConnectButtonScript.OnClicked += Connect_Button;
+	}
+
+	void OnDisable()
+	{
+		ConnectButtonScript.OnClicked -= Connect_Button;
+	}
+
 
 	string nextScene = Scenes.unityNetworkCharacterSelection;
 
@@ -174,19 +184,21 @@ public class ConnectToGame : MonoBehaviour
 				string tmpIp = "";
 				int x = 0;
 				while (x < hosts[i].ip.Length) {
-					tmpIp = hosts[i].ip[x] + " ";
+					tmpIp = hosts[i].ip[x] + " ";		// ip[0] enthält komplette IP, ip[1] nächste komplette IP
 					x++;
 				}
+
 
 				GameObject tempBtn = (GameObject) Instantiate(prefabButtonConnectToHost);
 				tempBtn.transform.SetParent(ScrollViewServerlistContentPanel.transform,false);
 				string serverString = "";
 				ConnectButtonScript tmpBtnScript = tempBtn.GetComponent<ConnectButtonScript>();
-				tmpBtnScript.hostip = tmpIp;
-				tmpBtnScript.hostport = hosts[i].port;
+				tmpBtnScript.hostIp = tmpIp;
+				tmpBtnScript.hostPort = hosts[i].port;
+				tmpBtnScript.hostGuId = hosts[i].guid;
 				tmpBtnScript.useNat = hosts[i].useNat;
-				serverString += hosts[i].gameName + ", " + tmpIp + ":";
-				serverString += hosts[i].port + "\nYou need NAT: ";
+				serverString += hosts[i].gameName + "\nMasterServer: recvedIP=" + tmpIp + ":";
+				serverString += hosts[i].port + "\nMasterServer: You need NAT: ";
 				serverString += hosts[i].useNat.ToString() + " ";
 				//serverString += hosts[i].guid + " ";
 
@@ -567,6 +579,20 @@ public class ConnectToGame : MonoBehaviour
 		Network.Connect( host, port );
 	}
 
+	void Connect_Button(ConnectButtonScript clickedButton)
+	{
+		if(clickedButton.useNat)
+		{
+			Network.Connect( clickedButton.hostGuId );
+			Debug.Log("Connect_Button using NAT GUID=" + clickedButton.hostGuId  );
+		}
+		else
+		{
+			Network.Connect( clickedButton.hostIp, clickedButton.hostPort );
+			Debug.Log("Connect_Button using no NAT IP=" + clickedButton.hostIp + ":" + clickedButton.hostPort );
+		}
+	}
+
 	public void ConnectWithGUID_Button(string hostGUID)
 	{
 		Network.Connect( hostGUID );
@@ -579,8 +605,9 @@ public class ConnectToGame : MonoBehaviour
 		Network.Disconnect();
 		hosting = true;
 		Network.InitializeServer( clientSlots, port, useNat );
+		MasterServer.dedicatedServer = false;
 		//MasterServer.RegisterHost(registeredGameType, registeredGameName + " " + port.ToString() + " NAT:" + useNat.ToString() , registeredGameComment);
-		MasterServer.RegisterHost(registeredGameType, gameName.text + " useNat=" + useNat, registeredGameComment);
+		MasterServer.RegisterHost(registeredGameType, gameName.text + "; uses Nat=" + useNat + "; IP=" + myIP + ":" + port , registeredGameComment);
 		
 		//			You can call RegisterHost more than once while a server is running 
 		//			to update the information stored on the Master Server. For example, 

@@ -17,7 +17,7 @@ public class Scenes : MonoBehaviour {
 	 * Unity Network Scenes
 	 **/
 
-	public const string unityNetworkLobby = "UnityNetworkLobby";
+	public const string unityNetworkConnectLobby = "UnityNetworkConnectLobby";
 	public const string unityNetworkCharacterSelection = "UnityNetworkCharacterSelection";
 	public const string unityNetworkGame = "UnityNetworkGame";
 	public const string unityNetworkGameRoom = "UnityNetworkGameRoom";

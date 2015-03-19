@@ -3,43 +3,105 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class TeamAndCharacterSelection : MonoBehaviour {
+public class UnityNetworkManager : MonoBehaviour {
 
-	public Button btnStart;
+	void OnEnable()
+	{
+		//TODO there is no ButtonNextCharacterScript at the beginning... is this a Problem??
+		ButtonNextCharacterScript.OnClicked += NextCharacter_Button;
+		ButtonServerJoinGameScript.OnClicked += ServerJoins_Button;
+	}
+
+	void OnDisable()
+	{
+		ButtonNextCharacterScript.OnClicked -= NextCharacter_Button;
+		ButtonServerJoinGameScript.OnClicked -= ServerJoins_Button;
+	}
+
+
+	/**
+	 * Level Transition
+	 **/
+	public Button btnStart; //TODO Event!
 	public string nextScene = Scenes.unityNetworkGame;
 
-//	public class Team {
-//	
-//		public Color color;
-//		public int id;
-//
-//	}
-//
-//	Team[] teams;
-
+	/**
+	 * Message Window
+	 **/
 	[SerializeField] InputField messageWindow;
 	Queue<string> messages;
 	const int messageCount = 6;
 
+	/**
+	 * NetworkView Reference (Component @ same GameObject)
+	 **/
 	NetworkView myNetworkView;
 
-	Vector2 moveDirection;
+	/**
+	 * CharacterLibrary Reference (Component @ same GameObject)
+	 **/
+	CharacterLibrary myCharacterLibrary;
 	
 
-	CharacterLibrary characters;
-
+	/**
+	 * Player on Serverdevice can join the Game
+	 **/
 	bool serverHasPlayer = false;
+	public GameObject ServerSlotPrefab;
+	public GameObject serverSlot;
 
-	// Use this for initialization
+	/**
+	 * PREFAB UI Slot to select new and show current Character
+	 * 
+	 * Server:
+	 * only for Clients
+	 * 
+	 * Clients:
+	 * for all
+	 **/
+	public GameObject SelectorUiSlotPrefab;
+
+	/**
+	 * UI Panel to store the UI Playerslots 
+	 **/
+	GameObject SlotPanel;
+
+
+	/**
+	 * //TODO persistent
+	 * PlayerDictionary : PERSISTENT (Informations needed in CharacterSelection and GameScene)
+	 * 
+	 * Server is authoritative to avoid conflicts and syncs it with all Clients
+	 *
+	 **/
+	public Dictionary<NetworkPlayer, Player> playerDictionary;
+	
+
+	/// <summary>
+	/// Awake this instance.
+	/// </summary>
+	void Awake()
+	{
+		playerDictionary = new Dictionary<NetworkPlayer, Player>();
+		myCharacterLibrary = GetComponent<CharacterLibrary>();
+		
+		SlotPanel = GameObject.Find("SlotPanel");
+	}
+
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
 	void Start () {
+
+		//TODO persistent
+		//method A
+		//DontDestroyOnLoad(gameObject);
+		//method B singleton
+
 		myNetworkView = GetComponent<NetworkView>();
 
 		messages = new Queue<string>(messageCount);
 		Network.logLevel = NetworkLogLevel.Full;
-
-
-		characters = GetComponent<CharacterLibrary>();
-
 
 		if(Network.peerType == NetworkPeerType.Server)
 		{
@@ -47,9 +109,22 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		}
 	}
 
-	public GameObject ServerSlotPrefab;
-	public GameObject serverSlot;
+//	/// <summary>
+//	/// Update this instance.
+//	/// </summary>
+//	void Update () {
+//		if(true)
+//		{
+//			if(Input.GetMouseButtonUp(0))
+//			{
+//				GetSelectedTeam(Input.mousePosition);
+//			}
+//		}
+//	}
 
+	/// <summary>
+	/// Server this instance.
+	/// </summary>
 	void Server()
 	{
 		btnStart.gameObject.SetActive(true);
@@ -58,6 +133,9 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		serverSlot.transform.SetParent(SlotPanel.transform,false);
 	}
 
+	/// <summary>
+	/// Servers the joins_ button.
+	/// </summary>
 	public void ServerJoins_Button()
 	{
 		Destroy(serverSlot);
@@ -65,6 +143,9 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		OnPlayerConnected(Network.player);
 	}
 
+	/// <summary>
+	/// Servers the leave_ button.
+	/// </summary>
 	public void ServerLeave_Button()
 	{
 		Destroy(serverSlot);
@@ -72,11 +153,21 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		OnPlayerDisconnected(Network.player);
 	}
 
+	//TODO Events / Actions / Delegates
+	//TODO persistent object (atleast playerDictionary)
+	/// <summary>
+	/// Start_s the button.
+	/// </summary>
 	public void Start_Button()
 	{
 		myNetworkView.RPC("Start_Rpc", RPCMode.AllBuffered, nextScene);
 	}
 
+	//TODO persistent object (atleast playerDictionary)
+	/// <summary>
+	/// Start_s the rpc.
+	/// </summary>
+	/// <param name="nextScene">Next scene.</param>
 	[RPC]
 	void Start_Rpc(string nextScene)
 	{
@@ -93,71 +184,61 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		// RPC -> Clients SyncStart() .. 3, 2, 1, GO ...
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		if(true)
-		{
-			Keyboard();
-			if(Input.GetMouseButtonUp(0))
-			{
-				GetSelectedTeam(Input.mousePosition);
-			}
-		}
-	}
 
-	void Keyboard()
-	{
-		moveDirection.x = Input.GetAxis("Horizontal");
-		moveDirection.y = Input.GetAxis("Vertical");
-	}
 
-	/**
-	 * Client / Server Funktion
-	 **/
-	public string GetSelectedTeam(Vector3 clickedPosition)
-	{
-		Ray ray = Camera.main.ScreenPointToRay(clickedPosition);		
-		Vector2 origin = ray.origin;										// startPoint
-		Vector2 direction = ray.direction;									// direction
-		float distance = 100f;
-		// 2D
-		LayerMask mask = 1 << LayerMask.NameToLayer("Team");
-//		Debug.Log(LayerMask.NameToLayer("Team"));
-//		Debug.Log(mask.value.ToString());
-		RaycastHit2D hit = Physics2D.Raycast(origin,direction,distance,mask);
-		bool hitted = false;
-		if(hit.collider != null)
-			hitted = true;
-		// 3D
-		//		RaycastHit hit;
-		//		bool hitted = Physics.Raycast(ray, out hit);
-		if(hitted)
-		{
-			if(hit.collider.tag == Tags.character)
-			{
-				Debug.Log(this.ToString()+": selected Team = " + hit.collider.name);
-				
-				// Name des getroffenen GameObject's zurückgeben
-				return hit.collider.name;
-			}
-			else 
-			{
-				// nothing spawnable hitted
-				Debug.Log(this.ToString() + ": wrong Tag! (" + hit.collider.name + " " + hit.collider.tag + ")");
-			}
-		}
-		else
-			Debug.Log(this.ToString() + ": nothing hitted with RayCast!");
-		return null;
-	}
+//	/**
+//	 * Client / Server Funktion
+//	 **/
+//	//TODO v1. Events (GameObjects has GetSelectedTeam() and fires Event if selected)
+//	//TODO v2. UI Elements (CharacterAvatar) with Events (dont need that function => no Update() spammed)
+//	//TODO v2. UI Elements (Teams) with Events (dont need that function => no Update() spammed)
+//	/// <summary>
+//	/// Gets the selected team. (Raycast)
+//	/// </summary>
+//	/// <returns>The selected team.</returns>
+//	/// <param name="clickedPosition">Clicked position.</param>
+//	public string GetSelectedTeam(Vector3 clickedPosition)
+//	{
+//		Ray ray = Camera.main.ScreenPointToRay(clickedPosition);		
+//		Vector2 origin = ray.origin;										// startPoint
+//		Vector2 direction = ray.direction;									// direction
+//		float distance = 100f;
+//		// 2D
+//		LayerMask mask = 1 << LayerMask.NameToLayer("Team");
+////		Debug.Log(LayerMask.NameToLayer("Team"));
+////		Debug.Log(mask.value.ToString());
+//		RaycastHit2D hit = Physics2D.Raycast(origin,direction,distance,mask);
+//		bool hitted = false;
+//		if(hit.collider != null)
+//			hitted = true;
+//		// 3D
+//		//		RaycastHit hit;
+//		//		bool hitted = Physics.Raycast(ray, out hit);
+//		if(hitted)
+//		{
+//			if(hit.collider.tag == Tags.character)
+//			{
+//				Debug.Log(this.ToString()+": selected Team = " + hit.collider.name);
+//				
+//				// Name des getroffenen GameObject's zurückgeben
+//				return hit.collider.name;
+//			}
+//			else 
+//			{
+//				// nothing spawnable hitted
+//				Debug.Log(this.ToString() + ": wrong Tag! (" + hit.collider.name + " " + hit.collider.tag + ")");
+//			}
+//		}
+//		else
+//			Debug.Log(this.ToString() + ": nothing hitted with RayCast!");
+//		return null;
+//	}
 
 
 	/// <summary>
-	/// Raises the master server event event.
+	/// This is called when the Master Server reports an event to the client – for example, server registered successfully, host list received, etc
 	/// </summary>
 	/// <param name="msevent">Msevent.</param>
-
-	// this is called when the Master Server reports an event to the client – for example, server registered successfully, host list received, etc
 	void OnMasterServerEvent( MasterServerEvent msevent )
 	{
 		if( msevent == MasterServerEvent.HostListReceived )
@@ -170,7 +251,6 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 	/// Server
 	/// Called on the server whenever a Network.InitializeServer was invoked and has completed.
 	/// </summary>
-
 	void OnServerInitialized()
 	{
 		Server ();
@@ -180,7 +260,6 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 	/// <summary>
 	/// Raises the connected to server event.
 	/// </summary>
-
 	void OnConnectedToServer()
 	{
 		/** Client
@@ -189,16 +268,20 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		myNetworkView.RPC("MyAdditionalInfo", RPCMode.Server, "rul0r");
 	}
 
+	/// <summary>
+	/// Mies the additional info.
+	/// </summary>
+	/// <param name="name">Name.</param>
+	/// <param name="info">Info.</param>
 	[RPC]
 	void MyAdditionalInfo(string name, NetworkMessageInfo info)
 	{
-
+		//TODO sync Server & Clients name/nick
 	}
 
 	/// <summary>
 	/// Raises the disconnected from server event.
 	/// </summary>
-
 	void OnDisconnectedFromServer()
 	{
 		/** Client
@@ -210,7 +293,6 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 	/// <summary>
 	/// Raises the failed to connect event.
 	/// </summary>
-
 	void OnFailedToConnect()
 	{
 		/** Client
@@ -222,19 +304,21 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 	/// Raises the network instantiate event.
 	/// </summary>
 	/// <param name="info">Info.</param>
-
 	void OnNetworkInstantiate(NetworkMessageInfo info)
 	{
 		/** Client
 		 *  Called on objects which have been network instantiated with Network.Instantiate.
 		 **/
+		if(UserIsAuthoritative())
+			Debug.LogError("OnNetworkInstantiate");
+		else
+			Debug.Log("OnNetworkInstantiate");
 	}
 
 	/// <summary>
 	/// Raises the player connected event.
 	/// </summary>
 	/// <param name="player">Player.</param>
-
 	void OnPlayerConnected(NetworkPlayer player)
 	{
 		/** Server
@@ -265,8 +349,12 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.All, player, avatar.id);
 	}
 
-	public GameObject SelectorUiSlotPrefab;
 
+	/// <summary>
+	/// Raises the player connected_ rpc event.
+	/// </summary>
+	/// <param name="netPlayer">Net player.</param>
+	/// <param name="characterAvatarId">Character avatar identifier.</param>
 	[RPC]
 	void OnPlayerConnected_Rpc(NetworkPlayer netPlayer, int characterAvatarId)
 	{
@@ -277,6 +365,11 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		SetupNewPlayer(netPlayer, characterAvatarId);
 	}
 
+	/// <summary>
+	/// Setups the new player.
+	/// </summary>
+	/// <param name="netPlayer">Net player.</param>
+	/// <param name="characterAvatarId">Character avatar identifier.</param>
 	void SetupNewPlayer(NetworkPlayer netPlayer, int characterAvatarId)
 	{
 		CharacterAvatar cA = myCharacterLibrary.Get(characterAvatarId);
@@ -319,6 +412,10 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Sends the current player dictionary.
+	/// </summary>
+	/// <param name="netPlayer">Net player.</param>
 	void SendCurrentPlayerDictionary(NetworkPlayer netPlayer)
 	{
 		foreach(NetworkPlayer currentNetPlayer in Network.connections)
@@ -345,6 +442,10 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Raises the player disconnected event.
+	/// </summary>
+	/// <param name="netPlayer">Net player.</param>
 	void OnPlayerDisconnected(NetworkPlayer netPlayer)
 	{
 		/** Server
@@ -354,6 +455,10 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		myNetworkView.RPC("OnPlayerDisconnected_Rpc", RPCMode.All, netPlayer);
 	}
 
+	/// <summary>
+	/// Raises the player disconnected_ rpc event.
+	/// </summary>
+	/// <param name="netPlayer">Net player.</param>
 	[RPC]
 	void OnPlayerDisconnected_Rpc(NetworkPlayer netPlayer)
 	{
@@ -374,22 +479,27 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		}
 	}
 
-	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
-	{
-		/** Server & Client
-		 *  Used to customize synchronization of variables in a script watched by a network view.
-		 **/
+//	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
+//	{
+//		/** Server & Client
+//		 *  Used to customize synchronization of variables in a script watched by a network view.
+//		 **/
+//
+//		if (stream.isWriting) {
+////			health = currentHealth;
+////			stream.Serialize(ref health);
+//		} else {
+////			stream.Serialize(ref health);
+////			currentHealth = health;
+//		}
+//
+//	}
 
-		if (stream.isWriting) {
-//			health = currentHealth;
-//			stream.Serialize(ref health);
-		} else {
-//			stream.Serialize(ref health);
-//			currentHealth = health;
-		}
 
-	}
-
+	/// <summary>
+	/// Adds the message.
+	/// </summary>
+	/// <param name="message">Message.</param>
 	void AddMessage(string message)
 	{
 		if(Network.peerType == NetworkPeerType.Disconnected)
@@ -402,6 +512,10 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Adds the message_ RP.
+	/// </summary>
+	/// <param name="message">Message.</param>
 	[RPC]
 	void AddMessage_RPC(string message)
 	{
@@ -421,35 +535,21 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 
 	/***************************************************************************************************************/
 
-	Dictionary<NetworkPlayer, Player> playerDictionary;
-	CharacterLibrary myCharacterLibrary;
 
-	GameObject SlotPanel;
 
-	void Awake()
-	{
-//		teams = new Team[4];
-//		teams[0].color = Color.red;
-//		teams[0].id = 0;
-//		teams[1].color = Color.green;
-//		teams[1].id = 1;
-//		teams[2].color = Color.yellow;
-//		teams[2].id = 2;
-//		teams[3].color = Color.blue;
-//		teams[3].id = 3;
 
-		playerDictionary = new Dictionary<NetworkPlayer, Player>();
-		myCharacterLibrary = GetComponent<CharacterLibrary>();
 
-		SlotPanel = GameObject.Find("SlotPanel");
-	}
+//	[RPC]
+//	public void AddNewPlayer(NetworkPlayer newPlayer, string playerName, int characterAvatarId)
+//	{
+//		playerDictionary.Add(newPlayer, new Player(newPlayer, new Character()));
+//	}
 
-	[RPC]
-	public void AddNewPlayer(NetworkPlayer newPlayer, string playerName, int characterAvatarId)
-	{
-		playerDictionary.Add(newPlayer, new Player(newPlayer, new Character()));
-	}
-
+	/// <summary>
+	/// Gets the player.
+	/// </summary>
+	/// <returns>The player.</returns>
+	/// <param name="netPlayer">Net player.</param>
 	Player GetPlayer(NetworkPlayer netPlayer)
 	{
 		Player player;
@@ -459,12 +559,20 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 			return null;
 	}
 
+	/// <summary>
+	/// Nexts the character_ button.
+	/// </summary>
 	public void NextCharacter_Button()
 	{
 		myNetworkView.RPC("NextCharacter_Rpc", RPCMode.All, Network.player);	// works also with Server -> Server
 																				// Parameter wird übergeben da in NetworkMessageInfo bei Server -> Server kein sender drin steht!
 	}
 
+	/// <summary>
+	/// Nexts the character_ rpc.
+	/// </summary>
+	/// <param name="requestedNetPlayer">Requested net player.</param>
+	/// <param name="info">Info.</param>
 	[RPC]
 	void NextCharacter_Rpc(NetworkPlayer requestedNetPlayer, NetworkMessageInfo info)
 	{
@@ -531,7 +639,12 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 
 		myNetworkView.RPC("UpdatePlayerSelection_Rpc", RPCMode.All, requestedNetPlayer, nextUnSelectedCharacterAvatarId);
 	}
-	
+
+	/// <summary>
+	/// Updates the player selection_ rpc.
+	/// </summary>
+	/// <param name="selector">Selector.</param>
+	/// <param name="characterAvatarID">Character avatar I.</param>
 	[RPC]
 	void UpdatePlayerSelection_Rpc(NetworkPlayer selector, int characterAvatarID)
 	{
@@ -583,6 +696,12 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 	}
 
 
+	//TODO
+	// static / singleton
+	/// <summary>
+	/// Users the is authoritative.
+	/// </summary>
+	/// <returns><c>true</c>, if is authoritative was usered, <c>false</c> otherwise.</returns>
 	bool UserIsAuthoritative()
 	{
 		if(Network.isServer)
@@ -592,6 +711,12 @@ public class TeamAndCharacterSelection : MonoBehaviour {
 
 	}
 
+	//TODO
+	// static / singleton
+	/// <summary>
+	/// Users the is client.
+	/// </summary>
+	/// <returns><c>true</c>, if is client was usered, <c>false</c> otherwise.</returns>
 	bool UserIsClient()
 	{
 		if(Network.isClient)
