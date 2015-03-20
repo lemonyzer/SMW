@@ -6,6 +6,7 @@ public class PlayerDictionaryManager : MonoBehaviour {
 
 
 	public static PlayerDictionary _instance;
+	public static bool serverHasPlayer = false;
 
 	void Awake()
 	{

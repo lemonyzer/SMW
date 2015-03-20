@@ -164,10 +164,10 @@ public class ConnectionStats : MonoBehaviour {
 			foreach(NetworkPlayer currentClient in clients)
 			{
 				GameObject canvasSlot;
-				PlayerStats currentSlot;
+				PlayerStatsSlotScript currentSlot;
 				if(dictionary.TryGetValue(currentClient, out canvasSlot))
 				{
-					currentSlot = canvasSlot.GetComponent<PlayerStats>();
+					currentSlot = canvasSlot.GetComponent<PlayerStatsSlotScript>();
 
 					currentSlot.slotName.text = currentClient.ipAddress;
 					currentSlot.slotWho.text = "Client";
@@ -246,7 +246,7 @@ public class ConnectionStats : MonoBehaviour {
 				}
 
 
-				PlayerStats currentSlot = canvasSlot.GetComponent<PlayerStats>();
+				PlayerStatsSlotScript currentSlot = canvasSlot.GetComponent<PlayerStatsSlotScript>();
 
 				if(currentOwnerScript.owner != Network.player)
 				{

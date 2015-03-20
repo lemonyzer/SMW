@@ -3,6 +3,10 @@ using System.Collections;
 
 public class UnityNetworkGameLevelManager : MonoBehaviour {
 
+	public delegate void OnPlayerLevelLoadComplete(NetworkPlayer netPlayer, Player newPlayer);
+	public static event OnPlayerLevelLoadComplete onPlayerLevelLoadComplete;
+
+	public GameObject _PrefabCharacterLibrary;
 	CharacterLibrary characters;
 
 	NetworkView myNetworkView;
@@ -12,7 +16,16 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 
 	void Awake()
 	{
-		characters = GameObject.Find("CharacterLibrary").GetComponent<CharacterLibrary>();
+		GameObject LibraryGO  = GameObject.Find("CharacterLibrary");
+		if(LibraryGO == null)
+		{
+			Debug.LogError("GameObject CharacterLibrary fehlt!!! (kommt normalerweise direkt aus vorherigen Scene");
+			LibraryGO = (GameObject) Instantiate(_PrefabCharacterLibrary);
+		}
+		else
+		{
+			characters = LibraryGO.GetComponent<CharacterLibrary>();
+		}
 		myNetworkView = this.GetComponent<NetworkView>();
 //		baseManager = this.GetComponent<UnityNetworkManager>();
 	}
@@ -20,8 +33,18 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	void Start()
 	{
 		Network.isMessageQueueRunning = true;
-		if(!Network.isServer)
+
+		if(Network.isServer)
+		{
+			if(PlayerDictionaryManager.serverHasPlayer)
+			{
+				myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);
+			}
+		}
+		else
+		{
 			myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);
+		}
 	}
 
 	/// <summary>
@@ -32,9 +55,6 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	[RPC]
 	void ClientLoadingLevelComplete_Rpc(NetworkPlayer netPlayer, NetworkMessageInfo info)
 	{
-		if(!Network.isServer)
-			return;
-		// only Server
 
 		// TODO instantiate Clients Character
 
@@ -48,13 +68,22 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 			player.loadingLevelComplete = true;
 			playerReadyCount++;												//TODO umgeht Update() iteration über Network.connections array
 
-			// Instantiate Character GameObject
-			InstantiateAndSetupPlayerCharacter(netPlayer, player);
+			if(Network.isServer)
+			{
+				// only Server
+				// Instantiate Character GameObject
+				InstantiateAndSetupPlayerCharacter(netPlayer, player);
+			}
+			onPlayerLevelLoadComplete(netPlayer, player);
 		}
 
-		if(playerReadyCount >= Network.connections.Length)					//TODO >=
+		if(Network.isServer)
 		{
-			myNetworkView.RPC("SyncGameStart_Rpc", RPCMode.All);
+			// only Server
+			if(playerReadyCount >= Network.connections.Length)					//TODO >=
+			{
+				myNetworkView.RPC("SyncGameStart_Rpc", RPCMode.All);
+			}
 		}
 	}
 

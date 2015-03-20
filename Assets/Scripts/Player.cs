@@ -20,17 +20,7 @@ public class Player
 	private int deads;
 	//	private int 
 
-	private GameObject uiSlot;
 
-	public void setUISlot(GameObject slot)
-	{
-		this.uiSlot = slot;
-	}
-
-	public GameObject getUISlot()
-	{
-		return uiSlot;
-	}
 
 
 	public void addHealth(int value)
@@ -170,8 +160,9 @@ public class Player
 	/*************************************************/
 
 	public CharacterAvatar characterAvatarScript;
-
-	public UiSlotScript uiSlotScript;
+	
+	public SelectorSlotScript UISelectorSlotScript;
+	public PlayerStatsSlotScript UIStatsSlotScript;
 
 	// Construcor Unity Network
 	public Player(NetworkPlayer player, CharacterAvatar character)
@@ -180,6 +171,31 @@ public class Player
 		this.name = networkPlayer.ToString (); 
 		this.id = int.Parse(name);
 		this.characterAvatarScript = character;
+	}
+
+	private GameObject StatsSlot;
+	private GameObject SelectorSlot;
+	
+	public void setStatsSlot(GameObject slot)
+	{
+		this.StatsSlot = slot;
+		this.UIStatsSlotScript = slot.GetComponent<PlayerStatsSlotScript>();
+	}
+	
+	public GameObject getStatsSlot()
+	{
+		return StatsSlot;
+	}
+	
+	public void setSelectorSlot(GameObject slot)
+	{
+		this.SelectorSlot = slot;
+		this.UISelectorSlotScript = slot.GetComponent<SelectorSlotScript>();
+	}
+	
+	public GameObject getSelectorSlot()
+	{
+		return SelectorSlot;
 	}
 
 }

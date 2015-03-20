@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class UiSlotScript : MonoBehaviour {
+public class SelectorSlotScript : MonoBehaviour {
 
 	public Text characterName;
 	public Image characterImage;

@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 public class UnityNetworkManager : MonoBehaviour {
 
+	public delegate void OnNewPlayerConnected(NetworkPlayer netPlayer, Player newPlayer);
+	public static event OnNewPlayerConnected onNewPlayerConnected;
+
+
 	void OnEnable()
 	{
 		//TODO there is no ButtonNextCharacterScript at the beginning... is this a Problem??
@@ -21,10 +25,49 @@ public class UnityNetworkManager : MonoBehaviour {
 	}
 
 
+	/// <summary>
+	/// Nexts the character_ button.
+	/// </summary>
+	public void NextCharacter_Button()
+	{
+		myNetworkView.RPC("NextCharacter_Rpc", RPCMode.All, Network.player);	// works also with Server -> Server
+		// Parameter wird übergeben da in NetworkMessageInfo bei Server -> Server kein sender drin steht (-1)!
+	}
+	
+	//TODO Events / Actions / Delegates
+	//TODO persistent object (atleast playerDictionary)
+	/// <summary>
+	/// Start_s the button.
+	/// </summary>
+	public void StartLoadingGameScene_Button()
+	{
+		myNetworkView.RPC("StartLoadingGameScene_Rpc", RPCMode.AllBuffered, nextScene);
+	}
+	
+	//TODO generic (like client connect)
+	/// <summary>
+	/// Servers the joins_ button.
+	/// </summary>
+	public void ServerJoins_Button()
+	{
+		PlayerDictionaryManager.serverHasPlayer = true;
+		OnPlayerConnected(Network.player);
+	}
+	
+	//TODO generic (like client connect)
+	/// <summary>
+	/// Servers the leave_ button.
+	/// </summary>
+	public void ServerLeave_Button()
+	{
+		PlayerDictionaryManager.serverHasPlayer = false;
+		OnPlayerDisconnected(Network.player);
+	}
+
+
 	/**
 	 * Level Transition
 	 **/
-	public Button btnStart; //TODO Event!
 	public string nextScene = Scenes.unityNetworkGame;
 
 	/**
@@ -48,25 +91,10 @@ public class UnityNetworkManager : MonoBehaviour {
 	/**
 	 * Player on Serverdevice can join the Game
 	 **/
-	bool serverHasPlayer = false;
-	public GameObject ServerSlotPrefab;
-	public GameObject serverSlot;
+//	public static bool serverHasPlayer = false;
 
-	/**
-	 * PREFAB UI Slot to select new and show current Character
-	 * 
-	 * Server:
-	 * only for Clients
-	 * 
-	 * Clients:
-	 * for all
-	 **/
-	public GameObject SelectorUiSlotPrefab;
 
-	/**
-	 * UI Panel to store the UI Playerslots 
-	 **/
-	GameObject SlotPanel;
+
 
 
 	/**
@@ -85,9 +113,11 @@ public class UnityNetworkManager : MonoBehaviour {
 	void Awake()
 	{
 		//playerDictionary = new Dictionary<NetworkPlayer, Player>();
-		myCharacterLibrary = GameObject.Find ("CharacterLibrary").GetComponent<CharacterLibrary>();
-		
-		SlotPanel = GameObject.Find("SlotPanel");
+		GameObject LibraryGO  = GameObject.Find("CharacterLibrary");
+		if(LibraryGO != null)
+			myCharacterLibrary = LibraryGO.GetComponent<CharacterLibrary>();
+		else
+			Debug.LogError("GameObject CharacterLibrary fehlt!!! (kommt normalerweise direkt aus vorherigen Scene");
 	}
 
 	/// <summary>
@@ -105,65 +135,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		messages = new Queue<string>(messageCount);
 		Network.logLevel = NetworkLogLevel.Full;
 
-		if(Network.peerType == NetworkPeerType.Server)
-		{
-			if(Application.loadedLevelName == Scenes.unityNetworkCharacterSelection)
-				Server();
-		}
-	}
 
-//	/// <summary>
-//	/// Update this instance.
-//	/// </summary>
-//	void Update () {
-//		if(true)
-//		{
-//			if(Input.GetMouseButtonUp(0))
-//			{
-//				GetSelectedTeam(Input.mousePosition);
-//			}
-//		}
-//	}
-
-	/// <summary>
-	/// Server this instance.
-	/// </summary>
-	void Server()
-	{
-		btnStart.gameObject.SetActive(true);
-		serverSlot = (GameObject) Instantiate(ServerSlotPrefab, Vector3.zero, Quaternion.identity);
-		serverSlot.GetComponent<UiSlotScript>().next.gameObject.SetActive(false);
-		serverSlot.transform.SetParent(SlotPanel.transform,false);
-	}
-
-	/// <summary>
-	/// Servers the joins_ button.
-	/// </summary>
-	public void ServerJoins_Button()
-	{
-		Destroy(serverSlot);
-		serverHasPlayer = true;
-		OnPlayerConnected(Network.player);
-	}
-
-	/// <summary>
-	/// Servers the leave_ button.
-	/// </summary>
-	public void ServerLeave_Button()
-	{
-		Destroy(serverSlot);
-		serverHasPlayer = false;
-		OnPlayerDisconnected(Network.player);
-	}
-
-	//TODO Events / Actions / Delegates
-	//TODO persistent object (atleast playerDictionary)
-	/// <summary>
-	/// Start_s the button.
-	/// </summary>
-	public void StartLoadingGameScene_Button()
-	{
-		myNetworkView.RPC("StartLoadingGameScene_Rpc", RPCMode.AllBuffered, nextScene);
 	}
 
 	//TODO persistent object (atleast playerDictionary)
@@ -260,7 +232,6 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// </summary>
 	void OnServerInitialized()
 	{
-		Server ();
 		AddMessage("Server " + Network.player.externalIP + ":" + Network.player.externalPort + " initialized. Slots: " + Network.maxConnections );
 	}
 
@@ -326,25 +297,28 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// Raises the player connected event.
 	/// </summary>
 	/// <param name="player">Player.</param>
-	void OnPlayerConnected(NetworkPlayer player)
+	void OnPlayerConnected(NetworkPlayer netPlayer)
 	{
 		/** Server
 		 *  Called on the server whenever a new player has successfully connected.
 		 **/
 
-		AddMessage("Player " + player.guid + " connected " + player.externalIP + " ID: " + player.ToString());
+		AddMessage("Player " + netPlayer.guid + " connected " + netPlayer.externalIP + " ID: " + netPlayer.ToString());
 
 		//TODO update new Client (send all other Player informations)
 		//before his own player is send! (order stays correct)
-		if(player != Network.player)
-			SendCurrentPlayerDictionary(player);
+		if(netPlayer != Network.player)
+		{
+			// GENERIC: nicht für den Serverspieler ausführen!
+			SendCurrentPlayerDictionary(netPlayer);
+		}
 
 		//new Player gets first unselected Character
 		CharacterAvatar avatar = myCharacterLibrary.GetFirstUnselected();
 		if(avatar != null)
 		{
 			//new Player will be registered in PlayerDictionary (Server)
-			SetupNewPlayer(player, avatar.id);
+			SetupNewPlayer(netPlayer, avatar.id);
 		}
 		else
 		{
@@ -353,7 +327,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		}
 
 		//Server notifys other Clients about new Player
-		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.All, player, avatar.id);
+		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.All, netPlayer, avatar.id);
 	}
 
 
@@ -385,32 +359,18 @@ public class UnityNetworkManager : MonoBehaviour {
 			// character is selected
 			cA.inUse = true;
 			
-			// create UI Element for player
-			GameObject newNetPlayerUiSlot = (GameObject) Instantiate(SelectorUiSlotPrefab,Vector3.zero, Quaternion.identity);
-
-			// disable button if Slot is not local player
-			if(netPlayer != Network.player)
-			{
-				//newNetPlayerUiSlot.GetComponent<UiSlotScript>().next.enabled = false;
-				newNetPlayerUiSlot.GetComponent<UiSlotScript>().next.gameObject.SetActive(false);
-			}
-
-			// add it to GridLayout
-			newNetPlayerUiSlot.transform.SetParent(SlotPanel.transform,false);
-
-
 			
 			// create new Player
 			Player newPlayer = new Player(netPlayer, cA);
 			
-			// register UI Slot to Player
-			newPlayer.uiSlotScript = newNetPlayerUiSlot.GetComponent<UiSlotScript>();
-			
-			// Update Slot with correct Player and Character Information
-			newPlayer.uiSlotScript.UpdateSlot(newPlayer);
-			
 			// register newPlayer in PlayerDictionary
 			PlayerDictionaryManager._instance.AddPlayer(netPlayer, newPlayer);
+
+			if(onNewPlayerConnected != null)
+			{
+				// we have event listeners
+				onNewPlayerConnected(netPlayer, newPlayer);
+			}
 			
 		}
 		else
@@ -435,7 +395,7 @@ public class UnityNetworkManager : MonoBehaviour {
 			}
 		}
 
-		if(serverHasPlayer)
+		if(PlayerDictionaryManager.serverHasPlayer)
 		{
 			Player currentPlayer;
 			if(PlayerDictionaryManager._instance.TryGetPlayer(Network.player, out currentPlayer))
@@ -477,7 +437,7 @@ public class UnityNetworkManager : MonoBehaviour {
 			{
 				PlayerDictionaryManager._instance.RemovePlayer(netPlayer);
 				disconnectedPlayer.characterAvatarScript.inUse = false;
-				Destroy(disconnectedPlayer.uiSlotScript.gameObject);
+				Destroy(disconnectedPlayer.UISelectorSlotScript.gameObject);
 			}
 			catch(UnityException e)
 			{
@@ -566,14 +526,7 @@ public class UnityNetworkManager : MonoBehaviour {
 			return null;
 	}
 
-	/// <summary>
-	/// Nexts the character_ button.
-	/// </summary>
-	public void NextCharacter_Button()
-	{
-		myNetworkView.RPC("NextCharacter_Rpc", RPCMode.All, Network.player);	// works also with Server -> Server
-																				// Parameter wird übergeben da in NetworkMessageInfo bei Server -> Server kein sender drin steht!
-	}
+
 
 	/// <summary>
 	/// Nexts the character_ rpc.
@@ -699,7 +652,7 @@ public class UnityNetworkManager : MonoBehaviour {
 			}
 		}
 
-		player.uiSlotScript.UpdateSlot(player);
+		player.UISelectorSlotScript.UpdateSlot(player);
 	}
 
 

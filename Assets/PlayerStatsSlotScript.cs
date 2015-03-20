@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class PlayerStats : MonoBehaviour {
+public class PlayerStatsSlotScript : MonoBehaviour {
 
 	//All
 	public Image border;
@@ -25,7 +25,7 @@ public class PlayerStats : MonoBehaviour {
 	
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
 
 		border = GetComponent<Image>();
 		slotAvatar = transform.FindChild("SlotImage").GetComponent<Image>();
@@ -40,6 +40,47 @@ public class PlayerStats : MonoBehaviour {
 
 		exinterpCount = transform.FindChild("SlotExinterpCount").GetComponent<Text>();
 		droppedCount = transform.FindChild("SlotDropCount").GetComponent<Text>();
+
+	}
+
+	public void UpdateSlot(Player player)
+	{
+		if(player == null)
+			return;
+
+		if(slotAvatar == null)
+		{
+			Debug.LogError("slotAvatar not Set, Start() needs to run first!");
+		}
+		slotAvatar.sprite = player.characterAvatarScript.gameObject.GetComponent<SpriteRenderer>().sprite;
+		slotName.text = player.getNetworkPlayer().ipAddress;
+
+		if(Network.isClient)
+		{
+			if(player.getNetworkPlayer() == Network.connections[0])
+			{
+				slotWho.text = "Server";
+			}
+			else if(player.getNetworkPlayer()  == Network.player)
+			{
+				slotWho.text = "Me! (Client)";
+			}
+			else
+			{
+				slotWho.text = "other Client";
+			}
+		}
+		else if(Network.isServer)
+		{
+			if(player.getNetworkPlayer()  == Network.player)
+			{
+				slotWho.text = "Me! (Server)";
+			}
+			else
+			{
+				slotWho.text = "Client";
+			}
+		}
 
 	}
 
