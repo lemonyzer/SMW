@@ -1304,5 +1304,18 @@ public class PlatformCharacter : MonoBehaviour {
 		predictedShootAnimation [7] = new Color (1f, 1f, 1f, 1f);	// alpha channel = 0.5
 	}
 
+	/// <summary>
+	/// Registers the character game object in player dictionary_ rpc.
+	/// </summary>
+	/// <param name="netPlayerOwner">Net player owner.</param>
+	[RPC]
+	void RegisterCharacterGameObjectInPlayerDictionary_Rpc(NetworkPlayer netPlayerOwner)
+	{
+		Player player;
+		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayerOwner, out player))
+		{
+			player.platformCharacterScript = this;
+		}
+	}
 
 }

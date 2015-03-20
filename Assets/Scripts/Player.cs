@@ -160,6 +160,7 @@ public class Player
 	/*************************************************/
 
 	public CharacterAvatar characterAvatarScript;
+	public PlatformCharacter platformCharacterScript;
 	
 	public SelectorSlotScript UISelectorSlotScript;
 	public PlayerStatsSlotScript UIStatsSlotScript;

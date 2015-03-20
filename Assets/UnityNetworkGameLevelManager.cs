@@ -87,21 +87,26 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		}
 	}
 
-	void InstantiateAndSetupPlayerCharacter(NetworkPlayer netPlayer, Player realOwner)
+	void InstantiateAndSetupPlayerCharacter(NetworkPlayer netPlayerOwner, Player realOwner)
 	{
 		GameObject playerCharacterGameObject;
 		playerCharacterGameObject = (GameObject) Network.Instantiate(realOwner.characterAvatarScript.prefabUnityCharacter, RandomSpawnPoint(), Quaternion.identity, 0);
 
 		// Keep track of this new player so we can properly destroy it when required.
 		RealOwner playerControlScript = playerCharacterGameObject.GetComponent<RealOwner>();
-		playerControlScript.owner = netPlayer;
+		playerControlScript.owner = netPlayerOwner;
+
 
 		// Get the networkview of this new GameObject
 		NetworkView newObjectsNetworkView = playerCharacterGameObject.GetComponent<NetworkView>();
 
+		//TODO without viewID search 
+		//TODO myNetworkView.RPC("RegisterCharacterGameObjectInPlayerDictionary_Rpc", RPCMode.AllBuffered, netPlayer, newObjectsNetworkView.viewID );
+
 		// Call an RPC on this new PhotonView, set the NetworkPlayer who controls this new player
-		newObjectsNetworkView.RPC("SetCharacterControlsOwner", RPCMode.AllBuffered, netPlayer);
-		newObjectsNetworkView.RPC("DeactivateKinematic", RPCMode.AllBuffered);
+		newObjectsNetworkView.RPC("RegisterCharacterGameObjectInPlayerDictionary_Rpc", RPCMode.AllBuffered, netPlayerOwner );
+		newObjectsNetworkView.RPC("SetCharacterControlsOwner", RPCMode.AllBuffered, netPlayerOwner);			// RealOwner Script
+		newObjectsNetworkView.RPC("DeactivateKinematic", RPCMode.AllBuffered);							// PlatformCharacter Script
 	}
 
 	Vector3 RandomSpawnPoint()

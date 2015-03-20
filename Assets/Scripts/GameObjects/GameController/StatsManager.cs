@@ -175,8 +175,9 @@ public class StatsManager : MonoBehaviour {
 		
 			//AnimatorController victimsAnimationController = playerVictim.getCharacter().getGameObject().GetComponent<AnimatorController>();
 			//victimsAnimationController.HeadJumpAnimation();
-			PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
-			victimCharacterScript.HeadJumpVictim();
+//TODO			PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
+//TODO			victimCharacterScript.HeadJumpVictim();
+			playerVictim.platformCharacterScript.HeadJumpVictim();
 
 			AddKill(playerAttacker, playerVictim);
 		}
@@ -232,8 +233,9 @@ public class StatsManager : MonoBehaviour {
 		//AnimatorController victimsAnimationController = playerVictim.getCharacter().getGameObject().GetComponent<AnimatorController>();
 		//victimsAnimationController.InvincibleAttackAnimation();
 
-		PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
-		victimCharacterScript.InvincibleAttackVictim();
+//TODO		PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
+//TODO		victimCharacterScript.InvincibleAttackVictim();
+		playerVictim.platformCharacterScript.InvincibleAttackVictim();
 		
 		AddKill(playerAttacker, playerVictim);
         //}
@@ -284,8 +286,9 @@ public class StatsManager : MonoBehaviour {
 			//AnimatorController victimsAnimationController = playerVictim.getCharacter().getGameObject().GetComponent<AnimatorController>();
 			//victimsAnimationController.InvincibleAttackAnimation();
 
-		PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
-		victimCharacterScript.InvincibleAttackVictim();
+//TODO		PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
+//TODO		victimCharacterScript.InvincibleAttackVictim();
+		playerVictim.platformCharacterScript.InvincibleAttackVictim();
 			
 			//AddKill(playerAttacker, playerVictim);
 		//}
