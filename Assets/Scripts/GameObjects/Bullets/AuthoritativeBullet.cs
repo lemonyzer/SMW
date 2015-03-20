@@ -3,13 +3,17 @@ using System.Collections;
 
 public class AuthoritativeBullet : MonoBehaviour {
 
+	public delegate void OnBulletHit(GameObject killer, GameObject victim);
+	public static event OnBulletHit onBulletHit;
+
+
 	public NetworkPlayer owner;
 	public GameObject ownerCharacter;
 
 
 	GameObject gameController;
 	Layer layer;
-	StatsManager statsManager;
+//	StatsManager statsManager;
 
 	public static Vector3 moveSpeed = new Vector3(5,5,0);
 	public Vector3 moveDirection = new Vector3(1,0,0);
@@ -17,7 +21,7 @@ public class AuthoritativeBullet : MonoBehaviour {
 	void Start () {
 		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
 		layer = gameController.GetComponent<Layer>();
-		statsManager = gameController.GetComponent<StatsManager>();
+//		statsManager = gameController.GetComponent<StatsManager>();
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -49,7 +53,18 @@ public class AuthoritativeBullet : MonoBehaviour {
 						}
 						else
 						{
-							statsManager.BulletHit(ownerCharacter, other.transform.parent.gameObject );
+							//TODO
+							//TODO
+							//statsManager.BulletHit(ownerCharacter, other.transform.parent.gameObject );
+							
+							if(onBulletHit != null)
+							{
+								onBulletHit(ownerCharacter, other.transform.parent.gameObject);
+							}
+							else
+							{
+								Debug.LogWarning("onBulletHit no listeners!");
+							}
 							Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
 							Network.Destroy(this.gameObject);
 						}

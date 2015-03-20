@@ -893,4 +893,13 @@ public class NetworkedPlayer : MonoBehaviour
 		}
 	}
 
+	void OnDestroy()
+	{
+
+		if(goCanvasConnectionInfo != null)
+		{
+			Destroy (goCanvasConnectionInfo);
+		}
+	}
+
 }

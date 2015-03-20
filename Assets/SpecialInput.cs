@@ -4,7 +4,7 @@ using System.Collections;
 public class SpecialInput : MonoBehaviour {
 
 	//TODO events (dont need to spam update)
-	//TODO is WRONG??
+	//TODO is WRONG?? Update needed to check Key!
 	
 	// Update is called once per frame
 	void Update () {

@@ -15,7 +15,7 @@ public class GameState {
 		Destroying					// Destroy the level
 	}
 
-	public static States currentState = States.Pause;
+	public static States currentState = States.Running;
 	
 	public static void ChangeState(States stateTo) {
 		if(currentState == stateTo)

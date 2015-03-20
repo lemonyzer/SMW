@@ -3,6 +3,9 @@ using System.Collections;
 
 public class SendDamageTrigger : MonoBehaviour {
 
+	public delegate void OnHeadJump(GameObject killer, GameObject victim);
+	public static event OnHeadJump onHeadJump;
+
 	public int damageValue = 1;
 //	private int targetLayer = 0;		// Head
 	//public bool enabled=true;
@@ -23,13 +26,13 @@ public class SendDamageTrigger : MonoBehaviour {
 	 **/
 	private GameObject gameController;
 	private Layer layer;
-	private StatsManager statsManager;
+//	private StatsManager statsManager;
 
 	void Awake()
 	{
 		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
 		layer = gameController.GetComponent<Layer>();
-		statsManager = gameController.GetComponent<StatsManager>();
+//		statsManager = gameController.GetComponent<StatsManager>();
 //		targetLayer = layer.head;
 	}
 
@@ -92,7 +95,19 @@ public class SendDamageTrigger : MonoBehaviour {
 							{
 								// Angriff zählt nur wenn Gegenspieler nicht durch mich durchspringt
 								Debug.Log(this.ToString() + ": " + this.transform.parent.name + " ---HeadJump---> " + other.transform.parent.name);
-								statsManager.HeadJump(myCharacterGameObject,targetCharacterGameObject);			// Alternative: statsManager oder HealthController können auch SpawnProtection abfragen!
+
+								//TODO component based programming
+								//TODO
+								//replaced statsManager.HeadJump(myCharacterGameObject,targetCharacterGameObject);			// Alternative: statsManager oder HealthController können auch SpawnProtection abfragen!
+
+								if(onHeadJump != null)
+								{
+									onHeadJump(myCharacterGameObject, targetCharacterGameObject);
+								}
+								else
+								{
+									Debug.LogWarning("onHeadJump no listeners!");
+								}
 							}
 							else
 							{

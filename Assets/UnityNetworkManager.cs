@@ -8,6 +8,9 @@ public class UnityNetworkManager : MonoBehaviour {
 	public delegate void OnNewPlayerConnected(NetworkPlayer netPlayer, Player newPlayer);
 	public static event OnNewPlayerConnected onNewPlayerConnected;
 
+	public delegate void OnPlayerDisconnected_custom(NetworkPlayer netPlayer, Player newPlayer);
+	public static event OnPlayerDisconnected_custom onPlayerDisconnected;
+
 
 	void OnEnable()
 	{
@@ -371,6 +374,10 @@ public class UnityNetworkManager : MonoBehaviour {
 				// we have event listeners
 				onNewPlayerConnected(netPlayer, newPlayer);
 			}
+			else
+			{
+				Debug.LogWarning("onNewPlayerConnected no listeners!");
+			}
 			
 		}
 		else
@@ -433,11 +440,19 @@ public class UnityNetworkManager : MonoBehaviour {
 
 		if(disconnectedPlayer != null)
 		{
+			if(onPlayerDisconnected != null)
+			{
+				onPlayerDisconnected(netPlayer, disconnectedPlayer);
+			}
+			else
+			{
+				Debug.LogWarning("onPlayerDisconnected no listeners!");
+			}
+
 			try
 			{
 				PlayerDictionaryManager._instance.RemovePlayer(netPlayer);
 				disconnectedPlayer.characterAvatarScript.inUse = false;
-				Destroy(disconnectedPlayer.UISelectorSlotScript.gameObject);
 			}
 			catch(UnityException e)
 			{

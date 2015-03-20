@@ -4,6 +4,20 @@ using System.Collections.Generic;
 
 public class StatsManager : MonoBehaviour {
 
+	void OnEnable()
+	{
+		SendDamageTrigger.onHeadJump += HeadJump;
+		RageTrigger.onRageKill += InvincibleAttack;
+		AuthoritativeBullet.onBulletHit += BulletHit;
+	}
+	
+	void OnDisable()
+	{
+		SendDamageTrigger.onHeadJump -= HeadJump;
+		RageTrigger.onRageKill -= InvincibleAttack;
+		AuthoritativeBullet.onBulletHit -= BulletHit;
+	}
+
 	public bool gameRunning = false;
 	public bool gameHasWinner = false;
 	private GameObject gameWinner;
@@ -57,16 +71,6 @@ public class StatsManager : MonoBehaviour {
 
 		myNetworkView = GetComponent<NetworkView>();
 	}
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	}
-	
 
 	bool PointLimitReached(int currentPoints)
 	{

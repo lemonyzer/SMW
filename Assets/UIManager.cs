@@ -99,21 +99,19 @@ public class UIManager : MonoBehaviour {
 	{
 
 		UnityNetworkManager.onNewPlayerConnected += AddNewPlayerSelectorSlot;
+		UnityNetworkManager.onPlayerDisconnected += PlayerDisconnected;
 
 		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete += AddNewPlayerStatsSlot;
-		//TODO there is no ButtonNextCharacterScript at the beginning... is this a Problem??
-//		ButtonNextCharacterScript.OnClicked += NextCharacter_Button;
 		ButtonServerJoinGameScript.OnClicked += ServerJoins_Button;
-//		ButtonStartLoadingGameScene.OnClicked += StartLoadingGameScene_Button;
 	}
 	
 	void OnDisable()
 	{
 		UnityNetworkManager.onNewPlayerConnected -= AddNewPlayerSelectorSlot;
+		UnityNetworkManager.onPlayerDisconnected -= PlayerDisconnected;
+
 		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete -= AddNewPlayerStatsSlot;
-//		ButtonNextCharacterScript.OnClicked -= NextCharacter_Button;
 		ButtonServerJoinGameScript.OnClicked -= ServerJoins_Button;
-//		ButtonStartLoadingGameScene.OnClicked -= StartLoadingGameScene_Button;
 	}
 
 
@@ -182,5 +180,37 @@ public class UIManager : MonoBehaviour {
 		player.UIStatsSlotScript.UpdateSlot(player);
 	}
 
+	void PlayerDisconnected(NetworkPlayer netPlayer, Player player)
+	{
+		RemovePlayerSelectorSlot(player);
+		RemovePlayerStatsSlot(player);
+	}
+
+	void RemovePlayerSelectorSlot(Player player)
+	{
+		if(player != null)
+		{
+			if(player.UISelectorSlotScript != null)
+				Destroy(player.UISelectorSlotScript.gameObject);
+			else
+				Debug.LogWarning("player.UISelectorSlotScript == null");
+		}
+		else
+			Debug.LogWarning("player == null");
+	}
+
+	void RemovePlayerStatsSlot(Player player)
+	{
+		if(player != null)
+		{
+			if(player.UIStatsSlotScript != null)
+				Destroy(player.UIStatsSlotScript.gameObject);
+			else
+				Debug.LogWarning("player.UIStatsSlotScript == null");
+		}
+		else
+			Debug.LogWarning("player == null");
+
+	}
 
 }
