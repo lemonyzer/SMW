@@ -22,9 +22,9 @@ public class BulletBounce : MonoBehaviour {
 		
 		groundCheckPositionOffset = new Vector3(0,bulletSpriteRenderer.bounds.extents.y,0);
 
-		randomDirection = RandomSign();
+//		randomDirection = RandomSign();
 
-		moveDirection.x *= randomDirection;
+//		moveDirection.x *= randomDirection;
 	}
 
 	int RandomSign()

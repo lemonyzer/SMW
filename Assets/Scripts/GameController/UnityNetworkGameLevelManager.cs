@@ -41,7 +41,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 				myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);
 			}
 		}
-		else
+		else if(Network.isClient)
 		{
 			myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);
 		}

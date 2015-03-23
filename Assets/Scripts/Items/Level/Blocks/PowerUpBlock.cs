@@ -4,7 +4,7 @@ using System.Collections;
 public class PowerUpBlock : MonoBehaviour {
 
 //	public string targetTag = "Head";
-	private float powerUpRespawnTime = 0.5f;
+	private float powerUpRespawnTime = 5f;
 	public bool hasPowerUp = true;
 
 	public AudioClip powerUpReleaseSound;
@@ -52,10 +52,10 @@ public class PowerUpBlock : MonoBehaviour {
 		anim.SetTrigger(hash.powerUpBlockLoadedTrigger);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+//	// Update is called once per frame
+//	void Update () {
+//	
+//	}
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
@@ -73,7 +73,7 @@ public class PowerUpBlock : MonoBehaviour {
 							{
 								ReleasingRandomPowerUp();
 							}
-							else
+							if(Network.isServer)
 								GetComponent<NetworkView>().RPC("ReleasingRandomPowerUp", RPCMode.All);			// PowerUpBlock animation setzen, Item selbst wird über Network.instantiated
 						}
 					//}
