@@ -14,9 +14,13 @@ public class Tags : MonoBehaviour {
 	public const string powerUpHitArea = "PowerUpHitArea";
 	public const string groundStopper = "GroundStopper";
 
-	public const string boxCollider = "BoxCollider";
+	//public const string boxCollider = "BoxCollider";
 	public const string lastReceivedPos = "LastRecvedPos";
-	public const string predictedBoxCollider = "PredictedBoxCollider";
+	public const string CurrentEstimatedPosOnServer = "CurrentEstimatedPosOnServer";
+	public const string PredictedPosSimulatedWithLastInput = "PredictedPosSimulatedWithLastInput";
+	public const string PredictedPosCalculatedWithLastInput = "PredictedPosCalculatedWithLastInput";
+	public const string PredictedPosV3 = "PredictedPosV3";
+	public const string iceWalled = "IceWalled";
 
 	/**
 	 * Scene, Level Parts

@@ -71,9 +71,9 @@ public class NetworkedPlayer : MonoBehaviour
 	RealOwner ownerScript;
 	NetworkView myNetworkView;
 
-	Transform characterLastRecvedPosBoxCollider;
-	Transform characterLastRecvedPos;
-	Transform characterPredictedPosBoxCollider;
+//	Transform characterLastRecvedPosBoxCollider;
+//	Transform characterLastRecvedPos;
+//	Transform characterPredictedPosBoxCollider;
 
 	void Awake()
 	{
@@ -81,17 +81,20 @@ public class NetworkedPlayer : MonoBehaviour
 		characterScript = GetComponent<PlatformCharacter> ();
 		inputScript = GetComponent<PlatformUserControl> ();
 		myNetworkView = GetComponent<NetworkView>();
-		characterLastRecvedPosBoxCollider = transform.Find("BoxCollider");		// looks in transform childs
-										//transform.FindChild
-																		// GameObject.Find looks in compete Scene!
-		characterLastRecvedPos = transform.Find("LastRecvedPos");
-		characterPredictedPosBoxCollider = transform.Find("PredictedBoxCollider");
+//		characterLastRecvedPosBoxCollider = transform.Find("BoxCollider");		// looks in transform childs
+//										//transform.FindChild
+//																		// GameObject.Find looks in compete Scene!
+//		characterLastRecvedPos = transform.Find("LastRecvedPos");
+//		characterPredictedPosBoxCollider = transform.Find("PredictedBoxCollider");
 	}
 
 	bool initialComplete = false;
 
 	void Start()
 	{
+		if(Network.isServer)
+			return;
+
 		if( ownerScript.owner == Network.player )
 		{
 			//TODO: wird nicht ausgeführt, da owner noch nicht gesetzt ist!!
@@ -482,21 +485,48 @@ public class NetworkedPlayer : MonoBehaviour
 				//				{
 				//					SimulationBack();
 				//				}
-				characterLastRecvedPosBoxCollider.transform.position = Vector3.zero + moveHistory[pastState].Position;
-				characterLastRecvedPos.position = moveHistory[pastState].Position;
+
+				// setzte berechnete position
+				characterScript.currentEstimatedPosOnServer.transform.position = moveHistory[pastState].Position;			// moveHistory[0]
+
+				// setzte letzte erhaltene position
+				if(stateCount > 0)
+				{
+					characterScript.lastReceivedPos.position = stateBuffer[0].Position;											// stateBuffer[0]
+				}
+				else
+				{
+					//TODO
+				}
 				Debug.DrawLine(this.transform.position, moveHistory[pastState].Position, Color.red, 5f);
 			}
 			else
 			{
+				// keinen past state gefunden
 				// TODO: calculate triptime of correctPosition message and check if player is grounded if not -> collider is moved triptime toward ground
-				characterLastRecvedPosBoxCollider.transform.position = this.transform.position;
-				characterLastRecvedPos.position = this.transform.position;
+
+				// setzte letzte erhaltene position
+				if(stateCount > 0)
+				{
+					characterScript.lastReceivedPos.position = stateBuffer[0].Position;											// stateBuffer[0]
+
+					// keine berechnung möglich, auf letzte erhaltene pos (diese ist triptime alt)
+					characterScript.currentEstimatedPosOnServer.transform.position = stateBuffer[0].Position;	
+				}
+				else
+				{
+					//TODO
+				}
+
+
+				//characterLastRecvedPosBoxCollider.transform.position = this.transform.position;
+				//characterLastRecvedPos.position = this.transform.position;
 				//				characterBoxCollider.SetActive(false);
 			}
 		}
 		else
 		{
-
+			// Auf Client: other Players position
 			/***
 			 * 
 			 *	PREDICTION			SIMPLE (only Player Input from latest received netUpdate (OnSerialzationView)
@@ -506,11 +536,12 @@ public class NetworkedPlayer : MonoBehaviour
 
 			if(stateCount >= 2)
 			{
+				//Lerping zwischen den zwei aktuellsten Positionen
 				//characterLastRecvedPos.position = Vector3.Lerp(stateBuffer[1].Position,stateBuffer[0].Position, (float)((Network.time-stateBuffer[0].Timestamp)/(2*stateBuffer[0].tripTime)));
-				characterLastRecvedPos.position = Vector3.Lerp(stateBuffer[1].Position,stateBuffer[0].Position, (float)((Network.time-stateBuffer[0].Timestamp)/(stateBuffer[0].Timestamp-stateBuffer[1].Timestamp)));
+				characterScript.lastReceivedPos.position = Vector3.Lerp(stateBuffer[1].Position,stateBuffer[0].Position, (float)((Network.time-stateBuffer[0].Timestamp)/(stateBuffer[0].Timestamp-stateBuffer[1].Timestamp)));
 			}
 			else if(stateCount == 1)
-				characterLastRecvedPos.position = stateBuffer[0].Position;
+				characterScript.lastReceivedPos.position = stateBuffer[0].Position;
 
 			if(stateCount > 0)
 			{
@@ -527,11 +558,11 @@ public class NetworkedPlayer : MonoBehaviour
 //				Debug.Log("TripTime (FromServer)= " + stateBuffer[0].tripTime + "\nresulting prediction Steps =" + steps);
 //				Debug.Log("Each Step takes Time.fixedDeltaTime: " + Time.fixedDeltaTime + " ms)");
 
-				// vorher position wieder auf character position setzen, dann kann vorrausberechnet werden
-				characterLastRecvedPosBoxCollider.position = characterLastRecvedPos.position;
+				// vorher position wieder auf ZULETZT ERHALTENE Position setzen, dann kann vorrausberechnet werden
+				characterScript.predictedPosCalculatedWithLastInput.position = stateBuffer[0].Position;
 				for(int i=0; i < steps; i++)
 				{
-					characterLastRecvedPosBoxCollider.Translate( moveDirectionPredicted );
+					characterScript.predictedPosCalculatedWithLastInput.Translate( moveDirectionPredicted );
 				}
 			}
 		}
@@ -646,11 +677,13 @@ public class NetworkedPlayer : MonoBehaviour
 		}
 
 
-		Prediction2();
+		PredictionWithLastInput();
 	}
 
-
-	void Prediction2()
+	/// <summary>
+	/// Predictions Position with using last move Input
+	/// </summary>
+	void PredictionWithLastInput()
 	{
 
 		/**
@@ -680,9 +713,9 @@ public class NetworkedPlayer : MonoBehaviour
 				//inputScript.inputJump = last.InputJump;
 				characterScript.Simulate();
 			}
-			Vector3 predictedPosition = characterLastRecvedPosBoxCollider.position;		// stateBuffer[0].pos + predictiontime*stateBuffer[0].inputH could be wrong?
+			Vector3 predictedPosition = characterScript.predictedPosSimulatedWithLastInput.position;		// stateBuffer[0].pos + predictiontime*stateBuffer[0].inputH could be wrong?
 			transform.position = tempPosition;
-			characterPredictedPosBoxCollider.position = predictedPosition;
+			characterScript.predictedPosSimulatedWithLastInput.position = predictedPosition;
 			Debug.DrawLine(tempPosition, predictedPosition);
 		}
 	}
@@ -786,7 +819,7 @@ public class NetworkedPlayer : MonoBehaviour
 			stream.Serialize(ref receivedHorizontal);
 			stream.Serialize(ref receivedInputJump);
 
-			// Update: netUpdates buffers now also on local player character to get current TripTime
+			// Update: netUpdates buffers now also on local player character to get current TripTime :://TODO DONE and latest pos ( lastrecvdPos
 
 			//netUpdate(pos, info);			// will buffer state only on characters not controlled by local player
 			netUpdate(authorativePos, receivedHorizontal, receivedInputJump, info);			// will buffer state only on characters not controlled by local player

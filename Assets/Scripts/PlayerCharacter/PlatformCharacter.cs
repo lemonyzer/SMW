@@ -118,6 +118,25 @@ public class PlatformCharacter : MonoBehaviour {
 	private SpriteRenderer spriteRenderer;
 
 
+	public Transform lastReceivedPos;
+	public SpriteRenderer lastReceivedPosRenderer;
+
+	public Transform currentEstimatedPosOnServer;
+	public SpriteRenderer currentEstimatedPosOnServerRenderer;
+
+	public Transform predictedPosSimulatedWithLastInput;
+	public SpriteRenderer predictedPosSimulatedWithLastInputRenderer;
+
+	public Transform predictedPosCalculatedWithLastInput;
+	public SpriteRenderer predictedPosCalculatedWithLastInputRenderer;
+
+	public Transform predictedPosV3;
+	public SpriteRenderer predictedPosV3Renderer;
+
+	public Transform iceWalled;
+	public SpriteRenderer iceWalledRenderer;
+
+
 	/**
 	 * Pre-Instantiated GameObjects
 	 **/
@@ -149,11 +168,30 @@ public class PlatformCharacter : MonoBehaviour {
 
 		spriteRenderer = GetComponent<SpriteRenderer>();
 
+		// Bodyparts
 		bodyCollider2D = transform.FindChild(Tags.body).GetComponent<BoxCollider2D>();
 		headCollider2D = transform.FindChild(Tags.head).GetComponent<BoxCollider2D>();
 		feetCollider2D = transform.FindChild(Tags.feet).GetComponent<BoxCollider2D>();
 		itemCollectorCollider2D = transform.FindChild(Tags.itemCollector).GetComponent<BoxCollider2D>();
 		powerUpCollider2D = transform.FindChild(Tags.powerUpHitArea).GetComponent<BoxCollider2D>();
+
+		currentEstimatedPosOnServer = transform.FindChild(Tags.CurrentEstimatedPosOnServer);
+		currentEstimatedPosOnServerRenderer = currentEstimatedPosOnServer.GetComponent<SpriteRenderer>();
+
+		lastReceivedPos = transform.FindChild(Tags.lastReceivedPos);
+		lastReceivedPosRenderer = lastReceivedPos.GetComponent<SpriteRenderer>();
+
+		predictedPosSimulatedWithLastInput = transform.FindChild(Tags.PredictedPosSimulatedWithLastInput);
+		predictedPosSimulatedWithLastInputRenderer = predictedPosSimulatedWithLastInput.GetComponent<SpriteRenderer>();
+
+		predictedPosCalculatedWithLastInput = transform.FindChild(Tags.PredictedPosCalculatedWithLastInput);
+		predictedPosCalculatedWithLastInputRenderer = predictedPosCalculatedWithLastInput.GetComponent<SpriteRenderer>();
+
+		predictedPosV3 = transform.FindChild(Tags.PredictedPosV3);
+		predictedPosV3Renderer = predictedPosV3.GetComponent<SpriteRenderer>();
+
+		iceWalled = transform.FindChild(Tags.iceWalled);
+		iceWalledRenderer = iceWalled.GetComponent<SpriteRenderer>();
 
 		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
 		currentLevel = gameController.GetComponent<Level>();
@@ -887,39 +925,39 @@ public class PlatformCharacter : MonoBehaviour {
 		return false;
 	}
 	
-	IEnumerator SpawnBullet()
-	{
-		if(isAuthoritativeHost())
-		{
-			if(bulletsLeftCount < 3)
-				yield return new WaitForSeconds (2);
-			
-			bulletsLeftCount --;
-			GameObject bulletPrefab = (GameObject) Resources.Load("PowerUps/"+"FireBall", typeof(GameObject));
-			if(bulletPrefab == null)
-			{
-				Debug.Log("bulletPrefab coudn't be loaded!!!! check path / and name");
-			}
-			GameObject bulletGameObject = null;
-			if(server())
-			{
-				bulletGameObject = (GameObject) Network.Instantiate( bulletPrefab, new Vector3(this.transform.localScale.x * bulletSpawnPositionOffset.x,1* bulletSpawnPositionOffset.y,1* bulletSpawnPositionOffset.z) + this.transform.position, Quaternion.identity, 0);
-			}
-			else if(offline())
-			{
-				bulletGameObject = (GameObject) Instantiate(bulletPrefab, new Vector3(this.transform.localScale.x * bulletSpawnPositionOffset.x,1* bulletSpawnPositionOffset.y,1* bulletSpawnPositionOffset.z) + this.transform.position, Quaternion.identity);
-			}
-			
-			bulletGameObject.GetComponent<AuthoritativeBullet>().ownerCharacter = this.gameObject;// important!!!
-			bulletGameObject.GetComponent<AuthoritativeBullet>().moveDirection = new Vector3(this.transform.localScale.x,0,0);
-			bulletGameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(this.transform.localScale.x * AuthoritativeBullet.moveSpeed.x,1 * AuthoritativeBullet.moveSpeed.y,1* AuthoritativeBullet.moveSpeed.z);
-			
-			if(bulletsLeftCount > 0)
-				StartCoroutine(SpawnBullet());
-			else
-				bulletsLeftCount = 3;
-		}
-	}
+//	IEnumerator SpawnBullet()
+//	{
+//		if(isAuthoritativeHost())
+//		{
+//			if(bulletsLeftCount < 3)
+//				yield return new WaitForSeconds (2);
+//			
+//			bulletsLeftCount --;
+//			GameObject bulletPrefab = (GameObject) Resources.Load("PowerUps/"+"FireBall", typeof(GameObject));
+//			if(bulletPrefab == null)
+//			{
+//				Debug.Log("bulletPrefab coudn't be loaded!!!! check path / and name");
+//			}
+//			GameObject bulletGameObject = null;
+//			if(server())
+//			{
+//				bulletGameObject = (GameObject) Network.Instantiate( bulletPrefab, new Vector3(this.transform.localScale.x * bulletSpawnPositionOffset.x,1* bulletSpawnPositionOffset.y,1* bulletSpawnPositionOffset.z) + this.transform.position, Quaternion.identity, 0);
+//			}
+//			else if(offline())
+//			{
+//				bulletGameObject = (GameObject) Instantiate(bulletPrefab, new Vector3(this.transform.localScale.x * bulletSpawnPositionOffset.x,1* bulletSpawnPositionOffset.y,1* bulletSpawnPositionOffset.z) + this.transform.position, Quaternion.identity);
+//			}
+//			
+//			bulletGameObject.GetComponent<AuthoritativeBullet>().ownerCharacter = this.gameObject;// important!!!
+//			bulletGameObject.GetComponent<AuthoritativeBullet>().moveDirection = new Vector3(this.transform.localScale.x,0,0);
+//			bulletGameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(this.transform.localScale.x * AuthoritativeBullet.moveSpeed.x,1 * AuthoritativeBullet.moveSpeed.y,1* AuthoritativeBullet.moveSpeed.z);
+//			
+//			if(bulletsLeftCount > 0)
+//				StartCoroutine(SpawnBullet());
+//			else
+//				bulletsLeftCount = 3;
+//		}
+//	}
 
 	Vector3 authoritativeSpawnPosition;
 	
@@ -1107,12 +1145,28 @@ public class PlatformCharacter : MonoBehaviour {
 			spriteRenderer.color = spawnProtectionAnimation[0];
 		}
 
-		transform.FindChild(Tags.lastReceivedPos).GetComponent<SpriteRenderer>().sprite = spriteRenderer.sprite;
-		transform.FindChild(Tags.lastReceivedPos).GetComponent<SpriteRenderer>().color = new Color(1f,0f,0f,0.5f);
-		transform.FindChild(Tags.predictedBoxCollider).GetComponent<SpriteRenderer>().sprite = spriteRenderer.sprite;
-		transform.FindChild(Tags.predictedBoxCollider).GetComponent<SpriteRenderer>().color = new Color(0f,0f,0f,0.5f);
-		transform.FindChild(Tags.boxCollider).GetComponent<SpriteRenderer>().sprite = spriteRenderer.sprite;
-		transform.FindChild(Tags.boxCollider).GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0.5f);
+
+		if(isAuthoritativeHost())
+		{
+			lastReceivedPosRenderer.enabled = true;
+			currentEstimatedPosOnServerRenderer.enabled = false;
+			predictedPosCalculatedWithLastInputRenderer.enabled = false;
+			predictedPosSimulatedWithLastInputRenderer.enabled = false;
+			predictedPosV3Renderer.enabled = false;
+			return;
+		}
+
+		lastReceivedPosRenderer.sprite = spriteRenderer.sprite;
+		lastReceivedPosRenderer.color = new Color(1f,1f,1f,0.3f);
+
+		currentEstimatedPosOnServerRenderer.sprite = spriteRenderer.sprite;
+		currentEstimatedPosOnServerRenderer.color = new Color(1f,1f,1f,0.3f);
+
+		predictedPosCalculatedWithLastInputRenderer.sprite = spriteRenderer.sprite;
+		predictedPosCalculatedWithLastInputRenderer.color = new Color(1f,1f,1f,0.3f);
+
+		predictedPosSimulatedWithLastInputRenderer.sprite = spriteRenderer.sprite;
+		predictedPosSimulatedWithLastInputRenderer.color = new Color(1f,1f,1f,0.3f);
 	}
 
 	void SpawnProtection()

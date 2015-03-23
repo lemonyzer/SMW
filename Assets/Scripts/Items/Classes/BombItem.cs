@@ -10,6 +10,7 @@ public class BombItem : Item {
 	public string powerScriptName = "Shoot";						// <--- Item-Power Zuordnung
 	
 	// Weapon Settings
+	public int projectileLimit = 2;
 	public double bulletToBulletTime = 1.5f;
 
 	// Projectile
@@ -49,6 +50,7 @@ public class BombItem : Item {
 			//characterPowerScript.gained(info);
 			Debug.LogError("GetComponent(string) hat funktioniert!");
 			characterPowerScript.SetBulletToBulletTime(bulletToBulletTime);
+			characterPowerScript.SetProjectileLimit(projectileLimit);
 			characterPowerScript.SetProjectile(projectile);
 			characterPowerScript.gained(info);
 			return;

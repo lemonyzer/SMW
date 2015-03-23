@@ -142,6 +142,11 @@ public class Shoot : Power {
 		this.currentProjectile = projectile;
 	}
 
+	public void SetProjectileLimit(int projectileLimit)
+	{
+		this.limitNumber = projectileLimit;
+	}
+
 	public void SetBulletToBulletTime(double bTbT)
 	{
 		this.bulletToBulletTime = bTbT;

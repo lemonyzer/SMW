@@ -19,6 +19,7 @@ public class FireBallProjectile : Projectile {
 	{
 		GameObject projectileGO = base.SpawnSingle(ownerCharacter);
 
+		// setze anfangs bewegungsrichtung 
 		projectileGO.transform.FindChild("GroundStopper").GetComponent<BulletBounce>().moveDirection.x = ownerCharacter.transform.localScale.x;
 
 		return projectileGO;
