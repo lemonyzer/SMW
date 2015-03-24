@@ -8,7 +8,7 @@ public class StatsManager : MonoBehaviour {
 	{
 		SendDamageTrigger.onHeadJump += HeadJump;
 		RageTrigger.onRageKill += InvincibleAttack;
-		AuthoritativeBullet.onBulletHit += BulletHit;
+		AuthoritativeFireBall.onBulletHit += BulletHit;
 		AuthoritativeBomb.onBombHit += BombHit;
 	}
 	
@@ -16,7 +16,7 @@ public class StatsManager : MonoBehaviour {
 	{
 		SendDamageTrigger.onHeadJump -= HeadJump;
 		RageTrigger.onRageKill -= InvincibleAttack;
-		AuthoritativeBullet.onBulletHit -= BulletHit;
+		AuthoritativeFireBall.onBulletHit -= BulletHit;
 		AuthoritativeBomb.onBombHit -= BombHit;
 		
 	}

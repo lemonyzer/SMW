@@ -62,9 +62,6 @@ public abstract class Projectile {
 		AuthoritativeProjectile projectileScript = projectileGameObject.GetComponent<AuthoritativeProjectile>();
 		
 		projectileScript.ownerCharacter = ownerCharacter;// important!!!
-		projectileScript.moveDirection = new Vector3(ownerCharacter.transform.localScale.x,0,0);
-		
-		projectileGameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(ownerCharacter.transform.localScale.x * projectileScript.moveSpeed.x,1 * projectileScript.moveSpeed.y,1* projectileScript.moveSpeed.z);
 		
 		return projectileGameObject;
 	}

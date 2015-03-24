@@ -11,7 +11,7 @@ public class BulletBounce : MonoBehaviour {
 	Vector3 groundCheckPosition;
 	SpriteRenderer bulletSpriteRenderer;
 	
-	public static Vector3 moveSpeed = new Vector3(5,5,0);
+	public Vector3 moveSpeed = new Vector3(5,5,0);
 	public Vector3 moveDirection = new Vector3(1,0,0);
 	// Use this for initialization
 	void Start () {

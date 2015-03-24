@@ -19,7 +19,13 @@ public class FireBallProjectile : Projectile {
 	{
 		GameObject projectileGO = base.SpawnSingle(ownerCharacter);
 
-		// setze anfangs bewegungsrichtung 
+		// setze anfangsbewegung
+		AuthoritativeProjectile projectileScript = projectileGO.GetComponent<AuthoritativeProjectile>();
+//		projectileScript.moveDirection = new Vector3(ownerCharacter.transform.localScale.x,0,0);
+		
+		projectileGO.GetComponent<Rigidbody2D>().velocity = new Vector2(ownerCharacter.transform.localScale.x * projectileScript.moveSpeed.x, 0f );
+
+		// setze bewegungsrichtung 
 		projectileGO.transform.FindChild("GroundStopper").GetComponent<BulletBounce>().moveDirection.x = ownerCharacter.transform.localScale.x;
 
 		return projectileGO;

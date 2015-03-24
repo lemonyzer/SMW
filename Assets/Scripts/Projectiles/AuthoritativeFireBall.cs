@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AuthoritativeBullet : AuthoritativeProjectile {
+public class AuthoritativeFireBall : AuthoritativeProjectile {
 
 	public delegate void OnBulletHit(GameObject killer, GameObject victim);
 	public static event OnBulletHit onBulletHit;

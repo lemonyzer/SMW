@@ -19,9 +19,10 @@ public class WandBlastProjectile : Projectile {
 	{
 		GameObject projectileGO = base.SpawnSingle(ownerCharacter);
 
-
+		AuthoritativeProjectile projectileScript = projectileGO.GetComponent<AuthoritativeProjectile>();
 		// setze anfangs bewegungsrichtung und geschwindigkeit
-		projectileGO.GetComponent<AuthoritativeProjectile>().moveSpeed = ownerCharacter.GetComponent<PlatformCharacter>().moveDirection;
+		//projectileGO.GetComponent<AuthoritativeProjectile>().moveSpeed = ownerCharacter.GetComponent<PlatformCharacter>().moveDirection;
+		projectileGO.GetComponent<Rigidbody2D>().velocity = new Vector2( ownerCharacter.transform.localScale.x * projectileScript.moveSpeed.x, 0f );
 		
 		return projectileGO;
 	}

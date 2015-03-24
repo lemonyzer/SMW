@@ -15,6 +15,21 @@ public class BombProjectile : Projectile {
 	{
 	}
 
+	public override GameObject SpawnSingle(GameObject ownerCharacter)
+	{
+		GameObject projectileGO = base.SpawnSingle(ownerCharacter);
+
+		// setze anfangsbewegung
+		AuthoritativeProjectile projectileScript = projectileGO.GetComponent<AuthoritativeProjectile>();
+
+		PlatformCharacter characterScript = ownerCharacter.GetComponent<PlatformCharacter>();
+
+		// setze anfangs bewegung, geschwindigkeit + richtung 
+		projectileGO.GetComponent<Rigidbody2D>().velocity = new Vector2 (ownerCharacter.transform.localScale.x + characterScript.moveDirection.x, projectileScript.moveSpeed.y);
+
+		return projectileGO;
+	}
+
 //	public override GameObject SpawnSingle(GameObject ownerCharacter)
 //	{
 //		//Resource finden und laden
