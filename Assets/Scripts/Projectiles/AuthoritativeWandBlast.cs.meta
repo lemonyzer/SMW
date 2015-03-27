@@ -1,10 +1,13 @@
 fileFormatVersion: 2
 guid: a88ebb6217ced6a45b4ade03c40547ff
-timeCreated: 1427121959
+timeCreated: 1427426053
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - projectileHitEffectPrefab: {fileID: 189196, guid: 5ff5ad6a6b9e88c4f950eaa567c02cc2,
+      type: 2}
+  - ownerCharacter: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

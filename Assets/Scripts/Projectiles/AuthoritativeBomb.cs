@@ -10,6 +10,20 @@ public class AuthoritativeBomb : AuthoritativeProjectile {
 //	public NetworkPlayer owner;
 //	public GameObject ownerCharacter;
 
+	public AudioClip bombExplosionClip;
+
+	public void PlayExplosionAudioClip()
+	{
+//		Debug.LogWarning("try bombExplosionClip playing!!!!");
+		if(bombExplosionClip != null)
+		{
+			this.GetComponent<AudioSource>().PlayOneShot(bombExplosionClip);
+//			Debug.LogWarning("bombExplosionClip is playing!!!!");
+		}
+		else
+			Debug.LogWarning("bombExplosionClip not set!!!!");
+	}
+
 	public float explosionDelay = 4f;
 
 	GameObject gameController;
@@ -50,12 +64,13 @@ public class AuthoritativeBomb : AuthoritativeProjectile {
 
 					if(Network.isServer || Network.peerType == NetworkPeerType.Disconnected)
 					{
-						if(other.transform.parent.GetComponent<PlatformCharacter>().isInRageModus)
-						{
-							this.ownerCharacter = other.transform.parent.gameObject;								// Rage Mode, sets new Owner
-						}
-						else
-						{
+						// BUGGY, cant shoot -> Projectilelist remove, add
+//						if(other.transform.parent.GetComponent<PlatformCharacter>().isInRageModus)
+//						{
+//							this.ownerCharacter = other.transform.parent.gameObject;								// Rage Mode, sets new Owner
+//						}
+//						else
+//						{
 							//TODO
 							//TODO
 							//statsManager.BulletHit(ownerCharacter, other.transform.parent.gameObject );
@@ -73,7 +88,7 @@ public class AuthoritativeBomb : AuthoritativeProjectile {
 
 							Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
 							Network.Destroy(this.gameObject);
-						}
+//						}
 					}
 				}
 				else

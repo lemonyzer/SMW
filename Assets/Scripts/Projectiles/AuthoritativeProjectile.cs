@@ -9,10 +9,29 @@ public abstract class AuthoritativeProjectile : MonoBehaviour {
 //	protected NetworkPlayer _owner;
 //	abstract public NetworkPlayer owner { get; set;}
 
+	public AudioClip projectileSpawnAudioClip;
+	public GameObject projectileHitEffectPrefab;
     public NetworkPlayer netOwner;
 	public GameObject ownerCharacter;
 
 	public Vector3 moveSpeed = new Vector3(5,5,0);
 //	public Vector3 moveDirection = new Vector3(1,0,0);
-	
+
+
+	public virtual void Awake()
+	{
+		if(projectileSpawnAudioClip != null)
+		{
+			this.GetComponent<AudioSource>().PlayOneShot(projectileSpawnAudioClip);
+		}
+	}
+
+	public virtual void OnDestroy()
+	{
+		if(projectileHitEffectPrefab != null)
+		{
+			Instantiate(projectileHitEffectPrefab, this.transform.position, Quaternion.identity);
+		}
+	}
+
 }
