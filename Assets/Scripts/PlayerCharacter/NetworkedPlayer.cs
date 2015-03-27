@@ -110,7 +110,7 @@ public class NetworkedPlayer : MonoBehaviour
 
 	// simulate movement local
 	// send input and calculated position to server / masterclient
-	public bool localPlayerUnityEnginePhysicsUsed = true;
+	public bool localPlayerUnityEnginePhysicsUsed = false;
 	bool frameRPCsended = false;
 	float inputToRPCDelay = 0f;
 	void FixedUpdate()
@@ -133,7 +133,15 @@ public class NetworkedPlayer : MonoBehaviour
 						lastMoveStateWithPhysics.Position = this.transform.position;
 						moveHistory.RemoveAt(0);
 						moveHistory.Insert (0, lastMoveStateWithPhysics);
-						myNetworkView.RPC( "ProcessInput", RPCMode.Server, lastMoveStateWithPhysics.HorizontalAxis, lastMoveStateWithPhysics.jump, this.transform.position );
+
+						if(Network.isClient)
+						{
+							myNetworkView.RPC( "ProcessInput", RPCMode.Server, lastMoveStateWithPhysics.HorizontalAxis, lastMoveStateWithPhysics.jump, this.transform.position );
+						}
+						else
+						{
+							// Server muss nichts simulieren
+						}
 //						if(characterScript.canUsePowerButton)
 //						{
 //							if(inputScript.inputPower)

@@ -119,6 +119,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		return new Vector3(Random.Range(xmin,xmax),Random.Range(ymin, ymax), z);
 	}
 
+
 	void OnPlayerDisconnected(NetworkPlayer netPlayer)
 	{
 		Player player;
@@ -126,6 +127,34 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		{
 			if(player.loadingLevelComplete)
 				playerReadyCount--;											//TODO consistent? disconnect kommt meistens später
+
+			// remove Character GameObject
+			RemoveCurrentPlayerCharacterGameObject(player);
+
+			// dont remove Stats
+
+		}
+		else
+		{
+			Debug.LogError("NetworkPlayer existiert nicht (mehr) in PlayerDictionary!!!");
+		}
+
+
+	}
+
+	void RemoveCurrentPlayerCharacterGameObject(Player player)
+	{
+		if(Network.isServer)
+		{
+			if(player.platformCharacterScript != null)
+			{
+				Network.RemoveRPCs(player.platformCharacterScript.gameObject.GetComponent<NetworkView>().viewID);
+				Network.Destroy(player.platformCharacterScript.gameObject);
+			}
+			else
+			{
+				Debug.LogWarning("Spieler hatte kein Character GameObject zum Entfernen!");
+			}
 		}
 	}
 

@@ -69,10 +69,7 @@ public class AuthoritativeFireBall : AuthoritativeProjectile {
 								Debug.LogWarning("onBulletHit no listeners!");
 							}
 
-							ownerCharacter.GetComponent<Shoot>().RemoveBullet(this.gameObject);
-
-							Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
-							Network.Destroy(this.gameObject);
+							DestroyPowerUp();
 						}
 					}
 				}
@@ -86,12 +83,17 @@ public class AuthoritativeFireBall : AuthoritativeProjectile {
 
 	public void StartDestroyTimer()
 	{
-		StartCoroutine(DestroyPowerUp());
+		StartCoroutine(AutoDestroyPowerUp());
 	}
 	
-	IEnumerator DestroyPowerUp()
+	IEnumerator AutoDestroyPowerUp()
 	{
 		yield return new WaitForSeconds(bulletStayTime);
+		DestroyPowerUp();
+	}
+
+	public void DestroyPowerUp()
+	{
 		if(Network.peerType == NetworkPeerType.Disconnected)
 		{
 			Destroy(this.gameObject);

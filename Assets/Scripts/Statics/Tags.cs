@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Tags : MonoBehaviour {
 
+	public const string guiAnalogStick = "AnalogStick";
+	public const string guiStick = "Stick";
+
 	/**
 	 * Body Parts (Parent and Children)
 	 **/

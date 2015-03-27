@@ -139,7 +139,8 @@ public class Beam : MonoBehaviour {
 //		}
 		if(other.gameObject.layer == layer.item)
 		{
-			beamableObject = true;
+			if(other.gameObject.name != Tags.itemCollector)
+				beamableObject = true;
 		}
 		else if(other.gameObject.layer == layer.powerUp)
 		{

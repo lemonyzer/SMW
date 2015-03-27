@@ -451,12 +451,29 @@ public class UnityNetworkManager : MonoBehaviour {
 
 			try
 			{
+				RemoveCurrentPlayerCharacterGameObject(disconnectedPlayer);
 				PlayerDictionaryManager._instance.RemovePlayer(netPlayer);
 				disconnectedPlayer.characterAvatarScript.inUse = false;
 			}
 			catch(UnityException e)
 			{
 				Debug.Log("OnPlayerDisconnected_Rpc: something went wrong");
+			}
+		}
+	}
+
+	void RemoveCurrentPlayerCharacterGameObject(Player player)
+	{
+		if(Network.isServer)
+		{
+			if(player.platformCharacterScript != null)
+			{
+				Network.RemoveRPCs(player.platformCharacterScript.gameObject.GetComponent<NetworkView>().viewID);
+				Network.Destroy(player.platformCharacterScript.gameObject);
+			}
+			else
+			{
+				Debug.LogWarning("Spieler hatte kein Character GameObject zum Entfernen!");
 			}
 		}
 	}

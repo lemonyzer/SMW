@@ -103,6 +103,8 @@ public class UIManager : MonoBehaviour {
 
 		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete += AddNewPlayerStatsSlot;
 		ButtonServerJoinGameScript.OnClicked += ServerJoins_Button;
+
+		StatsManager.onPvPKill += OnPvPKill;
 	}
 	
 	void OnDisable()
@@ -112,6 +114,8 @@ public class UIManager : MonoBehaviour {
 
 		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete -= AddNewPlayerStatsSlot;
 		ButtonServerJoinGameScript.OnClicked -= ServerJoins_Button;
+
+		StatsManager.onPvPKill -= OnPvPKill;
 	}
 
 
@@ -210,6 +214,21 @@ public class UIManager : MonoBehaviour {
 		}
 		else
 			Debug.LogWarning("player == null");
+
+	}
+
+	void OnPvPKill(Player killer, Player victim)
+	{
+		killer.UIStatsSlotScript.slotKills.text = "Kills: " + killer.getPoints();
+	}
+
+	void AddPoints(Player killer, Player victim)
+	{
+
+	}
+
+	void UpdateStatesSlot()
+	{
 
 	}
 

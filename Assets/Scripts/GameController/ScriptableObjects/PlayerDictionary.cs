@@ -177,21 +177,21 @@ public class PlayerDictionary : ScriptableObject {
 	/// <param name="networkPlayer">Network player.</param>
 	public void RemovePlayer( NetworkPlayer networkPlayer )
 	{
-		//TODO
-		//TODO begin
-		//TODO
-		guiGO = GameObject.Find("GUI");
-		if(guiGO != null)
-		{
-			conStats = guiGO.GetComponent<ConnectionStats>();
-			if(conStats != null)
-			{
-				conStats.RemovePlayer(networkPlayer);
-			}
-		}
-		//TODO
-		//TODO end
-		//TODO
+//		//TODO
+//		//TODO begin
+//		//TODO
+//		guiGO = GameObject.Find("GUI");
+//		if(guiGO != null)
+//		{
+//			conStats = guiGO.GetComponent<ConnectionStats>();
+//			if(conStats != null)
+//			{
+//				conStats.RemovePlayer(networkPlayer);
+//			}
+//		}
+//		//TODO
+//		//TODO end
+//		//TODO
 
 		Player removedPlayer = null;
 		

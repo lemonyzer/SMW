@@ -104,29 +104,78 @@ public class PlatformUserControl : MonoBehaviour {
 	{
 		realOwner = GetComponent<RealOwner>();
 	}
-	
-	// Use this for initialization
-	/// <summary>
-	/// Start this instance.
-	/// </summary>
+
 	void Start() {
+
+		//TODO //TODO //TODO achtung jetzt darf es nicht mehr destroyed werden!
+
+		//TODO aktuell 2 Find: ... versuchen auf ein Fin zu reduzieren (GO und Child GO)
+		//TODO ohne Find: in Scene bereits instanziieren und direkt über inspector public zuweisen
 		
-		analogStickTexture = (GUITexture) Instantiate(prefabAnalogStickTexture);		// needed? pre-instantiete in hierachie?!
-		stickTexture = (GUITexture) Instantiate(prefabStickTexture);					// needed? pre-instantiete in hierachie?!
+		//TODO static analogStick ?? muss nur einmal für diese klasse festgelegt werden
+		//TODO static stick ?? muss nur einmal für diese klasse festgelegt werden
+		
+		GameObject analogStickGO = GameObject.FindGameObjectWithTag(Tags.guiAnalogStick);
+		if(analogStickGO == null)
+		{
+			analogStickTexture = (GUITexture) Instantiate(prefabAnalogStickTexture);		// needed? pre-instantiete in hierachie?!
+			analogStickGO = analogStickTexture.gameObject;
+		}
+		else
+		{
+			analogStickTexture = analogStickGO.GetComponent<GUITexture>();
+		}
 		analogStickTextureWidth = analogStickTexture.pixelInset.width;
 		analogStickTextureHeight = analogStickTexture.pixelInset.height;
+
+		stickTexture = analogStickGO.transform.FindChild(Tags.guiStick).GetComponent<GUITexture>();
+		
+//		GameObject stickGO = GameObject.Find("Stick");
+//		if(stickGO == null)
+//		{
+//			stickTexture = (GUITexture) Instantiate(prefabStickTexture);					// needed? pre-instantiete in hierachie?!
+//		}
+//		else
+//		{
+//			stickTexture = stickGO.GetComponent<GUITexture>();
+//		}
 		stickTextureWidth = stickTexture.pixelInset.width;
 		stickTextureHeight = stickTexture.pixelInset.height;
+		
 		// Analog Stick ausblenden (aus sichtfeld verschieben)
 		analogStickTexture.pixelInset = new Rect(0,
 		                                         0,
 		                                         0,
 		                                         0);
+		// Stick ausblenden (aus sichtfeld verschieben)
 		stickTexture.pixelInset = new Rect(0,
 		                                   0,
 		                                   0,
 		                                   0);
 	}
+	
+//	// Use this for initialization
+//	/// <summary>
+//	/// Start this instance.
+//	/// </summary>
+//	void Start() {
+//		
+//		analogStickTexture = (GUITexture) Instantiate(prefabAnalogStickTexture);		// needed? pre-instantiete in hierachie?!
+//		stickTexture = (GUITexture) Instantiate(prefabStickTexture);					// needed? pre-instantiete in hierachie?!
+//		analogStickTextureWidth = analogStickTexture.pixelInset.width;
+//		analogStickTextureHeight = analogStickTexture.pixelInset.height;
+//		stickTextureWidth = stickTexture.pixelInset.width;
+//		stickTextureHeight = stickTexture.pixelInset.height;
+//		// Analog Stick ausblenden (aus sichtfeld verschieben)
+//		analogStickTexture.pixelInset = new Rect(0,
+//		                                         0,
+//		                                         0,
+//		                                         0);
+//		stickTexture.pixelInset = new Rect(0,
+//		                                   0,
+//		                                   0,
+//		                                   0);
+//	}
 
 	/// <summary>
 	/// 
@@ -558,7 +607,8 @@ public class PlatformUserControl : MonoBehaviour {
 		//			debugging.text = debugmsg;
 		
 	}
-	
+
+	//TODO //TODO //TODO achtung jetzt darf es nicht mehr destroyed werden!
 	// Wenn jeder Character ein UserControlScript hat müssen die benutzten AnalogSticks dieses Script 
 	// beim entfernen mitzerstört werden
 	// GUITexture sind nicht dem CharacterGameObject untergeordnet (Child), da sich dessen Position ändert und 
@@ -569,10 +619,11 @@ public class PlatformUserControl : MonoBehaviour {
 	/// </summary>
 	void OnDestroy()
 	{
-		if(analogStickTexture != null)
-			Destroy(analogStickTexture);
-		
-		if(stickTexture != null)
-			Destroy(stickTexture);
+		//TODO //TODO //TODO achtung jetzt darf es nicht mehr destroyed werden!
+//		if(analogStickTexture != null)
+//			Destroy(analogStickTexture);
+//		
+//		if(stickTexture != null)
+//			Destroy(stickTexture);
 	}
 }

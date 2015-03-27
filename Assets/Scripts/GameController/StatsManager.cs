@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class StatsManager : MonoBehaviour {
 
+	public delegate void OnPvPKill(Player killer, Player victim);
+	public static event OnPvPKill onPvPKill;
+
 	void OnEnable()
 	{
 		SendDamageTrigger.onHeadJump += HeadJump;
@@ -25,10 +28,10 @@ public class StatsManager : MonoBehaviour {
 	public bool gameHasWinner = false;
 	private GameObject gameWinner;
 
-	private GameMode currentGameMode;
+	public static GameMode currentGameMode = GameMode.Classic;
 	public int gameModePointLimit = 10;
 	
-	enum GameMode
+	public enum GameMode
 	{
 		Classic,
 		ClassicReverse,
@@ -67,7 +70,7 @@ public class StatsManager : MonoBehaviour {
 			Debug.LogError("no Background found!");
 		}
 
-		currentGameMode = GameMode.Classic;
+//		currentGameMode = GameMode.Classic;
 
 		gameHasWinner = false;
 		gameRunning = true;
@@ -137,6 +140,9 @@ public class StatsManager : MonoBehaviour {
 			killer.addPoints(pointValueHeadJump);
 			victim.addHealth(-damageValueHeadJump);
 		}
+
+		if(onPvPKill != null)
+			onPvPKill(killer, victim);
 	}
 
 	public void HeadJump(GameObject attacker, GameObject victim)

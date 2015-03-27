@@ -267,13 +267,13 @@ public class PlatformCharacter : MonoBehaviour {
 		// 0.5 = half player size (pivot.x)
 		// if players pos < leftborder+0.5
 		// beam to rightborder-0.5
-		if(transform.position.x < -9.5f)
+		if(transform.position.x < -10.5f)
 		{
-			playerPos.x = 9.5f;
+			playerPos.x += 20f;
 		}
-		else if(transform.position.x > 9.5f)
+		else if(transform.position.x > 10.5f)
 		{
-			playerPos.x = -9.5f;
+			playerPos.x -= 20f;
 		}
 		
 		transform.position = playerPos;
@@ -1364,6 +1364,10 @@ public class PlatformCharacter : MonoBehaviour {
 		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayerOwner, out player))
 		{
 			player.platformCharacterScript = this;
+		}
+		else
+		{
+			Debug.LogError("RegisterCharacterGameObjectInPlayerDictionary_Rpc failed");
 		}
 	}
 
