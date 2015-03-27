@@ -83,11 +83,10 @@ public class AuthoritativeBomb : AuthoritativeProjectile {
 							{
 								Debug.LogWarning("onBulletHit no listeners!");
 							}
-
-							ownerCharacter.GetComponent<Shoot>().RemoveBullet(this.gameObject);
-
-							Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
-							Network.Destroy(this.gameObject);
+// Sound & Animation Fix: Bomb gets automatic destroyed!
+//							ownerCharacter.GetComponent<Shoot>().RemoveBullet(this.gameObject);
+//							Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
+//							Network.Destroy(this.gameObject);
 //						}
 					}
 				}
