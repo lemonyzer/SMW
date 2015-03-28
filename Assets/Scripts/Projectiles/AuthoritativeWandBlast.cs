@@ -3,8 +3,7 @@ using System.Collections;
 
 public class AuthoritativeWandBlast : AuthoritativeProjectile {
 
-	public delegate void OnBlastHit(GameObject killer, GameObject victim);
-	public static event OnBlastHit onBlastHit;
+
 
 
 //	public NetworkPlayer owner;
@@ -56,15 +55,15 @@ public class AuthoritativeWandBlast : AuthoritativeProjectile {
 							//statsManager.BulletHit(ownerCharacter, other.transform.parent.gameObject );
 							
 						other.transform.parent.GetComponent<PlatformCharacter>().IcedTriggered();
-
-							if(onBlastHit != null)
-							{
-								onBlastHit(ownerCharacter, other.transform.parent.gameObject);
-							}
-							else
-							{
-								Debug.LogWarning("onBulletHit no listeners!");
-							}
+						other.transform.parent.gameObject.GetComponent<PlatformCharacter>().Victim_AttackTriggered(this, false);
+//							if(onBlastHit != null)
+//							{
+//								onBlastHit(ownerCharacter, other.transform.parent.gameObject);
+//							}
+//							else
+//							{
+//								Debug.LogWarning("onBulletHit no listeners!");
+//							}
 
 							ownerCharacter.GetComponent<Shoot>().RemoveBullet(this.gameObject);
 

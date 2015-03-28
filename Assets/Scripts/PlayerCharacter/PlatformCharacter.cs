@@ -3,6 +3,27 @@ using System.Collections;
 
 public class PlatformCharacter : MonoBehaviour {
 
+	public delegate void OnRageKill(GameObject killer, GameObject victim);
+	public static event OnRageKill onRageKill;
+
+	public delegate void OnHeadJump(GameObject killer, GameObject victim);
+	public static event OnHeadJump onHeadJump;
+	
+	public delegate void OnProjectileHit(GameObject killer, GameObject victim);
+	public static event OnProjectileHit onProjectileHit;
+
+	public delegate void OnBlastHit(GameObject killer, GameObject victim);
+	public static event OnBlastHit onBlastHit;
+
+	public delegate void OnBulletHit(GameObject killer, GameObject victim);
+	public static event OnBulletHit onBulletHit;
+
+	public delegate void OnBombHit(GameObject killer, GameObject victim);
+	public static event OnBombHit onBombHit;
+
+
+	HeadJump myHeadJump;
+
 //	public Power power;
 
 	// the position read from the network
@@ -103,6 +124,7 @@ public class PlatformCharacter : MonoBehaviour {
 	 * Connection to GameController 
 	 **/
 	private GameObject gameController;
+//	StatsManager statsManager;
 //	private HashID hash;
 //	private Layer layer;
 //	private GameSceneManager gameSceneManager;
@@ -165,6 +187,7 @@ public class PlatformCharacter : MonoBehaviour {
 		myNetworkView = GetComponent<NetworkView>();
 
 		inputScript = GetComponent<PlatformUserControl>();
+		myHeadJump = GetComponent<HeadJump>();
 
 		spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -194,6 +217,7 @@ public class PlatformCharacter : MonoBehaviour {
 		iceWalledRenderer = iceWalled.GetComponent<SpriteRenderer>();
 
 		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
+//		statsManager = gameController.GetComponent<StatsManager>();
 		currentLevel = gameController.GetComponent<Level>();
 //		hash = gameController.GetComponent<HashID>();
 //		layer = gameController.GetComponent<Layer>();
@@ -289,6 +313,8 @@ public class PlatformCharacter : MonoBehaviour {
 	void CheckPosition()
 	{
 
+		Vector2 playerColliderOffset = new Vector2(0.1f,0.0f); // FIX player jump at wall and get grounded
+
 		//playerPos spriterenderer boundaries
 		Vector2 playerPos = new Vector2(transform.position.x, transform.position.y);
 
@@ -312,6 +338,11 @@ public class PlatformCharacter : MonoBehaviour {
 		Debug.DrawLine(playerColliderTopLeftPos, playerColliderBottomRightPos, Color.yellow);
 		Debug.DrawLine(playerColliderTopRightPos, playerColliderBottomLeftPos, Color.yellow);
 		Debug.DrawLine(playerColliderBottomLeftPos, playerColliderBottomRightPos, Color.yellow);
+
+		Debug.DrawLine(playerColliderTopLeftPos + playerColliderOffset, playerColliderTopRightPos - playerColliderOffset, Color.white);
+		Debug.DrawLine(playerColliderTopLeftPos + playerColliderOffset, playerColliderBottomRightPos - playerColliderOffset, Color.white);
+		Debug.DrawLine(playerColliderTopRightPos - playerColliderOffset, playerColliderBottomLeftPos + playerColliderOffset, Color.white);
+		Debug.DrawLine(playerColliderBottomLeftPos - playerColliderOffset, playerColliderBottomRightPos + playerColliderOffset, Color.white);
 		#endif
 
 		/**
@@ -326,7 +357,7 @@ public class PlatformCharacter : MonoBehaviour {
 
 		//int overlapCount = Physics2D.OverlapAreaNonAlloc(playerColliderTopLeftPos, playerColliderBottomRightPos, foundColliderArray, jumpOnPlatform );
 		foundColliderArray[0] = null;
-		Physics2D.OverlapAreaNonAlloc(playerColliderTopLeftPos, playerColliderBottomRightPos, foundColliderArray, Layer.whatIsJumpOnPlatform );
+		Physics2D.OverlapAreaNonAlloc(playerColliderTopLeftPos + playerColliderOffset, playerColliderBottomRightPos - playerColliderOffset, foundColliderArray, Layer.whatIsJumpOnPlatform );
 
 		if(foundColliderArray[0] != null)
 		{
@@ -370,7 +401,7 @@ public class PlatformCharacter : MonoBehaviour {
 
 			platformGrounded = false;
 			foundColliderArray[0] = null;
-			Physics2D.OverlapAreaNonAlloc(playerColliderTopLeftPos, playerColliderBottomRightPos, foundColliderArray, Layer.whatIsStaticGround);
+			Physics2D.OverlapAreaNonAlloc(playerColliderTopLeftPos + playerColliderOffset, playerColliderBottomRightPos - playerColliderOffset, foundColliderArray, Layer.whatIsStaticGround);
 			if(foundColliderArray[0] != null)
 			{
 				grounded = true;
@@ -608,19 +639,19 @@ public class PlatformCharacter : MonoBehaviour {
 		
 	}
 
-//	[RPC]
-//	void DeactivateKinematic()
-//	{
-//		gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
-//		gameObject.GetComponent<Rigidbody2D>().WakeUp();
-//	}
-//	
-//	[RPC]
-//	void ActivateKinematic()
-//	{
-//		gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
-//		gameObject.GetComponent<Rigidbody2D>().WakeUp();
-//	}
+	[RPC]
+	void DeactivateKinematic()
+	{
+		gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
+		gameObject.GetComponent<Rigidbody2D>().WakeUp();
+	}
+	
+	[RPC]
+	void ActivateKinematic()
+	{
+		gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+		gameObject.GetComponent<Rigidbody2D>().WakeUp();
+	}
 	
 	[RPC]
 	public void CollectedItem_Rpc(int itemId, NetworkMessageInfo info)
@@ -912,16 +943,20 @@ public class PlatformCharacter : MonoBehaviour {
 
 	IEnumerator SpawnDelay()
 	{
+		#if UNITY_EDITOR
 		if(debugSpawn && this.transform.name.StartsWith("Carbuncle"))
 			Debug.LogWarning("CoRoutine: SpawnDelay()");
+		#endif
 		yield return new WaitForSeconds(reSpawnDelayTimeNetwork);
 		StartSpawnAnimation();
 	}
 
 	public void StartSpawnAnimation()
 	{
+		#if UNITY_EDITOR
 		if(debugSpawn && this.transform.name.StartsWith("Carbuncle"))
 			Debug.LogWarning("StartSpawnAnimation()");
+		#endif
 		this.transform.GetComponent<Renderer>().enabled = false;				// sieht besser aus macht eigentlich kein unterschied, da kein neuer frame erstellt wird bis render aktiviert wird
 		
 		// neue Position halten
@@ -975,8 +1010,10 @@ public class PlatformCharacter : MonoBehaviour {
 		{
 			if(anim.GetCurrentAnimatorStateInfo(0).nameHash == HashID.spawnProtectionState)
 			{
+				#if UNITY_EDITOR
 				if(debugSpawn && this.transform.name.StartsWith("Carbuncle"))
 					Debug.LogWarning("SpawnProtectionState");
+				#endif
 				spawnProtection = true;	// coroutine ist zu langsam, wird sonst zweimal gestartet!
 				anim.SetTrigger(HashID.nextStateTrigger);	// spawnprotection state verlassen
 				// Spawn Animation finished!
@@ -1048,8 +1085,10 @@ public class PlatformCharacter : MonoBehaviour {
 	
 	IEnumerator SpawnProtectionTime()
 	{
+		#if UNITY_EDITOR
 		if(debugSpawn && this.transform.name.StartsWith("Carbuncle"))
 			Debug.LogWarning("CoRoutine: SpawnProtection()");
+		#endif
 		spawnProtection = true;
 		yield return new WaitForSeconds(spawnProtectionTime);
 		spawnProtection = false;
@@ -1058,8 +1097,10 @@ public class PlatformCharacter : MonoBehaviour {
 	
 	void SpawnComplete()
 	{
+#if UNITY_EDITOR
 		if(debugSpawn && this.transform.name.StartsWith("Carbuncle"))
 			Debug.LogWarning("SpawnComplete()");
+#endif
 		spriteRenderer.color = new Color(1f,1f,1f,1f);	// transparenz entfernen
 		Fighting();
 	}
@@ -1292,6 +1333,163 @@ public class PlatformCharacter : MonoBehaviour {
 		{
 			Debug.Log("destroyedWhileIced");
 		}
+	}
+
+//	public class DamageTrigger : MonoBehaviour {
+//
+//		public void AttackFailed()
+//		{
+//			
+//		}
+//
+//		public void AttackSuccessfull()
+//		{
+//
+//		}
+//	}
+//
+//	public void AttackTriggered(DamageTrigger attackerScript)
+//	{
+//		if(!CanTakeDamage())
+//		{
+//			attackerScript.AttackFailed();
+//			return;
+//		}
+//
+//		attackerScript.AttackSuccessfull();
+//	}
+
+	public void Attacker_AttackSuccessfull()
+	{
+//		spawnProtection = false;
+//		SpawnComplete();
+	}
+
+	public void Victim_AttackTriggered(RageTrigger attackerRageTriggerScript)
+	{
+		if(!CanTakeDamage())
+			return;
+		TakeDamage();
+		PlatformCharacter attacker = attackerRageTriggerScript.myCharacterScript;
+
+		if(onRageKill != null)
+		{
+			onRageKill(attacker.gameObject, this.gameObject);
+		}
+		else
+		{
+			Debug.LogWarning("onRageKill no listeners!");
+		}
+
+		//attacker punkte ++ (RPC)
+		
+		//victim (this) leben -- (RPC)
+		
+		//victim (this) die animation (RPC)
+	}
+
+	public void Victim_AttackTriggered(SendDamageTrigger attackerFeetScript)
+	{
+		if(!CanTakeDamage())
+			return;
+		TakeDamage();
+		//HeadJump
+		
+		//attacker spawnprotection = false setzen!!
+		PlatformCharacter attacker = attackerFeetScript.myCharacterScript;
+		attacker.Attacker_AttackSuccessfull();
+
+		if(onHeadJump != null)
+		{
+			onHeadJump(attacker.gameObject, this.gameObject);
+		}
+		else
+		{
+			Debug.LogWarning("onHeadJump no listeners!");
+		}
+		
+		//attacker punkte ++ (RPC)
+		
+		//victim (this) leben -- (RPC)
+		
+		//victim (this) headjump animation (RPC)
+		
+	}
+
+	public void Victim_AttackTriggered(AuthoritativeProjectile projectileScript, bool makeDamage)
+	{
+		if(!makeDamage)	// WandBlast makes no damage
+			return;
+
+		if(!CanTakeDamage())
+			return;
+		TakeDamage();
+		//Bullet Hit (FireBall, Bomb, WandBlast)
+		
+		//attacker spawnprotection = false setzen!!
+		PlatformCharacter attacker = projectileScript.ownerCharacter;
+		attacker.Attacker_AttackSuccessfull();
+
+
+		if(onProjectileHit != null)
+		{
+			onProjectileHit(attacker.gameObject, this.gameObject);
+		}
+		else
+		{
+			Debug.LogWarning("onProjectileHit no listeners!");
+		}
+		//attacker punkte ++ (RPC)
+		
+		//victim (this) leben -- (RPC)
+		
+		//victim (this) die animation (RPC)
+		
+	}
+
+//	public void AttackTriggered(ItemCollectorScript attackerRageTriggerScript)
+//	{
+//		if(!CanTakeDamage())
+//			return;
+//		PlatformCharacter attacker = attackerRageTriggerScript.myCharacterScript;
+//		
+//	}
+
+	public void TakeDamage()
+	{
+		isHit = true;
+	}
+
+	public bool CanTakeDamage()
+	{
+		if(isDead || isHit || spawnProtection || isInRageModus)
+		{
+			return false;
+		}
+		else
+			return true;
+	}
+
+	public bool CanHeadJump()
+	{
+		// physikalische eigenschafetn nicht getestet (muss beim headjump nach unten bewegen)
+		return CanAttack();
+	}
+
+	public bool CanRageAttack()
+	{
+		if(CanAttack())
+			return isInRageModus;
+		else
+			return false;
+	}
+
+	public bool CanAttack()
+	{
+		if( !isDead && !isHit )
+			return true;
+
+		return false;
 	}
 
 }

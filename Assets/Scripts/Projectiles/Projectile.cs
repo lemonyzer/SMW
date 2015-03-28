@@ -61,7 +61,7 @@ public abstract class Projectile {
 		
 		AuthoritativeProjectile projectileScript = projectileGameObject.GetComponent<AuthoritativeProjectile>();
 		
-		projectileScript.ownerCharacter = ownerCharacter;// important!!!
+		projectileScript.ownerCharacter = ownerCharacter.GetComponent<PlatformCharacter>();// important!!!
 		
 		return projectileGameObject;
 	}

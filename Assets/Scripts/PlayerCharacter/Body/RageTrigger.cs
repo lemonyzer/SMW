@@ -3,17 +3,16 @@ using System.Collections;
 
 public class RageTrigger : MonoBehaviour {
 
-	public delegate void OnRageKill(GameObject killer, GameObject victim);
-	public static event OnRageKill onRageKill;
 
-	GameObject gameController;
+
+//	GameObject gameController;
 //	Layer layer;
 //	StatsManager statsManager;
-	PlatformCharacter myCharacterScript;
+	public PlatformCharacter myCharacterScript;
 
 	// Use this for initialization
 	void Start () {
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
+//		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
 //		layer = gameController.GetComponent<Layer>();
 //		statsManager = gameController.GetComponent<StatsManager>();
 		myCharacterScript = this.transform.parent.GetComponent<PlatformCharacter>();
@@ -33,27 +32,33 @@ public class RageTrigger : MonoBehaviour {
 					// check if other collider is from a player or a powerup
 					if(other.gameObject.name == Tags.powerUpHitArea)
 					{
-						// other gameObject is child from a Character
-						if(!other.transform.parent.GetComponent<Rage>().isInRageModus)
-						{
-							if(!other.transform.parent.GetComponent<PlatformCharacter>().isDead)			//TODO not needed, if collider is deactivated during respawn-spawnProtection!
-							{
-								// nur wenn anderer Spieler nicht auch in RageModus ist!
 
-								//TODO
-								//TODO
-								//statsManager.InvincibleAttack(this.transform.parent.gameObject, other.transform.parent.gameObject);
+						other.transform.parent.GetComponent<PlatformCharacter>().Victim_AttackTriggered(this);
 
-								if(onRageKill != null)
-								{
-									onRageKill(this.transform.parent.gameObject, other.transform.parent.gameObject);
-								}
-								else
-								{
-									Debug.LogWarning("onRageKill no listeners!");
-								}
-							}
-						}
+//						// other gameObject is child from a Character
+//						if(!other.transform.parent.GetComponent<Rage>().isInRageModus)
+//						{
+//
+//							if(!other.transform.parent.GetComponent<PlatformCharacter>().isDead)			//TODO not needed, if collider is deactivated during respawn-spawnProtection!
+//							{
+//								// nur wenn anderer Spieler nicht auch in RageModus ist!
+//
+//								//TODO
+//								//TODO
+//								//statsManager.InvincibleAttack(this.transform.parent.gameObject, other.transform.parent.gameObject);
+//
+//
+//
+//								if(onRageKill != null)
+//								{
+//									onRageKill(this.transform.parent.gameObject, other.transform.parent.gameObject);
+//								}
+//								else
+//								{
+//									Debug.LogWarning("onRageKill no listeners!");
+//								}
+//							}
+//						}
 					}
 				}
 				else if(other.gameObject.layer == Layer.head)

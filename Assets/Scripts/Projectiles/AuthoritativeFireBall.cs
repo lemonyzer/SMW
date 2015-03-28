@@ -3,8 +3,7 @@ using System.Collections;
 
 public class AuthoritativeFireBall : AuthoritativeProjectile {
 
-	public delegate void OnBulletHit(GameObject killer, GameObject victim);
-	public static event OnBulletHit onBulletHit;
+
 
 
 //	public NetworkPlayer owner;
@@ -53,15 +52,17 @@ public class AuthoritativeFireBall : AuthoritativeProjectile {
 							//TODO
 							//TODO
 							//statsManager.BulletHit(ownerCharacter, other.transform.parent.gameObject );
-							
-							if(onBulletHit != null)
-							{
-								onBulletHit(ownerCharacter, other.transform.parent.gameObject);
-							}
-							else
-							{
-								Debug.LogWarning("onBulletHit no listeners!");
-							}
+
+						other.transform.parent.gameObject.GetComponent<PlatformCharacter>().Victim_AttackTriggered(this, true);
+
+//							if(onBulletHit != null)
+//							{
+//								onBulletHit(ownerCharacter, other.transform.parent.gameObject);
+//							}
+//							else
+//							{
+//								Debug.LogWarning("onBulletHit no listeners!");
+//							}
 
 							DestroyPowerUp();
 //						}

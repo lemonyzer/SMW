@@ -9,18 +9,32 @@ public class StatsManager : MonoBehaviour {
 
 	void OnEnable()
 	{
-		SendDamageTrigger.onHeadJump += HeadJump;
-		RageTrigger.onRageKill += InvincibleAttack;
-		AuthoritativeFireBall.onBulletHit += BulletHit;
-		AuthoritativeBomb.onBombHit += BombHit;
+
+		PlatformCharacter.onHeadJump += HeadJump;
+		PlatformCharacter.onRageKill += InvincibleAttack;
+		PlatformCharacter.onProjectileHit += BulletHit;
+		PlatformCharacter.onBulletHit += BulletHit;
+		PlatformCharacter.onBombHit += BombHit;
+
+//		SendDamageTrigger.onHeadJump += HeadJump;
+//		RageTrigger.onRageKill += InvincibleAttack;
+//		AuthoritativeFireBall.onBulletHit += BulletHit;
+//		AuthoritativeBomb.onBombHit += BombHit;
 	}
 	
 	void OnDisable()
 	{
-		SendDamageTrigger.onHeadJump -= HeadJump;
-		RageTrigger.onRageKill -= InvincibleAttack;
-		AuthoritativeFireBall.onBulletHit -= BulletHit;
-		AuthoritativeBomb.onBombHit -= BombHit;
+
+		PlatformCharacter.onHeadJump -= HeadJump;
+		PlatformCharacter.onRageKill -= InvincibleAttack;
+		PlatformCharacter.onProjectileHit -= BulletHit;
+		PlatformCharacter.onBulletHit -= BulletHit;
+		PlatformCharacter.onBombHit -= BombHit;
+
+//		SendDamageTrigger.onHeadJump -= HeadJump;
+//		RageTrigger.onRageKill -= InvincibleAttack;
+//		AuthoritativeFireBall.onBulletHit -= BulletHit;
+//		AuthoritativeBomb.onBombHit -= BombHit;
 		
 	}
 

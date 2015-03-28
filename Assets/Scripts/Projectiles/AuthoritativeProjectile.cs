@@ -13,7 +13,7 @@ public abstract class AuthoritativeProjectile : MonoBehaviour {
 	public GameObject projectileHitEffectPrefab;
 	public float hitEffectDurationTime = 2f;
     public NetworkPlayer netOwner;
-	public GameObject ownerCharacter;
+	public PlatformCharacter ownerCharacter;
 
 	public Vector3 moveSpeed = new Vector3(5,5,0);
 //	public Vector3 moveDirection = new Vector3(1,0,0);

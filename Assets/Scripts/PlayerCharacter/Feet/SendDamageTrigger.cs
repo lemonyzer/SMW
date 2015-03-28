@@ -3,8 +3,7 @@ using System.Collections;
 
 public class SendDamageTrigger : MonoBehaviour {
 
-	public delegate void OnHeadJump(GameObject killer, GameObject victim);
-	public static event OnHeadJump onHeadJump;
+
 
 	public int damageValue = 1;
 //	private int targetLayer = 0;		// Head
@@ -15,7 +14,7 @@ public class SendDamageTrigger : MonoBehaviour {
 	GameObject targetCharacterGameObject;
 	GameObject targetHead;
 
-	PlatformCharacter myPlatformCharacterScript;
+	public PlatformCharacter myCharacterScript;
 //	PlatformCharacter targetCharacterScript;
 
 //	HealthController myHealthController;
@@ -25,13 +24,13 @@ public class SendDamageTrigger : MonoBehaviour {
 	/** 
 	 * Connection to GameController 
 	 **/
-	private GameObject gameController;
+//	private GameObject gameController;
 //	private Layer layer;
 //	private StatsManager statsManager;
 
 	void Awake()
 	{
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
+//		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
 //		layer = gameController.GetComponent<Layer>();
 //		statsManager = gameController.GetComponent<StatsManager>();
 //		targetLayer = layer.head;
@@ -41,8 +40,8 @@ public class SendDamageTrigger : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		myCharacterGameObject = transform.parent.gameObject;
-		myPlatformCharacterScript = myCharacterGameObject.GetComponent<PlatformCharacter>();
-		if(myPlatformCharacterScript == null)
+		myCharacterScript = myCharacterGameObject.GetComponent<PlatformCharacter>();
+		if(myCharacterScript == null)
 		{
 			Debug.LogError("CharacterScript not found!");
 		}
@@ -66,9 +65,9 @@ public class SendDamageTrigger : MonoBehaviour {
 		{
 			return;
 		}
-		if(myPlatformCharacterScript != null)
+		if(myCharacterScript != null)
 		{
-			if(!myPlatformCharacterScript.isHit && !myPlatformCharacterScript.isDead)
+			if(!myCharacterScript.isHit && !myCharacterScript.isDead)
 			{
 				//Angriff zählt nur wenn selbst nicht getroffen
 
@@ -76,59 +75,69 @@ public class SendDamageTrigger : MonoBehaviour {
 				{
 					//Angriff zählt nur wenn anderer Collider sich in der Layer (Ebene) "Head" befindet
 
-
-					if(myPlatformCharacterScript.moveDirection.y <0)
+					//Angriff zählt nur bei Fallbewegung
+					if(myCharacterScript.moveDirection.y <0)
 					//if(myCharacterGameObject.rigidbody2D.velocity.y < 0)
 					{
-						//Angriff zählt nur bei Fallbewegung
-
 						targetHead = other.gameObject;
-//						Debug.Log(targetHead.name);
-//						Debug.Log(other.transform.name);
-
-
 						targetCharacterGameObject = targetHead.transform.parent.gameObject;
+						PlatformCharacter targetCharacter = targetCharacterGameObject.GetComponent<PlatformCharacter>();
 
-						if(!targetCharacterGameObject.GetComponent<PlatformCharacter>().isInRageModus)
+						// Angriff zählt nur wenn Gegenspieler nicht durch mich durchspringt
+						if(myCharacterScript.moveDirection.y < targetCharacter.moveDirection.y)
 						{
-							//if(myCharacterGameObject.rigidbody2D.velocity.y < targetCharacterGameObject.rigidbody2D.velocity.y)
-							if(myPlatformCharacterScript.moveDirection.y < targetCharacterGameObject.GetComponent<PlatformCharacter>().moveDirection.y)
-							{
-								// Angriff zählt nur wenn Gegenspieler nicht durch mich durchspringt
-								Debug.Log(this.ToString() + ": " + this.transform.parent.name + " ---HeadJump---> " + other.transform.parent.name);
-
-								//TODO component based programming
-								//TODO
-								//replaced: statsManager.HeadJump(myCharacterGameObject,targetCharacterGameObject);			// Alternative: statsManager oder HealthController können auch SpawnProtection abfragen!
-
-								if(onHeadJump != null)
-								{
-									onHeadJump(myCharacterGameObject, targetCharacterGameObject);
-								}
-								else
-								{
-									Debug.LogWarning("onHeadJump no listeners!");
-								}
-							}
-							else
-							{
-								Debug.LogWarning(targetCharacterGameObject.name + " durchspringt " + myCharacterGameObject.name + ", feet-head trigger zählt nicht als angriff");
-								Debug.Log(myCharacterGameObject.name + " " + myCharacterGameObject.GetComponent<Rigidbody2D>().velocity.y + " < " + targetCharacterGameObject.GetComponent<Rigidbody2D>().velocity.y + " " + targetCharacterGameObject.name);
-							}
-							//targetCharacterGameObject.GetComponent<HealthController>().ApplyDamage(damageValue,true);
-
-							//AudioSource.PlayClipAtPoint(deathSound,transform.position,1);								//wird zu oft ausgeführT!!!
-
-
-							/** 
-							 * SendMessage, Parameter vorher in Array packen!
-							 * head.SendMessage("ApplyDamage",damageValue,SendMessageOptions.DontRequireReceiver);	// BESSER ??!!!! 
-							 **/
+							targetCharacter.Victim_AttackTriggered(this);
 						}
-						else
-						{
-							Debug.LogWarning("anderer Spieler ist im RageModus und kann nicht angegriffen werden!");
-						}
+
+//						//Angriff zählt nur bei Fallbewegung
+//
+//						targetHead = other.gameObject;
+////						Debug.Log(targetHead.name);
+////						Debug.Log(other.transform.name);
+//
+//
+//						targetCharacterGameObject = targetHead.transform.parent.gameObject;
+//
+//						if(!targetCharacterGameObject.GetComponent<PlatformCharacter>().isInRageModus)
+//						{
+//							//if(myCharacterGameObject.rigidbody2D.velocity.y < targetCharacterGameObject.rigidbody2D.velocity.y)
+//							if(myCharacterScript.moveDirection.y < targetCharacterGameObject.GetComponent<PlatformCharacter>().moveDirection.y)
+//							{
+//								// Angriff zählt nur wenn Gegenspieler nicht durch mich durchspringt
+//								Debug.Log(this.ToString() + ": " + this.transform.parent.name + " ---HeadJump---> " + other.transform.parent.name);
+//
+//								//TODO component based programming
+//								//TODO
+//								//replaced: statsManager.HeadJump(myCharacterGameObject,targetCharacterGameObject);			// Alternative: statsManager oder HealthController können auch SpawnProtection abfragen!
+//
+//								if(onHeadJump != null)
+//								{
+//									onHeadJump(myCharacterGameObject, targetCharacterGameObject);
+//								}
+//								else
+//								{
+//									Debug.LogWarning("onHeadJump no listeners!");
+//								}
+//							}
+//							else
+//							{
+//								Debug.LogWarning(targetCharacterGameObject.name + " durchspringt " + myCharacterGameObject.name + ", feet-head trigger zählt nicht als angriff");
+//								Debug.Log(myCharacterGameObject.name + " " + myCharacterGameObject.GetComponent<Rigidbody2D>().velocity.y + " < " + targetCharacterGameObject.GetComponent<Rigidbody2D>().velocity.y + " " + targetCharacterGameObject.name);
+//							}
+//							//targetCharacterGameObject.GetComponent<HealthController>().ApplyDamage(damageValue,true);
+//
+//							//AudioSource.PlayClipAtPoint(deathSound,transform.position,1);								//wird zu oft ausgeführT!!!
+//
+//
+//							/** 
+//							 * SendMessage, Parameter vorher in Array packen!
+//							 * head.SendMessage("ApplyDamage",damageValue,SendMessageOptions.DontRequireReceiver);	// BESSER ??!!!! 
+//							 **/
+//						}
+//						else
+//						{
+//							Debug.LogWarning("anderer Spieler ist im RageModus und kann nicht angegriffen werden!");
+//						}
 					}
 					else
 					{

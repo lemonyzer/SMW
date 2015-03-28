@@ -7,15 +7,12 @@ public class ItemCollectorScript : MonoBehaviour {
 //	public static event OnCollecting onCollectingItem;
 
 
-	Layer layer;
-	GameObject gameController;
+
 	NetworkView myNetworkView;
-	PlatformCharacter myCharacterScript;
+	public PlatformCharacter myCharacterScript;
 
 	// Use this for initialization
 	void Start () {
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		layer = gameController.GetComponent<Layer>();
 		myNetworkView = this.transform.parent.GetComponent<NetworkView>();
 		myCharacterScript = this.transform.parent.GetComponent<PlatformCharacter>();
 	}

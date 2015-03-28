@@ -811,27 +811,27 @@ public class NetworkedPlayer : MonoBehaviour
 		// if Owner is Client, send to all Players (not only to Server!!!)
 		if (stream.isWriting)
 		{
-			Vector3 authorativePos = transform.position;				// authorative calculated position
+			Vector3 authoritativePos = transform.position;				// authorative calculated position
 			float receivedHorizontal = inputScript.inputHorizontal;		// received input from the character owner send to all clients (for prediction use and animation)
 			bool receivedInputJump = inputScript.inputJump;				// received input from the character owner send to all clients (for prediction use and animation)
-			stream.Serialize(ref authorativePos);
+			stream.Serialize(ref authoritativePos);
 			stream.Serialize(ref receivedHorizontal);
 			stream.Serialize(ref receivedInputJump);
 		}
 		// Read data from Server
 		else
 		{
-			Vector3 authorativePos = Vector3.zero;
+			Vector3 authoritativePos = Vector3.zero;
 			float receivedHorizontal = 0;
 			bool receivedInputJump = false;
-			stream.Serialize(ref authorativePos);
+			stream.Serialize(ref authoritativePos);
 			stream.Serialize(ref receivedHorizontal);
 			stream.Serialize(ref receivedInputJump);
 
 			// Update: netUpdates buffers now also on local player character to get current TripTime :://TODO DONE and latest pos ( lastrecvdPos
 
 			//netUpdate(pos, info);			// will buffer state only on characters not controlled by local player
-			netUpdate(authorativePos, receivedHorizontal, receivedInputJump, info);			// will buffer state only on characters not controlled by local player
+			netUpdate(authoritativePos, receivedHorizontal, receivedInputJump, info);			// will buffer state only on characters not controlled by local player
 		}
 	}
 

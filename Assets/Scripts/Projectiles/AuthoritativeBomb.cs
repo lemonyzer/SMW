@@ -3,8 +3,7 @@ using System.Collections;
 
 public class AuthoritativeBomb : AuthoritativeProjectile {
 
-	public delegate void OnBombHit(GameObject killer, GameObject victim);
-	public static event OnBombHit onBombHit;
+
 
 
 //	public NetworkPlayer owner;
@@ -71,14 +70,16 @@ public class AuthoritativeBomb : AuthoritativeProjectile {
 								//TODO
 								//statsManager.BulletHit(ownerCharacter, other.transform.parent.gameObject );
 								
-								if(onBombHit != null)
-								{
-									onBombHit(ownerCharacter, other.transform.parent.gameObject);
-								}
-								else
-								{
-									Debug.LogWarning("onBulletHit no listeners!");
-								}
+							other.transform.parent.gameObject.GetComponent<PlatformCharacter>().Victim_AttackTriggered(this, true);
+
+//								if(onBombHit != null)
+//								{
+//									onBombHit(ownerCharacter, other.transform.parent.gameObject);
+//								}
+//								else
+//								{
+//									Debug.LogWarning("onBulletHit no listeners!");
+//								}
 	// Sound & Animation Fix: Bomb gets automatic destroyed!
 	//							ownerCharacter.GetComponent<Shoot>().RemoveBullet(this.gameObject);
 	//							Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
