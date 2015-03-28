@@ -11,6 +11,7 @@ public abstract class AuthoritativeProjectile : MonoBehaviour {
 
 	public AudioClip projectileSpawnAudioClip;
 	public GameObject projectileHitEffectPrefab;
+	public float hitEffectDurationTime = 2f;
     public NetworkPlayer netOwner;
 	public GameObject ownerCharacter;
 
@@ -30,7 +31,7 @@ public abstract class AuthoritativeProjectile : MonoBehaviour {
 	{
 		if(projectileHitEffectPrefab != null)
 		{
-			Instantiate(projectileHitEffectPrefab, this.transform.position, Quaternion.identity);
+			Destroy(Instantiate(projectileHitEffectPrefab, this.transform.position, Quaternion.identity),hitEffectDurationTime);
 		}
 	}
 

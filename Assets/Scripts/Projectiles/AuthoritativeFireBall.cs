@@ -12,17 +12,10 @@ public class AuthoritativeFireBall : AuthoritativeProjectile {
 
 	public float bulletStayTime = 8f;
 
-	GameObject gameController;
-	Layer layer;
-//	StatsManager statsManager;
-
 //	public static Vector3 moveSpeed = new Vector3(2,2,0);
 //	public Vector3 moveDirection = new Vector3(1,0,0);
 	// Use this for initialization
 	void Start () {
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		layer = gameController.GetComponent<Layer>();
-//		statsManager = gameController.GetComponent<StatsManager>();
 		StartDestroyTimer();
 	}
 
@@ -40,7 +33,7 @@ public class AuthoritativeFireBall : AuthoritativeProjectile {
 			return;
 		}
 		Debug.Log(other.gameObject.name);
-		if(other.gameObject.layer == layer.powerUp)
+		if(other.gameObject.layer == Layer.powerUp)
 		{
 			if(other.transform.parent != null)
 			{
@@ -50,12 +43,13 @@ public class AuthoritativeFireBall : AuthoritativeProjectile {
 
 					if(Network.isServer || Network.peerType == NetworkPeerType.Disconnected)
 					{
-						if(other.transform.parent.GetComponent<PlatformCharacter>().isInRageModus)
-						{
-							this.ownerCharacter = other.transform.parent.gameObject;								// Rage Mode, sets new Owner
-						}
-						else
-						{
+						// BUGGY, cant shoot -> Projectilelist remove, add
+//						if(other.transform.parent.GetComponent<PlatformCharacter>().isInRageModus)
+//						{
+//							this.ownerCharacter = other.transform.parent.gameObject;								// Rage Mode, sets new Owner
+//						}
+//						else
+//						{
 							//TODO
 							//TODO
 							//statsManager.BulletHit(ownerCharacter, other.transform.parent.gameObject );
@@ -70,7 +64,7 @@ public class AuthoritativeFireBall : AuthoritativeProjectile {
 							}
 
 							DestroyPowerUp();
-						}
+//						}
 					}
 				}
 				else

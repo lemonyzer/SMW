@@ -268,6 +268,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		/** Client
 		 *  Called on client during disconnection from server, but also on the server when the connection has disconnected.
 		 **/
+		Destroy(PlayerDictionaryManager._instance); // TODO consistent!!! automatisch!
 		Application.LoadLevel( Scenes.mainmenu );
 	}
 

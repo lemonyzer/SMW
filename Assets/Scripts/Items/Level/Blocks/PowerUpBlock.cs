@@ -14,9 +14,6 @@ public class PowerUpBlock : MonoBehaviour {
 //	public float powerUpStayTime = 8.0f;
 
 	private Animator anim;
-	GameObject gameController;
-	private HashID hash;
-	private Layer layer;
 
 	private GameObject powerupClone;
 
@@ -28,9 +25,6 @@ public class PowerUpBlock : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake() {
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		hash = gameController.GetComponent<HashID>();
-		layer = gameController.GetComponent<Layer>();
 		anim = GetComponent<Animator>();
 
 		LoadRandomPowerUp();
@@ -49,7 +43,7 @@ public class PowerUpBlock : MonoBehaviour {
 		blockCenterPositionY = blockSpriteRenderer.bounds.center.y;
 		blockWidth = blockSpriteRenderer.bounds.size.x;
 		blockHeight = blockSpriteRenderer.bounds.size.y;
-		anim.SetTrigger(hash.powerUpBlockLoadedTrigger);
+		anim.SetTrigger(HashID.powerUpBlockLoadedTrigger);
 	}
 	
 //	// Update is called once per frame
@@ -61,7 +55,7 @@ public class PowerUpBlock : MonoBehaviour {
 	{
 		if(Network.isServer || Network.peerType == NetworkPeerType.Disconnected)
 		{
-			if(other.gameObject.layer == layer.head)
+			if(other.gameObject.layer == Layer.head)
 			{
 				if(HeadTriggerUnderBlock(other))
 				{
@@ -161,7 +155,7 @@ public class PowerUpBlock : MonoBehaviour {
 	{
 		AudioSource.PlayClipAtPoint(powerUpReleaseSound,transform.position,1);
 		hasPowerUp = false;
-		anim.SetTrigger(hash.powerUpBlockReleaseTrigger);
+		anim.SetTrigger(HashID.powerUpBlockReleaseTrigger);
 		//anim.SetBool(hash.hasPowerUpBool,hasPowerUp);
 		StartCoroutine(ReloadPowerUpBlock());
 
@@ -230,7 +224,7 @@ public class PowerUpBlock : MonoBehaviour {
 	{
 		hasPowerUp=true;
 		//anim.SetBool(hash.hasPowerUpBool,hasPowerUp);
-		anim.SetTrigger(hash.powerUpBlockLoadedTrigger);
+		anim.SetTrigger(HashID.powerUpBlockLoadedTrigger);
 		AudioSource.PlayClipAtPoint(powerUpReloadedSound,transform.position,1);
 	}
 

@@ -9,7 +9,6 @@ public class BombScript : ItemScript {
 	public void Awake()
 	{
 		item = new BombItem();																		//<---------------------------------------- deshalb eigenes Skript
-		layer = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<Layer>();
 	}
 
 	public override Item item {
@@ -88,16 +87,10 @@ public class BombScript : ItemScript {
 			}
 		}
 	}
-	
-	
-	
-	public Layer layer;
-	
 
-	
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if(other.gameObject.layer == layer.item)
+		if(other.gameObject.layer == Layer.item)
 		{
 			if(other.gameObject.name == Tags.itemCollector)
 			{

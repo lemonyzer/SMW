@@ -6,20 +6,20 @@ public class RaceCam : MonoBehaviour {
 	public bool holdStartPos = true; 
 	public GameObject target;
 
-	void Awake()
-	{
-//		currentMode = camMode.
-	}
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+//	void Awake()
+//	{
+////		currentMode = camMode.
+//	}
+//
+//	// Use this for initialization
+//	void Start () {
+//	
+//	}
+//	
+//	// Update is called once per frame
+//	void Update () {
+//	
+//	}
 
 	// auto
 	private float hSpeed = 4;

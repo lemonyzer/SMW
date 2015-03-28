@@ -13,16 +13,11 @@ public class BreakableBlock : MonoBehaviour {
 	private GameObject myBlock;
 	private BoxCollider2D myBlockCollider;
 
-	private GameObject gameController;
-	private Layer layer;
-
 	NetworkView myNView;
 
 	void Awake()
 	{
 		myNView = this.GetComponent<NetworkView>();
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		layer = gameController.GetComponent<Layer>();
 
 //		myTriggerZone = GetComponent<BoxCollider2D>();
 		myBlock = this.gameObject;
@@ -39,7 +34,7 @@ public class BreakableBlock : MonoBehaviour {
 		if(Network.isServer)
 		{
 			Debug.Log("OnTriggerEnter2D: " + other.name);
-			if(other.gameObject.layer == layer.head)
+			if(other.gameObject.layer == Layer.head)
 			{
 				// Abfrage ob Trigger/Collision am unteren Rand des Blocks
 				Debug.Log("Parent: " + other.gameObject.transform.parent.name);

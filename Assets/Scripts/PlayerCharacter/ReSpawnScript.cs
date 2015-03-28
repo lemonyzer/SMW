@@ -13,8 +13,8 @@ public class ReSpawnScript : MonoBehaviour {
 
 	Animator anim;
 	GameObject gameController;
-	HashID hash;
-	Layer layer;
+//	HashID hash;
+//	Layer layer;
 
 	Level currentLevel;
 
@@ -103,9 +103,9 @@ public class ReSpawnScript : MonoBehaviour {
 		mySpriteRenderer = GetComponent<SpriteRenderer> ();
 		anim = GetComponent<Animator>();
 		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		hash = gameController.GetComponent<HashID>();
+//		hash = gameController.GetComponent<HashID>();
 		currentLevel = gameController.GetComponent<Level>();
-		layer = gameController.GetComponent<Layer>();
+//		layer = gameController.GetComponent<Layer>();
 	}
 
 	// SpawnArea
@@ -151,7 +151,7 @@ public class ReSpawnScript : MonoBehaviour {
 		}
 
 		// Spawn Animation
-		anim.SetBool(hash.spawnBool, true);
+		anim.SetBool(HashID.spawnBool, true);
 
 		// Kinematic = true, alle Collider & Trigger aus
 		SetSpawnAnimationCharacterCollider();
@@ -197,12 +197,12 @@ public class ReSpawnScript : MonoBehaviour {
 	{
 		if(!spawnProtection)
 		{
-			if(anim.GetCurrentAnimatorStateInfo(0).nameHash == hash.spawnProtectionState)
+			if(anim.GetCurrentAnimatorStateInfo(0).nameHash == HashID.spawnProtectionState)
 			{
 				if(debugSpawn && myCharacter.name.StartsWith("Carbuncle"))
 					Debug.LogWarning("SpawnProtectionState");
 				spawnProtection = true;	// coroutine ist zu langsam, wird sonst zweimal gestartet!
-				anim.SetTrigger(hash.nextStateTrigger);	// spawnprotection state verlassen
+				anim.SetTrigger(HashID.nextStateTrigger);	// spawnprotection state verlassen
 				// Spawn Animation finished!
 				// nach SpawnAnimation Collider & Trigger auf SpawnProtection setzen
 				SetSpawnProtectionCharacterCollider();

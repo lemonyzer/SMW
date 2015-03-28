@@ -17,8 +17,6 @@ public class Beam : MonoBehaviour {
 	/** 
 	 * Connection to GameController 
 	 **/
-	private GameObject gameController;
-	private Layer layer;
 
 	BoxCollider2D[] beamCollider;
 
@@ -26,8 +24,6 @@ public class Beam : MonoBehaviour {
 	{
 		beamCollider = GetComponents<BoxCollider2D>();
 		SortBeamCollider();
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		layer = gameController.GetComponent<Layer>();
 	}
 
 	void SortBeamCollider()
@@ -137,12 +133,12 @@ public class Beam : MonoBehaviour {
 //		{
 //			beamableObject = true;
 //		}
-		if(other.gameObject.layer == layer.item)
+		if(other.gameObject.layer == Layer.item)
 		{
 			if(other.gameObject.name != Tags.itemCollector)
 				beamableObject = true;
 		}
-		else if(other.gameObject.layer == layer.powerUp)
+		else if(other.gameObject.layer == Layer.powerUp)
 		{
 			// problem! character hat auch ein child gameobject in powerUp layer!
 			if(other.gameObject.name != Tags.powerUpHitArea)

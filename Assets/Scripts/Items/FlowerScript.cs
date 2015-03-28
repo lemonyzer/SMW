@@ -7,7 +7,6 @@ public class FlowerScript : ItemScript {
 
 	public void Awake()
 	{
-		layer = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<Layer>();
 		item = new FlowerItem();																		//<---------------------------------------- deshalb eigenes Skript
 	}
 
@@ -89,13 +88,12 @@ public class FlowerScript : ItemScript {
 	
 	
 	
-	public Layer layer;
 	
 
 	
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if(other.gameObject.layer == layer.item)
+		if(other.gameObject.layer == Layer.item)
 		{
 			if(other.gameObject.name == Tags.itemCollector)
 			{

@@ -6,25 +6,31 @@ public class PlayerDictionaryManager : MonoBehaviour {
 
 
 	public static PlayerDictionary _instance;
-	public static bool serverHasPlayer = false;
+	public static bool serverHasPlayer = false;//TODO//TODO//TODO//TODO//TODO//TODO//TODO
 
 	void Awake()
 	{
+		#if UNITY_EDITOR
 		Debug.LogWarning(this.ToString() + ": Awake()");
+		Debug.LogWarning(this.ToString() + ": serverHasPlayer = " + serverHasPlayer);
+		#endif
 		if(_instance == null)
 		{
 			// PlayerDictionary doesn't exist
 			// this should haben in first time PhotonLobby!
 			_instance = (PlayerDictionary)ScriptableObject.CreateInstance (typeof(PlayerDictionary));
+			#if UNITY_EDITOR
 			Debug.Log(this.ToString() +": _instance instantiert!");
+			#endif
 		}
 		else
 		{
 			// PlayerDictionary already exists
 			// this should haben in PhotonRoom, GameScene and second time PhotonLobby!
 			// in PhotonLobby clear PlayerDictionary!!! else they would be exist in next created/joined Room!!!!
+			#if UNITY_EDITOR
 			Debug.LogWarning(this.ToString() +": _instance is already instantiated!");
-
+			#endif
 			List<Player> buffer = new List<Player> ( _instance.Values() );
 			foreach(Player player in buffer)
 			{
@@ -33,11 +39,15 @@ public class PlayerDictionaryManager : MonoBehaviour {
 			if(Application.loadedLevelName == Scenes.photonLobby ||
 			   Application.loadedLevelName == Scenes.mainmenu ||
 			   Application.loadedLevelName == Scenes.unityNetworkConnectLobby ||
-			   Application.loadedLevelName == Scenes.unityNetworkRace)
+			   Application.loadedLevelName == Scenes.unityNetworkRace ||
+			   Application.loadedLevelName == Scenes.unityNetworkCharacterSelection)
 			{
 				// wenn aktuelles Level PhotonLobby ist, lösche alle Einträge aus PlayerDictionary
 				_instance.RemoveAll();
+				serverHasPlayer = false; //TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO
+				#if UNITY_EDITOR
 				Debug.LogWarning(this.ToString() +": _instance.RemoveAll() executed!!!");
+				#endif
 			}
 		}
 	}
@@ -116,14 +126,18 @@ public class PlayerDictionaryManager : MonoBehaviour {
 		// muss wieder gefüllt werden oder einfach nicht löschen!
 		if (_instance == null)
 		{
+			#if UNITY_EDITOR
 			Debug.LogWarning("Dictionary is NULL!");
+			#endif
 			//			_instance = (PlayerDictionary)ScriptableObject.CreateInstance (typeof(PlayerDictionary));
 		}
 		
 		if(_instance != null)
 		{
 			_instance.RemoveAll();
+			#if UNITY_EDITOR
             Debug.LogWarning("AutoReset clearing Dictionary!");
+			#endif
         }
     }
 
@@ -143,7 +157,9 @@ public class PlayerDictionaryManager : MonoBehaviour {
 		if(_instance != null)
 		{
 			_instance.RemoveAll();
+			#if UNITY_EDITOR
             Debug.LogWarning("AutoReset clearing Dictionary!");
+			#endif
         }
     }
 

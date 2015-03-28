@@ -35,10 +35,10 @@ public class AnimatorController : MonoBehaviour {
 	ReSpawnScript myReSpawnScript;
 	Animator anim;
 
-	GameObject gameController;
-	private HashID hash;
-	private StatsManager statsManager;
-	private Layer layer;
+//	GameObject gameController;
+//	private HashID hash;
+//	private StatsManager statsManager;
+//	private Layer layer;
 
 	/**
 	 * Collider / Trigger
@@ -75,10 +75,10 @@ public class AnimatorController : MonoBehaviour {
 		InitColliderAndTrigger();
 		myReSpawnScript = GetComponent<ReSpawnScript>();
 //		Debug.Log(gameObject.name + " HealthController -> Awake()");
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		hash = gameController.GetComponent<HashID>();
-		statsManager = gameController.GetComponent<StatsManager>();
-		layer = gameController.GetComponent<Layer>();
+//		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
+//		hash = gameController.GetComponent<HashID>();
+//		statsManager = gameController.GetComponent<StatsManager>();
+//		layer = gameController.GetComponent<Layer>();
 	}
 
 	// Use this for initialization
@@ -131,11 +131,11 @@ public class AnimatorController : MonoBehaviour {
 	public void HeadJumpAnimation()
 	{
 		myPlatformCharacterScript.isHit = true;
-		anim.SetBool(hash.spawnBool,false);
-		anim.SetBool(hash.gameOverBool,false);
-		anim.SetBool(hash.headJumpedBool,false);
-		anim.SetBool(hash.deadBool,false);
-		anim.SetTrigger(hash.hitTrigger);			// Lösung!
+		anim.SetBool(HashID.spawnBool,false);
+		anim.SetBool(HashID.gameOverBool,false);
+		anim.SetBool(HashID.headJumpedBool,false);
+		anim.SetBool(HashID.deadBool,false);
+		anim.SetTrigger(HashID.hitTrigger);			// Lösung!
 
 		// Death Sound abspielen
 		AudioSource.PlayClipAtPoint(deathSound,transform.position,1);
@@ -148,11 +148,11 @@ public class AnimatorController : MonoBehaviour {
 	public void ShootedAnimation()
 	{
 		myPlatformCharacterScript.isHit = true;
-		anim.SetBool(hash.spawnBool,false);
-		anim.SetBool(hash.gameOverBool,false);
-		anim.SetBool(hash.headJumpedBool,false);
-		anim.SetBool(hash.deadBool,false);
-		anim.SetTrigger(hash.hitTrigger);			// Lösung!
+		anim.SetBool(HashID.spawnBool,false);
+		anim.SetBool(HashID.gameOverBool,false);
+		anim.SetBool(HashID.headJumpedBool,false);
+		anim.SetBool(HashID.deadBool,false);
+		anim.SetTrigger(HashID.hitTrigger);			// Lösung!
 		
 		// Death Sound abspielen
 		AudioSource.PlayClipAtPoint(deathSound,transform.position,1);
@@ -165,11 +165,11 @@ public class AnimatorController : MonoBehaviour {
     public void InvincibleAttackAnimation()
 	{
 		myPlatformCharacterScript.isHit = true;
-		anim.SetBool(hash.spawnBool,false);
-		anim.SetBool(hash.gameOverBool,false);
-		anim.SetBool(hash.headJumpedBool,false);
-		anim.SetBool(hash.deadBool,false);
-		anim.SetTrigger(hash.hitTrigger);			// Lösung!
+		anim.SetBool(HashID.spawnBool,false);
+		anim.SetBool(HashID.gameOverBool,false);
+		anim.SetBool(HashID.headJumpedBool,false);
+		anim.SetBool(HashID.deadBool,false);
+		anim.SetTrigger(HashID.hitTrigger);			// Lösung!
 
 		// Death Sound abspielen
 		AudioSource.PlayClipAtPoint(deathSound,transform.position,1);
@@ -183,7 +183,7 @@ public class AnimatorController : MonoBehaviour {
 	{
 		// Death Sound abspielen
 		AudioSource.PlayClipAtPoint(gameOverSound,transform.position,1);
-		anim.SetBool (hash.gameOverBool, true);
+		anim.SetBool (HashID.gameOverBool, true);
 		SetCharacterColliderDead();
 		DeadAnimationPhysics();
 		GameOver();
@@ -192,7 +192,7 @@ public class AnimatorController : MonoBehaviour {
 	void NoHeadJump()
 	{
 		//Animation setzen
-		anim.SetBool(hash.deadBool,true);
+		anim.SetBool(HashID.deadBool,true);
 		SetCharacterColliderDead();
 
 		DeadAnimationPhysics();
@@ -201,7 +201,7 @@ public class AnimatorController : MonoBehaviour {
 	void HeadJumped() 
 	{
 		//Animation setzen
-		anim.SetBool(hash.headJumpedBool,true);
+		anim.SetBool(HashID.headJumpedBool,true);
 		SetCharacterColliderHeadJumped();
 
 		myCharacter.GetComponent<Rigidbody2D>().velocity = Vector2.zero;

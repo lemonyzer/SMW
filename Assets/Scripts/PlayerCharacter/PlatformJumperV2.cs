@@ -54,7 +54,7 @@ public class PlatformJumperV2 : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		jumpOnPlatform = 1 << layer.jumpAblePlatform;
+		jumpOnPlatform = 1 << Layer.jumpAblePlatform;
 		CalculateColliderEdges();
 	}
 
@@ -140,10 +140,12 @@ public class PlatformJumperV2 : MonoBehaviour {
 		}
 
 		Color color = Color.red;
+		#if UNITY_EDITOR
 		Debug.DrawLine(platformColliderFinderTopLeftPos,platformColliderFinderTopLeftPos + new Vector2(0f,-2f),color);
 		Debug.DrawLine(platformColliderFinderTopLeftPos,platformColliderFinderTopLeftPos + new Vector2(2f,0f),color);
 		Debug.DrawLine(platformColliderFinderBottomRightPos,platformColliderFinderBottomRightPos + new Vector2(0f,+2f),color);
 		Debug.DrawLine(platformColliderFinderBottomRightPos,platformColliderFinderBottomRightPos + new Vector2(-2f,0f),color);
+		#endif
 
 		/**
 		 * find Platform to activate
@@ -165,10 +167,12 @@ public class PlatformJumperV2 : MonoBehaviour {
 			Physics2D.IgnoreCollision(groundStopper, platformColliderConsideringArray[0], false);
 		}
 		color = Color.green;
+		#if UNITY_EDITOR
 		Debug.DrawLine(platformColliderFinderTopLeftPos,platformColliderFinderTopLeftPos + new Vector2(0f,-1.75f),color);
 		Debug.DrawLine(platformColliderFinderTopLeftPos,platformColliderFinderTopLeftPos + new Vector2(bodyCollider.size.x,0f),color);
 		Debug.DrawLine(platformColliderFinderBottomRightPos,platformColliderFinderBottomRightPos + new Vector2(0f,+1.75f),color);
 		Debug.DrawLine(platformColliderFinderBottomRightPos,platformColliderFinderBottomRightPos + new Vector2(-bodyCollider.size.x,0f),color);
+		#endif
 
 		// DebugCode
 //		if(platformColliderIgnoring != null &&
@@ -224,8 +228,9 @@ public class PlatformJumperV2 : MonoBehaviour {
 
 		
 		CalculateColliderEdges();
-		
+		#if UNITY_EDITOR
 		Debug.DrawLine(platformColliderFinderTopLeftPos, platformColliderFinderBottomRightPos, Color.green);
+		#endif
 		
 		Collider2D platformCollider = Physics2D.OverlapArea(platformColliderFinderTopLeftPos, platformColliderFinderBottomRightPos, jumpOnPlatform);
 

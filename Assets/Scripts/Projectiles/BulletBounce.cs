@@ -3,10 +3,6 @@ using System.Collections;
 
 public class BulletBounce : MonoBehaviour {
 
-	GameObject gameController;
-	Layer layer;
-//	StatsManager statsManager;
-
 	Vector3 groundCheckPositionOffset;
 	Vector3 groundCheckPosition;
 	SpriteRenderer bulletSpriteRenderer;
@@ -21,9 +17,7 @@ public class BulletBounce : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		layer = gameController.GetComponent<Layer>();
-//		statsManager = gameController.GetComponent<StatsManager>();
+
 		bulletSpriteRenderer = this.transform.parent.GetComponent<SpriteRenderer>();
 		fireBallScript = this.transform.parent.GetComponent<AuthoritativeFireBall>();
 		
@@ -47,7 +41,9 @@ public class BulletBounce : MonoBehaviour {
 //		
 //		if(Network.isServer || Network.peerType == NetworkPeerType.Disconnected)
 //		{
+//			#if UNITY_EDITOR
 //			Debug.DrawLine(groundCheckPosition, groundCheckPosition + new Vector3(1,0,0));
+//			#endif
 //			
 //			groundCheckPosition = this.transform.position - groundCheckPositionOffset;		// sprite pivot need to be in center position
 //			if(Physics2D.OverlapPoint(groundCheckPosition, layer.whatIsAllGround))
@@ -64,14 +60,16 @@ public class BulletBounce : MonoBehaviour {
 	{
 		if(Network.isServer || Network.peerType == NetworkPeerType.Disconnected)
 		{
-			if(collision.gameObject.layer == layer.ground ||
-			   collision.gameObject.layer == layer.jumpAblePlatform ||
-			   collision.gameObject.layer == layer.block)
+			if(collision.gameObject.layer == Layer.ground ||
+			   collision.gameObject.layer == Layer.jumpAblePlatform ||
+			   collision.gameObject.layer == Layer.block)
 			{
 	//			Debug.Log(this.ToString() +": UnityPhysics -> BOUNCE");
 
+				#if UNITY_EDITOR
 				Debug.DrawLine(Vector3.zero, collision.contacts[0].point, Color.white, 2f);
 				Debug.DrawLine(Vector3.zero, this.transform.position, Color.red, 2f);
+				#endif
 
 				if( collision.contacts[0].point.x >= this.transform.position.x +fireBallRadius )
 				{

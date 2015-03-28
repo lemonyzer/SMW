@@ -75,12 +75,13 @@ public class PushSkript : MonoBehaviour {
 //			   (collision.gameObject.layer == layer.player2) ||
 //			   (collision.gameObject.layer == layer.player3) || 
 //			   (collision.gameObject.layer == layer.player4))
-			if(collision.gameObject.layer == layer.player)
+			if(collision.gameObject.layer == Layer.player)
 			{
 				Debug.Log(myCharacter.name + ": Collision's relative Velocity = " + collision.relativeVelocity);
 
 				float relativeVelocity = Mathf.Abs(collision.relativeVelocity.x);
 
+				#if UNITY_EDITOR
 				Debug.DrawLine(myCharacter.position,
 				               myCharacter.position + new Vector3(0f,0.5f,0f),
 				               Color.blue,
@@ -92,6 +93,7 @@ public class PushSkript : MonoBehaviour {
 				               Color.red,						// Color
 				               2,								// Visible Time
 				               false);							// depthTest
+				#endif
 
 	//			otherRigidBody2D = collision.rigidbody;		// zgriff auf Physikeigenschaften des Gegenspielers
 	//			

@@ -12,17 +12,11 @@ public class AuthoritativeWandBlast : AuthoritativeProjectile {
 
 	public float explosionDelay = 4f;
 
-	GameObject gameController;
-	Layer layer;
-//	StatsManager statsManager;
 
 //	public static Vector3 moveSpeed = new Vector3(2,2,0);
 //	public Vector3 moveDirection = new Vector3(1,0,0);
 	// Use this for initialization
 	void Start () {
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		layer = gameController.GetComponent<Layer>();
-//		statsManager = gameController.GetComponent<StatsManager>();
 		StartBombTimer();
 	}
 
@@ -40,7 +34,7 @@ public class AuthoritativeWandBlast : AuthoritativeProjectile {
 			return;
 		}
 		Debug.Log(other.gameObject.name);
-		if(other.gameObject.layer == layer.powerUp)
+		if(other.gameObject.layer == Layer.powerUp)
 		{
 			if(other.transform.parent != null)
 			{
@@ -50,16 +44,19 @@ public class AuthoritativeWandBlast : AuthoritativeProjectile {
 
 					if(Network.isServer || Network.peerType == NetworkPeerType.Disconnected)
 					{
-						if(other.transform.parent.GetComponent<PlatformCharacter>().isInRageModus)
-						{
-							this.ownerCharacter = other.transform.parent.gameObject;								// Rage Mode, sets new Owner
-						}
-						else
-						{
+						// BUGGY, cant shoot -> Projectilelist remove, add
+//						if(other.transform.parent.GetComponent<PlatformCharacter>().isInRageModus)
+//						{
+//							this.ownerCharacter = other.transform.parent.gameObject;								// Rage Mode, sets new Owner
+//						}
+//						else
+//						{
 							//TODO
 							//TODO
 							//statsManager.BulletHit(ownerCharacter, other.transform.parent.gameObject );
 							
+						other.transform.parent.GetComponent<PlatformCharacter>().IcedTriggered();
+
 							if(onBlastHit != null)
 							{
 								onBlastHit(ownerCharacter, other.transform.parent.gameObject);
@@ -73,7 +70,7 @@ public class AuthoritativeWandBlast : AuthoritativeProjectile {
 
 							Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
 							Network.Destroy(this.gameObject);
-						}
+//						}
 					}
 				}
 				else

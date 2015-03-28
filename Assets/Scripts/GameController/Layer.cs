@@ -5,14 +5,14 @@ public class Layer : MonoBehaviour {
 	
 	// Physic Layer
 	
-	public LayerMask allPlayer;
-	public LayerMask whatIsStaticGround;
-	public LayerMask whatIsJumpOnPlatform;
-	public LayerMask whatIsAllGround;
-	public LayerMask whatIsWall;
+	public static LayerMask allPlayer;
+	public static LayerMask whatIsStaticGround;
+	public static LayerMask whatIsJumpOnPlatform;
+	public static LayerMask whatIsAllGround;
+	public static LayerMask whatIsWall;
 
-	public int defaultLayer;
-	public int player;
+	public static int defaultLayer;
+	public static int player;
 
 //	public int player1;
 //	public int player2;
@@ -20,22 +20,22 @@ public class Layer : MonoBehaviour {
 //	public int player4;
 	
 //	public int enemy;
-	public int feet;
-	public int head;
-	public int body;
-	public int item;
+	public static int feet;
+	public static int head;
+	public static int body;
+	public static int item;
 
-	public int ground;
+	public static int ground;
 //	public int tagAble;
 //	public int floor;
-	public int block;
-	public int jumpAblePlatform;
+	public static int block;
+	public static int jumpAblePlatform;
 //	public int jumpAblePlatformSaveZone;
 	
-	public int powerUp;
+	public static int powerUp;
 //	public int bullet;
 	
-	public int groundStopper;
+	public static int groundStopper;
 	
 //	public int fader;
 

@@ -6,45 +6,45 @@ public class HashID : MonoBehaviour {
 	/**
 	 * Platform Character
 	 **/
-	public int hittedState;
-	public int deadState;
-	public int dieState;
-	public int headJumpedState;
-	public int spawnState;
-	public int spawnProtectionState;
-	public int idleState;
-	public int runState;
-	public int changeRunDirectionState;
-	public int jumpState;
+	public static int hittedState;
+	public static int deadState;
+	public static int dieState;
+	public static int headJumpedState;
+	public static int spawnState;
+	public static int spawnProtectionState;
+	public static int idleState;
+	public static int runState;
+	public static int changeRunDirectionState;
+	public static int jumpState;
 	
-	public int hSpeedFloat;
-	public int vSpeedFloat;
-	public int changeRunDirectionTrigger;
+	public static int hSpeedFloat;
+	public static int vSpeedFloat;
+	public static int changeRunDirectionTrigger;
 	
-	public int groundedBool;
-	public int walledBool;
+	public static int groundedBool;
+	public static int walledBool;
 	
-	public int hittedBool;
-	public int gameOverBool;
-	public int headJumpedBool;
-	public int spawnBool;
-	public int deadBool;
-	public int hitTrigger;
-	public int spawnProtectionBool;
-	public int nextStateTrigger;
+	public static int hittedBool;
+	public static int gameOverBool;
+	public static int headJumpedBool;
+	public static int spawnBool;
+	public static int deadBool;
+	public static int hitTrigger;
+	public static int spawnProtectionBool;
+	public static int nextStateTrigger;
 	
 	/**
 	 * Platform PowerUpBlock
 	 **/
-	public int powerUpBlockReleaseTrigger;
-	public int powerUpBlockLoadedTrigger;
-	public int hasPowerUpBool;
+	public static int powerUpBlockReleaseTrigger;
+	public static int powerUpBlockLoadedTrigger;
+	public static int hasPowerUpBool;
 	
 	/**
 	 * CountDown
 	 **/
-	public int startCountDownTrigger;
-	public int countDownEnabledBool;
+	public static int startCountDownTrigger;
+	public static int countDownEnabledBool;
 	
 	void Awake() {
 		

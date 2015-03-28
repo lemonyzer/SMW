@@ -16,6 +16,7 @@ public class SendDamageTrigger : MonoBehaviour {
 	GameObject targetHead;
 
 	PlatformCharacter myPlatformCharacterScript;
+//	PlatformCharacter targetCharacterScript;
 
 //	HealthController myHealthController;
 //	HealthController targetHealthController;
@@ -25,13 +26,13 @@ public class SendDamageTrigger : MonoBehaviour {
 	 * Connection to GameController 
 	 **/
 	private GameObject gameController;
-	private Layer layer;
+//	private Layer layer;
 //	private StatsManager statsManager;
 
 	void Awake()
 	{
 		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		layer = gameController.GetComponent<Layer>();
+//		layer = gameController.GetComponent<Layer>();
 //		statsManager = gameController.GetComponent<StatsManager>();
 //		targetLayer = layer.head;
 	}
@@ -67,11 +68,11 @@ public class SendDamageTrigger : MonoBehaviour {
 		}
 		if(myPlatformCharacterScript != null)
 		{
-			if(!myPlatformCharacterScript.isHit)
+			if(!myPlatformCharacterScript.isHit && !myPlatformCharacterScript.isDead)
 			{
 				//Angriff zählt nur wenn selbst nicht getroffen
 
-				if(other.gameObject.layer == layer.head)
+				if(other.gameObject.layer == Layer.head)
 				{
 					//Angriff zählt nur wenn anderer Collider sich in der Layer (Ebene) "Head" befindet
 

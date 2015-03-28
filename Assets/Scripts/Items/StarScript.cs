@@ -81,17 +81,15 @@ public class StarScript : ItemScript {
 	
 	
 	
-	public Layer layer;
 	
 	public void Awake()
 	{
-		layer = GameObject.FindGameObjectWithTag(Tags.gameController).GetComponent<Layer>();
 		item = new StarItem();
 	}
 	
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if(other.gameObject.layer == layer.item)
+		if(other.gameObject.layer == Layer.item)
 		{
 			if(other.gameObject.name == Tags.itemCollector)
 			{

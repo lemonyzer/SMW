@@ -711,6 +711,7 @@ public class NetworkedPlayer : MonoBehaviour
 			characterScript.Simulate();
 			
 			transform.position = tempPosition;	// reset position
+			characterScript.predictedPosSimulatedWithLastInput.position = transform.position;
 
 			//TODO replace Time.fixedDeltaTime
 			// what is GetPastState looking for, 

@@ -6,9 +6,7 @@ public class ProjectilePlatformJumper : MonoBehaviour {
 	BoxCollider2D bodyCollider;
 	CircleCollider2D groundStopper;
 	Rigidbody2D projectileRigidbody2D;
-
-	GameObject gameController;
-	Layer layer;
+	
 	LayerMask jumpOnPlatform;
 
 	// Use this for initialization
@@ -17,9 +15,7 @@ public class ProjectilePlatformJumper : MonoBehaviour {
 		bodyCollider = this.GetComponent<BoxCollider2D>();
 		groundStopper =  this.GetComponent<CircleCollider2D>();
 
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		layer = gameController.GetComponent<Layer>();
-		jumpOnPlatform = 1 << layer.jumpAblePlatform;
+		jumpOnPlatform = 1 << Layer.jumpAblePlatform;
 	}
 
 	void Update()
@@ -93,10 +89,12 @@ public class ProjectilePlatformJumper : MonoBehaviour {
 		}
 		
 		Color color = Color.red;
+		#if UNITY_EDITOR
 		Debug.DrawLine(platformColliderFinderTopLeftPos,platformColliderFinderTopLeftPos + new Vector2(0f,-2f),color);
 		Debug.DrawLine(platformColliderFinderTopLeftPos,platformColliderFinderTopLeftPos + new Vector2(2f,0f),color);
 		Debug.DrawLine(platformColliderFinderBottomRightPos,platformColliderFinderBottomRightPos + new Vector2(0f,+2f),color);
 		Debug.DrawLine(platformColliderFinderBottomRightPos,platformColliderFinderBottomRightPos + new Vector2(-2f,0f),color);
+		#endif
 		
 		/**
 		 * find Platform to activate
@@ -118,10 +116,12 @@ public class ProjectilePlatformJumper : MonoBehaviour {
 			Physics2D.IgnoreCollision(groundStopper, platformColliderConsideringArray[0], false);
 		}
 		color = Color.green;
+		#if UNITY_EDITOR
 		Debug.DrawLine(platformColliderFinderTopLeftPos,platformColliderFinderTopLeftPos + new Vector2(0f,-1.75f),color);
 		Debug.DrawLine(platformColliderFinderTopLeftPos,platformColliderFinderTopLeftPos + new Vector2(bodyCollider.size.x,0f),color);
 		Debug.DrawLine(platformColliderFinderBottomRightPos,platformColliderFinderBottomRightPos + new Vector2(0f,+1.75f),color);
 		Debug.DrawLine(platformColliderFinderBottomRightPos,platformColliderFinderBottomRightPos + new Vector2(-bodyCollider.size.x,0f),color);
+		#endif
 		
 		// DebugCode
 		//		if(platformColliderIgnoring != null &&

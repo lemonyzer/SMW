@@ -7,14 +7,14 @@ public class RageTrigger : MonoBehaviour {
 	public static event OnRageKill onRageKill;
 
 	GameObject gameController;
-	Layer layer;
+//	Layer layer;
 //	StatsManager statsManager;
 	PlatformCharacter myCharacterScript;
 
 	// Use this for initialization
 	void Start () {
 		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		layer = gameController.GetComponent<Layer>();
+//		layer = gameController.GetComponent<Layer>();
 //		statsManager = gameController.GetComponent<StatsManager>();
 		myCharacterScript = this.transform.parent.GetComponent<PlatformCharacter>();
 
@@ -27,7 +27,7 @@ public class RageTrigger : MonoBehaviour {
 		{
 			if(myCharacterScript.isInRageModus)
 			{
-				if(other.gameObject.layer == layer.powerUp)											// problem player interacts not with player (because of collider)
+				if(other.gameObject.layer == Layer.powerUp)											// problem player interacts not with player (because of collider)
 																									// bodyCollider -> in Child GO
 				{
 					// check if other collider is from a player or a powerup
@@ -56,12 +56,12 @@ public class RageTrigger : MonoBehaviour {
 						}
 					}
 				}
-				else if(other.gameObject.layer == layer.head)
+				else if(other.gameObject.layer == Layer.head)
 				{
 					// spieler in spawnprotection wird auch angegriffen!!!!
 					//statsManager.InvincibleAttack(this.gameObject, other.transform.parent.gameObject);
 				}
-				else if(other.gameObject.layer == layer.feet)
+				else if(other.gameObject.layer == Layer.feet)
 				{
 					// spieler in spawnprotection wird auch angegriffen!!!!
 					//statsManager.InvincibleAttack(this.gameObject, other.transform.parent.gameObject);

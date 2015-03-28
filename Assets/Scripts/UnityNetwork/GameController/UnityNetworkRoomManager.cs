@@ -40,7 +40,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 	public AudioSource myAudioSource;
 	public AudioClip roomBackgroundMusic;
 	private Animator anim;
-	private HashID hash;
+//	private HashID hash;
 
 	// Start Animation
 	public AudioClip beepAudioClip;
@@ -139,7 +139,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 	IEnumerator startCountDown()
 	{
 		//start CountDown
-		anim.SetTrigger(hash.startCountDownTrigger);
+		anim.SetTrigger(HashID.startCountDownTrigger);
 		// 3, 2, 1, GO...
 		// beep sound every second
 		// 3
@@ -206,7 +206,7 @@ public class UnityNetworkRoomManager : MonoBehaviour {
 		
 		// Start Countdown Animation 3,2,1 
 		anim = GetComponent<Animator>();
-		hash = GetComponent<HashID>();
+//		hash = GetComponent<HashID>();
 		
 		GameState.currentState = GameState.States.Initializing;
 		

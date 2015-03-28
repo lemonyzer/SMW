@@ -103,8 +103,8 @@ public class PlatformCharacter : MonoBehaviour {
 	 * Connection to GameController 
 	 **/
 	private GameObject gameController;
-	private HashID hash;
-	private Layer layer;
+//	private HashID hash;
+//	private Layer layer;
 //	private GameSceneManager gameSceneManager;
 
 	/**
@@ -195,8 +195,8 @@ public class PlatformCharacter : MonoBehaviour {
 
 		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
 		currentLevel = gameController.GetComponent<Level>();
-		hash = gameController.GetComponent<HashID>();
-		layer = gameController.GetComponent<Layer>();
+//		hash = gameController.GetComponent<HashID>();
+//		layer = gameController.GetComponent<Layer>();
 
 		InitSpawnProtectionAnimation();
 		InitPredictedShootAnimation();
@@ -305,14 +305,14 @@ public class PlatformCharacter : MonoBehaviour {
 		
 		Vector2 playerColliderBottomLeftPos = new Vector2(transform.position.x - bodyCollider2D.size.x*0.5f + bodyCollider2D.offset.x,
 		                                                   transform.position.y - spriteRenderer.bounds.extents.y*1.2f);	// Collider Bottom Left
-
+		#if UNITY_EDITOR
 //		Debug.DrawLine(playerColliderTopLeftPos, playerColliderBottomRightPos, Color.yellow);
 //		Debug.DrawLine(playerColliderBottomLeftPos, playerColliderTopRightPos, Color.yellow);
 		Debug.DrawLine(playerColliderTopLeftPos, playerColliderTopRightPos, Color.yellow);
 		Debug.DrawLine(playerColliderTopLeftPos, playerColliderBottomRightPos, Color.yellow);
 		Debug.DrawLine(playerColliderTopRightPos, playerColliderBottomLeftPos, Color.yellow);
 		Debug.DrawLine(playerColliderBottomLeftPos, playerColliderBottomRightPos, Color.yellow);
-
+		#endif
 
 		/**
 		 * check if standing on activ jumpPlatform
@@ -326,7 +326,7 @@ public class PlatformCharacter : MonoBehaviour {
 
 		//int overlapCount = Physics2D.OverlapAreaNonAlloc(playerColliderTopLeftPos, playerColliderBottomRightPos, foundColliderArray, jumpOnPlatform );
 		foundColliderArray[0] = null;
-		Physics2D.OverlapAreaNonAlloc(playerColliderTopLeftPos, playerColliderBottomRightPos, foundColliderArray, layer.whatIsJumpOnPlatform );
+		Physics2D.OverlapAreaNonAlloc(playerColliderTopLeftPos, playerColliderBottomRightPos, foundColliderArray, Layer.whatIsJumpOnPlatform );
 
 		if(foundColliderArray[0] != null)
 		{
@@ -370,7 +370,7 @@ public class PlatformCharacter : MonoBehaviour {
 
 			platformGrounded = false;
 			foundColliderArray[0] = null;
-			Physics2D.OverlapAreaNonAlloc(playerColliderTopLeftPos, playerColliderBottomRightPos, foundColliderArray, layer.whatIsStaticGround);
+			Physics2D.OverlapAreaNonAlloc(playerColliderTopLeftPos, playerColliderBottomRightPos, foundColliderArray, Layer.whatIsStaticGround);
 			if(foundColliderArray[0] != null)
 			{
 				grounded = true;
@@ -391,7 +391,9 @@ public class PlatformCharacter : MonoBehaviour {
 		 **/
 
 		//		walled = Physics2D.OverlapCircle(playerPos+wallCheckPosition, wallRadius, layer.whatIsWall);
+		//#if UNITY_EDITOR
 		//Debug.DrawLine(playerPos, playerPos+wallCheckPosition + 1*transform.localScale.x * new Vector2(wallRadius,0), Color.green);
+		//#endif
 	}
 
 //	void SetAnim() 
@@ -430,8 +432,8 @@ public class PlatformCharacter : MonoBehaviour {
 	/// </summary>
 	public void Simulate()
 	{
+		// Position checken (inAir -> jump nicht möglich)
 		CheckPosition();
-		SimulateAnimation();
 
 		if(isDead)
 		{
@@ -494,11 +496,11 @@ public class PlatformCharacter : MonoBehaviour {
 			transform.Translate( moveDirection * Time.fixedDeltaTime );
 		}
 		CheckBeam ();
+		CheckPosition();
+		SimulateAnimation();
 	}
 
-
-	bool hasHorizontalInputShown = false;
-	bool hasNoHorizontalInputShown = false;
+	
 
 	/// <summary>
 	/// Simulates the animation.
@@ -506,45 +508,17 @@ public class PlatformCharacter : MonoBehaviour {
 
 	void SimulateAnimation()
 	{
-		anim.SetBool(hash.groundedBool, grounded);
-		anim.SetBool(hash.walledBool, walled);
+		anim.SetBool(HashID.groundedBool, grounded);
+		anim.SetBool(HashID.walledBool, walled);
 
-		//if(inputScript.inputHorizontal != 0f)
-		if(moveDirection.x != 0f)							// nochmal kontrollieren warum ich diese abfrage mache... (umständlich zweimal anim.SetFloat(hSpeed...)
+		anim.SetFloat(HashID.hSpeedFloat, moveDirection.x);
+		if(facingRight && moveDirection.x < 0)
 		{
-//			if(Network.isServer)
-//			{
-//				if(ownerScript.owner != Network.player)
-//				{
-//					Debug.Log(moveDirection.x);
-//				}
-//			}
-//			if(!hasHorizontalInputShown)
-//			{
-//				hasHorizontalInputShown = true;
-//				Debug.Log(moveDirection.x);							//switched from inputHorizontal (between -1 and 1) to moveDirection.x
-//			}
-			hasNoHorizontalInputShown = false;	
-			anim.SetFloat(hash.hSpeedFloat, moveDirection.x);
-			if(facingRight && moveDirection.x < 0)
-			{
-				Flip ();
-			}
-			else if( !facingRight  && moveDirection.x > 0)
-			{
-				Flip ();
-			}
+			Flip ();
 		}
-		else
+		else if( !facingRight  && moveDirection.x > 0)
 		{
-			anim.SetFloat(hash.hSpeedFloat,moveDirection.x);
-
-			hasHorizontalInputShown = false;
-			if(!hasNoHorizontalInputShown)
-			{
-				hasNoHorizontalInputShown = true;
-				//Debug.Log(this.ToString() + ": no Input");
-			}
+			Flip ();
 		}
 	}
 
@@ -566,7 +540,7 @@ public class PlatformCharacter : MonoBehaviour {
 		}
 		else
 		{
-			anim.SetBool(hash.groundedBool,false);
+			anim.SetBool(HashID.groundedBool,false);
 		}
 	}
 
@@ -586,8 +560,8 @@ public class PlatformCharacter : MonoBehaviour {
 		}
 		else
 		{
-			anim.SetBool(hash.groundedBool,false);
-			anim.SetBool(hash.walledBool,false);
+			anim.SetBool(HashID.groundedBool,false);
+			anim.SetBool(HashID.walledBool,false);
 		}
 	}
 	
@@ -613,7 +587,7 @@ public class PlatformCharacter : MonoBehaviour {
 			}
 			else
 			{
-				anim.SetTrigger(hash.changeRunDirectionTrigger);	// Start Change Run Direction Animation
+				anim.SetTrigger(HashID.changeRunDirectionTrigger);	// Start Change Run Direction Animation
 			}
 			if(changeRunDirectionSound != null)
 				AudioSource.PlayClipAtPoint(changeRunDirectionSound,transform.position,1);				//ChangeDirection
@@ -634,19 +608,19 @@ public class PlatformCharacter : MonoBehaviour {
 		
 	}
 
-	[RPC]
-	void DeactivateKinematic()
-	{
-		gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
-		gameObject.GetComponent<Rigidbody2D>().WakeUp();
-	}
-	
-	[RPC]
-	void ActivateKinematic()
-	{
-		gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
-		gameObject.GetComponent<Rigidbody2D>().WakeUp();
-	}
+//	[RPC]
+//	void DeactivateKinematic()
+//	{
+//		gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
+//		gameObject.GetComponent<Rigidbody2D>().WakeUp();
+//	}
+//	
+//	[RPC]
+//	void ActivateKinematic()
+//	{
+//		gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+//		gameObject.GetComponent<Rigidbody2D>().WakeUp();
+//	}
 	
 	[RPC]
 	public void CollectedItem_Rpc(int itemId, NetworkMessageInfo info)
@@ -680,126 +654,6 @@ public class PlatformCharacter : MonoBehaviour {
 
 		// Call items Collect routine (can destroy itemGo after collecting)
 		collectingItem.item.Collecting(collectingItem.gameObject, this);
-	}
-
-
-	// wird auf server ausgeführt, kontrolleirt ob character und spieler item einsammeln dürfen.
-	public void CollectingItem(GameObject goItem)
-	{
-		if(!isAuthoritativeHost())
-		{
-			return;
-		}
-		// runs on server/offline only
-
-		Item currentItem = goItem.GetComponent<ItemScript>().item;		// muss genaues Script erhalten <-- Item is wrong
-
-		// lösung: statt ontriggerenter function an character, ontriggerenterfunction an itemscript
-		// collectorCharacterScript.CollectingItem(this (:Item));
-
-		if(currentItem == null)
-		{
-			Debug.LogError(goItem.name + " has no Item Script attached!!!");
-			return;
-		}
-
-
-		/**
-		 *  Polymorphie in CharacterCanCollectItems... CharacterStates  myCharacterState.collecting(goItem)?
-		 * 																myCharacterState.collecting(currentItem)?
-		 * 
-		 **/
-
-		if(!CharacterCanCollectItems())
-		{
-			Debug.LogWarning(this.ToString() + " can't collect items right now!");
-            return;
-        }
-        
-        currentItem.Collecting(goItem, this);
-
-		//
-		/**
-		 * DONE, no more if's!!!!			GO destroy, if(item.destroyAfterCollecting) Destroy go;
-		 * 									currentItem.Collecting(this, goItem);	// collecting itself destroys the item (offline/online)
-		 **/
-
-		bool destroyItem = true;
-
-		//TODO Polymorphism
-		return;
-
-
-//		if(currentItem.itemName == "Star")
-//		{
-//			//GetComponent<RageModus>().StartRageModus();
-//			if(offline())
-//			{
-//				NetworkMessageInfo bla = new NetworkMessageInfo();
-//				Debug.Log("Time.time " + Time.time);
-//				Debug.Log("Network.time " + Network.time);
-//				Debug.Log("NetworkMessageInfo: timestamp " + bla.timestamp);
-//				//bla.timestamp = Network.time; geht nicht
-//				GetComponent<RageModus>().StartRageModus(bla);
-//			}
-//			if(server())
-//				networkView.RPC("StartRageModus", RPCMode.All);
-//
-//		}
-//		else if(currentItem.itemName == "FireFlower")
-//		{
-//			if(offline())
-//				StartCoroutine(SpawnBullet());
-//			if(server())
-//			{
-//				StartCoroutine(SpawnBullet());				// spezzialfall... bullets werden von server gemanaged (authoritativ )
-//				//	myNetworkView.RPC ("", RPCMode.All);		// an alle?? eigentlich nur an Spieler	
-//			}
-//		}
-//		else if(currentItem.itemName == "FireFlower2")
-//		{
-//			// aktiviere Power Button für Character
-//			myNetworkView.RPC("ActivatePower", RPCMode.All, "FireFlower2");
-//		}
-//		else if(currentItem.itemName == "BoBomb")
-//		{
-//
-//		}
-//		else if(currentItem.itemName == "1up")
-//		{
-//
-//		}
-//		else if(currentItem.itemName == "2up")
-//		{
-//
-//		}
-//		else if(currentItem.itemName == "3up")
-//		{
-//
-//		}
-//		else if(currentItem.itemName == "5up")
-//		{
-//
-//		}
-//		else
-//		{
-//			Debug.LogWarning("unknown Item found! " + goItem.name + " " + currentItem.itemName);
-//		}
-//
-//
-//		if(destroyItem)
-//		{
-//			if(offline())
-//			{
-//				Destroy(goItem);
-//			}
-//			if(server())
-//			{
-//				Network.RemoveRPCs(goItem.networkView.viewID);
-//				Network.Destroy(goItem);
-//			}
-//		}
-
 	}
 
 	public bool canUsePowerButton = false;
@@ -976,17 +830,17 @@ public class PlatformCharacter : MonoBehaviour {
 	{
 		//RemovePower();
 		isHit = true;
-		anim.SetBool(hash.spawnBool,false);
-		anim.SetBool(hash.gameOverBool,false);
-		anim.SetBool(hash.headJumpedBool,false);
-		anim.SetBool(hash.deadBool,false);
-		anim.SetTrigger(hash.hitTrigger);			// Lösung!
+		anim.SetBool(HashID.spawnBool,false);
+		anim.SetBool(HashID.gameOverBool,false);
+		anim.SetBool(HashID.headJumpedBool,false);
+		anim.SetBool(HashID.deadBool,false);
+		anim.SetTrigger(HashID.hitTrigger);			// Lösung!
 		
 		// Death Sound abspielen
 		AudioSource.PlayClipAtPoint(deathSound,transform.position,1);
 
 		//Animation setzen
-		anim.SetBool(hash.headJumpedBool,true);
+		anim.SetBool(HashID.headJumpedBool,true);
 
 		/**
 		 * Physics
@@ -1086,7 +940,7 @@ public class PlatformCharacter : MonoBehaviour {
 		//SimulateAnimation();
 		
 		// Spawn Animation
-		anim.SetBool(hash.spawnBool, true);
+		anim.SetBool(HashID.spawnBool, true);
 		
 		kinematic = true;	// bleibt in luft hängen für die zeit der animation, spieler input ist auch deaktiviert (durch isDead)
 		// Kinematic = true, alle Collider & Trigger aus (bis auf groundStopper und body (World stopper)
@@ -1112,17 +966,19 @@ public class PlatformCharacter : MonoBehaviour {
 		
 		this.transform.GetComponent<Renderer>().enabled = true;				// sieht besser aus macht eigentlich kein unterschied, da kein neuer frame seit dem deaktivieren erzeugt wurde
 	}
-	
+
+	public Material predictionMaterial;
+
 	void LateUpdate()
 	{
 		if(!spawnProtection)
 		{
-			if(anim.GetCurrentAnimatorStateInfo(0).nameHash == hash.spawnProtectionState)
+			if(anim.GetCurrentAnimatorStateInfo(0).nameHash == HashID.spawnProtectionState)
 			{
 				if(debugSpawn && this.transform.name.StartsWith("Carbuncle"))
 					Debug.LogWarning("SpawnProtectionState");
 				spawnProtection = true;	// coroutine ist zu langsam, wird sonst zweimal gestartet!
-				anim.SetTrigger(hash.nextStateTrigger);	// spawnprotection state verlassen
+				anim.SetTrigger(HashID.nextStateTrigger);	// spawnprotection state verlassen
 				// Spawn Animation finished!
 				// nach SpawnAnimation Collider & Trigger auf SpawnProtection setzen
 				SpawnProtection();
@@ -1156,17 +1012,19 @@ public class PlatformCharacter : MonoBehaviour {
 			return;
 		}
 
-		lastReceivedPosRenderer.sprite = spriteRenderer.sprite;
-		lastReceivedPosRenderer.color = new Color(1f,1f,1f,0.3f);
+		lastReceivedPosRenderer.sprite = spriteRenderer.sprite;					// other player character
+		lastReceivedPosRenderer.color = new Color(0f,0f,0f,0.3f);
 
-		currentEstimatedPosOnServerRenderer.sprite = spriteRenderer.sprite;
-		currentEstimatedPosOnServerRenderer.color = new Color(1f,1f,1f,0.3f);
+		currentEstimatedPosOnServerRenderer.sprite = spriteRenderer.sprite;		// local player character
+		currentEstimatedPosOnServerRenderer.color = new Color(0f,0f,0f,0.3f);
 
-		predictedPosCalculatedWithLastInputRenderer.sprite = spriteRenderer.sprite;
-		predictedPosCalculatedWithLastInputRenderer.color = new Color(1f,1f,1f,0.3f);
+		predictedPosCalculatedWithLastInputRenderer.sprite = spriteRenderer.sprite;		// other player character
+		predictedPosCalculatedWithLastInputRenderer.color = new Color(0f,1f,0f,0.2f);
+		predictedPosCalculatedWithLastInputRenderer.material = predictionMaterial;
 
-		predictedPosSimulatedWithLastInputRenderer.sprite = spriteRenderer.sprite;
-		predictedPosSimulatedWithLastInputRenderer.color = new Color(1f,1f,1f,0.3f);
+		predictedPosSimulatedWithLastInputRenderer.sprite = spriteRenderer.sprite;		// other player character
+		predictedPosSimulatedWithLastInputRenderer.color = new Color(1f,0f,0f,0.2f);
+		predictedPosCalculatedWithLastInputRenderer.material = predictionMaterial;
 	}
 
 	void SpawnProtection()
@@ -1262,18 +1120,18 @@ public class PlatformCharacter : MonoBehaviour {
 	public void InvincibleAttackVictim()
 	{
 		isHit = true;
-		anim.SetBool(hash.spawnBool,false);
-		anim.SetBool(hash.gameOverBool,false);
-		anim.SetBool(hash.headJumpedBool,false);
-		anim.SetBool(hash.deadBool,false);
-		anim.SetTrigger(hash.hitTrigger);			// Lösung!
+		anim.SetBool(HashID.spawnBool,false);
+		anim.SetBool(HashID.gameOverBool,false);
+		anim.SetBool(HashID.headJumpedBool,false);
+		anim.SetBool(HashID.deadBool,false);
+		anim.SetTrigger(HashID.hitTrigger);			// Lösung!
 
 		// Death Sound abspielen
 		AudioSource.PlayClipAtPoint(deathSound,transform.position,1);
 
 		//NoHeadJump();
 		//Animation setzen
-		anim.SetBool(hash.deadBool,true);
+		anim.SetBool(HashID.deadBool,true);
 		//SetCharacterColliderDead();
 		// Layer Collisionen mit Gegenspieler und PowerUps ignorieren, GameObject soll aber auf Boden/Platform fallen und liegen bleiben
 		
@@ -1368,6 +1226,71 @@ public class PlatformCharacter : MonoBehaviour {
 		else
 		{
 			Debug.LogError("RegisterCharacterGameObjectInPlayerDictionary_Rpc failed");
+		}
+	}
+
+	bool isIced = false;
+
+	public void IcedTriggered()
+	{
+		if(isIced)
+			return;
+
+		isIced = true;
+
+		if(Network.isServer)
+		{
+			myNetworkView.RPC("Iced_Rpc", RPCMode.AllBuffered);
+		}
+	}
+
+	[RPC]
+	public void Iced_Rpc()
+	{
+		StartCoroutine(Iced());
+	}
+
+	public void StartIced()
+	{
+		iceWalledRenderer.enabled = true;
+		inputScript.enabled = false;
+		inputScript.inputJump = false;
+		inputScript.inputPower = false;
+		inputScript.inputHorizontal = 0f;
+
+	}
+
+	public void EndIced()
+	{
+		// endIce bool
+		isIced = false;
+
+		// invincible (spawnschutz)
+
+		// disable renderer
+		iceWalledRenderer.enabled = false;
+
+		// disable boxcollider trigger
+
+		// enable input (movement)
+		inputScript.enabled = true;
+	}
+
+	public float icedTime = 4f;
+
+	bool destroyedWhileIced = false;
+
+	IEnumerator Iced()
+	{
+		StartIced();
+		yield return new WaitForSeconds(icedTime);
+		if(!destroyedWhileIced)
+		{
+			EndIced();
+		}
+		else
+		{
+			Debug.Log("destroyedWhileIced");
 		}
 	}
 

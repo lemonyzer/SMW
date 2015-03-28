@@ -11,8 +11,8 @@ public class NetworkRigidbody2D : MonoBehaviour {
 		internal double timestamp;
 		internal Vector3 pos;
 		internal Vector3 velocity;
-		internal float rot;
-		internal float angularVelocity;
+//		internal float rot;
+//		internal float angularVelocity;
 	}
 
 	// We store twenty states with "playback" information
@@ -32,8 +32,8 @@ public class NetworkRigidbody2D : MonoBehaviour {
 			float angularVelocity = GetComponent<Rigidbody2D>().angularVelocity;
 			stream.Serialize(ref pos);
 			stream.Serialize(ref velocity);
-			stream.Serialize(ref rot);
-			stream.Serialize(ref angularVelocity);
+//			stream.Serialize(ref rot);
+//			stream.Serialize(ref angularVelocity);
 		}
 		// Read data from remote client
 		else
@@ -44,8 +44,8 @@ public class NetworkRigidbody2D : MonoBehaviour {
 			float angularVelocity = 0;
 			stream.Serialize(ref pos);
 			stream.Serialize(ref velocity);
-			stream.Serialize(ref rot);
-			stream.Serialize(ref angularVelocity);
+//			stream.Serialize(ref rot);
+//			stream.Serialize(ref angularVelocity);
 
 			// Shift the buffer sideways, deleting state 20
 			for (int i=m_BufferedState.Length-1;i>=1;i--)
@@ -58,8 +58,8 @@ public class NetworkRigidbody2D : MonoBehaviour {
 			state.timestamp = info.timestamp;
 			state.pos = pos;
 			state.velocity = velocity;
-			state.rot = rot;
-			state.angularVelocity = angularVelocity;
+//			state.rot = rot;
+//			state.angularVelocity = angularVelocity;
 			m_BufferedState[0] = state;
 
 			// Update used slot count, however never exceed the buffer size
@@ -114,7 +114,7 @@ public class NetworkRigidbody2D : MonoBehaviour {
 					// if t=0 => lhs is used directly
 					transform.localPosition = Vector3.Lerp(lhs.pos, rhs.pos, t);
 					//transform.localRotation = new Vector3(0,0,Mathf.Lerp(lhs.rot, rhs.rot, t));
-					GetComponent<Rigidbody2D>().rotation = Mathf.Lerp(lhs.rot, rhs.rot, t);
+//					GetComponent<Rigidbody2D>().rotation = Mathf.Lerp(lhs.rot, rhs.rot, t);
 					return;
 				}
 			}
@@ -129,11 +129,11 @@ public class NetworkRigidbody2D : MonoBehaviour {
 			if (extrapolationLength < m_ExtrapolationLimit)
 			{
 				//float axisLength = extrapolationLength * latest.angularVelocity * Mathf.Rad2Deg;
-				float angularRotation = latest.angularVelocity;
+//				float angularRotation = latest.angularVelocity;
 				GetComponent<Rigidbody2D>().position = latest.pos + latest.velocity * extrapolationLength;
-				GetComponent<Rigidbody2D>().rotation = angularRotation * latest.rot;
+//				GetComponent<Rigidbody2D>().rotation = angularRotation * latest.rot;
 				GetComponent<Rigidbody2D>().velocity = latest.velocity;
-				GetComponent<Rigidbody2D>().angularVelocity = latest.angularVelocity;
+//				GetComponent<Rigidbody2D>().angularVelocity = latest.angularVelocity;
 			}
 		}
 	}
