@@ -12,13 +12,13 @@ public class PushSkript : MonoBehaviour {
 	/** 
 	 * Connection with GameController 
 	 **/
-	GameObject gameController;
-	Layer layer;
+//	GameObject gameController;
+//	Layer layer;
 
 	void Awake()
 	{
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
-		layer = gameController.GetComponent<Layer>();
+//		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
+//		layer = gameController.GetComponent<Layer>();
 	}
 
 	// Use this for initialization

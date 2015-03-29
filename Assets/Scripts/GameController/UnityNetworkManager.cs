@@ -18,6 +18,8 @@ public class UnityNetworkManager : MonoBehaviour {
 		ButtonNextCharacterScript.OnClicked += NextCharacter_Button;
 		ButtonServerJoinGameScript.OnClicked += ServerJoins_Button;
 		ButtonStartLoadingGameScene.OnClicked += StartLoadingGameScene_Button;
+
+		PlayerStatsSlotScript.OnClicked += ActivateBotControls;
 	}
 
 	void OnDisable()
@@ -25,6 +27,60 @@ public class UnityNetworkManager : MonoBehaviour {
 		ButtonNextCharacterScript.OnClicked -= NextCharacter_Button;
 		ButtonServerJoinGameScript.OnClicked -= ServerJoins_Button;
 		ButtonStartLoadingGameScene.OnClicked -= StartLoadingGameScene_Button;
+
+		PlayerStatsSlotScript.OnClicked -= ActivateBotControls;
+	}
+
+	public void ActivateBotControls(PlayerStatsSlotScript slot)
+	{
+		Player player;
+		PlayerDictionaryManager._instance.TryGetPlayer(slot.netPlayer, out player);
+
+		if(player != null)
+		{
+			if(player.platformCharacterScript != null)
+			{
+				if(player.platformCharacterScript.gameObject != null)
+				{
+					if(player.platformCharacterScript.gameObject.GetComponent<Bot>() != null)
+					{
+						Debug.Log("player -> sucessFull");
+						player.platformCharacterScript.gameObject.GetComponent<Bot>().enabled = !slot.player.platformCharacterScript.gameObject.GetComponent<Bot>().enabled;
+					}
+					else
+						Debug.LogError("player -> GetComponent<Bot>()");
+				}
+				else
+					Debug.LogError("player.platformCharacterScript.gameObject");
+			}
+			else
+				Debug.LogError("player.platformCharacterScript");
+		}
+		else
+			Debug.LogError("player");
+
+		if(slot.player != null)
+		{
+			if(slot.player.platformCharacterScript != null)
+			{
+				if(slot.player.platformCharacterScript.gameObject != null)
+				{
+					if(slot.player.platformCharacterScript.gameObject.GetComponent<Bot>() != null)
+					{
+						Debug.Log("slot.player -> sucessFull");
+						slot.player.platformCharacterScript.gameObject.GetComponent<Bot>().enabled = true;
+					}
+					else
+						Debug.LogError("slot.player -> GetComponent<Bot>()");
+				}
+				else
+					Debug.LogError("slot.player.platformCharacterScript.gameObject");
+			}
+			else
+				Debug.LogError("slot.player.platformCharacterScript");
+		}
+		else
+			Debug.LogError("slot.player");
 	}
 
 

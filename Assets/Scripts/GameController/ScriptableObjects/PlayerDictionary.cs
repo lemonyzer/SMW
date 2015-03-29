@@ -246,20 +246,21 @@ public class PlayerDictionary : ScriptableObject {
 		}
 	}
 
-	/// <summary>
-	/// Gets the player.
-	/// </summary>
-	/// <returns>The player.</returns>
-	/// <param name="networkPlayer">Network player.</param>
+/// <summary>
+/// Tries the get player.
+/// </summary>
+/// <returns><c>true</c>, if get player was tryed, <c>false</c> otherwise.</returns>
+/// <param name="networkPlayer">Network player.</param>
+/// <param name="player">Player.</param>
 	public bool TryGetPlayer(NetworkPlayer networkPlayer, out Player player)
 	{
-		Player currentValue = null;
+//		Player currentValue = null;
 		player = null;
 //		Player result = null;
 
-		if(playerDictionary.TryGetValue(networkPlayer, out currentValue))
+		if(playerDictionary.TryGetValue(networkPlayer, out player))
 		{
-			player = currentValue;
+//			player = currentValue;
 			return true;
 		}
 		

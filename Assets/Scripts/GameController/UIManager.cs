@@ -101,7 +101,8 @@ public class UIManager : MonoBehaviour {
 		UnityNetworkManager.onNewPlayerConnected += AddNewPlayerSelectorSlot;
 		UnityNetworkManager.onPlayerDisconnected += PlayerDisconnected;
 
-		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete += AddNewPlayerStatsSlot;
+		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete += AddNewPlayerStatsSlot;		// player has no properties set!!!
+		PlatformCharacter.onRegistered += UpdateStatesSlot;										// player gets properties from Character GO
 		ButtonServerJoinGameScript.OnClicked += ServerJoins_Button;
 
 		StatsManager.onPvPKill += OnPvPKill;
@@ -112,7 +113,8 @@ public class UIManager : MonoBehaviour {
 		UnityNetworkManager.onNewPlayerConnected -= AddNewPlayerSelectorSlot;
 		UnityNetworkManager.onPlayerDisconnected -= PlayerDisconnected;
 
-		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete -= AddNewPlayerStatsSlot;
+		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete -= AddNewPlayerStatsSlot;		// player has no properties set!!!
+		PlatformCharacter.onRegistered -= UpdateStatesSlot;										// player gets properties from Character GO
 		ButtonServerJoinGameScript.OnClicked -= ServerJoins_Button;
 
 		StatsManager.onPvPKill -= OnPvPKill;
@@ -181,7 +183,7 @@ public class UIManager : MonoBehaviour {
 		// greife auf Referenz zu und Update Slot
 		//TODO alternative suchen Start() muss vorher einmal ausgeführt werden (initialisierung)
 		player.UIStatsSlotScript.Start();
-		player.UIStatsSlotScript.UpdateSlot(player);
+		player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
 	}
 
 	void PlayerDisconnected(NetworkPlayer netPlayer, Player player)
@@ -227,9 +229,9 @@ public class UIManager : MonoBehaviour {
 
 	}
 
-	void UpdateStatesSlot()
+	void UpdateStatesSlot(NetworkPlayer netPlayer, Player player)
 	{
-
+		player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
 	}
 
 }

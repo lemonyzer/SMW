@@ -4,6 +4,12 @@ using System.Collections;
 
 public class PlayerStatsSlotScript : MonoBehaviour {
 
+	public delegate void ClickAction(PlayerStatsSlotScript clickedSlot);
+	public static event ClickAction OnClicked;
+
+	public NetworkPlayer netPlayer;
+	public Player player;
+
 	//All
 	public Image border;
 	public Image slotAvatar;
@@ -26,7 +32,7 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 
 	// Use this for initialization
 	public void Start () {
-
+		Debug.Log(this.ToString() + " Start()");
 		border = GetComponent<Image>();
 		slotAvatar = transform.FindChild("SlotImage").GetComponent<Image>();
 		slotName = transform.FindChild("SlotName").GetComponent<Text>();
@@ -43,10 +49,13 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 
 	}
 
-	public void UpdateSlot(Player player)
+	public void UpdateSlot(NetworkPlayer netPlayer, Player player)
 	{
+		Debug.Log(this.ToString() + " UpdateSlot()");
 		if(player == null)
 			return;
+
+		this.player = player;
 
 		if(slotAvatar == null)
 		{
@@ -82,6 +91,27 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 			}
 		}
 
+	}
+
+	public void SlotClicked()
+	{
+		if(Network.isServer)
+		{
+			// Server kann alle Character setzen
+			if(OnClicked != null)
+			{
+				// we have event listeners
+				OnClicked(this);
+			}
+			else
+			{
+				Debug.LogError(this.ToString() + "no OnClicked() listeners");
+			}
+		}
+		else
+		{
+			// Client kann nur seinen eigenen
+		}
 	}
 
 }

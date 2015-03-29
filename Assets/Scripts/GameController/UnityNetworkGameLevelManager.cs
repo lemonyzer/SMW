@@ -68,13 +68,16 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 			player.loadingLevelComplete = true;
 			playerReadyCount++;												//TODO umgeht Update() iteration über Network.connections array
 
+
+			onPlayerLevelLoadComplete(netPlayer, player); // erzeuge UI Slot
+
+
 			if(Network.isServer)
 			{
 				// only Server
 				// Instantiate Character GameObject
 				InstantiateAndSetupPlayerCharacter(netPlayer, player);
 			}
-			onPlayerLevelLoadComplete(netPlayer, player);
 		}
 
 		if(Network.isServer)

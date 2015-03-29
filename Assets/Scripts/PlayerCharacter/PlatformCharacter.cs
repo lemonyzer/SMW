@@ -3,6 +3,10 @@ using System.Collections;
 
 public class PlatformCharacter : MonoBehaviour {
 
+	
+	public delegate void OnCharacterRegistered(NetworkPlayer netPlayer, Player player);
+	public static event OnCharacterRegistered onRegistered;
+
 	public delegate void OnRageKill(GameObject killer, GameObject victim);
 	public static event OnRageKill onRageKill;
 
@@ -1263,10 +1267,17 @@ public class PlatformCharacter : MonoBehaviour {
 		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayerOwner, out player))
 		{
 			player.platformCharacterScript = this;
+			Debug.LogWarning("player.platformCharacterScript set");
+			if(onRegistered != null)
+			{
+				onRegistered(netPlayerOwner, player);
+			}
+			else
+				Debug.LogError(this.ToString() + " no onCharacterRegistered() listeners");
 		}
 		else
 		{
-			Debug.LogError("RegisterCharacterGameObjectInPlayerDictionary_Rpc failed");
+			Debug.LogError("RegisterCharacterGameObjectInPlayerDictionary_Rpc failed: NetworkPlayer not in playerDicionary");
 		}
 	}
 
