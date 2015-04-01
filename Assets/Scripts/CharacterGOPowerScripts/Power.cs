@@ -11,7 +11,7 @@ public abstract class Power : MonoBehaviour {
 	public int priority;
 
 	// Item wurde eingesammelt die diese Power/Fähigkeit freischaltet.
-	public abstract void gained(NetworkMessageInfo info);
+	public abstract void gained(double collectedTimeStamp);
 	
 	// Character hat Fähigkeit verloren
 	public abstract void lost();

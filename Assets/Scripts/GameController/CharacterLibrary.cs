@@ -6,16 +6,38 @@ public class CharacterLibrary : MonoBehaviour {
 
 	public GameObject[] characters;
 
+
+	/**
+	 * 
+	 * Bei einem DontDestroyOnLoad() makierten GameObject wird nie wieder (aus SetActive(false, true)) Awake() und Start() ausgeführt)
+	 * 
+	 **/
+
 	// Initialisierung
 	void Awake()
 	{
-		DontDestroyOnLoad(this);
+
+		//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO
+		DontDestroyOnLoad(this.gameObject);
+
 		for(int i=0; i < characters.Length; i++)
 		{
 			characters[i].GetComponent<CharacterAvatar>().id = i;
 			characters[i].GetComponent<CharacterAvatar>().inUse = false;
 		}
 
+	}
+
+	//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO
+	void OnLevelWasLoaded()
+	{
+		Debug.Log("Scene: " + Application.loadedLevelName);
+		if(Application.loadedLevelName == Scenes.mainmenu)
+		{
+			Debug.LogWarning(this.ToString() + " OnLevelWasLoaded() in MainMenu -> Destroy me!");
+			Destroy(this.gameObject);
+			return;
+		}
 	}
 
 	public CharacterAvatar GetFirstUnselected()

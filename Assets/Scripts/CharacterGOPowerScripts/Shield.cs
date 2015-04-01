@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Shield : Power {
 
-	public override void gained (NetworkMessageInfo info)
+	public override void gained (double collectedTimeStamp)
 	{
 		throw new System.NotImplementedException ();
 	}

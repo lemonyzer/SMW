@@ -32,6 +32,14 @@ public class HashID : MonoBehaviour {
 	public static int hitTrigger;
 	public static int spawnProtectionBool;
 	public static int nextStateTrigger;
+
+	/**
+	 * Breakable IceBlock
+	 **/
+	public static int icedTrigger;
+	public static int iceBlockBreakTrigger;
+	public static int iceBlockMeltTrigger;
+
 	
 	/**
 	 * Platform PowerUpBlock
@@ -90,6 +98,13 @@ public class HashID : MonoBehaviour {
 		 **/
 		startCountDownTrigger = Animator.StringToHash("startCountDown");
 		countDownEnabledBool = Animator.StringToHash("CountDownEnabled");
+
+		/**
+		 * Breakable IceBlock
+		 **/
+		iceBlockBreakTrigger = Animator.StringToHash("Break");
+		iceBlockMeltTrigger = Animator.StringToHash("Melt");
+		icedTrigger = Animator.StringToHash("Iced");
 		
 	}
 }

@@ -2,44 +2,48 @@
 using System.Collections;
 
 public class StarItem : Item {
-	
+
+	public StarItem (int id) : base (id)
+	{
+		rpcMode = RPCMode.AllBuffered;
+	}
+
 	//	public GameObject item;
 	
-	public RPCMode rpcMode = RPCMode.AllBuffered;	// eigentlich brauch die Einsammelinfo nur der betroffende Spieler, ABER andere Spieler sollen sehen das er im Rage modus ist!
-	
-	public int itemId = ItemLibrary.starID;
+//	public RPCMode rpcMode = RPCMode.AllBuffered;	// eigentlich brauch die Einsammelinfo nur der betroffende Spieler, ABER andere Spieler sollen sehen das er im Rage modus ist!
+//	
+//	public int itemId = ItemLibrary.starID;
 	//public Power powerScript = new Rage();						// <--- Item-Power Zuordnung		<-- geht nicht!
 	public Rage powerScript;									// <--- Item-Power Zuordnung	problem: ist schon speziallisiert. kann nicht allgemeint über Power angesprochen werden
 	public string powerScriptName = "Rage";						// <--- Item-Power Zuordnung
 	
 	
-	public override void Collecting(GameObject itemGO, PlatformCharacter collector)
-	{
-		if(Network.peerType == NetworkPeerType.Disconnected)
-		{
-			//offline, collecting??
-			//collector.CollectedItem(itemGO, );
-			return;
+//	public override void Collecting(GameObject itemGO, PlatformCharacter collector)
+//	{
+//		if(Network.peerType == NetworkPeerType.Disconnected)
+//		{
+//			//offline, collecting??
+//			//collector.CollectedItem(itemGO, );
+//			return;
+//
+//		}
+//
+//		collector.myNetworkView.RPC("CollectedItem_Rpc", rpcMode, itemId);			// Serverseitig
+//		
+//		// rpc geht von collctor aus 				-> Client weiß wer!
+//		// itemId 									-> Client weiß was!
+//		// rpc hat NetworkMessageInfo mit timeStamp -> Client weiß wann!
+//		
+//		// das itemGO kann Zerstört werden, nach Collecting...
+//		// wird für jedes Item seperat gehandelt.
+//		// könnte noch interface oder oberklasse mit destroyaftercollecting stayaftercollecting erweitern...
+//		if(destroyAfterCollecting)
+//		{
+//			DestroyItemGO(itemGO);
+//		}
+//	}
 
-		}
-
-		collector.myNetworkView.RPC("CollectedItem_Rpc", rpcMode, itemId);			// Serverseitig
-		
-		// rpc geht von collctor aus 				-> Client weiß wer!
-		// itemId 									-> Client weiß was!
-		// rpc hat NetworkMessageInfo mit timeStamp -> Client weiß wann!
-		
-		// das itemGO kann Zerstört werden, nach Collecting...
-		// wird für jedes Item seperat gehandelt.
-		// könnte noch interface oder oberklasse mit destroyaftercollecting stayaftercollecting erweitern...
-		if(Network.isServer)
-		{
-			Network.RemoveRPCs(itemGO.GetComponent<NetworkView>().viewID);
-			Network.Destroy(itemGO.gameObject);
-		}
-	}
-	
-	public override void Collected(PlatformCharacter collector, NetworkMessageInfo info)
+	public override void Collected(PlatformCharacter collector, double collectedTimeStamp)
 	{
 		//		this.collector = collector;												// Clientseitig (wenn rpcMode == All) auch Serverseitig 
 		/**
@@ -79,7 +83,7 @@ public class StarItem : Item {
 		{
 			//characterPowerScript.gained(info);
 			Debug.LogError("GetComponent(string) hat funktioniert!");
-			characterPowerScript.gained(info);
+			characterPowerScript.gained(collectedTimeStamp);
 			return;
 		}
 		else
@@ -96,7 +100,7 @@ public class StarItem : Item {
 		characterPowerScript = collector.gameObject.GetComponent( powerScript.GetType() ) as Power;
 		if(characterPowerScript != null)
 		{
-			characterPowerScript.gained(info);
+			characterPowerScript.gained(collectedTimeStamp);
 			Debug.LogError("GetComponent(powerScript.GetType()) hat funktioniert!");
 		}
 		else

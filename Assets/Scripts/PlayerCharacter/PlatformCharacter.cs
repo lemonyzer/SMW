@@ -660,7 +660,11 @@ public class PlatformCharacter : MonoBehaviour {
 	[RPC]
 	public void CollectedItem_Rpc(int itemId, NetworkMessageInfo info)
 	{
-		ItemLibrary.getItem(itemId).Collected(this, info);
+		double collectedTimeStamp = info.timestamp;
+#if UNITY_EDITOR
+		Debug.LogWarning("Collected TimeStamp: " + collectedTimeStamp);
+#endif
+		ItemLibrary.getItem(itemId).Collected(this, collectedTimeStamp);
 	}
 
 	/// <summary>
@@ -673,7 +677,6 @@ public class PlatformCharacter : MonoBehaviour {
 		{
 			return;
 		}
-
 		
 		if(collectingItem == null)
 		{
@@ -688,7 +691,7 @@ public class PlatformCharacter : MonoBehaviour {
 		}
 
 		// Call items Collect routine (can destroy itemGo after collecting)
-		collectingItem.item.Collecting(collectingItem.gameObject, this);
+		ItemLibrary.getItem(collectingItem.itemId).Collecting(collectingItem.gameObject, this);
 	}
 
 	public bool canUsePowerButton = false;
@@ -1285,7 +1288,7 @@ public class PlatformCharacter : MonoBehaviour {
 
 	public void IcedTriggered()
 	{
-		if(isIced)
+		if(!CanGetIced())
 			return;
 
 		isIced = true;
@@ -1302,8 +1305,25 @@ public class PlatformCharacter : MonoBehaviour {
 		StartCoroutine(Iced());
 	}
 
+	public float icedTime = 4f;
+	IEnumerator Iced()
+	{
+		StartIced();
+		yield return new WaitForSeconds(icedTime);
+		if(!destroyedWhileIced)
+		{
+			IcedMelted();
+		}
+		else
+		{
+			Debug.Log("destroyedWhileIced");
+		}
+	}
+
 	public void StartIced()
 	{
+		destroyedWhileIced = false;
+		iceWalled.GetComponent<Animator>().SetTrigger(HashID.icedTrigger);
 		iceWalledRenderer.enabled = true;
 		inputScript.enabled = false;
 		inputScript.inputJump = false;
@@ -1312,39 +1332,34 @@ public class PlatformCharacter : MonoBehaviour {
 
 	}
 
+	bool destroyedWhileIced = false;
+
+	public void IcedMelted()
+	{
+		iceWalled.GetComponent<Animator>().SetTrigger(HashID.iceBlockMeltTrigger);
+		EndIced();
+	}
+
 	public void EndIced()
 	{
 		// endIce bool
 		isIced = false;
-
+		
 		// invincible (spawnschutz)
-
+		
 		// disable renderer
-		iceWalledRenderer.enabled = false;
-
+		//		iceWalledRenderer.enabled = false;
+		
+		//animation disables it!
+		
 		// disable boxcollider trigger
-
+		
 		// enable input (movement)
 		inputScript.enabled = true;
 	}
 
-	public float icedTime = 4f;
 
-	bool destroyedWhileIced = false;
 
-	IEnumerator Iced()
-	{
-		StartIced();
-		yield return new WaitForSeconds(icedTime);
-		if(!destroyedWhileIced)
-		{
-			EndIced();
-		}
-		else
-		{
-			Debug.Log("destroyedWhileIced");
-		}
-	}
 
 //	public class DamageTrigger : MonoBehaviour {
 //
@@ -1466,9 +1481,39 @@ public class PlatformCharacter : MonoBehaviour {
 //		
 //	}
 
+	[RPC]
+	void AttackedWhileIced()
+	{
+		iceWalled.GetComponent<Animator>().SetTrigger(HashID.iceBlockBreakTrigger);	// wird nicht per RPC übertragen
+		destroyedWhileIced = true;
+
+		EndIced();
+	}
+
 	public void TakeDamage()
 	{
 		isHit = true;
+		if(isIced)
+		{
+			myNetworkView.RPC("AttackedWhileIced", RPCMode.All);	//TODO check RPCMode
+//			iceWalled.GetComponent<Animator>().SetTrigger(HashID.iceBlockBreakTrigger);	// wird nicht per RPC übertragen
+//			destroyedWhileIced = true;
+		}
+	}
+
+	public bool CanGetIced()
+	{
+		if(CanTakeDamage())
+		{
+			if(isIced)
+			{
+				return false;
+			}
+			return true;
+		}
+		//if(isHit || isDead || isInRageModus ||  isIced)
+
+		return false;
 	}
 
 	public bool CanTakeDamage()

@@ -177,7 +177,10 @@ public class PowerUpBlock : MonoBehaviour {
 			{
 				
 			}
-			powerupClone.GetComponent<ItemScript>().StartDestroyTimer();
+			if(powerupClone.GetComponent<ItemScript>().autoDestroy)
+			{
+				powerupClone.GetComponent<ItemScript>().StartDestroyTimer();
+			}
 		}
 
 		if(Network.isServer)

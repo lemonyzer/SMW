@@ -14,11 +14,11 @@ public class Rage : Power {
 	// power.checkTrigger() ausgeführt
 	// checkTrigger kontrolliert Benutzereingabe.... oder triggerFlags die von einem TriggerEvent ausgeführt werden.
 
-	public override void gained (NetworkMessageInfo info)
+	public override void gained (double collectedTimeStamp)
 	{
-		gainTimeStamp = info.timestamp;
+		gainTimeStamp = collectedTimeStamp;
 		//if(gamemode.powerprefs.rage == auto)
-		autoActivate(info);
+		autoActivate(gainTimeStamp);
 		//else
 		//powerbtn aktivieren
 		//timer aktivieren...
@@ -39,9 +39,13 @@ public class Rage : Power {
 		throw new System.NotImplementedException ();
 	}
 
-	public void autoActivate(NetworkMessageInfo info)
+	/// <summary>
+	/// Autos the activate.
+	/// </summary>
+	/// <param name="gainTimeStamp">Gain time stamp (collectedTimeStamp).</param>
+	public void autoActivate(double gainTimeStamp)
 	{
-		StartRageModus(info);			// später wird statt weiteres script... alles in diesem script durchgeführt was diese poewr betrifft!
+		StartRageModus(gainTimeStamp);			// später wird statt weiteres script... alles in diesem script durchgeführt was diese poewr betrifft!
 	}
 
 
@@ -211,13 +215,37 @@ public class Rage : Power {
 			gameController.GetComponent<AudioSource>().Play();
 		}
 	}
-	
-	[RPC]
-	public void StartRageModus(NetworkMessageInfo info)
+
+//	[RPC]
+//	public void StartRageModus(NetworkMessageInfo info)
+//	{
+//		
+//		double rpcTripTime = Network.time - info.timestamp;
+//		if(info.timestamp != 0)
+//		{
+//			if(rpcTripTime >= rageTime)
+//			{
+//				rageTimeNetwork = 0f;
+//			}
+//			else
+//				rageTimeNetwork = rageTime - (float)rpcTripTime;
+//		}
+//		else
+//		{
+//			// offline 
+//			rageTimeNetwork = rageTime;
+//		}
+//		
+//		Debug.Log(this.ToString() + " rpcTripTime: " + rpcTripTime);
+//		Debug.Log(this.ToString() + " rageTimeNetwork: " + rageTimeNetwork);
+//	}
+
+
+	public void StartRageModus(double gainedTimeStamp)
 	{
 		
-		double rpcTripTime = Network.time - info.timestamp;
-		if(info.timestamp != 0)
+		double rpcTripTime = Network.time - gainedTimeStamp;
+		if(gainedTimeStamp != 0)
 		{
 			if(rpcTripTime >= rageTime)
 			{

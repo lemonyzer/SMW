@@ -80,7 +80,7 @@ public class Shoot : Power {
 		}
 	}
 
-	public override void gained (NetworkMessageInfo info)
+	public override void gained (double collectedTimeStamp)
 	{
 		characterScript.SetPower(this);
 		//characterScript.power1 = this;
@@ -104,7 +104,7 @@ public class Shoot : Power {
 				// spawn projectile
 				// add to list
 				// set Owner
-				AddBullet(currentProjectile.SpawnSingle(this.gameObject));
+				AddBullet(currentProjectile.Instantiate(this.gameObject));
 			}
 		}
     }

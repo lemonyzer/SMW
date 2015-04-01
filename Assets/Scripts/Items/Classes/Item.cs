@@ -13,6 +13,13 @@ public abstract class Item {
 //	public abstract string powerScriptName { get;set; }
 
 
+	public Item(int id)
+	{
+		itemId = id;
+		#if UNITY_EDITOR
+		Debug.Log(this.ToString() + " Id:" + id);
+		#endif
+	}
 
 
 
@@ -67,7 +74,64 @@ public abstract class Item {
      * Beispiel unserer Methoden Starten und Landen also durch:
      **/
 
-	public abstract void Collecting(GameObject itemGO, PlatformCharacter collector);	// Serverseitig (authoritative)
-	public abstract void Collected(PlatformCharacter collector, NetworkMessageInfo info);	// Server- und Clientseitig (RPCMode.All)
+	public RPCMode rpcMode;	// eigentlich brauch die Einsammelinfo nur der betroffende Spieler, ABER andere Spieler sollen sehen das er im Rage modus ist!
+	public int itemId;	//TODO PROBLEM
+	public bool destroyAfterCollecting = true;
+
+	public virtual void Collecting(GameObject itemGO, PlatformCharacter collector)	// Serverseitig (authoritative)
+	{
+
+		if(Network.isClient)
+			return;
+
+		if(Network.peerType == NetworkPeerType.Disconnected)
+		{
+			//offline, collecting??
+
+			//			if(offline())
+			//			{
+			//				NetworkMessageInfo bla = new NetworkMessageInfo();
+			//				Debug.Log("Time.time " + Time.time);
+			//				Debug.Log("Network.time " + Network.time);
+			//				Debug.Log("NetworkMessageInfo: timestamp " + bla.timestamp);
+			//				//bla.timestamp = Network.time; geht nicht
+            //				GetComponent<RageModus>().StartRageModus(bla);
+			//			}
+
+			NetworkMessageInfo temp = new NetworkMessageInfo();
+
+			collector.CollectedItem_Rpc(itemId, temp);
+		}
+		else if(Network.isServer)
+		{
+			collector.myNetworkView.RPC("CollectedItem_Rpc", rpcMode, itemId);			// Serverseitig
+		}
+		
+		// rpc geht von collctor aus 				-> Client weiß wer!
+		// itemId 									-> Client weiß was!
+		// rpc hat NetworkMessageInfo mit timeStamp -> Client weiß wann!
+		
+		// das itemGO kann Zerstört werden, nach Collecting...
+		// wird für jedes Item seperat gehandelt.
+		// könnte noch interface oder oberklasse mit destroyaftercollecting stayaftercollecting erweitern...
+		if(destroyAfterCollecting)
+		{
+			DestroyItemGO(itemGO);
+		}
+	}
+	public abstract void Collected(PlatformCharacter collector, double collectedTimeStamp);	// Server- und Clientseitig (RPCMode.All)
+
+	public virtual void DestroyItemGO(GameObject itemGO)
+	{
+		if(Network.peerType == NetworkPeerType.Disconnected)
+        {
+			GameObject.Destroy(itemGO.gameObject);
+		}
+		if(Network.isServer)
+		{
+			Network.RemoveRPCs(itemGO.GetComponent<NetworkView>().viewID);
+			Network.Destroy(itemGO.gameObject);
+		}
+	}
 
 }

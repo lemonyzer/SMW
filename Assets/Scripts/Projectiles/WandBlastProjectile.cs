@@ -15,9 +15,9 @@ public class WandBlastProjectile : Projectile {
 	{
 	}
 
-	public override GameObject SpawnSingle(GameObject ownerCharacter)
+	public override GameObject Instantiate(GameObject ownerCharacter)
 	{
-		GameObject projectileGO = base.SpawnSingle(ownerCharacter);
+		GameObject projectileGO = base.Instantiate(ownerCharacter);
 
 		AuthoritativeProjectile projectileScript = projectileGO.GetComponent<AuthoritativeProjectile>();
 		// setze anfangs bewegungsrichtung und geschwindigkeit

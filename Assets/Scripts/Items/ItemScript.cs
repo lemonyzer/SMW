@@ -3,15 +3,39 @@ using System.Collections;
 
 public abstract class ItemScript : MonoBehaviour {
 
+	// wird von Baseclasse geerbt (protected)
+	//private Item _item;
+	
+	// public 	= öffentlich
+	// override = überschreibe von Baseclass
+	// Item 	= Rückgabewert
+	// item		= "Property"-Name
+	
+	//set-zugriff mit: item = xyz;
+	//get-zugriff mit: item.Collecting();
+
+
 	// vererben ???
 //	public delegate void OnCollecting(GameObject killer, GameObject victim);
 //	public static event OnCollecting onRageKill;
 
-	protected Item _item;
-	abstract public Item item { get; set;}
+	protected int _itemId;	
+
+	public int itemId {
+		get {
+			return _itemId;
+		}
+		set {
+			_itemId = value;
+		}
+	}
+
+	// This function is always called before any Start functions and also just after a prefab is instantiated
+	abstract public void Awake();
+
 //	abstract public float itemStayTime { get; set;}			// debug..geht nicht (coroutine)
 
-	public abstract void StartDestroyTimer();
+//	public abstract void StartDestroyTimer();
 
 
 
@@ -38,4 +62,56 @@ public abstract class ItemScript : MonoBehaviour {
 	//	}
 
 
+	public bool autoDestroy = true;
+	public float itemStayTime = 8f;
+	
+
+	public virtual void StartDestroyTimer()
+	{
+		StartCoroutine(DestroyPowerUp());
+	}
+	
+	IEnumerator DestroyPowerUp()
+	{
+		yield return new WaitForSeconds(itemStayTime);
+		if(Network.peerType == NetworkPeerType.Disconnected)
+		{
+			Destroy(this.gameObject);
+		}
+		if(Network.isServer)
+		{
+			if(this.gameObject != null)
+			{
+				Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
+				Network.Destroy(this.gameObject);
+			}
+			else
+			{
+				Debug.LogWarning("nothing to Destroy! already destroyed/collected?!");
+			}
+		}
+	}
+	
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		if(other.gameObject.layer == Layer.item)
+		{
+			if(other.gameObject.name == Tags.itemCollector)
+			{
+				// Player gefunden
+				if(itemId == null)
+				{
+					Debug.LogError(this.gameObject.name + " hat kein Item im Inspektor gesetzt!!!");
+				}
+				else
+				{
+					//V0: kann im PlatformCharacter noch controllieren ob dieser das Item einsammeln darf! 
+					other.transform.parent.GetComponent<PlatformCharacter>().CollectingItem(this);
+					
+					//V1 
+					//item.Collecting(this.gameObject, other.transform.parent.GetComponent<PlatformCharacter>());
+				}
+			}
+		}
+	}
 }

@@ -15,9 +15,9 @@ public class BombProjectile : Projectile {
 	{
 	}
 
-	public override GameObject SpawnSingle(GameObject ownerCharacter)
+	public override GameObject Instantiate(GameObject ownerCharacter)
 	{
-		GameObject projectileGO = base.SpawnSingle(ownerCharacter);
+		GameObject projectileGO = base.Instantiate(ownerCharacter);
 
 		// setze anfangsbewegung
 		AuthoritativeProjectile projectileScript = projectileGO.GetComponent<AuthoritativeProjectile>();

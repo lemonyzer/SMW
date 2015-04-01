@@ -2,7 +2,16 @@
 using System.Collections;
 
 public abstract class Projectile {
-	
+
+	//public AudioClip spawnSound;
+	public AudioClip throwSound;
+	public AudioClip pickUpSound;
+
+	public virtual void Release(GameObject ownerCharacter)
+	{
+
+	}
+
 //	public abstract override void Collecting(GameObject itemGO, PlatformCharacter collector);
 //	public abstract override void Collected(PlatformCharacter collector, NetworkMessageInfo info);
 
@@ -32,7 +41,7 @@ public abstract class Projectile {
 
 //	public abstract GameObject SpawnSingle(GameObject ownerCharacter, Vector3 playerPosition);
 
-	public virtual GameObject SpawnSingle(GameObject ownerCharacter)
+	public virtual GameObject Instantiate(GameObject ownerCharacter)
 	{
 		//Resource finden und laden
 		

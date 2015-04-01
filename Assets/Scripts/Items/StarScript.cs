@@ -14,14 +14,21 @@ public class StarScript : ItemScript {
 	//set-zugriff mit: item = xyz;
 	//get-zugriff mit: item.Collecting();
 
-	public override Item item {
-		get {
-			return _item;
-		}
-		set {
-			_item = value;
-		}
+	// This function is always called before any Start functions and also just after a prefab is instantiated
+	public override void Awake()
+	{
+		itemId = ItemLibrary.starID;
+		//item = new StarItem();		//TODO
 	}
+//
+//	public override Item item {
+//		get {
+//			return _item;
+//		}
+//		set {
+//			_item = value;
+//		}
+//	}
 
 	//Not Polymoph!!!
 	//public new Item item = new Star();
@@ -42,7 +49,7 @@ public class StarScript : ItemScript {
 	//	public string itemName;
 
 
-	public float itemStayTime = 8f;
+
 
 //	public override float itemStayTime {
 //		get {
@@ -52,61 +59,67 @@ public class StarScript : ItemScript {
 //			itemStayTime = 8f;
 //		}
 //	}
-	
-	public override void StartDestroyTimer()
-	{
-		StartCoroutine(DestroyPowerUp());
-	}
-	
-	IEnumerator DestroyPowerUp()
-	{
-		yield return new WaitForSeconds(itemStayTime);
-		if(Network.peerType == NetworkPeerType.Disconnected)
-		{
-			Destroy(this.gameObject);
-		}
-		if(Network.isServer)
-		{
-			if(this.gameObject != null)
-			{
-				Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
-				Network.Destroy(this.gameObject);
-			}
-			else
-			{
-				Debug.LogWarning("nothing to Destroy! already destroyed/collected?!");
-			}
-		}
-	}
-	
-	
-	
-	
-	public void Awake()
-	{
-		item = new StarItem();
-	}
-	
-	void OnTriggerEnter2D(Collider2D other)
-	{
-		if(other.gameObject.layer == Layer.item)
-		{
-			if(other.gameObject.name == Tags.itemCollector)
-			{
-				// Player gefunden
-				if(item == null)
-				{
-					Debug.LogError(this.gameObject.name + " hat kein Item im Inspektor gesetzt!!!");
-				}
-				else
-				{
-					//V0: kann im PlatformCharacter noch controllieren ob dieser das Item einsammeln darf! 
-					other.transform.parent.GetComponent<PlatformCharacter>().CollectingItem(this);
-					
-					//V1 
-					//item.Collecting(this.gameObject, other.transform.parent.GetComponent<PlatformCharacter>());
-				}
-			}
-		}
-	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//	public override void StartDestroyTimer()
+//	{
+//		StartCoroutine(DestroyPowerUp());
+//	}
+//	
+//	IEnumerator DestroyPowerUp()
+//	{
+//		yield return new WaitForSeconds(itemStayTime);
+//		if(Network.peerType == NetworkPeerType.Disconnected)
+//		{
+//			Destroy(this.gameObject);
+//		}
+//		if(Network.isServer)
+//		{
+//			if(this.gameObject != null)
+//			{
+//				Network.RemoveRPCs(this.GetComponent<NetworkView>().viewID);
+//				Network.Destroy(this.gameObject);
+//			}
+//			else
+//			{
+//				Debug.LogWarning("nothing to Destroy! already destroyed/collected?!");
+//			}
+//		}
+//	}
+//	
+//	void OnTriggerEnter2D(Collider2D other)
+//	{
+//		if(other.gameObject.layer == Layer.item)
+//		{
+//			if(other.gameObject.name == Tags.itemCollector)
+//			{
+//				// Player gefunden
+//				if(item == null)
+//				{
+//					Debug.LogError(this.gameObject.name + " hat kein Item im Inspektor gesetzt!!!");
+//				}
+//				else
+//				{
+//					//V0: kann im PlatformCharacter noch controllieren ob dieser das Item einsammeln darf! 
+//					other.transform.parent.GetComponent<PlatformCharacter>().CollectingItem(this);
+//					
+//					//V1 
+//					//item.Collecting(this.gameObject, other.transform.parent.GetComponent<PlatformCharacter>());
+//				}
+//			}
+//		}
+//	}
 }
