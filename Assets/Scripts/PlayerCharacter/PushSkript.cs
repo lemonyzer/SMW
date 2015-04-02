@@ -62,6 +62,10 @@ public class PushSkript : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D collision) 
 	{
+
+		return; //TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO
+
+
 		if(Network.peerType != NetworkPeerType.Disconnected)
 			return;
 

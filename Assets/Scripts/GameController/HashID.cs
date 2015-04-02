@@ -2,7 +2,41 @@
 using System.Collections;
 
 public class HashID : MonoBehaviour {
-	
+
+	// Parameter
+	public static string p_hSpeed = "hSpeed";
+	public static string p_vSpeed = "vSpeed";
+	public static string p_grounded = "Grounded";
+	public static string p_walled = "Walled";
+	public static string p_hitted = "Hitted";
+	public static string p_gameOver = "GameOver";
+	public static string p_headJumped = "HeadJumped";
+	public static string p_spawn = "Spawn";
+	public static string p_dead = "Dead";
+	public static string p_hitTrigger = "HitTrigger";
+	public static string p_spawnProtection = "SpawnProtection";
+	public static string p_changeRunDirectionTrigger = "ChangeRunDirection";
+	public static string p_rageTrigger = "RageTrigger";
+	public static string p_rageModus = "RageModus";
+	public static string p_nextStateTrigger = "NextStateTrigger";
+
+	// States
+	public static string s_Idle = "Idle";
+	public static string s_JumpAndFall = "JumpAndFall";
+	public static string s_Run = "Run";
+	public static string s_ChangeRunDirection = "ChangeRunDirection";
+
+	public static string s_Hitted = "Hitted";
+	public static string s_HeadJumped = "HeadJumped";
+	public static string s_Dead = "Dead";
+	public static string s_GameOver = "GameOver";
+
+	public static string s_Generic_Spawn = "_Generic_Spawn";
+	public static string s_Generic_SpawnProtection = "_Generic_SpawnProtection";
+
+	public static string s_RageMode = "_Generic_RageMode";
+
+
 	/**
 	 * Platform Character
 	 **/
