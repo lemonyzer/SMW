@@ -17,4 +17,18 @@ public class CreateSmwCharacter : MonoBehaviour {
 
 		Selection.activeObject = asset;
 	}
+
+	public static SmwCharacter CreateAssetAndSetup()
+	{
+		SmwCharacter asset = ScriptableObject.CreateInstance<SmwCharacter>();
+		
+		AssetDatabase.CreateAsset(asset, "Assets/newSmwCharacterSO.asset");
+		AssetDatabase.SaveAssets();
+		
+		EditorUtility.FocusProjectWindow();
+		
+		Selection.activeObject = asset;
+
+		return asset;
+	}
 }

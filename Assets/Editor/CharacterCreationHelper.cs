@@ -6,7 +6,7 @@ using UnityEditor.Sprites;
 
 using System;
 using System.Collections.Generic;
-using System.Xml;
+//using System.Xml;
 
 public class CharacterCreationHelper : EditorWindow {
 
@@ -17,7 +17,8 @@ public class CharacterCreationHelper : EditorWindow {
 
 	public Sprite unslicedSprite;
 	public Sprite[] slicedSprite;
-	public Texture2D texture2d;
+//	public Texture2D texture2d;
+	public int subSpritesCount = 6;
 	public int pixelPerUnit = 32;
 	public int pixelSizeWidth = 32;
 	public int pixelSizeHeight = 32;
@@ -53,22 +54,27 @@ public class CharacterCreationHelper : EditorWindow {
 		if (GUILayout.Button("New Character"))
 		{
 			// neuen Character erzeugen
-			CreateSmwCharacter.CreateAsset();
+			smwCharacter = CreateSmwCharacter.CreateAssetAndSetup();
 		}
 		GUILayout.EndHorizontal ();
 
-		GUILayout.BeginVertical ();
-		texture2d = EditorGUILayout.ObjectField("Texture2D", texture2d, typeof(Texture2D), false) as Texture2D;
-		GUILayout.EndVertical ();
+		smwCharacter = EditorGUILayout.ObjectField("SMW Character SO", smwCharacter, typeof(SmwCharacter), false) as SmwCharacter;
+//		GUI.enabled = false;
 
 //		GUILayout.BeginVertical ();
+//		texture2d = EditorGUILayout.ObjectField("Texture2D", texture2d, typeof(Texture2D), false) as Texture2D;
+//		GUILayout.EndVertical ();
+
+//		xmlAsset = EditorGUILayout.ObjectField("XML Source", xmlAsset, typeof (TextAsset), false) as TextAsset;
+
 		GUILayout.BeginHorizontal ();
 		unslicedSprite = EditorGUILayout.ObjectField("Unsliced Sprite", unslicedSprite, typeof(Sprite), false) as Sprite;
 
+		UnityEditor.TextureImporter myImporter = null;
 		bool enabled_SpriteSet = GUI.enabled;
 		if(unslicedSprite != null)
 		{
-			UnityEditor.TextureImporter importer = UnityEditor.TextureImporter.GetAtPath ( AssetDatabase.GetAssetPath(unslicedSprite) ) as TextureImporter ;
+			myImporter = UnityEditor.TextureImporter.GetAtPath ( AssetDatabase.GetAssetPath(unslicedSprite) ) as TextureImporter ;
 		}
 		else
 		{
@@ -81,11 +87,19 @@ public class CharacterCreationHelper : EditorWindow {
 		//importer.assetPath = AssetDatabase.GetAssetPath(sprite); // Read-only
 
 		GUILayout.EndHorizontal ();
+
+		// GUI SubSpriteCount
+		subSpritesCount = EditorGUILayout.IntSlider("Sub Sprites #", subSpritesCount, 1, 6);
+
+		// GUI pixelPerUnit
+		pixelPerUnit = EditorGUILayout.IntField("Pixel per Unit", pixelPerUnit);
+
 		GUILayout.BeginHorizontal ();
 		// GUI: Pivot
 		spriteAlignment = (SpriteAlignment) EditorGUILayout.EnumPopup("Pivot", spriteAlignment);
-		bool customPivotEnabled = enabled_SpriteSet;
+//		bool customPivotEnabled = enabled_SpriteSet;
 		if (spriteAlignment != SpriteAlignment.Custom) {
+			// deaktiviere custom Offset
 			GUI.enabled = false;
 		}
 		// GUI: Custom Pivot
@@ -98,96 +112,139 @@ public class CharacterCreationHelper : EditorWindow {
 		if (GUILayout.Button("Sprite Info"))
 		{
 			// Spriteinfo ausgeben
-			SpriteAssetInfo(importer);
+			SpriteAssetInfo(myImporter);
 		}
 		
-		if (GUILayout.Button("Setup Sprite"))
-		{
-			SetupSprite(importer);
-			
-			// Spriteinfo ausgeben
-			SpriteAssetInfo(importer);
-		}
-		
-		if (GUILayout.Button("Slice Sprite"))
+//		if (GUILayout.Button("Setup Sprite"))
+//		{
+//			SetupSprite(myImporter);
+//			
+//			// Spriteinfo ausgeben
+//			SpriteAssetInfo(myImporter);
+//		}
+		if (GUILayout.Button("meta. Slice"))
 		{
 			//Grid Slice
-			ManualSliceSprite(importer);
+			PerformMetaSlice(unslicedSprite);
 		}
+
+		GUI.enabled = false;
+//		if (GUILayout.Button("man. Slice"))
+//		{
+//			//Grid Slice
+//			ManualSliceSprite(myImporter);
+//		}
 		GUILayout.EndHorizontal ();
 		GUI.enabled = true;
 	}
 
-	[SerializeField] private TextAsset xmlAsset;
-	public TextureImporter importer;
+//	[SerializeField] private TextAsset xmlAsset;
+//	public TextureImporter importer;
 
-	private void PerformSlice()
+	// thx to http://www.toxicfork.com/154/importing-xml-spritesheet-into-unity3d
+
+	private void PerformMetaSlice(Sprite sprite)
 	{
-		XmlDocument document = new XmlDocument();
-		document.LoadXml(xmlAsset.text);
-		
-		XmlElement root = document.DocumentElement;
-		if (root.Name == "TextureAtlas") {
+		if(sprite != null)
+		{
+			UnityEditor.TextureImporter myImporter = null;
+			myImporter = UnityEditor.TextureImporter.GetAtPath ( AssetDatabase.GetAssetPath(sprite) ) as TextureImporter ;
+
 			bool failed = false;
-			
-			Texture2D texture = AssetDatabase.LoadMainAssetAtPath(importer.assetPath) as Texture2D;
-			int textureHeight = texture.height;
-			
 			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
-			
-			foreach (XmlNode childNode in root.ChildNodes)
+
+			slicedSprite = new Sprite[subSpritesCount];
+			// Calculate SpriteMetaData (sliced SpriteSheet)
+			for(int i=0; i<slicedSprite.Length; i++)
 			{
-				if (childNode.Name == "SubTexture") {
-					try {
-						int width = Convert.ToInt32(childNode.Attributes["width"].Value);
-						int height = Convert.ToInt32(childNode.Attributes["height"].Value);
-						int x = Convert.ToInt32(childNode.Attributes["x"].Value);
-						int y = textureHeight - (height + Convert.ToInt32(childNode.Attributes["y"].Value));
-						
-						SpriteMetaData spriteMetaData = new SpriteMetaData
-						{
-							alignment = (int)spriteAlignment,
-							border = new Vector4(),
-							name = childNode.Attributes["name"].Value,
-							pivot = GetPivotValue(spriteAlignment, customOffset),
-							rect = new Rect(x, y, width, height)
-						};
-						
-						metaDataList.Add(spriteMetaData);
-					}
-					catch (Exception exception) {
-						failed = true;
-						Debug.LogException(exception);
-					}
+				try {
+
+					SpriteMetaData spriteMetaData = new SpriteMetaData
+					{
+						alignment = (int)spriteAlignment,
+						border = new Vector4(),
+						name = System.IO.Path.GetFileNameWithoutExtension(myImporter.assetPath) + "_" + i,
+						pivot = GetPivotValue(spriteAlignment, customOffset),
+						rect = new Rect(i*pixelSizeWidth, 	0, pixelSizeWidth, 	pixelSizeHeight)
+					};
+
+					metaDataList.Add(spriteMetaData);
+
 				}
-				else
-				{
-					Debug.LogError("Child nodes should be named 'SubTexture' !");
+				catch (Exception exception) {
 					failed = true;
+					Debug.LogException(exception);
 				}
 			}
+
+//XML not needed
+//		XmlDocument document = new XmlDocument();
+//		document.LoadXml(xmlAsset.text);
+		
+//		XmlElement root = document.DocumentElement;
+//		if (root.Name == "TextureAtlas")
+//		{
+//			bool failed = false;
+//			
+//			Texture2D texture = AssetDatabase.LoadMainAssetAtPath(importer.assetPath) as Texture2D;
+//			int textureHeight = texture.height;
+//			
+//			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
+//			
+//			foreach (XmlNode childNode in root.ChildNodes)
+//			{
+//				if (childNode.Name == "SubTexture") {
+//					try {
+//						int width = Convert.ToInt32(childNode.Attributes["width"].Value);
+//						int height = Convert.ToInt32(childNode.Attributes["height"].Value);
+//						int x = Convert.ToInt32(childNode.Attributes["x"].Value);
+//						int y = textureHeight - (height + Convert.ToInt32(childNode.Attributes["y"].Value));
+//						
+//						SpriteMetaData spriteMetaData = new SpriteMetaData
+//						{
+//							alignment = (int)spriteAlignment,
+//							border = new Vector4(),
+//							name = childNode.Attributes["name"].Value,
+//							pivot = GetPivotValue(spriteAlignment, customOffset),
+//							rect = new Rect(x, y, width, height)
+//						};
+//						
+//						metaDataList.Add(spriteMetaData);
+//					}
+//					catch (Exception exception) {
+//						failed = true;
+//						Debug.LogException(exception);
+//					}
+//				}
+//				else
+//				{
+//					Debug.LogError("Child nodes should be named 'SubTexture' !");
+//					failed = true;
+//				}
+//			}
 			
 			if (!failed) {
-				importer.spriteImportMode = SpriteImportMode.Multiple; 
-				importer.spritesheet = metaDataList.ToArray();
+				myImporter.spritePixelsPerUnit = pixelPerUnit;
+				myImporter.spriteImportMode = SpriteImportMode.Multiple; 
+				myImporter.spritesheet = metaDataList.ToArray();
 				
-				EditorUtility.SetDirty(importer);
+				EditorUtility.SetDirty(myImporter);
 				
 				try
 				{
 					AssetDatabase.StartAssetEditing();
-					AssetDatabase.ImportAsset(importer.assetPath);
+					AssetDatabase.ImportAsset(myImporter.assetPath);
 				}
 				finally
 				{
 					AssetDatabase.StopAssetEditing();
-					Close();
+					//Close();
 				}
 			}
 		}
 		else
 		{
-			Debug.LogError("XML needs to have a 'TextureAtlas' root node!");
+			Debug.LogError("sprite == null");
 		}
 	}
 
@@ -255,7 +312,6 @@ public class CharacterCreationHelper : EditorWindow {
 
 
 
-	const int spritesCount = 6;
 
 	void ManualSliceSprite(TextureImporter importer)
 	{
@@ -276,7 +332,7 @@ public class CharacterCreationHelper : EditorWindow {
 //			SpriteAssetInfo(copyImporter);
 //			AssetDatabase.CreateAsset(newSprite, importer.assetPath + " sliced");
 
-			slicedSprite = new Sprite[spritesCount];
+			slicedSprite = new Sprite[subSpritesCount];
 //	ok		Debug.Log("slicedSprite Array länge: " + slicedSprite.Length);
 
 			// Slice SpriteSheet
@@ -302,7 +358,7 @@ public class CharacterCreationHelper : EditorWindow {
 				if(slicedSprite[0].texture != null)
 				{
 
-					for (int i=spritesCount-1; i>=0; i--)
+					for (int i=subSpritesCount-1; i>=0; i--)
 					{
 						AssetDatabase.AddObjectToAsset(slicedSprite[i], newSprite);
 					}
