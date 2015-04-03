@@ -1,15 +1,15 @@
 fileFormatVersion: 2
-guid: c2115ed5a70b1364482f52aaeb598b65
-timeCreated: 1428017191
+guid: ba77056b7a6b00648afc7678ea835979
+timeCreated: 1428024686
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: peardian_Blaziken_alpha_rmFF00FF_0
-    21300002: peardian_Blaziken_alpha_rmFF00FF_1
-    21300004: peardian_Blaziken_alpha_rmFF00FF_2
-    21300006: peardian_Blaziken_alpha_rmFF00FF_3
-    21300008: peardian_Blaziken_alpha_rmFF00FF_4
-    21300010: peardian_Blaziken_alpha_rmFF00FF_5
+    21300000: 4matsy_Fygar_alpha_rmFF00FF_0
+    21300002: 4matsy_Fygar_alpha_rmFF00FF_1
+    21300004: 4matsy_Fygar_alpha_rmFF00FF_2
+    21300006: 4matsy_Fygar_alpha_rmFF00FF_3
+    21300008: 4matsy_Fygar_alpha_rmFF00FF_4
+    21300010: 4matsy_Fygar_alpha_rmFF00FF_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -55,7 +55,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: peardian_Blaziken_alpha_rmFF00FF_0
+    - name: 4matsy_Fygar_alpha_rmFF00FF_0
       rect:
         serializedVersion: 2
         x: 0
@@ -65,7 +65,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: peardian_Blaziken_alpha_rmFF00FF_1
+    - name: 4matsy_Fygar_alpha_rmFF00FF_1
       rect:
         serializedVersion: 2
         x: 32
@@ -75,7 +75,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: peardian_Blaziken_alpha_rmFF00FF_2
+    - name: 4matsy_Fygar_alpha_rmFF00FF_2
       rect:
         serializedVersion: 2
         x: 64
@@ -85,7 +85,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: peardian_Blaziken_alpha_rmFF00FF_3
+    - name: 4matsy_Fygar_alpha_rmFF00FF_3
       rect:
         serializedVersion: 2
         x: 96
@@ -95,7 +95,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: peardian_Blaziken_alpha_rmFF00FF_4
+    - name: 4matsy_Fygar_alpha_rmFF00FF_4
       rect:
         serializedVersion: 2
         x: 128
@@ -105,7 +105,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: peardian_Blaziken_alpha_rmFF00FF_5
+    - name: 4matsy_Fygar_alpha_rmFF00FF_5
       rect:
         serializedVersion: 2
         x: 160

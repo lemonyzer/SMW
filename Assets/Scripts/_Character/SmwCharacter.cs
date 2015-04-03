@@ -6,7 +6,7 @@ public class SmwCharacter : ScriptableObject {
 
 	public string charName;
 	public int charId;
-	public Sprite[] charSpriteSheet;
+	public Sprite[] charSpritesheet;
 
 	public Sprite[] charIdleSprites;
 	public Sprite[] charRunSprites;
@@ -16,9 +16,9 @@ public class SmwCharacter : ScriptableObject {
 //	public Sprite[] charGameOverSprites;
 	public Sprite[] charHeadJumpedSprites;
 
-	public void SetCharSprites(Sprite[] sprites)
+	public void SetCharSpritesheet(Sprite[] sprites)
 	{
-		charSpriteSheet = sprites;
+		charSpritesheet = sprites;
 
 		if(sprites.Length < 6)
 		{
@@ -28,29 +28,29 @@ public class SmwCharacter : ScriptableObject {
 
 		//Idle
 		charIdleSprites = new Sprite[1];
-		charIdleSprites[0] = charSpriteSheet[0];
+		charIdleSprites[0] = charSpritesheet[0];
 		//charIdleSprites[0] = Sprite.Create(charSpriteSheet[0].texture, charSpriteSheet[0].rect, charSpriteSheet[0].pivot);
 
 		//Run
 		charRunSprites = new Sprite[2];
-		charRunSprites[0] = charSpriteSheet[0];
-		charRunSprites[1] = charSpriteSheet[1];
+		charRunSprites[0] = charSpritesheet[0];
+		charRunSprites[1] = charSpritesheet[1];
 
 		//Jump
 		charJumpSprites = new Sprite[1];
-		charJumpSprites[0] = charSpriteSheet[2];
+		charJumpSprites[0] = charSpritesheet[2];
 
 		//Skid - ChangeRunDirection
 		charSkidSprites = new Sprite[1];
-		charSkidSprites[0] = charSpriteSheet[3];
+		charSkidSprites[0] = charSpritesheet[3];
 
 		//Die
 		charDieSprites = new Sprite[1];
-		charDieSprites[0] = charSpriteSheet[4];
+		charDieSprites[0] = charSpritesheet[4];
 
 		//HeadJumped
 		charHeadJumpedSprites = new Sprite[1];
-		charHeadJumpedSprites[0] = charSpriteSheet[5];
+		charHeadJumpedSprites[0] = charSpritesheet[5];
 	}
 
 //	void SetupAnimationStateSprites(Sprite[] stateSprites, uint spriteCount)

@@ -2,7 +2,7 @@
 using System.Collections;
 
 using UnityEditor;
-using UnityEditor.Sprites;
+//using UnityEditor.TextureImporter;
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ public class CharacterCreationHelper : EditorWindow {
 	public SpriteAlignment spriteAlignment = SpriteAlignment.Center;
 	public Vector2 customOffset = new Vector2(0.5f, 0.5f);
 
-	public Sprite unslicedSprite;
+	public Sprite spritesheet;
 	public Sprite[] slicedSprite;
 //	public Texture2D texture2d;
 	public int subSpritesCount = 6;
@@ -37,6 +37,20 @@ public class CharacterCreationHelper : EditorWindow {
 //		}
 //	}
 
+	TextureImporter myImporter = null;
+	bool canSetupScriptableSMWCharacter = false;
+
+	bool SpriteIsPrepared(TextureImporter myImporter)
+	{
+		if(myImporter.spritePixelsPerUnit == pixelPerUnit &&
+		   myImporter.spritePivot == GetPivotValue(spriteAlignment, customOffset) &&
+		   myImporter.spriteImportMode == SpriteImportMode.Multiple)
+		{
+			return true;
+		}
+		return false;
+	}
+
 	void OnGUI ()
 	{
 		GUILayout.BeginHorizontal ();
@@ -50,6 +64,40 @@ public class CharacterCreationHelper : EditorWindow {
 				EditorUtility.FocusProjectWindow();
 				Selection.activeObject = smwCharacter;
 			}
+			if(true)
+			{
+
+				GUI.enabled = canSetupScriptableSMWCharacter;
+
+				//TODO
+				//TODO aktuell wird nicht direkt das Sprite [multiple] als Asset übergeben!!!
+				//TODO
+				if (GUILayout.Button("SetCharSpritesheet"))
+				{
+					Debug.Log("Loading Sprites @ " + myImporter.assetPath);
+//					slicedSprite = AssetDatabase.LoadAllAssetRepresentationsAtPath (myImporter.assetPath) as Sprite[];
+					//slicedSprite = ((Sprite)AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath)) //.Of //OfType<Sprite>().ToArray();
+
+
+					Sprite[] temp = AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath) as Sprite[]; 
+
+					if(temp != null)
+					{
+						Debug.Log("slicedSprite länge = " + slicedSprite.Length);
+						smwCharacter.SetCharSpritesheet(slicedSprite);
+					}
+					else
+					{
+						Debug.LogError("slicedSprite == null!!!");
+					}
+//					EditorUtility.SetDirty(smwCharacter);
+//					EditorUtility.FocusProjectWindow();
+//					Selection.activeObject = smwCharacter;
+				}
+
+				GUI.enabled = true;
+			}
+
 		}
 		if (GUILayout.Button("New Character"))
 		{
@@ -59,32 +107,33 @@ public class CharacterCreationHelper : EditorWindow {
 		GUILayout.EndHorizontal ();
 
 		smwCharacter = EditorGUILayout.ObjectField("SMW Character SO", smwCharacter, typeof(SmwCharacter), false) as SmwCharacter;
-//		GUI.enabled = false;
 
-//		GUILayout.BeginVertical ();
-//		texture2d = EditorGUILayout.ObjectField("Texture2D", texture2d, typeof(Texture2D), false) as Texture2D;
-//		GUILayout.EndVertical ();
-
-//		xmlAsset = EditorGUILayout.ObjectField("XML Source", xmlAsset, typeof (TextAsset), false) as TextAsset;
 
 		GUILayout.BeginHorizontal ();
-		unslicedSprite = EditorGUILayout.ObjectField("Unsliced Sprite", unslicedSprite, typeof(Sprite), false) as Sprite;
+		spritesheet = EditorGUILayout.ObjectField("Unsliced Sprite", spritesheet, typeof(Sprite), false) as Sprite;
 
-		UnityEditor.TextureImporter myImporter = null;
+
 		bool enabled_SpriteSet = GUI.enabled;
-		if(unslicedSprite != null)
+		myImporter = UnityEditor.TextureImporter.GetAtPath ( AssetDatabase.GetAssetPath(spritesheet) ) as TextureImporter ;
+		if(myImporter != null)
 		{
-			myImporter = UnityEditor.TextureImporter.GetAtPath ( AssetDatabase.GetAssetPath(unslicedSprite) ) as TextureImporter ;
+			GUI.enabled = true;
+			if(SpriteIsPrepared(myImporter))
+			{
+				canSetupScriptableSMWCharacter = true;
+			}
+			else
+			{
+				canSetupScriptableSMWCharacter = false;
+				enabled_SpriteSet = true;
+				GUI.enabled = false;
+			}
 		}
 		else
 		{
-			enabled_SpriteSet = false;
+			canSetupScriptableSMWCharacter = false;
 			GUI.enabled = false;
 		}
-		//smwCharacter.SetCharSprites( EditorGUILayout.ObjectField("Sliced Sprite", smwCharacter. );
-		
-		//		UnityEditor.TextureImporter importer = new UnityEditor.TextureImporter();
-		//importer.assetPath = AssetDatabase.GetAssetPath(sprite); // Read-only
 
 		GUILayout.EndHorizontal ();
 
@@ -115,25 +164,13 @@ public class CharacterCreationHelper : EditorWindow {
 			SpriteAssetInfo(myImporter);
 		}
 		
-//		if (GUILayout.Button("Setup Sprite"))
-//		{
-//			SetupSprite(myImporter);
-//			
-//			// Spriteinfo ausgeben
-//			SpriteAssetInfo(myImporter);
-//		}
 		if (GUILayout.Button("meta. Slice"))
 		{
 			//Grid Slice
-			PerformMetaSlice(unslicedSprite);
+			PerformMetaSlice(spritesheet);
 		}
 
 		GUI.enabled = false;
-//		if (GUILayout.Button("man. Slice"))
-//		{
-//			//Grid Slice
-//			ManualSliceSprite(myImporter);
-//		}
 		GUILayout.EndHorizontal ();
 		GUI.enabled = true;
 	}
@@ -153,9 +190,9 @@ public class CharacterCreationHelper : EditorWindow {
 			bool failed = false;
 			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
 
-			slicedSprite = new Sprite[subSpritesCount];
+//			slicedSprite = new Sprite[subSpritesCount];
 			// Calculate SpriteMetaData (sliced SpriteSheet)
-			for(int i=0; i<slicedSprite.Length; i++)
+			for(int i=0; i<subSpritesCount; i++)
 			{
 				try {
 
@@ -167,6 +204,9 @@ public class CharacterCreationHelper : EditorWindow {
 						pivot = GetPivotValue(spriteAlignment, customOffset),
 						rect = new Rect(i*pixelSizeWidth, 	0, pixelSizeWidth, 	pixelSizeHeight)
 					};
+
+					// erhalte sliced Texture
+//					slicedSprite[i] = Sprite.Create(unslicedSprite.texture, spriteMetaData.rect, spriteMetaData.pivot, pixelPerUnit);
 
 					metaDataList.Add(spriteMetaData);
 
@@ -238,6 +278,7 @@ public class CharacterCreationHelper : EditorWindow {
 				finally
 				{
 					AssetDatabase.StopAssetEditing();
+					myImporter.SaveAndReimport();
 					//Close();
 				}
 			}
@@ -315,7 +356,7 @@ public class CharacterCreationHelper : EditorWindow {
 
 	void ManualSliceSprite(TextureImporter importer)
 	{
-		if(importer != null && unslicedSprite != null)
+		if(importer != null && spritesheet != null)
 		{
 			SpriteAssetInfo(importer);
 
@@ -347,7 +388,7 @@ public class CharacterCreationHelper : EditorWindow {
 				Vector2 pivot = new Vector2 (0.5f, 0.5f);
 
 				// erhalte sliced Texture
-				slicedSprite[i] = Sprite.Create(unslicedSprite.texture, rect, pivot, pixelPerUnit);
+				slicedSprite[i] = Sprite.Create(spritesheet.texture, rect, pivot, pixelPerUnit);
 
 				// setze name 
 				slicedSprite[i].name = System.IO.Path.GetFileNameWithoutExtension(importer.assetPath) + "_" + i; 
