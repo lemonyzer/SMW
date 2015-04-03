@@ -82,11 +82,18 @@ public class CharacterCreationHelper : EditorWindow {
 
 					if(test != null)
 					{
-						Debug.Log("test länge = " + test.Length);
-						slicedSprite = new Sprite[test.Length -1 ];
-						for(int i=1; i< test.Length; i++)
+						if(test.Length > 1)
 						{
-							slicedSprite[i-1] = test[i] as Sprite;
+							Debug.Log("SubAssets Anzahl = " + test.Length);
+							slicedSprite = new Sprite[test.Length -1 ];
+							for(int i=1; i< test.Length; i++)
+							{
+								slicedSprite[i-1] = test[i] as Sprite;
+							}
+						}
+						else
+						{
+							Debug.LogError("SubAssets Anzahl = " + test.Length);
 						}
 					}
 
@@ -96,7 +103,7 @@ public class CharacterCreationHelper : EditorWindow {
 
 					if(slicedSprite != null)
 					{
-						Debug.Log("slicedSprite länge = " + slicedSprite.Length);
+						Debug.Log("slicedSprite SubAssets Anzahl = " + slicedSprite.Length);
 						smwCharacter.SetCharSpritesheet(slicedSprite);
 					}
 					else
@@ -281,7 +288,7 @@ public class CharacterCreationHelper : EditorWindow {
 				myImporter.spriteImportMode = SpriteImportMode.Multiple; 
 				myImporter.spritesheet = metaDataList.ToArray();
 				
-				EditorUtility.SetDirty(myImporter);
+				EditorUtility.SetDirty (myImporter);
 				
 				try
 				{
@@ -295,7 +302,7 @@ public class CharacterCreationHelper : EditorWindow {
 				finally
 				{
 					AssetDatabase.StopAssetEditing();
-					myImporter.SaveAndReimport();
+//					myImporter.SaveAndReimport();
 					//Close();
 				}
 			}

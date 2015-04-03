@@ -51,6 +51,10 @@ public class SmwCharacter : ScriptableObject {
 		//HeadJumped
 		charHeadJumpedSprites = new Sprite[1];
 		charHeadJumpedSprites[0] = charSpritesheet[5];
+
+		//TODO important
+		UnityEditor.EditorUtility.SetDirty (this);				// speichere Asset (Änderung wird übernommen)
+		//TODO important
 	}
 
 //	void SetupAnimationStateSprites(Sprite[] stateSprites, uint spriteCount)

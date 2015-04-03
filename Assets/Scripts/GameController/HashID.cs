@@ -3,6 +3,9 @@ using System.Collections;
 
 public class HashID : MonoBehaviour {
 
+	public static string l_base = "Base Layer";
+	public static string l_overlay = "Overlay Layer";
+
 	// Parameter
 	public static string p_hSpeed = "hSpeed";
 	public static string p_vSpeed = "vSpeed";
@@ -15,12 +18,14 @@ public class HashID : MonoBehaviour {
 	public static string p_dead = "Dead";
 	public static string p_hitTrigger = "HitTrigger";
 	public static string p_spawnProtection = "SpawnProtection";
+	public static string p_stopSpawnProtectionTrigger = "StopSpawnProtectionTrigger";
 	public static string p_changeRunDirectionTrigger = "ChangeRunDirection";
 	public static string p_rageTrigger = "RageTrigger";
 	public static string p_rageModus = "RageModus";
 	public static string p_nextStateTrigger = "NextStateTrigger";
 
 	// States
+	// Base Layer
 	public static string s_Idle = "Idle";
 	public static string s_JumpAndFall = "JumpAndFall";
 	public static string s_Run = "Run";
@@ -35,6 +40,10 @@ public class HashID : MonoBehaviour {
 	public static string s_Generic_SpawnProtection = "_Generic_SpawnProtection";
 
 	public static string s_RageMode = "_Generic_RageMode";
+	// Overlay Layer
+	public static string s_l1_defaultState = "Default State";
+	public static string s_l1_Generic_Invincible = "_Generic_Invincible";
+	public static string s_l1_Generic_SpawnProtection = "_Generic_SpawnProtection";
 
 
 	/**
@@ -50,7 +59,11 @@ public class HashID : MonoBehaviour {
 	public static int runState;
 	public static int changeRunDirectionState;
 	public static int jumpState;
-	
+
+	public static int l1_defaultState;
+	public static int l1_invincibleState;
+	public static int l1_spawnProtection;
+
 	public static int hSpeedFloat;
 	public static int vSpeedFloat;
 	public static int changeRunDirectionTrigger;
@@ -65,6 +78,8 @@ public class HashID : MonoBehaviour {
 	public static int deadBool;
 	public static int hitTrigger;
 	public static int spawnProtectionBool;
+//	public static int spawnProtectionBool;
+	public static int stopSpawnProtectionTrigger;
 	public static int nextStateTrigger;
 
 	/**
@@ -93,16 +108,24 @@ public class HashID : MonoBehaviour {
 		/**
 		 * Platform Character
 		 **/
-		hittedState =			Animator.StringToHash("Base Layer.Hitted");
-		deadState = 			Animator.StringToHash("Base Layer.Dead");
-		dieState = 				Animator.StringToHash("Base Layer.Die");
-		headJumpedState = 		Animator.StringToHash("Base Layer.HeadJumped");
-		spawnState = 			Animator.StringToHash("Base Layer._Generic_Spawn");
-		spawnProtectionState = 	Animator.StringToHash("Base Layer._Generic_SpawnProtection");
-		idleState = 			Animator.StringToHash("Base Layer.Idle");
-		runState = 				Animator.StringToHash("Base Layer.Run");
-		changeRunDirectionState = Animator.StringToHash("Base Layer.ChangeRunDirection");
-		jumpState = 			Animator.StringToHash("Base Layer.JumpAndFall");
+		// Base Layer
+		hittedState =			Animator.StringToHash(l_base + "." + s_Hitted);
+		deadState = 			Animator.StringToHash(l_base + "." + s_Dead);
+		dieState = 				Animator.StringToHash(l_base + "." + s_Dead);
+		headJumpedState = 		Animator.StringToHash(l_base + "." + s_HeadJumped);
+		spawnState = 			Animator.StringToHash(l_base + "." + s_Generic_Spawn);
+		spawnProtectionState = 	Animator.StringToHash(l_base + "." + s_Generic_SpawnProtection);
+		idleState = 			Animator.StringToHash(l_base + "." + s_Idle);
+		runState = 				Animator.StringToHash(l_base + "." + s_Run);
+		changeRunDirectionState = Animator.StringToHash(l_base + "." + s_ChangeRunDirection);
+		jumpState = 			Animator.StringToHash(l_base + "." + s_JumpAndFall);
+
+		// Overlay Layer
+		l1_defaultState =		Animator.StringToHash(l_overlay + "." + s_l1_defaultState);
+		l1_invincibleState =	Animator.StringToHash(l_overlay + "." + s_l1_Generic_Invincible);
+		l1_spawnProtection =	Animator.StringToHash(l_overlay + "." + s_l1_Generic_SpawnProtection);
+		
+
 		
 		hSpeedFloat = Animator.StringToHash("hSpeed");
 		vSpeedFloat = Animator.StringToHash("vSpeed");
@@ -118,6 +141,7 @@ public class HashID : MonoBehaviour {
 		deadBool = Animator.StringToHash("Dead");
 		hitTrigger = Animator.StringToHash("HitTrigger");
 		spawnProtectionBool = Animator.StringToHash("SpawnProtection");
+		stopSpawnProtectionTrigger = Animator.StringToHash(p_stopSpawnProtectionTrigger);
 		nextStateTrigger = Animator.StringToHash("NextStateTrigger");
 		
 		/**
