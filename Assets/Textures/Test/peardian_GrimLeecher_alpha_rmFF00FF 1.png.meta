@@ -1,19 +1,20 @@
 fileFormatVersion: 2
-guid: ba77056b7a6b00648afc7678ea835979
-timeCreated: 1428024686
+guid: ca670b437c039ec4e92ab46164254857
+timeCreated: 1428025631
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: 4matsy_Fygar_alpha_rmFF00FF_0
-    21300002: 4matsy_Fygar_alpha_rmFF00FF_1
-    21300004: 4matsy_Fygar_alpha_rmFF00FF_2
-    21300006: 4matsy_Fygar_alpha_rmFF00FF_3
-    21300008: 4matsy_Fygar_alpha_rmFF00FF_4
-    21300010: 4matsy_Fygar_alpha_rmFF00FF_5
+    21300000: peardian_GrimLeecher_alpha_rmFF00FF
+    21300002: peardian_GrimLeecher_alpha_rmFF00FF 1_0
+    21300004: peardian_GrimLeecher_alpha_rmFF00FF 1_1
+    21300006: peardian_GrimLeecher_alpha_rmFF00FF 1_2
+    21300008: peardian_GrimLeecher_alpha_rmFF00FF 1_3
+    21300010: peardian_GrimLeecher_alpha_rmFF00FF 1_4
+    21300012: peardian_GrimLeecher_alpha_rmFF00FF 1_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -33,10 +34,10 @@ TextureImporter:
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
-  maxTextureSize: 2048
+  maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -55,7 +56,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: 4matsy_Fygar_alpha_rmFF00FF_0
+    - name: peardian_GrimLeecher_alpha_rmFF00FF 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -65,7 +66,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: 4matsy_Fygar_alpha_rmFF00FF_1
+    - name: peardian_GrimLeecher_alpha_rmFF00FF 1_1
       rect:
         serializedVersion: 2
         x: 32
@@ -75,7 +76,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: 4matsy_Fygar_alpha_rmFF00FF_2
+    - name: peardian_GrimLeecher_alpha_rmFF00FF 1_2
       rect:
         serializedVersion: 2
         x: 64
@@ -85,7 +86,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: 4matsy_Fygar_alpha_rmFF00FF_3
+    - name: peardian_GrimLeecher_alpha_rmFF00FF 1_3
       rect:
         serializedVersion: 2
         x: 96
@@ -95,7 +96,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: 4matsy_Fygar_alpha_rmFF00FF_4
+    - name: peardian_GrimLeecher_alpha_rmFF00FF 1_4
       rect:
         serializedVersion: 2
         x: 128
@@ -105,7 +106,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: 4matsy_Fygar_alpha_rmFF00FF_5
+    - name: peardian_GrimLeecher_alpha_rmFF00FF 1_5
       rect:
         serializedVersion: 2
         x: 160

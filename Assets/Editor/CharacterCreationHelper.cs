@@ -78,10 +78,23 @@ public class CharacterCreationHelper : EditorWindow {
 //					slicedSprite = AssetDatabase.LoadAllAssetRepresentationsAtPath (myImporter.assetPath) as Sprite[];
 					//slicedSprite = ((Sprite)AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath)) //.Of //OfType<Sprite>().ToArray();
 
+					UnityEngine.Object[] test = AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath);
 
-					Sprite[] temp = AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath) as Sprite[]; 
+					if(test != null)
+					{
+						Debug.Log("test länge = " + test.Length);
+						slicedSprite = new Sprite[test.Length -1 ];
+						for(int i=1; i< test.Length; i++)
+						{
+							slicedSprite[i-1] = test[i] as Sprite;
+						}
+					}
 
-					if(temp != null)
+					//slicedSprite = Resources.LoadAll(myImporter.assetPath) as Sprite[];
+
+//					Sprite[] temp = AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath) as Sprite[]; 
+
+					if(slicedSprite != null)
 					{
 						Debug.Log("slicedSprite länge = " + slicedSprite.Length);
 						smwCharacter.SetCharSpritesheet(slicedSprite);
@@ -274,6 +287,10 @@ public class CharacterCreationHelper : EditorWindow {
 				{
 					AssetDatabase.StartAssetEditing();
 					AssetDatabase.ImportAsset(myImporter.assetPath);
+				}
+				catch (Exception e)
+				{
+					Debug.LogError("wtf " + e.ToString());
 				}
 				finally
 				{
