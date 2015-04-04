@@ -193,7 +193,15 @@ public class CharacterCreationHelper : EditorWindow {
 		GUI.enabled = false;
 		GUILayout.EndHorizontal ();
 		GUI.enabled = true;
-	}
+
+		networked = EditorGUILayout.Toggle("for Network", networked);
+
+		if (GUILayout.Button("create Prefab"))
+		{
+			// create Prefab
+			CreateCharacterPrefab();
+        }
+    }
 
 //	[SerializeField] private TextAsset xmlAsset;
 //	public TextureImporter importer;
@@ -345,12 +353,203 @@ public class CharacterCreationHelper : EditorWindow {
 		}
 	}
 
+	[System.Serializable]
+	public class BodyPartComponent
+	{
+		// liste die alle componenenten enthält die dem prefab hinzugefügt werden müssen
+		public string name = "";
+		public string tag = "";
+		public string layer = "";
+		public Vector3 position;
+		public List<Component> components;
+
+		public BodyPartComponent(string name, string tag, string layer)
+		{
+			this.name = name;
+			this.tag = tag;
+			this.layer = layer;
+			this.position = new Vector3(0,0,0);
+			this.components = new List<Component>();
+		}
+	}
+        
+
+	[System.Serializable]
+	public class MyCharacter
+	{
+		// um Prefab zu erstellen muss einfach über Liste childs iteriert werden und die darin enthaltenen Körperteile
+		public static List<BodyPartComponent> childs;
+
+		public static void SetupChilds()
+		{
+			childs = new List<BodyPartComponent>();
+
+			Vector3 headPos = new Vector3(0f,0.3f,0f);
+			Vector3 feetPos = new Vector3(0f,-0.3f,0f);
+			Vector3 kingPos = new Vector3(0f,0.6f,0f);
+
+			float leftPos = -20f;
+			float rightPos = 20f;
+
+			Vector2 headBoxSize = new Vector2(0.7f,0.25f);
+			Vector2 offSetCenter = Vector2.zero;
+			Vector2 offSetLeft = new Vector2(leftPos,0f);
+			Vector2 offSetRight = new Vector2(rightPos,0f);
 
 
+			// Clone Left
+			BodyPartComponent child = new BodyPartComponent(Tags.cloneLeft, Tags.cloneLeft, Layer.playerLayerName);
+			child.position.x = leftPos;
+			child.components.Add(new SpriteRenderer());
+			child.components.Add(new CloneSpriteScript());
+			//add
+			childs.Add(child);
 
 
+			// Clone Right
+			child = new BodyPartComponent(Tags.cloneRight, Tags.cloneRight, Layer.playerLayerName);
+			child.position.x = rightPos;
+			child.components.Add(new SpriteRenderer());
+			child.components.Add(new CloneSpriteScript());
+			//add
+            childs.Add(child);
 
 
+			// Head
+			child = new BodyPartComponent(Tags.head, Tags.head, Layer.headLayerName);
+			child.position = headPos;
+
+			//center
+			BoxCollider2D childComponent = new BoxCollider2D();
+			childComponent.isTrigger = true;
+			childComponent.size = headBoxSize;
+			childComponent.offset = Vector2.zero;
+			child.components.Add(childComponent);
+
+			//left
+			childComponent = new BoxCollider2D();
+			childComponent.isTrigger = true;
+			childComponent.size = headBoxSize;
+			childComponent.offset = offSetLeft;
+			child.components.Add(childComponent);
+            
+            //right
+			childComponent = new BoxCollider2D();
+			childComponent.isTrigger = true;
+			childComponent.size = headBoxSize;
+			childComponent.offset = offSetRight;
+			child.components.Add(childComponent);
+            //add
+            childs.Add(child);
+
+//			GameObject c = new GameObject();
+//			c.transform.position = feetPos;
+
+			// Feet
+			child = new BodyPartComponent(Tags.feet, Tags.feet, Layer.feetLayerName);
+			child.position = feetPos;
+			
+			//center
+			childComponent = new BoxCollider2D();
+			childComponent.isTrigger = true;
+			childComponent.size = headBoxSize;
+			childComponent.offset = Vector2.zero;
+			child.components.Add(childComponent);
+			
+			//left
+			childComponent = new BoxCollider2D();
+			childComponent.isTrigger = true;
+			childComponent.size = headBoxSize;
+			childComponent.offset = offSetLeft;
+			child.components.Add(childComponent);
+			
+			//right
+			childComponent = new BoxCollider2D();
+			childComponent.isTrigger = true;
+			childComponent.size = headBoxSize;
+            childComponent.offset = offSetRight;
+            child.components.Add(childComponent);
+            //add
+            childs.Add(child);
+            
+            
+        }
+        
+        public static void BuildCharacter(GameObject characterGO)
+		{
+			SetupChilds();
+			Transform parentTransform = characterGO.transform;
+
+			foreach(BodyPartComponent child in childs)
+			{
+				GameObject childGO = new GameObject(child.name);
+
+				// verbinde childGO mit CharacterGO
+				childGO.transform.SetParent(parentTransform);
+
+				// setze tag
+				childGO.tag = child.tag;
+
+				// setze layer
+				Debug.Log(child.layer + " = " + LayerMask.NameToLayer(child.layer));
+				childGO.layer = LayerMask.NameToLayer(child.layer);
+
+				// füge vorbereitete componenten hinzu
+				foreach(Component component in child.components)
+				{
+					Debug.Log("aktuelle Componente ist vom Typ " + component.GetType()); 
+					childGO.AddComponent(component.GetType());
+				}
+
+				//
+			}
+
+		}
+	}
+
+	bool networked = false;
+
+	void CreateCharacterPrefab()
+	{
+		string charName = smwCharacter.charName;
+		if(smwCharacter.charName == "")
+		{
+			charName = "unnamedChar";
+			Debug.LogError("smwCharacter.charName == \"\"");
+		}
+
+		string pathRelativeToAssetsPath = "";
+
+		if(networked)
+			pathRelativeToAssetsPath = "Resources/AutoGen Characters/UnityNetwork";
+		else
+			pathRelativeToAssetsPath = "Prefabs/AutoGen Characters";
+
+		if (!AnimationHelper.CreateFolder (pathRelativeToAssetsPath))
+		{
+			Debug.LogError("Ordner " + pathRelativeToAssetsPath + " konnte nicht erstellt werden");
+			return;
+		}
+
+		string pathRelativeToProject = "Assets/" + pathRelativeToAssetsPath;
+		string prefabPathRelativeToProject = "Assets/" + pathRelativeToAssetsPath + "/" + charName + ".prefab";
+
+		UnityEngine.Object emptyObj = PrefabUtility.CreateEmptyPrefab (prefabPathRelativeToProject);
+        
+		//GameObject tempObj = GameObject.CreatePrimitive(prim);
+		//GameObject tempObj = new GameObject(BodyPartComponents.components.ToArray());
+
+		// create empty
+		GameObject tempObj = new GameObject(charName);
+
+		// build character
+		MyCharacter.BuildCharacter(tempObj);
+
+
+		// save GO in prefab
+		PrefabUtility.ReplacePrefab(tempObj, emptyObj, ReplacePrefabOptions.ConnectToPrefab);
+
+	}
 
 
 

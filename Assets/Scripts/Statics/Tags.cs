@@ -10,6 +10,8 @@ public class Tags : MonoBehaviour {
 	 * Body Parts (Parent and Children)
 	 **/
 	public const string player = "Player";
+	public const string cloneLeft = "Clone Left";
+	public const string cloneRight = "Clone Right";
 	public const string head = "Head";
 	public const string body = "Body";
 	public const string feet = "Feet";
