@@ -380,131 +380,225 @@ public class CharacterCreationHelper : EditorWindow {
 		// um Prefab zu erstellen muss einfach über Liste childs iteriert werden und die darin enthaltenen Körperteile
 		public static List<BodyPartComponent> childs;
 
-		public static void SetupChilds()
-		{
-			childs = new List<BodyPartComponent>();
+		//newBug
+//		public static void SetupChilds()
+//		{
+//			childs = new List<BodyPartComponent>();
+//			
+//			Vector3 headPos = new Vector3(0f,0.3f,0f);
+//			Vector3 feetPos = new Vector3(0f,-0.3f,0f);
+//			Vector3 kingPos = new Vector3(0f,0.6f,0f);
+//			
+//			float leftPos = -20f;
+//			float rightPos = 20f;
+//			
+//			Vector2 headBoxSize = new Vector2(0.7f,0.25f);
+//			Vector2 offSetCenter = Vector2.zero;
+//			Vector2 offSetLeft = new Vector2(leftPos,0f);
+//			Vector2 offSetRight = new Vector2(rightPos,0f);
+//			
+//			
+//			// Clone Left
+//			BodyPartComponent child = new BodyPartComponent(Tags.cloneLeft, Tags.cloneLeft, Layer.playerLayerName);
+//			child.position.x = leftPos;
+//			child.components.Add(new SpriteRenderer());
+//			child.components.Add(new CloneSpriteScript());
+//			//add
+//			childs.Add(child);
+//			
+//			
+//			// Clone Right
+//			child = new BodyPartComponent(Tags.cloneRight, Tags.cloneRight, Layer.playerLayerName);
+//			child.position.x = rightPos;
+//			child.components.Add(new SpriteRenderer());
+//			child.components.Add(new CloneSpriteScript());
+//			//add
+//			childs.Add(child);
+//			
+//			
+//			// Head
+//			child = new BodyPartComponent(Tags.head, Tags.head, Layer.headLayerName);
+//			child.position = headPos;
+//			
+//			//center
+//			BoxCollider2D childComponent = new BoxCollider2D();
+//			childComponent.isTrigger = true;
+//			childComponent.size = headBoxSize;
+//			childComponent.offset = Vector2.zero;
+//			child.components.Add(childComponent);
+//			
+//			//left
+//			childComponent = new BoxCollider2D();
+//			childComponent.isTrigger = true;
+//			childComponent.size = headBoxSize;
+//			childComponent.offset = offSetLeft;
+//			child.components.Add(childComponent);
+//			
+//			//right
+//			childComponent = new BoxCollider2D();
+//			childComponent.isTrigger = true;
+//			childComponent.size = headBoxSize;
+//			childComponent.offset = offSetRight;
+//			child.components.Add(childComponent);
+//			//add
+//			childs.Add(child);
+//			
+//			//			GameObject c = new GameObject();
+//			//			c.transform.position = feetPos;
+//			
+//			// Feet
+//			child = new BodyPartComponent(Tags.feet, Tags.feet, Layer.feetLayerName);
+//			child.position = feetPos;
+//			
+//			//center
+//			childComponent = new BoxCollider2D();
+//			childComponent.isTrigger = true;
+//			childComponent.size = headBoxSize;
+//			childComponent.offset = Vector2.zero;
+//			child.components.Add(childComponent);
+//			
+//			//left
+//			childComponent = new BoxCollider2D();
+//			childComponent.isTrigger = true;
+//			childComponent.size = headBoxSize;
+//			childComponent.offset = offSetLeft;
+//			child.components.Add(childComponent);
+//			
+//			//right
+//			childComponent = new BoxCollider2D();
+//			childComponent.isTrigger = true;
+//			childComponent.size = headBoxSize;
+//			childComponent.offset = offSetRight;
+//			child.components.Add(childComponent);
+//			//add
+//			childs.Add(child);
+//			
+//			
+//		}
 
+		public static void SetupChilds(GameObject characterGO)
+		{
 			Vector3 headPos = new Vector3(0f,0.3f,0f);
 			Vector3 feetPos = new Vector3(0f,-0.3f,0f);
 			Vector3 kingPos = new Vector3(0f,0.6f,0f);
 
 			float leftPos = -20f;
 			float rightPos = 20f;
+			Vector3 centerTransformPos = Vector3.zero;
+			Vector3 leftTransformPos = new Vector3(leftPos,0f,0f);
+			Vector3 rightTransformPos = new Vector3(rightPos,0f,0f);
 
 			Vector2 headBoxSize = new Vector2(0.7f,0.25f);
+			Vector2 feetBoxSize = new Vector2(0.7f,0.25f);
+			Vector2 bodyBoxSize = new Vector2(0.7f,0.8f);
+			Vector2 itemCollectorAreaBoxSize = new Vector2(0.7f,0.8f);
+			Vector2 powerHitAreaBoxSize = new Vector2(0.7f,0.8f);
+			Vector2 groundStopperBoxSize = new Vector2(0.7f,0.8f);
+			
 			Vector2 offSetCenter = Vector2.zero;
 			Vector2 offSetLeft = new Vector2(leftPos,0f);
 			Vector2 offSetRight = new Vector2(rightPos,0f);
 
 
 			// Clone Left
-			BodyPartComponent child = new BodyPartComponent(Tags.cloneLeft, Tags.cloneLeft, Layer.playerLayerName);
-			child.position.x = leftPos;
-			child.components.Add(new SpriteRenderer());
-			child.components.Add(new CloneSpriteScript());
-			//add
-			childs.Add(child);
+			GameObject childGO = new GameObject(Tags.cloneLeft);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = leftTransformPos;					// setze offSet Position
+			childGO.tag = Tags.cloneLeft;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.playerLayerName);	// setze layer
+			// Componenten
+			SpriteRenderer renderer = childGO.AddComponent<SpriteRenderer>();
+			CloneSpriteScript cloneScript = childGO.AddComponent<CloneSpriteScript>();
 
 
 			// Clone Right
-			child = new BodyPartComponent(Tags.cloneRight, Tags.cloneRight, Layer.playerLayerName);
-			child.position.x = rightPos;
-			child.components.Add(new SpriteRenderer());
-			child.components.Add(new CloneSpriteScript());
-			//add
-            childs.Add(child);
-
+			childGO = new GameObject(Tags.cloneRight);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = leftTransformPos;					// setze offSet Position
+			childGO.tag = Tags.cloneRight;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.playerLayerName);	// setze layer
+			// Componenten
+			renderer = childGO.AddComponent<SpriteRenderer>();
+			cloneScript = childGO.AddComponent<CloneSpriteScript>();
 
 			// Head
-			child = new BodyPartComponent(Tags.head, Tags.head, Layer.headLayerName);
-			child.position = headPos;
-
+			childGO = new GameObject(Tags.head);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = headPos;					// setze offSet Position
+			childGO.tag = Tags.head;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.headLayerName);	// setze layer
+			// Componenten
 			//center
-			BoxCollider2D childComponent = new BoxCollider2D();
-			childComponent.isTrigger = true;
-			childComponent.size = headBoxSize;
-			childComponent.offset = Vector2.zero;
-			child.components.Add(childComponent);
-
+			BoxCollider2D box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = headBoxSize;
+			box.offset = Vector2.zero;
 			//left
-			childComponent = new BoxCollider2D();
-			childComponent.isTrigger = true;
-			childComponent.size = headBoxSize;
-			childComponent.offset = offSetLeft;
-			child.components.Add(childComponent);
-            
-            //right
-			childComponent = new BoxCollider2D();
-			childComponent.isTrigger = true;
-			childComponent.size = headBoxSize;
-			childComponent.offset = offSetRight;
-			child.components.Add(childComponent);
-            //add
-            childs.Add(child);
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = headBoxSize;
+			box.offset = offSetLeft;
+			//right
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = headBoxSize;
+			box.offset = offSetRight;
 
-//			GameObject c = new GameObject();
-//			c.transform.position = feetPos;
 
 			// Feet
-			child = new BodyPartComponent(Tags.feet, Tags.feet, Layer.feetLayerName);
-			child.position = feetPos;
-			
+			childGO = new GameObject(Tags.feet);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = feetPos;					// setze offSet Position
+			childGO.tag = Tags.feet;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.feetLayerName);	// setze layer
+			// Componenten
 			//center
-			childComponent = new BoxCollider2D();
-			childComponent.isTrigger = true;
-			childComponent.size = headBoxSize;
-			childComponent.offset = Vector2.zero;
-			child.components.Add(childComponent);
-			
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = feetBoxSize;
+			box.offset = Vector2.zero;
 			//left
-			childComponent = new BoxCollider2D();
-			childComponent.isTrigger = true;
-			childComponent.size = headBoxSize;
-			childComponent.offset = offSetLeft;
-			child.components.Add(childComponent);
-			
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = feetBoxSize;
+			box.offset = offSetLeft;
 			//right
-			childComponent = new BoxCollider2D();
-			childComponent.isTrigger = true;
-			childComponent.size = headBoxSize;
-            childComponent.offset = offSetRight;
-            child.components.Add(childComponent);
-            //add
-            childs.Add(child);
-            
-            
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = feetBoxSize;
+			box.offset = offSetRight; 
         }
         
-        public static void BuildCharacter(GameObject characterGO)
-		{
-			SetupChilds();
-			Transform parentTransform = characterGO.transform;
-
-			foreach(BodyPartComponent child in childs)
-			{
-				GameObject childGO = new GameObject(child.name);
-
-				// verbinde childGO mit CharacterGO
-				childGO.transform.SetParent(parentTransform);
-
-				// setze tag
-				childGO.tag = child.tag;
-
-				// setze layer
-				Debug.Log(child.layer + " = " + LayerMask.NameToLayer(child.layer));
-				childGO.layer = LayerMask.NameToLayer(child.layer);
-
-				// füge vorbereitete componenten hinzu
-				foreach(Component component in child.components)
-				{
-					Debug.Log("aktuelle Componente ist vom Typ " + component.GetType()); 
-					childGO.AddComponent(component.GetType());
-				}
-
-				//
-			}
-
-		}
+//        public static void BuildCharacter(GameObject characterGO)
+//		{
+//			SetupChilds();
+//			Transform parentTransform = characterGO.transform;
+//
+//			foreach(BodyPartComponent child in childs)
+//			{
+//				GameObject childGO = new GameObject(child.name);
+//
+//				// verbinde childGO mit CharacterGO
+//				childGO.transform.SetParent(parentTransform);
+//
+//				// setze tag
+//				childGO.tag = child.tag;
+//
+//				// setze layer
+//				Debug.Log(child.layer + " = " + LayerMask.NameToLayer(child.layer));
+//				childGO.layer = LayerMask.NameToLayer(child.layer);
+//
+//				// füge vorbereitete componenten hinzu
+//				foreach(Component component in child.components)
+//				{
+//					Debug.Log("aktuelle Componente ist vom Typ " + component.GetType()); 
+//					childGO.AddComponent(component.GetType());
+//				}
+//
+//				//
+//			}
+//
+//		}
 	}
 
 	bool networked = false;
@@ -543,7 +637,7 @@ public class CharacterCreationHelper : EditorWindow {
 		GameObject tempObj = new GameObject(charName);
 
 		// build character
-		MyCharacter.BuildCharacter(tempObj);
+		MyCharacter.SetupChilds(tempObj);
 
 
 		// save GO in prefab
