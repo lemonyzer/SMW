@@ -135,13 +135,13 @@ public class Beam : MonoBehaviour {
 //		}
 		if(other.gameObject.layer == Layer.item)
 		{
-			if(other.gameObject.name != Tags.itemCollector)
+			if(other.gameObject.name != Tags.name_itemCollector)
 				beamableObject = true;
 		}
 		else if(other.gameObject.layer == Layer.powerUp)
 		{
 			// problem! character hat auch ein child gameobject in powerUp layer!
-			if(other.gameObject.name != Tags.powerUpHitArea)
+			if(other.gameObject.name != Tags.name_powerUpHitArea)
 			{
 				beamableObject = true;
 			}

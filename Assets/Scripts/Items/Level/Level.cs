@@ -17,7 +17,7 @@ public class Level : MonoBehaviour {
 
 	void Awake()
 	{
-		background = GameObject.FindGameObjectWithTag(Tags.background);
+		background = GameObject.FindGameObjectWithTag(Tags.tag_background);
 		if(background != null)
 		{
 			bgSpriteRenderer = background.GetComponent<SpriteRenderer>();
@@ -109,7 +109,7 @@ public class Level : MonoBehaviour {
 		}
 		else
 		{
-			Debug.LogError("no GameObject with Tag" + Tags.background + " found in current Scene. Cant calculate SpawnArea!");
+			Debug.LogError("no GameObject with Tag" + Tags.tag_background + " found in current Scene. Cant calculate SpawnArea!");
 			return Vector3.zero;
 		}
 	}

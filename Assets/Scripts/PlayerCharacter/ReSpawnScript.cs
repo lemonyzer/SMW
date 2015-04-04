@@ -36,7 +36,7 @@ public class ReSpawnScript : MonoBehaviour {
 
 	void InitColliderAndTrigger()
 	{
-		BoxCollider2D[] myBody = transform.Find(Tags.body).GetComponents<BoxCollider2D>();
+		BoxCollider2D[] myBody = transform.Find(Tags.name_body).GetComponents<BoxCollider2D>();
 		foreach(BoxCollider2D coll in myBody)
 		{
 			if(coll.isTrigger)
@@ -44,9 +44,9 @@ public class ReSpawnScript : MonoBehaviour {
 			else
 				myBodyCollider = coll;
 		}
-		myFeetTrigger = transform.Find(Tags.feet).GetComponent<BoxCollider2D>();
-		myHeadTrigger = transform.Find(Tags.head).GetComponent<BoxCollider2D>();
-		myGroundStopperCollider = transform.Find(Tags.groundStopper).GetComponent<BoxCollider2D>();
+		myFeetTrigger = transform.Find(Tags.name_feet).GetComponent<BoxCollider2D>();
+		myHeadTrigger = transform.Find(Tags.name_head).GetComponent<BoxCollider2D>();
+		myGroundStopperCollider = transform.Find(Tags.name_groundStopper).GetComponent<BoxCollider2D>();
 	}
 
 	void SetSpawnAnimationCharacterCollider()
@@ -102,7 +102,7 @@ public class ReSpawnScript : MonoBehaviour {
 		InitSpawnProtectionAnimation ();
 		mySpriteRenderer = GetComponent<SpriteRenderer> ();
 		anim = GetComponent<Animator>();
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
+		gameController = GameObject.FindGameObjectWithTag(Tags.tag_gameController);
 //		hash = gameController.GetComponent<HashID>();
 		currentLevel = gameController.GetComponent<Level>();
 //		layer = gameController.GetComponent<Layer>();

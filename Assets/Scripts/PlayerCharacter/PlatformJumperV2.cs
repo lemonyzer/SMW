@@ -24,11 +24,11 @@ public class PlatformJumperV2 : MonoBehaviour {
 	void Awake()
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
+		gameController = GameObject.FindGameObjectWithTag(Tags.tag_gameController);
 		layer = gameController.GetComponent<Layer>();
 		myPlatformCharacter = GetComponent<PlatformCharacter>();
 
-		bodyCollider = transform.Find(Tags.body).GetComponent<BoxCollider2D>();
+		bodyCollider = transform.Find(Tags.name_body).GetComponent<BoxCollider2D>();
 
 //		BoxCollider2D[] myBody = transform.Find(Tags.body).GetComponents<BoxCollider2D>();
 //		if(myBody == null)
@@ -48,7 +48,7 @@ public class PlatformJumperV2 : MonoBehaviour {
 		// same
 //		groundStopper = transform.FindChild(Tags.groundStopper).GetComponent<BoxCollider2D>();
 //		Debug.Log(groundStopper.name);
-		groundStopper = transform.Find(Tags.groundStopper).GetComponent<BoxCollider2D>();
+		groundStopper = transform.Find(Tags.name_groundStopper).GetComponent<BoxCollider2D>();
 //		Debug.Log(groundStopper.name);
 	}
 

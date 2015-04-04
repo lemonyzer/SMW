@@ -187,7 +187,7 @@ public class PlatformCharacter : MonoBehaviour {
 	/// </summary>
 	void Awake()
 	{
-		myGroundStopperCollider = transform.Find(Tags.groundStopper).GetComponent<BoxCollider2D>();
+		myGroundStopperCollider = transform.Find(Tags.name_groundStopper).GetComponent<BoxCollider2D>();
 		myNetworkView = GetComponent<NetworkView>();
 
 		inputScript = GetComponent<PlatformUserControl>();
@@ -196,31 +196,31 @@ public class PlatformCharacter : MonoBehaviour {
 		spriteRenderer = GetComponent<SpriteRenderer>();
 
 		// Bodyparts
-		bodyCollider2D = transform.FindChild(Tags.body).GetComponent<BoxCollider2D>();
-		headCollider2D = transform.FindChild(Tags.head).GetComponent<BoxCollider2D>();
-		feetCollider2D = transform.FindChild(Tags.feet).GetComponent<BoxCollider2D>();
-		itemCollectorCollider2D = transform.FindChild(Tags.itemCollector).GetComponent<BoxCollider2D>();
-		powerUpCollider2D = transform.FindChild(Tags.powerUpHitArea).GetComponent<BoxCollider2D>();
+		bodyCollider2D = transform.FindChild(Tags.name_body).GetComponent<BoxCollider2D>();
+		headCollider2D = transform.FindChild(Tags.name_head).GetComponent<BoxCollider2D>();
+		feetCollider2D = transform.FindChild(Tags.name_feet).GetComponent<BoxCollider2D>();
+		itemCollectorCollider2D = transform.FindChild(Tags.name_itemCollector).GetComponent<BoxCollider2D>();
+		powerUpCollider2D = transform.FindChild(Tags.name_powerUpHitArea).GetComponent<BoxCollider2D>();
 
-		currentEstimatedPosOnServer = transform.FindChild(Tags.CurrentEstimatedPosOnServer);
+		currentEstimatedPosOnServer = transform.FindChild(Tags.name_CurrentEstimatedPosOnServer);
 		currentEstimatedPosOnServerRenderer = currentEstimatedPosOnServer.GetComponent<SpriteRenderer>();
 
-		lastReceivedPos = transform.FindChild(Tags.lastReceivedPos);
+		lastReceivedPos = transform.FindChild(Tags.name_lastReceivedPos);
 		lastReceivedPosRenderer = lastReceivedPos.GetComponent<SpriteRenderer>();
 
-		predictedPosSimulatedWithLastInput = transform.FindChild(Tags.PredictedPosSimulatedWithLastInput);
+		predictedPosSimulatedWithLastInput = transform.FindChild(Tags.name_PredictedPosSimulatedWithLastInput);
 		predictedPosSimulatedWithLastInputRenderer = predictedPosSimulatedWithLastInput.GetComponent<SpriteRenderer>();
 
-		predictedPosCalculatedWithLastInput = transform.FindChild(Tags.PredictedPosCalculatedWithLastInput);
+		predictedPosCalculatedWithLastInput = transform.FindChild(Tags.name_PredictedPosCalculatedWithLastInput);
 		predictedPosCalculatedWithLastInputRenderer = predictedPosCalculatedWithLastInput.GetComponent<SpriteRenderer>();
 
-		predictedPosV3 = transform.FindChild(Tags.PredictedPosV3);
+		predictedPosV3 = transform.FindChild(Tags.name_PredictedPosV3);
 		predictedPosV3Renderer = predictedPosV3.GetComponent<SpriteRenderer>();
 
-		iceWalled = transform.FindChild(Tags.iceWalled);
+		iceWalled = transform.FindChild(Tags.name_iceWalled);
 		iceWalledRenderer = iceWalled.GetComponent<SpriteRenderer>();
 
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
+		gameController = GameObject.FindGameObjectWithTag(Tags.name_gameController);
 //		statsManager = gameController.GetComponent<StatsManager>();
 		currentLevel = gameController.GetComponent<Level>();
 //		hash = gameController.GetComponent<HashID>();

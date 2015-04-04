@@ -9,35 +9,57 @@ public class Tags : MonoBehaviour {
 	/**
 	 * Body Parts (Parent and Children)
 	 **/
-	public const string player = "Player";
-	public const string cloneLeft = "Clone Left";
-	public const string cloneRight = "Clone Right";
-	public const string head = "Head";
-	public const string body = "Body";
-	public const string feet = "Feet";
-	public const string itemCollector = "ItemCollector";
-	public const string powerUpHitArea = "PowerUpHitArea";
-	public const string groundStopper = "GroundStopper";
-	public const string king = "King";
+	public const string name_player = "Player";
+	public const string tag_player = "Player";
+	public const string name_cloneLeft = "Clone Left";
+	public const string tag_cloneLeft = "Clone Left";
+	public const string name_cloneRight = "Clone Right";
+	public const string tag_cloneRight = "Clone Right";
+	public const string name_head = "Head";
+	public const string tag_head = "Head";
+	public const string name_body = "Body";
+	public const string tag_body = "Body";
+	public const string name_feet = "Feet";
+	public const string tag_feet = "Feet";
+	public const string name_itemCollector = "ItemCollector";
+	public const string tag_itemCollector = "ItemCollector";
+	public const string name_powerUpHitArea = "PowerUpHitArea";
+	public const string tag_powerUpHitArea = "PowerUpHitArea";
+	public const string name_groundStopper = "GroundStopper";
+	public const string tag_groundStopper = "GroundStopper";
+	public const string name_king = "King";
+	public const string tag_king = "King";
 
 	//public const string boxCollider = "BoxCollider";
-	public const string lastReceivedPos = "LastRecvedPos";
-	public const string CurrentEstimatedPosOnServer = "CurrentEstimatedPosOnServer";
-	public const string PredictedPosSimulatedWithLastInput = "PredictedPosSimulatedWithLastInput";
-	public const string PredictedPosCalculatedWithLastInput = "PredictedPosCalculatedWithLastInput";
-	public const string PredictedPosV3 = "PredictedPosV3";
-	public const string iceWalled = "IceWalled";
+	public const string name_lastReceivedPos = "LastRecvedPos";
+	public const string tag_lastReceivedPos = "LastRecvedPos";
+	public const string name_CurrentEstimatedPosOnServer = "CurrentEstimatedPosOnServer";
+	public const string tag_CurrentEstimatedPosOnServer = "CurrentEstimatedPosOnServer";
+	public const string name_PredictedPosSimulatedWithLastInput = "PredictedPosSimulatedWithLastInput";
+	public const string tag_PredictedPosSimulatedWithLastInput = "PredictedPosSimulatedWithLastInput";
+	public const string name_PredictedPosCalculatedWithLastInput = "PredictedPosCalculatedWithLastInput";
+	public const string tag_PredictedPosCalculatedWithLastInput = "PredictedPosCalculatedWithLastInput";
+	public const string name_PredictedPosV3 = "PredictedPosV3";
+	public const string tag_PredictedPosV3 = "PredictedPosV3";
+	public const string name_iceWalled = "IceWalled";
+	public const string tag_iceWalled = "IceWalled";
 
 	/**
 	 * Scene, Level Parts
 	 **/
-	public const string gameController = "GameController";
+	public const string name_gameController = "GameController";
+	public const string tag_gameController = "GameController";
 //	public const string itemLibrary = "ItemLibrary";
-	public const string background = "Background";
-	public const string invincibleSound = "InvincibleSound";
-	public const string powerUp = "PowerUp";
-	public const string fader = "Fader";
-	public const string countDown = "CountDown";
+	public const string name_background = "Background";
+	public const string tag_background = "Background";
+	public const string name_invincibleSound = "InvincibleSound";
+	public const string tag_invincibleSound = "InvincibleSound";
+	public const string name_powerUp = "PowerUp";
+	public const string tag_powerUp = "PowerUp";
+	public const string name_fader = "Fader";
+	public const string tag_fader = "Fader";
+	public const string name_countDown = "CountDown";
+	public const string tag_countDown = "CountDown";
 
 	/**
 	 * Character Selection

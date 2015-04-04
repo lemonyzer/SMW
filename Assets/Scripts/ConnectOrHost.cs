@@ -28,7 +28,7 @@ public class ConnectOrHost : MonoBehaviour {
 		}
 		if(GUILayout.Button("Follow Player", GUILayout.MinHeight(40f)))
 		{
-			raceCam.target = GameObject.FindGameObjectWithTag(Tags.player);
+			raceCam.target = GameObject.FindGameObjectWithTag(Tags.tag_player);
 		}
 		if(Network.peerType == NetworkPeerType.Disconnected)
 		{

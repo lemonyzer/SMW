@@ -143,7 +143,7 @@ public class Rage : Power {
 	void Awake()
 	{
 		try {
-			invincibleSound = GameObject.FindGameObjectWithTag(Tags.invincibleSound);
+			invincibleSound = GameObject.FindGameObjectWithTag(Tags.tag_invincibleSound);
 		}catch(System.Exception e)
 		{
 			Debug.LogError( "GameObject invincibleSound nicht in Scene gefunden!!!" );
@@ -154,10 +154,10 @@ public class Rage : Power {
 		myPlatformCharacter = GetComponent<PlatformCharacter>();
 		//		anim = GetComponent<Animator>();
 		bodyCollider2D = GetComponent<BoxCollider2D>();
-		headCollider2D = transform.FindChild(Tags.head).GetComponent<BoxCollider2D>();
-		feetCollider2D = transform.FindChild(Tags.feet).GetComponent<BoxCollider2D>();
+		headCollider2D = transform.FindChild(Tags.name_head).GetComponent<BoxCollider2D>();
+		feetCollider2D = transform.FindChild(Tags.name_feet).GetComponent<BoxCollider2D>();
 		
-		gameController = GameObject.FindGameObjectWithTag(Tags.gameController);
+		gameController = GameObject.FindGameObjectWithTag(Tags.tag_gameController);
 		hash = gameController.GetComponent<HashID>();
 		layer = gameController.GetComponent<Layer>();
 		statsManager = gameController.GetComponent<StatsManager>();

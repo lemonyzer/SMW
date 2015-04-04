@@ -65,9 +65,9 @@ public class AnimatorController : MonoBehaviour {
 			else
 				myBodyCollider = coll;
 		}
-		myFeetTrigger = transform.Find(Tags.feet).GetComponent<BoxCollider2D>();
-		myHeadTrigger = transform.Find(Tags.head).GetComponent<BoxCollider2D>();
-		myGroundStopperCollider = transform.Find(Tags.groundStopper).GetComponent<BoxCollider2D>();
+		myFeetTrigger = transform.Find(Tags.name_feet).GetComponent<BoxCollider2D>();
+		myHeadTrigger = transform.Find(Tags.name_head).GetComponent<BoxCollider2D>();
+		myGroundStopperCollider = transform.Find(Tags.name_groundStopper).GetComponent<BoxCollider2D>();
 	}
 
 	void Awake() {

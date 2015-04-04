@@ -30,7 +30,7 @@ public class RageTrigger : MonoBehaviour {
 																									// bodyCollider -> in Child GO
 				{
 					// check if other collider is from a player or a powerup
-					if(other.gameObject.name == Tags.powerUpHitArea)
+					if(other.gameObject.name == Tags.name_powerUpHitArea)
 					{
 
 						other.transform.parent.GetComponent<PlatformCharacter>().Victim_AttackTriggered(this);

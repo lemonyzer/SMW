@@ -137,7 +137,7 @@ public class ConnectionStats : MonoBehaviour {
 		if(Network.peerType == NetworkPeerType.Disconnected)
 			return;
 
-		GameObject[] playerCharacters = GameObject.FindGameObjectsWithTag(Tags.player);
+		GameObject[] playerCharacters = GameObject.FindGameObjectsWithTag(Tags.tag_player);
 //		
 //		if(playerCharacters.Length > 0)
 //			Debug.Log("Player Characters found:" + playerCharacters[0].name);
@@ -329,7 +329,7 @@ public class ConnectionStats : MonoBehaviour {
 		if(Network.peerType == NetworkPeerType.Disconnected)
 			return;
 
-		GameObject[] playerCharacters = GameObject.FindGameObjectsWithTag(Tags.player);
+		GameObject[] playerCharacters = GameObject.FindGameObjectsWithTag(Tags.tag_player);
 
 		if(playerCharacters.Length > 0)
 			Debug.Log("Player Characters found:" + playerCharacters[0].name);

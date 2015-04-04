@@ -96,7 +96,7 @@ public abstract class ItemScript : MonoBehaviour {
 	{
 		if(other.gameObject.layer == Layer.item)
 		{
-			if(other.gameObject.name == Tags.itemCollector)
+			if(other.gameObject.name == Tags.name_itemCollector)
 			{
 				// Player gefunden
 				if(itemId == null)

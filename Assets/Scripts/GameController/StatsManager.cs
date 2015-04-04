@@ -78,7 +78,7 @@ public class StatsManager : MonoBehaviour {
 	{
 		sortingLayer = GetComponent<SortingLayer>();
 
-		backGround = GameObject.FindGameObjectWithTag(Tags.background);
+		backGround = GameObject.FindGameObjectWithTag(Tags.tag_background);
 		if(backGround == null)
 		{
 			Debug.LogError("no Background found!");
