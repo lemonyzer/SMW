@@ -2,6 +2,8 @@
 using System.Collections;
 
 using UnityEditor;
+using UnityEditorInternal;
+using System.Reflection;
 //using UnityEditor.TextureImporter;
 
 using System;
@@ -9,6 +11,71 @@ using System.Collections.Generic;
 //using System.Xml;
 
 public class CharacterCreationHelper : EditorWindow {
+
+	// properties for all characters
+	public AnimationClip spawnAnimClip;
+	public AnimationClip protectionAnimClip;
+	public AnimationClip rageAnimClip;
+
+	public Sprite kingSprite;
+	public Sprite iceWandSprite;
+
+	public Color color_rootRenderer 						= new Color(1f,1f,1f,1f);		// ALL (ROOT SpriteRenderer)
+	public Color color_rootCloneRenderer 					= new Color(1f,1f,1f,1f);		// ALL
+	public Color color_kingRenderer		 					= new Color(1f,1f,1f,1f);		// ALL
+	public Color color_iceWallRenderer	 					= new Color(1f,1f,1f,1f);		// ALL
+	public Color color_currentEstimatedPosOnServer 			= new Color(1f,1f,1f,1f);	// localplayer Character's	only
+	public Color color_LastRecvedPos 						= new Color(1f,1f,1f,0.25f);	// all other Character's	vergangene Position
+	public Color color_PredictedPosSimulatedWithLastInput 	= new Color(1f,1f,1f,0.25f);	// all other Character's	vergangene Position
+	public Color color_PredictedPosCalculatedWithLastInput 	= new Color(1f,1f,1f,0.25f);	// all other Character's	vergangene Position
+	
+	public int rootRendererSortingLayer;
+	public int rootCloneRendererSortingLayer;
+	public int kingRendererSortingLayer;
+	public int iceWalledRendererSortingLayer;
+	public int currentEstimatedPosOnServerSortingLayer;
+	public int lastRecvdPosRendererSortingLayer;
+	public int preSimPosRendererSortingLayer;
+	public int preCalclastRecvdPosRendererSortingLayer;
+	// Get the sorting layer names
+	//int popupMenuIndex;//The selected GUI popup Index
+	public string[] GetSortingLayerNames()
+	{
+		Type internalEditorUtilityType = typeof(InternalEditorUtility);
+		PropertyInfo sortingLayersProperty = internalEditorUtilityType.GetProperty("sortingLayerNames", BindingFlags.Static | BindingFlags.NonPublic);
+		return (string[])sortingLayersProperty.GetValue(null, new object[0]);
+	}
+	string[] sortingLayerNames;//we load here our Layer names to be displayed at the popup GUI
+	/// <summary>
+	/// Raises the enable event. We use it to set some references and do some initialization. I don`t figured out how to make a variable persistent in Unity Editor yet so most of the codes here can useless
+	/// </summary>
+	void OnEnable()
+	{
+		sortingLayerNames = GetSortingLayerNames(); //First we load the name of our layers
+
+		rootRendererSortingLayer = GetSortingLayerNumber(SortingLayer.name_CharacterBackground);
+		rootCloneRendererSortingLayer = GetSortingLayerNumber(SortingLayer.name_CharacterBackground);
+
+		kingRendererSortingLayer = GetSortingLayerNumber(SortingLayer.name_CharacterKing);
+		iceWalledRendererSortingLayer = GetSortingLayerNumber(SortingLayer.name_CharacterForeground);
+
+		currentEstimatedPosOnServerSortingLayer = GetSortingLayerNumber(SortingLayer.name_CharacterForeground);
+		lastRecvdPosRendererSortingLayer = GetSortingLayerNumber(SortingLayer.name_CharacterForeground);
+		preSimPosRendererSortingLayer = GetSortingLayerNumber(SortingLayer.name_CharacterForeground);
+		preCalclastRecvdPosRendererSortingLayer = GetSortingLayerNumber(SortingLayer.name_CharacterForeground);
+
+	}
+
+	public int GetSortingLayerNumber(string sortingLayerName)
+	{
+		for (int i = 0; i<sortingLayerNames.Length;i++) //here we initialize our popupMenuIndex with the current Sort Layer Name
+		{
+			if (sortingLayerNames[i] == sortingLayerName)
+				return i;
+		}
+		Debug.LogError("Sorting Layer " + sortingLayerName + " nicht gefunden");
+		return 0;
+	}
 
 	public SmwCharacter smwCharacter;
 
@@ -51,10 +118,109 @@ public class CharacterCreationHelper : EditorWindow {
 		return false;
 	}
 
+
+//	GUIStyle leftAlignment = new GUIStyle();
+//
+//
 	void OnGUI ()
 	{
+
+		GUILayout.BeginHorizontal ();
+		GUILayout.Label ("Character Library", EditorStyles.boldLabel);
+		if (GUILayout.Button("Show Character List"))
+		{
+			// ... kann man die Datei im ProjectWindow (Datei Explorer) öffnen
+//			EditorUtility.FocusProjectWindow();
+//			Selection.activeObject = smwCharacter;
+		}
+		if (GUILayout.Button("Open Character List"))
+		{
+			// ... kann man die Datei im ProjectWindow (Datei Explorer) öffnen
+			//			EditorUtility.FocusProjectWindow();
+			//			Selection.activeObject = smwCharacter;
+		}
+		if (GUILayout.Button("New Character List"))
+		{
+			// ... kann man die Datei im ProjectWindow (Datei Explorer) öffnen
+			//			EditorUtility.FocusProjectWindow();
+			//			Selection.activeObject = smwCharacter;
+		}
+		GUILayout.EndHorizontal ();
+		
+
+
+		GUILayout.BeginVertical ();
+
+		GUILayout.Label ("Generic Animations");
+		spawnAnimClip = EditorGUILayout.ObjectField("Spawn Animation", spawnAnimClip, typeof(AnimationClip), false) as AnimationClip;
+		protectionAnimClip = EditorGUILayout.ObjectField("Protection Animation", protectionAnimClip, typeof(AnimationClip), false) as AnimationClip;
+		rageAnimClip = EditorGUILayout.ObjectField("Rage Animation", rageAnimClip, typeof(AnimationClip), false) as AnimationClip;
+
+		GUILayout.Label ("Special Sprites");
+		kingSprite = EditorGUILayout.ObjectField("King Sprite", kingSprite, typeof(Sprite), false) as Sprite;
+		iceWandSprite = EditorGUILayout.ObjectField("Ice Wand Sprite", iceWandSprite, typeof(Sprite), false) as Sprite;
+		
+
+		GUILayout.Label ("SpriteRenderer");
+
+		GUILayout.BeginHorizontal ();
+		GUILayout.Label ("root", EditorStyles.foldout);
+		GUILayout.EndHorizontal ();
+		rootRendererSortingLayer  = EditorGUILayout.Popup("Sorting Layer", rootRendererSortingLayer, sortingLayerNames);//The popup menu is displayed simple as that
+		color_rootRenderer = EditorGUILayout.ColorField("Color", color_rootRenderer);
+
+
+		GUILayout.BeginHorizontal ();
+		GUILayout.Label ("root clones", EditorStyles.foldout);
+		GUILayout.EndHorizontal ();
+		rootCloneRendererSortingLayer = EditorGUILayout.Popup("Sorting Layer", rootCloneRendererSortingLayer, sortingLayerNames);//The popup menu is displayed simple as that
+
+
+		GUILayout.BeginHorizontal ();
+		GUILayout.Label ("king", EditorStyles.foldout);
+		GUILayout.EndHorizontal ();
+		kingRendererSortingLayer = EditorGUILayout.Popup("Sorting Layer", kingRendererSortingLayer, sortingLayerNames);//The popup menu is displayed simple as that
+
+
+		GUILayout.BeginHorizontal ();
+		GUILayout.Label ("icewall", EditorStyles.foldout, GUILayout.ExpandWidth(false));
+		GUILayout.EndHorizontal ();
+		iceWalledRendererSortingLayer = EditorGUILayout.Popup("Sorting Layer", iceWalledRendererSortingLayer, sortingLayerNames, GUILayout.ExpandWidth(true));//The popup menu is displayed simple as that
+
+
+		GUILayout.BeginHorizontal ();
+		GUILayout.Label ("current estim server Po", EditorStyles.foldout, GUILayout.ExpandWidth(false));
+		GUILayout.EndHorizontal ();
+		currentEstimatedPosOnServerSortingLayer = EditorGUILayout.Popup("Sorting Layer", currentEstimatedPosOnServerSortingLayer, sortingLayerNames, GUILayout.ExpandWidth(true));//The popup menu is displayed simple as that
+		color_currentEstimatedPosOnServer = EditorGUILayout.ColorField("Color", color_currentEstimatedPosOnServer, GUILayout.ExpandWidth(true));
+
+		GUILayout.BeginHorizontal ();
+		GUILayout.Label ("last recvd Pos", EditorStyles.foldout, GUILayout.ExpandWidth(false));
+		GUILayout.EndHorizontal ();
+		lastRecvdPosRendererSortingLayer = EditorGUILayout.Popup("Sorting Layer", lastRecvdPosRendererSortingLayer, sortingLayerNames, GUILayout.ExpandWidth(true));//The popup menu is displayed simple as that
+		color_LastRecvedPos = EditorGUILayout.ColorField("Color", color_LastRecvedPos, GUILayout.ExpandWidth(true));
+
+
+		GUILayout.BeginHorizontal ();
+		GUILayout.Label ("predicted Pos sim", EditorStyles.foldout);
+		GUILayout.EndHorizontal ();
+		preSimPosRendererSortingLayer = EditorGUILayout.Popup("Sorting Layer", preSimPosRendererSortingLayer, sortingLayerNames);//The popup menu is displayed simple as that
+		color_PredictedPosSimulatedWithLastInput = EditorGUILayout.ColorField("Color", color_PredictedPosSimulatedWithLastInput);
+
+
+		GUILayout.BeginHorizontal ();
+		GUILayout.Label ("predicted Pos calc", EditorStyles.foldout);
+		GUILayout.EndHorizontal ();
+		preCalclastRecvdPosRendererSortingLayer = EditorGUILayout.Popup("Sorting Layer", preCalclastRecvdPosRendererSortingLayer, sortingLayerNames);//The popup menu is displayed simple as that
+		color_PredictedPosCalculatedWithLastInput = EditorGUILayout.ColorField("Color", color_PredictedPosCalculatedWithLastInput);
+
+		GUILayout.EndVertical ();
+
+
+
 		GUILayout.BeginHorizontal ();
 		GUILayout.Label ("SMW Character Editor", EditorStyles.boldLabel);
+
 		if (smwCharacter != null)
 		{
 			// wenn ein SMW Character gesetzt ist

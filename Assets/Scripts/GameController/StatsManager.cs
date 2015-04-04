@@ -70,13 +70,11 @@ public class StatsManager : MonoBehaviour {
 	public GameObject winEffect2;
 	public AudioClip winSound;
 
-	private SortingLayer sortingLayer;
 
 	NetworkView myNetworkView;
 
 	void Awake()
 	{
-		sortingLayer = GetComponent<SortingLayer>();
 
 		backGround = GameObject.FindGameObjectWithTag(Tags.tag_background);
 		if(backGround == null)
@@ -122,7 +120,7 @@ public class StatsManager : MonoBehaviour {
 			winEffect.SetActive(true);
 			winEffect.transform.position = gameWinner.transform.position;
 			winEffect.transform.parent = gameWinner.transform;
-			winEffect.GetComponent<Renderer>().sortingLayerID = sortingLayer.guiSortingLayer;
+			winEffect.GetComponent<Renderer>().sortingLayerID = SortingLayer.int_GUI;
 		}
 		if(winEffect2 != null)
 		{
@@ -131,7 +129,7 @@ public class StatsManager : MonoBehaviour {
 			winEffect2.transform.parent = gameWinner.transform;
 			foreach(Transform child in winEffect2.transform)
 			{
-				child.GetComponent<Renderer>().sortingLayerID = sortingLayer.guiSortingLayer;
+				child.GetComponent<Renderer>().sortingLayerID = SortingLayer.int_GUI;
 			}
 		}
 		if(winSound != null) {
