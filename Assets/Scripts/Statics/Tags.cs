@@ -18,6 +18,7 @@ public class Tags : MonoBehaviour {
 	public const string itemCollector = "ItemCollector";
 	public const string powerUpHitArea = "PowerUpHitArea";
 	public const string groundStopper = "GroundStopper";
+	public const string king = "King";
 
 	//public const string boxCollider = "BoxCollider";
 	public const string lastReceivedPos = "LastRecvedPos";

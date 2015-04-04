@@ -380,107 +380,59 @@ public class CharacterCreationHelper : EditorWindow {
 		// um Prefab zu erstellen muss einfach über Liste childs iteriert werden und die darin enthaltenen Körperteile
 		public static List<BodyPartComponent> childs;
 
-		//newBug
-//		public static void SetupChilds()
+		//EDIT //TODO//TODO//TODO//TODO//TODO//TODO//TODO
+//		// Open tag manager
+//		SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+//		SerializedProperty tagsProp = tagManager.FindProperty("tags");
+//		
+//		// For Unity 5 we need this too
+//		SerializedProperty layersProp = tagManager.FindProperty("layers");
+//		
+//		// Adding a Tag
+//		string s = "the_tag_i_want_to_add";
+//		
+//		// First check if it is not already present
+//		bool found = false;
+//		for (int i = 0; i < tagsProp.arraySize; i++)
 //		{
-//			childs = new List<BodyPartComponent>();
-//			
-//			Vector3 headPos = new Vector3(0f,0.3f,0f);
-//			Vector3 feetPos = new Vector3(0f,-0.3f,0f);
-//			Vector3 kingPos = new Vector3(0f,0.6f,0f);
-//			
-//			float leftPos = -20f;
-//			float rightPos = 20f;
-//			
-//			Vector2 headBoxSize = new Vector2(0.7f,0.25f);
-//			Vector2 offSetCenter = Vector2.zero;
-//			Vector2 offSetLeft = new Vector2(leftPos,0f);
-//			Vector2 offSetRight = new Vector2(rightPos,0f);
-//			
-//			
-//			// Clone Left
-//			BodyPartComponent child = new BodyPartComponent(Tags.cloneLeft, Tags.cloneLeft, Layer.playerLayerName);
-//			child.position.x = leftPos;
-//			child.components.Add(new SpriteRenderer());
-//			child.components.Add(new CloneSpriteScript());
-//			//add
-//			childs.Add(child);
-//			
-//			
-//			// Clone Right
-//			child = new BodyPartComponent(Tags.cloneRight, Tags.cloneRight, Layer.playerLayerName);
-//			child.position.x = rightPos;
-//			child.components.Add(new SpriteRenderer());
-//			child.components.Add(new CloneSpriteScript());
-//			//add
-//			childs.Add(child);
-//			
-//			
-//			// Head
-//			child = new BodyPartComponent(Tags.head, Tags.head, Layer.headLayerName);
-//			child.position = headPos;
-//			
-//			//center
-//			BoxCollider2D childComponent = new BoxCollider2D();
-//			childComponent.isTrigger = true;
-//			childComponent.size = headBoxSize;
-//			childComponent.offset = Vector2.zero;
-//			child.components.Add(childComponent);
-//			
-//			//left
-//			childComponent = new BoxCollider2D();
-//			childComponent.isTrigger = true;
-//			childComponent.size = headBoxSize;
-//			childComponent.offset = offSetLeft;
-//			child.components.Add(childComponent);
-//			
-//			//right
-//			childComponent = new BoxCollider2D();
-//			childComponent.isTrigger = true;
-//			childComponent.size = headBoxSize;
-//			childComponent.offset = offSetRight;
-//			child.components.Add(childComponent);
-//			//add
-//			childs.Add(child);
-//			
-//			//			GameObject c = new GameObject();
-//			//			c.transform.position = feetPos;
-//			
-//			// Feet
-//			child = new BodyPartComponent(Tags.feet, Tags.feet, Layer.feetLayerName);
-//			child.position = feetPos;
-//			
-//			//center
-//			childComponent = new BoxCollider2D();
-//			childComponent.isTrigger = true;
-//			childComponent.size = headBoxSize;
-//			childComponent.offset = Vector2.zero;
-//			child.components.Add(childComponent);
-//			
-//			//left
-//			childComponent = new BoxCollider2D();
-//			childComponent.isTrigger = true;
-//			childComponent.size = headBoxSize;
-//			childComponent.offset = offSetLeft;
-//			child.components.Add(childComponent);
-//			
-//			//right
-//			childComponent = new BoxCollider2D();
-//			childComponent.isTrigger = true;
-//			childComponent.size = headBoxSize;
-//			childComponent.offset = offSetRight;
-//			child.components.Add(childComponent);
-//			//add
-//			childs.Add(child);
-//			
-//			
+//			SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
+//			if (t.stringValue.Equals(s)) { found = true; break; }
 //		}
+//		
+//		// if not found, add it
+//		if (!found)
+//		{
+//			tagsProp.InsertArrayElementAtIndex(0);
+//			SerializedProperty n = tagsProp.GetArrayElementAtIndex(0);
+//			n.stringValue = s;
+//		}
+//		
+//		// Setting a Layer (Let's set Layer 10)
+//		string layerName = "the_name_want_to_give_it";
+//		
+//		// --- Unity 4 ---
+//		SerializedProperty sp = tagManager.FindProperty("User Layer 10");
+//		if (sp != null) sp.stringValue = layerName;
+//		
+//		// --- Unity 5 ---
+//		SerializedProperty sp = layersProp.GetArrayElementAtIndex(10);
+//		if (sp != null) sp.stringValue = layerName;
+//		
+//		// and to save the changes
+//		tagManager.ApplyModifiedProperties();
+
 
 		public static void SetupChilds(GameObject characterGO)
 		{
-			Vector3 headPos = new Vector3(0f,0.3f,0f);
-			Vector3 feetPos = new Vector3(0f,-0.3f,0f);
-			Vector3 kingPos = new Vector3(0f,0.6f,0f);
+
+
+			Vector3 headPos = 			new Vector3(0f,0.3f,0f);
+			Vector3 feetPos = 			new Vector3(0f,-0.3f,0f);
+			Vector3 bodyPos = 			new Vector3(0f,0f,0f);
+			Vector3 itemCollectorPos = 	new Vector3(0f,0f,0f);
+			Vector3 powerHitPos = 		new Vector3(0f,0f,0f);
+			Vector3 groundStopperPos = 	new Vector3(0f,0f,0f);
+			Vector3 kingPos = 			new Vector3(0f,0.6f,0f);
 
 			float leftPos = -20f;
 			float rightPos = 20f;
@@ -491,13 +443,43 @@ public class CharacterCreationHelper : EditorWindow {
 			Vector2 headBoxSize = new Vector2(0.7f,0.25f);
 			Vector2 feetBoxSize = new Vector2(0.7f,0.25f);
 			Vector2 bodyBoxSize = new Vector2(0.7f,0.8f);
-			Vector2 itemCollectorAreaBoxSize = new Vector2(0.7f,0.8f);
-			Vector2 powerHitAreaBoxSize = new Vector2(0.7f,0.8f);
-			Vector2 groundStopperBoxSize = new Vector2(0.7f,0.8f);
+			Vector2 itemCollectorBoxSize = new Vector2(0.7f,0.8f);
+			Vector2 powerHitBoxSize = new Vector2(0.7f,0.8f);
+			Vector2 groundStopperBoxSize = new Vector2(0.7f,0.5f);
+
+			Vector2 groundStopperBoxOffset = new Vector2(0.0f,-0.25f);
 			
 			Vector2 offSetCenter = Vector2.zero;
 			Vector2 offSetLeft = new Vector2(leftPos,0f);
 			Vector2 offSetRight = new Vector2(rightPos,0f);
+
+			// root
+			SpriteRenderer renderer = characterGO.AddComponent<SpriteRenderer>();	//TODO	layer, sprite
+			//renderer.sprite = 
+			//renderer.sortingLayerID = 
+			//renderer.sortingLayerName = 
+			//renderer.sortingOrder = 
+			Rigidbody2D rb2d = characterGO.AddComponent<Rigidbody2D>();	//TODO  gravityscale = 0, fixedAngle
+			rb2d.gravityScale = 0.0f;
+			rb2d.fixedAngle = true;
+			Animator anim = characterGO.AddComponent<Animator>();		//TODO	animatorController, rootMotion=false
+			//anim.runtimeAnimatorController = 
+			anim.applyRootMotion = false;
+			characterGO.AddComponent<PlatformUserControl>();
+			characterGO.AddComponent<PlatformCharacter>();
+			characterGO.AddComponent<PlatformJumperV2>();
+			Bot bot = characterGO.AddComponent<Bot>();
+			bot.enabled = false;
+			characterGO.AddComponent<Rage>();
+			characterGO.AddComponent<Shoot>();
+			characterGO.AddComponent<Shield>();
+			NetworkedPlayer netPlayer = characterGO.AddComponent<NetworkedPlayer>();
+			AudioSource audioSource = characterGO.AddComponent<AudioSource>();	//TODO (loop off, onawake off)
+			audioSource.playOnAwake = false;
+			audioSource.loop = false;
+			NetworkView networkView = characterGO.AddComponent<NetworkView>();	//TODO
+			networkView.stateSynchronization = NetworkStateSynchronization.Unreliable;
+			networkView.observed = netPlayer;
 
 
 			// Clone Left
@@ -507,19 +489,22 @@ public class CharacterCreationHelper : EditorWindow {
 			childGO.tag = Tags.cloneLeft;									// setze tag
 			childGO.layer = LayerMask.NameToLayer(Layer.playerLayerName);	// setze layer
 			// Componenten
-			SpriteRenderer renderer = childGO.AddComponent<SpriteRenderer>();
+			renderer = childGO.AddComponent<SpriteRenderer>();
 			CloneSpriteScript cloneScript = childGO.AddComponent<CloneSpriteScript>();
-
+			//renderer.sprite = //TODO sprite for king 
+			//renderer.sortingLayerName = //TODO kingRendererSortLayer 
 
 			// Clone Right
 			childGO = new GameObject(Tags.cloneRight);
 			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
-			childGO.transform.position = leftTransformPos;					// setze offSet Position
+			childGO.transform.position = rightTransformPos;					// setze offSet Position
 			childGO.tag = Tags.cloneRight;									// setze tag
 			childGO.layer = LayerMask.NameToLayer(Layer.playerLayerName);	// setze layer
 			// Componenten
 			renderer = childGO.AddComponent<SpriteRenderer>();
 			cloneScript = childGO.AddComponent<CloneSpriteScript>();
+			//renderer.sprite = //TODO sprite for king 
+			//renderer.sortingLayerName = //TODO kingRendererSortLayer 
 
 			// Head
 			childGO = new GameObject(Tags.head);
@@ -567,6 +552,172 @@ public class CharacterCreationHelper : EditorWindow {
 			box.isTrigger = true;
 			box.size = feetBoxSize;
 			box.offset = offSetRight; 
+			SendDamageTrigger feetScript = childGO.AddComponent<SendDamageTrigger>();
+
+
+			// Body
+			childGO = new GameObject(Tags.body);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = bodyPos;					// setze offSet Position
+			childGO.tag = Tags.body;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.bodyLayerName);	// setze layer
+			// Componenten
+			//center
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = false;
+			box.size = bodyBoxSize;
+			box.offset = Vector2.zero;
+			//left
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.enabled = false;	//TODO off
+			box.isTrigger = false;
+			box.size = bodyBoxSize;
+			box.offset = offSetLeft;
+			//right
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.enabled = false;	//TODO off
+			box.isTrigger = false;
+			box.size = bodyBoxSize;
+			box.offset = offSetRight; 
+
+
+			// ItemCollector
+			childGO = new GameObject(Tags.itemCollector);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = itemCollectorPos;					// setze offSet Position
+			childGO.tag = Tags.itemCollector;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.itemLayerName);	// setze layer
+			// Componenten
+			//center
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = itemCollectorBoxSize;
+			box.offset = Vector2.zero;
+			//left
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = itemCollectorBoxSize;
+			box.offset = offSetLeft;
+			//right
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = itemCollectorBoxSize;
+			box.offset = offSetRight; 
+			ItemCollectorScript collectorScript = childGO.AddComponent<ItemCollectorScript>();
+
+
+			// PowerHitArea
+			childGO = new GameObject(Tags.powerUpHitArea);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = powerHitPos;					// setze offSet Position
+			childGO.tag = Tags.powerUpHitArea;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.powerUpLayerName);	// setze layer
+			// Componenten
+			//center
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = powerHitBoxSize;
+			box.offset = Vector2.zero;
+			//left
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = powerHitBoxSize;
+			box.offset = offSetLeft;
+			//right
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = powerHitBoxSize;
+			box.offset = offSetRight; 
+			RageTrigger powerHitAreaScript = childGO.AddComponent<RageTrigger>();
+
+
+			// GroundStopper
+			childGO = new GameObject(Tags.groundStopper);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = groundStopperPos;					// setze offSet Position
+			childGO.tag = Tags.groundStopper;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.groundStopperLayerName);	// setze layer
+			// Componenten
+			//center
+			box = childGO.AddComponent<BoxCollider2D>();
+			box.isTrigger = true;
+			box.size = groundStopperBoxSize;
+			box.offset = groundStopperBoxOffset;
+//			//left
+//			box = childGO.AddComponent<BoxCollider2D>();
+//			box.isTrigger = true;
+//			box.size = powerHitBoxSize;
+//			box.offset = offSetLeft;
+//			//right
+//			box = childGO.AddComponent<BoxCollider2D>();
+//			box.isTrigger = true;
+//			box.size = powerHitBoxSize;
+//			box.offset = offSetRight; 
+
+			// King
+			childGO = new GameObject(Tags.king);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = kingPos;					// setze offSet Position
+//			childGO.tag = ;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.defaultLayerName);	// setze layer
+			// Componenten
+			//center
+			renderer = childGO.AddComponent<SpriteRenderer>();
+			//renderer.sprite = //TODO sprite for king 
+			//renderer.sortingLayerName = //TODO kingRendererSortLayer 
+
+
+			// CurrentEstimatedPosOnServer
+			childGO = new GameObject(Tags.CurrentEstimatedPosOnServer);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = Vector3.zero;					// setze offSet Position
+			//			childGO.tag = ;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.defaultLayerName);	// setze layer
+			// Componenten
+			//center
+			renderer = childGO.AddComponent<SpriteRenderer>();
+			//renderer.color = //TODO color and transparenz
+			//renderer.sprite = //TODO sprite 
+			//renderer.sortingLayerName = //TODO kingRendererSortLayer
+
+			// LastRecvedPos
+			childGO = new GameObject(Tags.lastReceivedPos);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = Vector3.zero;					// setze offSet Position
+			//			childGO.tag = ;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.defaultLayerName);	// setze layer
+			// Componenten
+			//center
+			renderer = childGO.AddComponent<SpriteRenderer>();
+			//renderer.color = //TODO color and transparenz
+			//renderer.sprite = //TODO sprite 
+			//renderer.sortingLayerName = //TODO kingRendererSortLayer
+
+			//PredictedPosSimulatedWithLastInput
+			childGO = new GameObject(Tags.PredictedPosSimulatedWithLastInput);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = Vector3.zero;					// setze offSet Position
+			//			childGO.tag = ;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.defaultLayerName);	// setze layer
+			// Componenten
+			//center
+			renderer = childGO.AddComponent<SpriteRenderer>();
+			//renderer.color = //TODO color and transparenz
+			//renderer.sprite = //TODO sprite 
+			//renderer.sortingLayerName = //TODO kingRendererSortLayer
+
+			//PredictedPosCalculatedWithLastInput
+			childGO = new GameObject(Tags.PredictedPosCalculatedWithLastInput);
+			childGO.transform.SetParent(characterGO.transform);				// setze Verbindung zum characterGO
+			childGO.transform.position = Vector3.zero;					// setze offSet Position
+			//			childGO.tag = ;									// setze tag
+			childGO.layer = LayerMask.NameToLayer(Layer.defaultLayerName);	// setze layer
+			// Componenten
+			//center
+			renderer = childGO.AddComponent<SpriteRenderer>();
+			//renderer.color = //TODO color and transparenz
+			//renderer.sprite = //TODO sprite 
+			//renderer.sortingLayerName = //TODO kingRendererSortLayer
         }
         
 //        public static void BuildCharacter(GameObject characterGO)
