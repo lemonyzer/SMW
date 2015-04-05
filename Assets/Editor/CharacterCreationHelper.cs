@@ -16,41 +16,42 @@ public class CharacterCreationHelper : EditorWindow {
 	public SmwCharacterList smwCharacterList;
 	private int viewIndex = 1;
 
-	// properties for all characters
-	public AnimationClip spawnAnimClip;
-	public AnimationClip protectionAnimClip;
-	public AnimationClip rageAnimClip;
-
-	public Sprite kingSprite;
-//	public Sprite iceWandSprite;
-	//public AnimatorController iceWandAnimatorController;
-	public RuntimeAnimatorController iceWandAnimatorController;
-
-	public Color color_rootRenderer 						= new Color(1f,1f,1f,1f);		// ALL (ROOT SpriteRenderer)
-	public Color color_rootCloneRenderer 					= new Color(1f,1f,1f,1f);		// ALL
-	public Color color_kingRenderer		 					= new Color(1f,1f,1f,1f);		// ALL
-	public Color color_iceWallRenderer	 					= new Color(1f,1f,1f,1f);		// ALL
-	public Color color_currentEstimatedPosOnServer 			= new Color(1f,1f,1f,1f);	// localplayer Character's	only
-	public Color color_LastRecvedPos 						= new Color(1f,1f,1f,0.25f);	// all other Character's	vergangene Position
-	public Color color_PredictedPosSimulatedWithLastInput 	= new Color(1f,1f,1f,0.25f);	// all other Character's	vergangene Position
-	public Color color_PredictedPosCalculatedWithLastInput 	= new Color(1f,1f,1f,0.25f);	// all other Character's	vergangene Position
-	
-	public int rootRendererSortingLayer;
-	public string rootRendererSortingLayerName = SortingLayer.name_CharacterBackground;
-	public int rootCloneRendererSortingLayer;
-	public string rootCloneRendererSortingLayerName = SortingLayer.name_CharacterBackground;
-	public int kingRendererSortingLayer;
-	public string kingRendererSortingLayerName = SortingLayer.name_CharacterKing;
-	public int iceWalledRendererSortingLayer;
-	public string iceWalledRendererSortingLayerName = SortingLayer.name_CharacterForeground;
-	public int currentEstimatedPosOnServerSortingLayer;
-	public string currentEstimatedPosOnServerSortingLayerName = SortingLayer.name_CharacterForeground;
-	public int lastRecvdPosRendererSortingLayer;
-	public string lastRecvdPosRendererSortingLayerName = SortingLayer.name_CharacterForeground;
-	public int preSimPosRendererSortingLayer;
-	public string preSimPosRendererSortingLayerName = SortingLayer.name_CharacterForeground;
-	public int preCalclastRecvdPosRendererSortingLayer;
-	public string preCalclastRecvdPosRendererSortingLayerName = SortingLayer.name_CharacterForeground;
+	// CharacterGenerics
+//	// properties for all characters
+//	public AnimationClip spawnAnimClip;
+//	public AnimationClip protectionAnimClip;
+//	public AnimationClip rageAnimClip;
+//
+//	public Sprite kingSprite;
+////	public Sprite iceWandSprite;
+//	//public AnimatorController iceWandAnimatorController;
+//	public RuntimeAnimatorController iceWandAnimatorController;
+//
+//	public Color color_rootRenderer 						= new Color(1f,1f,1f,1f);		// ALL (ROOT SpriteRenderer)
+//	public Color color_rootCloneRenderer 					= new Color(1f,1f,1f,1f);		// ALL
+//	public Color color_kingRenderer		 					= new Color(1f,1f,1f,1f);		// ALL
+//	public Color color_iceWallRenderer	 					= new Color(1f,1f,1f,1f);		// ALL
+//	public Color color_currentEstimatedPosOnServer 			= new Color(1f,1f,1f,1f);	// localplayer Character's	only
+//	public Color color_LastRecvedPos 						= new Color(1f,1f,1f,0.25f);	// all other Character's	vergangene Position
+//	public Color color_PredictedPosSimulatedWithLastInput 	= new Color(1f,1f,1f,0.25f);	// all other Character's	vergangene Position
+//	public Color color_PredictedPosCalculatedWithLastInput 	= new Color(1f,1f,1f,0.25f);	// all other Character's	vergangene Position
+//	
+//	public int rootRendererSortingLayer;
+//	public string rootRendererSortingLayerName = SortingLayer.name_CharacterBackground;
+//	public int rootCloneRendererSortingLayer;
+//	public string rootCloneRendererSortingLayerName = SortingLayer.name_CharacterBackground;
+//	public int kingRendererSortingLayer;
+//	public string kingRendererSortingLayerName = SortingLayer.name_CharacterKing;
+//	public int iceWalledRendererSortingLayer;
+//	public string iceWalledRendererSortingLayerName = SortingLayer.name_CharacterForeground;
+//	public int currentEstimatedPosOnServerSortingLayer;
+//	public string currentEstimatedPosOnServerSortingLayerName = SortingLayer.name_CharacterForeground;
+//	public int lastRecvdPosRendererSortingLayer;
+//	public string lastRecvdPosRendererSortingLayerName = SortingLayer.name_CharacterForeground;
+//	public int preSimPosRendererSortingLayer;
+//	public string preSimPosRendererSortingLayerName = SortingLayer.name_CharacterForeground;
+//	public int preCalclastRecvdPosRendererSortingLayer;
+//	public string preCalclastRecvdPosRendererSortingLayerName = SortingLayer.name_CharacterForeground;
 	// Get the sorting layer names
 	//int popupMenuIndex;//The selected GUI popup Index
 	public string[] GetSortingLayerNames()
@@ -149,7 +150,7 @@ public class CharacterCreationHelper : EditorWindow {
 
 	public Sprite spritesheet;
 	public Sprite[] slicedSprite;
-//	public Texture2D texture2d;
+
 	public int subSpritesCount = 6;
 	public int pixelPerUnit = 32;
 	public int pixelSizeWidth = 32;
@@ -160,17 +161,6 @@ public class CharacterCreationHelper : EditorWindow {
 		GetWindow (typeof (CharacterCreationHelper));
 	}
 
-//	void OnEnable ()
-//	{
-//		if(EditorPrefs.HasKey("ObjectPath"))
-//		{
-//			string objectPath = EditorPrefs.GetString("ObjectPath");
-//			smwCharacter = AssetDatabase.LoadAssetAtPath (objectPath, typeof(SmwCharacter)) as SmwCharacter;
-//		}
-//	}
-
-	TextureImporter myImporter = null;
-	bool canSetupScriptableSMWCharacter = false;
 
 	bool SpriteIsPrepared(TextureImporter myImporter)
 	{
@@ -193,6 +183,12 @@ public class CharacterCreationHelper : EditorWindow {
 
 	void UpdateSortingLayers()
 	{
+
+		if(smwCharacterGenerics == null)
+		{
+			return;
+		}
+
 		sortingLayerNames = GetSortingLayerNames(); //First we load the name of our layers
 		sortingLayersUniqueIDs = GetSortingLayerUniqueIDs(); //First we load the name of our layers
 
@@ -203,16 +199,16 @@ public class CharacterCreationHelper : EditorWindow {
 		// geht aber aufs gleiche raus, wenn SortinLayerName in UnityEngine geändert wird  (sortinglayer umsortiert umbenannt gelöscht...) kann es sein das es ebenfalls nicht mehr existiert
 		// TODO SortingLayer.xxxName stimmt dann auch nicht mehr!!
 
-		rootRendererSortingLayerName  = GetSortingLayerName(rootRendererSortingLayer);
-		rootCloneRendererSortingLayerName = GetSortingLayerName(rootCloneRendererSortingLayer);
+		smwCharacterGenerics.rootRendererSortingLayerName  = GetSortingLayerName(smwCharacterGenerics.rootRendererSortingLayer);
+		smwCharacterGenerics.rootCloneRendererSortingLayerName = GetSortingLayerName(smwCharacterGenerics.rootCloneRendererSortingLayer);
 		
-		kingRendererSortingLayerName = GetSortingLayerName(kingRendererSortingLayer);
-		iceWalledRendererSortingLayerName  = GetSortingLayerName(iceWalledRendererSortingLayer);
+		smwCharacterGenerics.kingRendererSortingLayerName = GetSortingLayerName(smwCharacterGenerics.kingRendererSortingLayer);
+		smwCharacterGenerics.iceWalledRendererSortingLayerName  = GetSortingLayerName(smwCharacterGenerics.iceWalledRendererSortingLayer);
 		
-		currentEstimatedPosOnServerSortingLayerName  = GetSortingLayerName(currentEstimatedPosOnServerSortingLayer);
-		lastRecvdPosRendererSortingLayerName  = GetSortingLayerName(lastRecvdPosRendererSortingLayer);
-		preSimPosRendererSortingLayerName  = GetSortingLayerName(preSimPosRendererSortingLayer);
-		preCalclastRecvdPosRendererSortingLayerName  = GetSortingLayerName(preCalclastRecvdPosRendererSortingLayer);
+		smwCharacterGenerics.currentEstimatedPosOnServerSortingLayerName  = GetSortingLayerName(smwCharacterGenerics.currentEstimatedPosOnServerSortingLayer);
+		smwCharacterGenerics.lastRecvdPosRendererSortingLayerName  = GetSortingLayerName(smwCharacterGenerics.lastRecvdPosRendererSortingLayer);
+		smwCharacterGenerics.preSimPosRendererSortingLayerName  = GetSortingLayerName(smwCharacterGenerics.preSimPosRendererSortingLayer);
+		smwCharacterGenerics.preCalclastRecvdPosRendererSortingLayerName  = GetSortingLayerName(smwCharacterGenerics.preCalclastRecvdPosRendererSortingLayer);
 
 		//TODO check
 //		return;
@@ -295,7 +291,17 @@ public class CharacterCreationHelper : EditorWindow {
 
 		GUILayout.BeginHorizontal ();
 		GUILayout.Label ("Character Generics", EditorStyles.boldLabel);
-		
+
+		if(smwCharacterGenerics != null)
+			GUI.enabled = true;
+		else
+			GUI.enabled = false;
+		if (GUILayout.Button("Save", GUILayout.ExpandWidth(false)))
+		{
+			// ... kann man die Datei im ProjectWindow (Datei Explorer) öffnen
+			EditorUtility.SetDirty(smwCharacterGenerics);
+		}
+
 		if(smwCharacterGenerics != null)
 			GUI.enabled = true;
 		else
@@ -328,14 +334,14 @@ public class CharacterCreationHelper : EditorWindow {
 			GUI.enabled = true;
 			GUILayout.BeginVertical ();
 			GUILayout.Label ("Generic Animations");
-			spawnAnimClip = EditorGUILayout.ObjectField("Spawn Animation", spawnAnimClip, typeof(AnimationClip), false) as AnimationClip;
-			protectionAnimClip = EditorGUILayout.ObjectField("Protection Animation", protectionAnimClip, typeof(AnimationClip), false) as AnimationClip;
-			rageAnimClip = EditorGUILayout.ObjectField("Rage Animation", rageAnimClip, typeof(AnimationClip), false) as AnimationClip;
+			smwCharacterGenerics.spawnAnimClip = EditorGUILayout.ObjectField("Spawn Animation", smwCharacterGenerics.spawnAnimClip, typeof(AnimationClip), false) as AnimationClip;
+			smwCharacterGenerics.protectionAnimClip = EditorGUILayout.ObjectField("Protection Animation", smwCharacterGenerics.protectionAnimClip, typeof(AnimationClip), false) as AnimationClip;
+			smwCharacterGenerics.rageAnimClip = EditorGUILayout.ObjectField("Rage Animation", smwCharacterGenerics.rageAnimClip, typeof(AnimationClip), false) as AnimationClip;
 			
 			GUILayout.Label ("Special Sprites with Animator Controller");
-			kingSprite = EditorGUILayout.ObjectField("King Sprite", kingSprite, typeof(Sprite), false) as Sprite;
+			smwCharacterGenerics.kingSprite = EditorGUILayout.ObjectField("King Sprite", smwCharacterGenerics.kingSprite, typeof(Sprite), false) as Sprite;
 			//		iceWandSprite = EditorGUILayout.ObjectField("Ice Wand Sprite", iceWandSprite, typeof(Sprite), false) as Sprite;
-			iceWandAnimatorController = EditorGUILayout.ObjectField("Ice Wand AnimatorController", iceWandAnimatorController, typeof(RuntimeAnimatorController), false) as RuntimeAnimatorController;
+			smwCharacterGenerics.iceWandAnimatorController = EditorGUILayout.ObjectField("Ice Wand AnimatorController", smwCharacterGenerics.iceWandAnimatorController, typeof(RuntimeAnimatorController), false) as RuntimeAnimatorController;
 			//iceWandAnimator = EditorGUILayout.ObjectField("Ice Wand AnimatorController", iceWandAnimator, typeof(Runti), false) as AnimatorController;
 			
 			
@@ -344,53 +350,53 @@ public class CharacterCreationHelper : EditorWindow {
 			GUILayout.BeginHorizontal ();
 			GUILayout.Label ("root", EditorStyles.foldout);
 			GUILayout.EndHorizontal ();
-			rootRendererSortingLayer  = EditorGUILayout.IntPopup("Sorting Layer", rootRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs);//The popup menu is displayed simple as that
-			color_rootRenderer = EditorGUILayout.ColorField("Color", color_rootRenderer);
+			smwCharacterGenerics.rootRendererSortingLayer  = EditorGUILayout.IntPopup("Sorting Layer", smwCharacterGenerics.rootRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs);//The popup menu is displayed simple as that
+			smwCharacterGenerics.color_rootRenderer = EditorGUILayout.ColorField("Color", smwCharacterGenerics.color_rootRenderer);
 			
 			
 			GUILayout.BeginHorizontal ();
 			GUILayout.Label ("root clones", EditorStyles.foldout);
 			GUILayout.EndHorizontal ();
-			rootCloneRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", rootCloneRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs);//The popup menu is displayed simple as that
+			smwCharacterGenerics.rootCloneRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", smwCharacterGenerics.rootCloneRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs);//The popup menu is displayed simple as that
 			
 			
 			GUILayout.BeginHorizontal ();
 			GUILayout.Label ("king", EditorStyles.foldout);
 			GUILayout.EndHorizontal ();
-			kingRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", kingRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs);//The popup menu is displayed simple as that
+			smwCharacterGenerics.kingRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", smwCharacterGenerics.kingRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs);//The popup menu is displayed simple as that
 			
 			
 			GUILayout.BeginHorizontal ();
 			GUILayout.Label ("icewall", EditorStyles.foldout, GUILayout.ExpandWidth(false));
 			GUILayout.EndHorizontal ();
-			iceWalledRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", iceWalledRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs, GUILayout.ExpandWidth(true));//The popup menu is displayed simple as that
+			smwCharacterGenerics.iceWalledRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", smwCharacterGenerics.iceWalledRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs, GUILayout.ExpandWidth(true));//The popup menu is displayed simple as that
 			
 			
 			GUILayout.BeginHorizontal ();
 			GUILayout.Label ("current estim server Po", EditorStyles.foldout, GUILayout.ExpandWidth(false));
 			GUILayout.EndHorizontal ();
-			currentEstimatedPosOnServerSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", currentEstimatedPosOnServerSortingLayer, sortingLayerNames, sortingLayersUniqueIDs, GUILayout.ExpandWidth(true));//The popup menu is displayed simple as that
-			color_currentEstimatedPosOnServer = EditorGUILayout.ColorField("Color", color_currentEstimatedPosOnServer, GUILayout.ExpandWidth(true));
+			smwCharacterGenerics.currentEstimatedPosOnServerSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", smwCharacterGenerics.currentEstimatedPosOnServerSortingLayer, sortingLayerNames, sortingLayersUniqueIDs, GUILayout.ExpandWidth(true));//The popup menu is displayed simple as that
+			smwCharacterGenerics.color_currentEstimatedPosOnServer = EditorGUILayout.ColorField("Color", smwCharacterGenerics.color_currentEstimatedPosOnServer, GUILayout.ExpandWidth(true));
 			
 			GUILayout.BeginHorizontal ();
 			GUILayout.Label ("last recvd Pos", EditorStyles.foldout, GUILayout.ExpandWidth(false));
 			GUILayout.EndHorizontal ();
-			lastRecvdPosRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", lastRecvdPosRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs, GUILayout.ExpandWidth(true));//The popup menu is displayed simple as that
-			color_LastRecvedPos = EditorGUILayout.ColorField("Color", color_LastRecvedPos, GUILayout.ExpandWidth(true));
+			smwCharacterGenerics.lastRecvdPosRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", smwCharacterGenerics.lastRecvdPosRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs, GUILayout.ExpandWidth(true));//The popup menu is displayed simple as that
+			smwCharacterGenerics.color_LastRecvedPos = EditorGUILayout.ColorField("Color", smwCharacterGenerics.color_LastRecvedPos, GUILayout.ExpandWidth(true));
 			
 			
 			GUILayout.BeginHorizontal ();
 			GUILayout.Label ("predicted Pos sim", EditorStyles.foldout);
 			GUILayout.EndHorizontal ();
-			preSimPosRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", preSimPosRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs);//The popup menu is displayed simple as that
-			color_PredictedPosSimulatedWithLastInput = EditorGUILayout.ColorField("Color", color_PredictedPosSimulatedWithLastInput);
+			smwCharacterGenerics.preSimPosRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", smwCharacterGenerics.preSimPosRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs);//The popup menu is displayed simple as that
+			smwCharacterGenerics.color_PredictedPosSimulatedWithLastInput = EditorGUILayout.ColorField("Color", smwCharacterGenerics.color_PredictedPosSimulatedWithLastInput);
 			
 			
 			GUILayout.BeginHorizontal ();
 			GUILayout.Label ("predicted Pos calc", EditorStyles.foldout);
 			GUILayout.EndHorizontal ();
-			preCalclastRecvdPosRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", preCalclastRecvdPosRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs);//The popup menu is displayed simple as that
-			color_PredictedPosCalculatedWithLastInput = EditorGUILayout.ColorField("Color", color_PredictedPosCalculatedWithLastInput);
+			smwCharacterGenerics.preCalclastRecvdPosRendererSortingLayer = EditorGUILayout.IntPopup("Sorting Layer", smwCharacterGenerics.preCalclastRecvdPosRendererSortingLayer, sortingLayerNames, sortingLayersUniqueIDs);//The popup menu is displayed simple as that
+			smwCharacterGenerics.color_PredictedPosCalculatedWithLastInput = EditorGUILayout.ColorField("Color", smwCharacterGenerics.color_PredictedPosCalculatedWithLastInput);
 			
 			GUILayout.EndVertical ();
 		}
@@ -476,60 +482,6 @@ public class CharacterCreationHelper : EditorWindow {
 				EditorUtility.FocusProjectWindow();
 				Selection.activeObject = smwCharacter;
 			}
-			if(true)
-			{
-
-				GUI.enabled = canSetupScriptableSMWCharacter;
-
-				//TODO
-				//TODO aktuell wird nicht direkt das Sprite [multiple] als Asset übergeben!!!
-				//TODO
-				if (GUILayout.Button("SetCharSpritesheet"))
-				{
-					Debug.Log("Loading Sprites @ " + myImporter.assetPath);
-//					slicedSprite = AssetDatabase.LoadAllAssetRepresentationsAtPath (myImporter.assetPath) as Sprite[];
-					//slicedSprite = ((Sprite)AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath)) //.Of //OfType<Sprite>().ToArray();
-
-					UnityEngine.Object[] test = AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath);
-
-					if(test != null)
-					{
-						if(test.Length > 1)
-						{
-							Debug.Log("SubAssets Anzahl = " + test.Length);
-							slicedSprite = new Sprite[test.Length -1 ];
-							for(int i=1; i< test.Length; i++)
-							{
-								slicedSprite[i-1] = test[i] as Sprite;
-							}
-						}
-						else
-						{
-							Debug.LogError("SubAssets Anzahl = " + test.Length);
-						}
-					}
-
-					//slicedSprite = Resources.LoadAll(myImporter.assetPath) as Sprite[];
-
-//					Sprite[] temp = AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath) as Sprite[]; 
-
-					if(slicedSprite != null)
-					{
-						Debug.Log("slicedSprite SubAssets Anzahl = " + slicedSprite.Length);
-						smwCharacter.SetCharSpritesheet(slicedSprite);
-					}
-					else
-					{
-						Debug.LogError("slicedSprite == null!!!");
-					}
-//					EditorUtility.SetDirty(smwCharacter);
-//					EditorUtility.FocusProjectWindow();
-//					Selection.activeObject = smwCharacter;
-				}
-
-				GUI.enabled = true;
-			}
-
 		}
 		if (GUILayout.Button("New Character"))
 		{
@@ -541,84 +493,201 @@ public class CharacterCreationHelper : EditorWindow {
 		smwCharacter = EditorGUILayout.ObjectField("SMW Character SO", smwCharacter, typeof(SmwCharacter), false) as SmwCharacter;
 
 
+		GUILayout.Label ("Spritesheet Editor", EditorStyles.boldLabel);
 		GUILayout.BeginHorizontal ();
 		spritesheet = EditorGUILayout.ObjectField("Unsliced Sprite", spritesheet, typeof(Sprite), false) as Sprite;
-
-
-		bool enabled_SpriteSet = GUI.enabled;
-		myImporter = UnityEditor.TextureImporter.GetAtPath ( AssetDatabase.GetAssetPath(spritesheet) ) as TextureImporter ;
-		if(myImporter != null)
+		GUILayout.EndHorizontal ();
+//		bool canSetupSprite = false;
+		TextureImporter myImporter = null;
+		if(spritesheet != null)
 		{
-			GUI.enabled = true;
-			if(SpriteIsPrepared(myImporter))
+			myImporter = TextureImporter.GetAtPath (AssetDatabase.GetAssetPath(spritesheet)) as TextureImporter;
+			if(myImporter != null)
 			{
-				canSetupScriptableSMWCharacter = true;
+				if(SpriteIsPrepared(myImporter))
+				{
+					GUILayout.Label("Sprite is prepared! Subsprites = " + myImporter.spritesheet.Length);
+				}
+				else
+				{
+					GUILayout.Label("Sprite is not prepared! Subsprites = " + myImporter.spritesheet.Length);
+				}
+
+				// GUI SubSpriteCount
+				subSpritesCount = EditorGUILayout.IntSlider("Sub Sprites #", subSpritesCount, 1, 6);
+
+				// GUI pixelPerUnit
+				pixelPerUnit = EditorGUILayout.IntField("Pixel per Unit", pixelPerUnit);
+
+				GUILayout.BeginHorizontal ();
+				// GUI: Pivot
+				bool current = GUI.enabled;
+				spriteAlignment = (SpriteAlignment) EditorGUILayout.EnumPopup("Pivot", spriteAlignment);
+				if (spriteAlignment != SpriteAlignment.Custom) {
+					// deaktiviere custom Offset
+					GUI.enabled = false;
+				}
+				// GUI: Custom Pivot
+				EditorGUILayout.Vector2Field("Custom Offset", customOffset);
+				GUI.enabled = current;
+				GUILayout.EndHorizontal ();
+
+
+				GUILayout.BeginHorizontal ();
+				if (GUILayout.Button("Sprite Info"))
+				{
+					// Spriteinfo ausgeben
+					SpriteAssetInfo(myImporter);
+				}
+				if (GUILayout.Button("meta. Slice"))
+				{
+					//Grid Slice
+					PerformMetaSlice(spritesheet);
+				}
+				GUILayout.EndHorizontal ();
 			}
 			else
 			{
-				canSetupScriptableSMWCharacter = false;
-				enabled_SpriteSet = true;
-				GUI.enabled = false;
+				GUILayout.Label("Error: select other Sprite");
 			}
+		}
+
+
+		//TODO
+		//TODO aktuell wird nicht direkt das Sprite [multiple] als Asset übergeben!!!
+		//TODO
+		if(myImporter != null &&
+		   myImporter.spritesheet.Length == 6)
+		{
+			GUI.enabled = true;
+			GUILayout.Label("Sprite ist vorbereitet. :)");
 		}
 		else
 		{
-			canSetupScriptableSMWCharacter = false;
 			GUI.enabled = false;
+			GUILayout.Label("Sprite muss vorbereitet werden!");
+		}
+		if (GUILayout.Button("Add Spritesheet to Character"))
+		{
+			Debug.Log("Loading Sprites @ " + myImporter.assetPath);
+			//					slicedSprite = AssetDatabase.LoadAllAssetRepresentationsAtPath (myImporter.assetPath) as Sprite[];
+			//slicedSprite = ((Sprite)AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath)) //.Of //OfType<Sprite>().ToArray();
+			
+			UnityEngine.Object[] test = AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath);
+			
+			if(test != null)
+			{
+				if(test.Length > 1)
+				{
+					Debug.Log("SubAssets Anzahl = " + test.Length);
+					slicedSprite = new Sprite[test.Length -1 ];
+					for(int i=1; i< test.Length; i++)
+					{
+						slicedSprite[i-1] = test[i] as Sprite;
+					}
+				}
+				else
+				{
+					Debug.LogError("SubAssets Anzahl = " + test.Length);
+				}
+			}
+			
+			//slicedSprite = Resources.LoadAll(myImporter.assetPath) as Sprite[];
+			
+			//					Sprite[] temp = AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath) as Sprite[]; 
+			
+			if(slicedSprite != null)
+			{
+				Debug.Log("slicedSprite SubAssets Anzahl = " + slicedSprite.Length);
+				smwCharacter.SetCharSpritesheet(slicedSprite);
+			}
+			else
+			{
+				Debug.LogError("slicedSprite == null!!!");
+			}
+			//					EditorUtility.SetDirty(smwCharacter);
+			//					EditorUtility.FocusProjectWindow();
+			//					Selection.activeObject = smwCharacter;
 		}
 
-		GUILayout.EndHorizontal ();
 
-		// GUI SubSpriteCount
-		subSpritesCount = EditorGUILayout.IntSlider("Sub Sprites #", subSpritesCount, 1, 6);
 
-		// GUI pixelPerUnit
-		pixelPerUnit = EditorGUILayout.IntField("Pixel per Unit", pixelPerUnit);
 
-		GUILayout.BeginHorizontal ();
-		// GUI: Pivot
-		spriteAlignment = (SpriteAlignment) EditorGUILayout.EnumPopup("Pivot", spriteAlignment);
-//		bool customPivotEnabled = enabled_SpriteSet;
-		if (spriteAlignment != SpriteAlignment.Custom) {
-			// deaktiviere custom Offset
+		if(allowedToCreateAnimatorController())
+			GUI.enabled = true;
+		else
 			GUI.enabled = false;
-		}
-		// GUI: Custom Pivot
-		EditorGUILayout.Vector2Field("Custom Offset", customOffset);
-		GUILayout.EndHorizontal ();
-
-		GUI.enabled = enabled_SpriteSet;
-
-		GUILayout.BeginHorizontal ();
-		if (GUILayout.Button("Sprite Info"))
-		{
-			// Spriteinfo ausgeben
-			SpriteAssetInfo(myImporter);
-		}
-		
-		if (GUILayout.Button("meta. Slice"))
-		{
-			//Grid Slice
-			PerformMetaSlice(spritesheet);
-		}
-
-		GUI.enabled = false;
-		GUILayout.EndHorizontal ();
-		GUI.enabled = true;
-
 		if (GUILayout.Button("create RuntimeAnimatorController"))
 		{
 			// create Prefab
-			CharacterAnimator.Create(smwCharacter);
+			CharacterAnimator.Create(smwCharacterGenerics, smwCharacter);
 		}
 		networked = EditorGUILayout.Toggle("for Network", networked);
 
+
+		if(allowedToCreateCharacterPrefab())
+			GUI.enabled = true;
+		else
+			GUI.enabled = false;
 		if (GUILayout.Button("create Prefab"))
 		{
 			// create Prefab
 			CreateCharacterPrefab();
         }
     }
+
+	bool allowedToMetaSliceSprite()
+	{
+		//smwCharacter != null
+		//smwCharacterGenerics != null
+		//AnimClips set != null?
+		//Spritesheet sliced ?
+		
+		if(smwCharacterGenerics != null && 
+		   smwCharacterGenerics.protectionAnimClip != null &&
+		   smwCharacterGenerics.rageAnimClip != null &&
+		   smwCharacterGenerics.spawnAnimClip != null &&
+		   smwCharacter != null &&
+		   smwCharacter.charSpritesheet.Length == 6)
+			return true;
+		else
+			return false;
+	}
+
+
+	bool allowedToCreateAnimatorController()
+	{
+		//smwCharacter != null
+		//smwCharacterGenerics != null
+		//AnimClips set != null?
+		//Spritesheet sliced ?
+
+		if(smwCharacterGenerics != null && 
+		   smwCharacterGenerics.protectionAnimClip != null &&
+		   smwCharacterGenerics.rageAnimClip != null &&
+		   smwCharacterGenerics.spawnAnimClip != null &&
+		   smwCharacter != null &&
+		   smwCharacter.charSpritesheet.Length == 6)
+			return true;
+		else
+			return false;
+	}
+
+	bool allowedToCreateCharacterPrefab()
+	{
+		//smwCharacter != null
+		//smwCharacterGenerics != null
+
+		//Spritesheet sliced ?
+		//RuntimeAnimator set != null ?
+
+		if(smwCharacterGenerics != null && 
+		   smwCharacter != null &&
+		   smwCharacter.runtimeAnimatorController != null)
+			return true;
+		else
+			return false;
+	}
 
 //	[SerializeField] private TextAsset xmlAsset;
 //	public TextureImporter importer;
@@ -629,8 +698,8 @@ public class CharacterCreationHelper : EditorWindow {
 	{
 		if(sprite != null)
 		{
-			UnityEditor.TextureImporter myImporter = null;
-			myImporter = UnityEditor.TextureImporter.GetAtPath ( AssetDatabase.GetAssetPath(sprite) ) as TextureImporter ;
+			TextureImporter myImporter = null;
+			myImporter = TextureImporter.GetAtPath ( AssetDatabase.GetAssetPath(sprite) ) as TextureImporter ;
 
 			bool failed = false;
 			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
@@ -897,7 +966,7 @@ public class CharacterCreationHelper : EditorWindow {
 
 		// root
 		root = new ChildData (smwCharacter.charName, Tags.tag_player, Layer.playerLayerName, centerTransformPos);		//TODO Achtung PrefabName und Name können isch unterscheieden!!!
-		root.Add(root.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], color_rootRenderer, rootRendererSortingLayer);
+		root.Add(root.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], smwCharacterGenerics.color_rootRenderer, smwCharacterGenerics.rootRendererSortingLayer);
 		root.Add(root.gameObject.AddComponent<Animator>(), true, null);		//TODO inspector
 		root.Add(root.gameObject.AddComponent<Rigidbody2D>(), 0f, true); 	//TODO inspector
 		root.Add(root.gameObject.AddComponent<AudioSource>(), true);
@@ -916,13 +985,13 @@ public class CharacterCreationHelper : EditorWindow {
 		
 		// Clone Left
 		ChildData child = new ChildData (Tags.name_cloneLeft, Tags.tag_player, Layer.playerLayerName, leftTransformPos);
-		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], color_rootCloneRenderer, rootCloneRendererSortingLayer);
+		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], smwCharacterGenerics.color_rootCloneRenderer, smwCharacterGenerics.rootCloneRendererSortingLayer);
 		child.Add(child.gameObject.AddComponent<CloneSpriteScript>(), true);
 		childs.Add (child);
 		
 		// Clone Right
 		child = new ChildData (Tags.name_cloneRight, Tags.tag_player, Layer.playerLayerName, rightTransformPos);
-		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], color_rootCloneRenderer, rootCloneRendererSortingLayer);
+		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], smwCharacterGenerics.color_rootCloneRenderer, smwCharacterGenerics.rootCloneRendererSortingLayer);
 		child.Add(child.gameObject.AddComponent<CloneSpriteScript>(), true);
 		childs.Add (child);
 		
@@ -961,33 +1030,33 @@ public class CharacterCreationHelper : EditorWindow {
 		
 		// King
 		child = new ChildData (Tags.name_king, Tags.tag_body, Layer.defaultLayerName, kingTransformPos);
-		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), false, kingSprite, color_kingRenderer, kingRendererSortingLayer);
+		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), false, smwCharacterGenerics.kingSprite, smwCharacterGenerics.color_kingRenderer, smwCharacterGenerics.kingRendererSortingLayer);
 		childs.Add (child);
 		
 		// CurrentEstimatedPosOnServer
 		child = new ChildData (Tags.name_CurrentEstimatedPosOnServer, Tags.tag_CurrentEstimatedPosOnServer, Layer.defaultLayerName, centerTransformPos);
-		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], color_currentEstimatedPosOnServer, currentEstimatedPosOnServerSortingLayer);
+		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], smwCharacterGenerics.color_currentEstimatedPosOnServer, smwCharacterGenerics.currentEstimatedPosOnServerSortingLayer);
 		childs.Add (child);
 		
 		// LastRecvedPos
 		child = new ChildData (Tags.name_lastReceivedPos, Tags.tag_lastReceivedPos, Layer.defaultLayerName, centerTransformPos);
-		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], color_LastRecvedPos, lastRecvdPosRendererSortingLayer);
+		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], smwCharacterGenerics.color_LastRecvedPos, smwCharacterGenerics.lastRecvdPosRendererSortingLayer);
 		childs.Add (child);
 		
 		// PredictedPosSimulatedWithLastInput
 		child = new ChildData (Tags.name_PredictedPosSimulatedWithLastInput, Tags.tag_PredictedPosSimulatedWithLastInput, Layer.defaultLayerName, centerTransformPos);
-		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], color_PredictedPosSimulatedWithLastInput, preSimPosRendererSortingLayer);
+		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], smwCharacterGenerics.color_PredictedPosSimulatedWithLastInput, smwCharacterGenerics.preSimPosRendererSortingLayer);
 		childs.Add (child);
 		
 		// PredictedPosCalculatedWithLastInput
 		child = new ChildData (Tags.name_PredictedPosCalculatedWithLastInput, Tags.tag_PredictedPosCalculatedWithLastInput, Layer.defaultLayerName, centerTransformPos);
-		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], color_PredictedPosCalculatedWithLastInput, preCalclastRecvdPosRendererSortingLayer);
+		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, smwCharacter.charIdleSprites[0], smwCharacterGenerics.color_PredictedPosCalculatedWithLastInput, smwCharacterGenerics.preCalclastRecvdPosRendererSortingLayer);
 		childs.Add (child);
 		
 		// IceWalled
 		child = new ChildData (Tags.name_iceWalled, Tags.tag_iceWalled, Layer.defaultLayerName, centerTransformPos);
-		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, null, color_iceWallRenderer, iceWalledRendererSortingLayer);
-		child.Add(child.gameObject.AddComponent<Animator>(), true, iceWandAnimatorController);
+		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, null, smwCharacterGenerics.color_iceWallRenderer, smwCharacterGenerics.iceWalledRendererSortingLayer);
+		child.Add(child.gameObject.AddComponent<Animator>(), true, smwCharacterGenerics.iceWandAnimatorController);
 		childs.Add (child);
 	}
 

@@ -27,7 +27,7 @@ public class CharacterAnimator {
 
 	public static SMWAnimation[] smwAnimations = new SMWAnimation[6];
 
-	public static RuntimeAnimatorController Create (SmwCharacter smwCharacter)
+	public static RuntimeAnimatorController Create (SmwCharacterGenerics smwCharacterGenerics, SmwCharacter smwCharacter)
 	{
 		string charName = smwCharacter.charName;
 		if(charName == "")
@@ -281,7 +281,6 @@ public class CharacterAnimator {
 		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Die",			1,1,	smwCharacter.charDieSprites,deadState);
 		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_HeadJumped",	1,1,	smwCharacter.charHeadJumpedSprites,headJumpedState);
 		
-		
 
 		for(int i=0; i < baseLayerStateCount; i++)
 		{
@@ -311,10 +310,13 @@ public class CharacterAnimator {
 			}
 		}
 		AssetDatabase.SaveAssets();
-		
+
+		//TODO:: add Generic AnimationClips to characterAnimatorController
+		spawnState.motion = smwCharacterGenerics.spawnAnimClip;
+		spawnProtectionOverlayState.motion = smwCharacterGenerics.protectionAnimClip;
+		invincibleOverlayState.motion = smwCharacterGenerics.rageAnimClip;
 		//TODO
-		//target.GetComponent<Animator>().runtimeAnimatorController = controller;
-		//TODO
+
 		smwCharacter.runtimeAnimatorController = controller;
 		return controller;
 	}
