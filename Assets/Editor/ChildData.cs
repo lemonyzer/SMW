@@ -4,52 +4,130 @@ using System.Collections.Generic;
 
 public class ChildData
 {
-	//			public GameObject gameObject;		//TODO weitere möglichkeit! gameObject muss kein parent gesetzt werden, nur vorbereiteter boxcollider/spriterenderer wird benötigt
+	//child components
+	public GameObject gameObject;		// enthält alle components des childs (ersetzt List<ComponentData> components)
 	//child
 	public string name;
 	public string tag;
 	public string layerName;
 	public Vector3 position;
 	
-	//child components
-	public List<ComponentData> components;
-	
 	public ChildData(string name, string tag, string layerName, Vector3 position)
 	{
-		//				gameObject = new GameObject(name);
 		this.name = name;
 		this.tag = tag;
 		this.layerName = layerName;
 		this.position = position;
-		
-		components = new List<ComponentData>();
+
+		gameObject = new GameObject(name);
+		if(tag != "")
+		{
+			gameObject.tag = tag;
+		}
+		gameObject.layer = LayerMask.NameToLayer(layerName);
+		gameObject.transform.position = position;
 	}
 	
 	/**
 	 * 	generic?
 	 **/
-	public void Add(System.Type componentType, bool enabled, Vector2 size, Vector2[] smartOffset, bool isTrigger, int smartCloneCount)
+	public void Add(BoxCollider2D box, bool enabled, Vector2 size, Vector2[] smartOffset, bool isTrigger, int smartCloneCount)
 	{
-		components.Add (new ComponentData(componentType,enabled,size,smartOffset,isTrigger, smartCloneCount));
-	}
-	
-	public void Add(System.Type componentType, bool enabled, Sprite sprite, Color color)
-	{
-		components.Add (new ComponentData(componentType,enabled,sprite,color));
-	}
-	
-//	public void Add(System.Type componentType, bool enabled, AnimatorController animatorController)
-//	{
-//		components.Add (new ComponentData(componentType, enabled, animatorController));
-//	}
+		for(int i=0; i < smartCloneCount; i++)
+		{
+			BoxCollider2D boxSmart = box;
+//			if(i == 0)
+//			{
+//				boxSmart = box;
+//			}
+			if(i > 0)
+			{
+				boxSmart = this.gameObject.AddComponent<BoxCollider2D>();
+			}
 
-	public void Add(System.Type componentType, bool enabled, RuntimeAnimatorController runtimeAnimatorController)
-	{
-		components.Add (new ComponentData(componentType, enabled, runtimeAnimatorController));
+			boxSmart.isTrigger = isTrigger;
+			boxSmart.size = size;
+			boxSmart.offset = smartOffset[i];												// <--- smart
+			//all
+			boxSmart.enabled = enabled;
+			//current smart Add finish
+		}
 	}
 	
-	public void Add(System.Type componentType, bool enabled)
+	public void Add(SpriteRenderer spriteRenderer, bool enabled, Sprite sprite, Color color, int sortingLayer)
 	{
-		components.Add (new ComponentData(componentType,enabled));
+		for(int i=0; i < 1; i++)
+		{
+			if(true)
+			{
+				spriteRenderer.sprite = sprite;
+				spriteRenderer.sortingLayerID = sortingLayer;
+				
+				//all
+				spriteRenderer.enabled = enabled;
+			}
+			//current smart Add finish
+		}
+	}
+
+	public void Add(Rigidbody2D rb2d, float gravityScale, bool fixedAngle)
+	{
+		for(int i=0; i < 1; i++)
+		{
+			if(true)
+			{
+				rb2d.gravityScale = gravityScale;
+				rb2d.fixedAngle = fixedAngle;
+				
+				//all
+//				rb2d.enabled = enabled;
+			}
+			//current smart Add finish
+		}
+	}
+	
+	public void Add(Animator anim, bool enabled, RuntimeAnimatorController runtimeAnimatorController)
+	{
+		for(int i=0; i < 1; i++)
+		{
+			if(true)
+			{
+				anim.runtimeAnimatorController = runtimeAnimatorController;
+				
+				//all
+				anim.enabled = enabled;
+			}
+			//current smart Add finish
+		}
+	}
+
+	public void Add(NetworkView networkView, bool enabled, NetworkedPlayer netPlayerScript)
+	{
+		for(int i=0; i < 1; i++)
+		{
+			if(true)
+			{
+				networkView.stateSynchronization = NetworkStateSynchronization.Unreliable;
+				networkView.observed = netPlayerScript;
+				
+				//all
+				networkView.enabled = enabled;
+			}
+			//current smart Add finish
+		}
+	}
+	
+	public void Add(Behaviour script, bool enabled)
+	{
+		for(int i=0; i < 1; i++)
+		{
+			if(true)
+			{
+
+				//all
+				script.enabled = enabled;
+			}
+			//current smart Add finish
+		}
 	}
 }

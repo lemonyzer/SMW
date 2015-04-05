@@ -32,17 +32,17 @@ public class Tags : MonoBehaviour {
 
 	//public const string boxCollider = "BoxCollider";
 	public const string name_lastReceivedPos = "LastRecvedPos";
-	public const string tag_lastReceivedPos = "LastRecvedPos";
+	public const string tag_lastReceivedPos = "";
 	public const string name_CurrentEstimatedPosOnServer = "CurrentEstimatedPosOnServer";
-	public const string tag_CurrentEstimatedPosOnServer = "CurrentEstimatedPosOnServer";
+	public const string tag_CurrentEstimatedPosOnServer = "";
 	public const string name_PredictedPosSimulatedWithLastInput = "PredictedPosSimulatedWithLastInput";
-	public const string tag_PredictedPosSimulatedWithLastInput = "PredictedPosSimulatedWithLastInput";
+	public const string tag_PredictedPosSimulatedWithLastInput = "";
 	public const string name_PredictedPosCalculatedWithLastInput = "PredictedPosCalculatedWithLastInput";
-	public const string tag_PredictedPosCalculatedWithLastInput = "PredictedPosCalculatedWithLastInput";
+	public const string tag_PredictedPosCalculatedWithLastInput = "";
 	public const string name_PredictedPosV3 = "PredictedPosV3";
-	public const string tag_PredictedPosV3 = "PredictedPosV3";
+	public const string tag_PredictedPosV3 = "";
 	public const string name_iceWalled = "IceWalled";
-	public const string tag_iceWalled = "IceWalled";
+	public const string tag_iceWalled = "";
 
 	/**
 	 * Scene, Level Parts
