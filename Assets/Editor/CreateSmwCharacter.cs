@@ -35,7 +35,7 @@ public class CreateSmwCharacter : MonoBehaviour {
 	public static SmwCharacter CreateAssetWithPathAndName(string relPath, string name)
 	{
 		SmwCharacter asset = ScriptableObject.CreateInstance<SmwCharacter>();
-		
+		asset.charName = name;
 		AssetDatabase.CreateAsset(asset, relPath + "/" + name + ".asset");
 		AssetDatabase.SaveAssets();
 		

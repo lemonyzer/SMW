@@ -89,9 +89,13 @@ public class CharacterCreationHelper : EditorWindow {
 			string objectPath = EditorPrefs.GetString(SMWCharacterGenericsPath);
 			smwCharacterGenerics = AssetDatabase.LoadAssetAtPath(objectPath, typeof(SmwCharacterGenerics)) as SmwCharacterGenerics;
 		}
-		if(EditorPrefs.HasKey(EP_AutoImportPath))
+//		if(EditorPrefs.HasKey(EP_AutoImportPath))
+//		{
+//			autoImportPath = EditorPrefs.GetString(EP_AutoImportPath);
+//		}
+		if(EditorPrefs.HasKey(EP_lastBatchImportFolder))
 		{
-			autoImportPath = EditorPrefs.GetString(EP_AutoImportPath);
+			lastBatchImportFolder = EditorPrefs.GetString(EP_lastBatchImportFolder);
 		}
 
 		UpdateSortingLayers();
@@ -500,8 +504,8 @@ public class CharacterCreationHelper : EditorWindow {
 		smwCharacter = EditorGUILayout.ObjectField("SMW Character SO", smwCharacter, typeof(SmwCharacter), false) as SmwCharacter;
 	}
 
-	string EP_AutoImportPath = "AutoImportPathString";
-	string autoImportPath = "";
+//	string EP_AutoImportPath = "AutoImportPathString";
+//	string autoImportPath = "";
 
 //	string OpenAutoImportFolderDialog(string relStartPath)
 //	{
@@ -611,6 +615,7 @@ public class CharacterCreationHelper : EditorWindow {
 				}
 				else
 				{
+					Debug.LogError("PerformMetaSlice(currentSprite);");
 					continue;		// skip this character
 				}
 
@@ -619,17 +624,23 @@ public class CharacterCreationHelper : EditorWindow {
 				//TODO character name extrahieren (string.splitt by _)
 
 				// Character ScriptableObject erstellen	(Ordner und name)
-				SmwCharacter currentCharacter = CreateSmwCharacter.CreateAssetWithPathAndName("Assets/Test", f.Name);
+				SmwCharacter currentCharacter = CreateSmwCharacter.CreateAssetWithPathAndName("Assets/Test", f.Name);		//TODO ordner erstellen falls nicht vorhanden
 
 				//überprüfe ob scriptableObject hinzugefügt wurde
 				if(currentCharacter == null)
+				{
+					Debug.LogError("currentCharacter == null");
 					continue;		// skip this character
+				}
 
 				AddSpritesheetToSmwCharacterSO(currentCharacter, currentSpritePath);
 
 				//überprüfe ob spritesheet hinzugefügt wurde //TODO inhalt ebenfalls prüfen!
 				if(currentCharacter.charSpritesheet == null)
+				{
+					Debug.LogError("currentCharacter.charSpritesheet == null");
 					continue;		// skip this character
+				}
 
 
 				//runtimeAnimatorController erstellen
@@ -637,15 +648,20 @@ public class CharacterCreationHelper : EditorWindow {
 
 				//überprüfe ob runtimeAnimatorController hinzugefügt wurde
 				if(currentCharacter.runtimeAnimatorController == null)					//TODO in welchem pfad wird das asset runtimeAnimatorController gespeichert???
+				{
+					Debug.LogError("currentCharacter.runtimeAnimatorController == null");
 					continue;		// skip this character
+				}
 
-
+				//prefab erstellen
+				CreateCharacterPrefab(currentCharacter, smwCharacterGenerics);
 
 			}
 		}
 	}
 
-
+	string EP_lastBatchImportFolder = "EP_lastBatchImportFolder";
+	string lastBatchImportFolder = "";
 
 	DirectoryInfo dir = null;
 	FileInfo[] info = null;
@@ -653,15 +669,21 @@ public class CharacterCreationHelper : EditorWindow {
 	{
 		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
 		GUILayout.BeginHorizontal ();
-		GUILayout.Label ("Path = " + autoImportPath, GUILayout.ExpandWidth(false));
+		GUILayout.Label ("Path = " + lastBatchImportFolder, GUILayout.ExpandWidth(false));
 		if (GUILayout.Button("Select Import Folder", GUILayout.ExpandWidth(false)))
 		{
 			// open folder dialog
-			string absPath = EditorUtility.OpenFolderPanel ("Select Import Folder with Sprites", "", "");
+			string absPath = EditorUtility.OpenFolderPanel ("Select Import Folder with Sprites", lastBatchImportFolder, "");
 			if (!string.IsNullOrEmpty(absPath))
 			{
+				//absolutenPath in EditorPrefs speichern 
+				lastBatchImportFolder = absPath;
+				EditorPrefs.SetString(EP_lastBatchImportFolder, lastBatchImportFolder);
+
 				dir = new DirectoryInfo(absPath);
 				info = dir.GetFiles("*.png");
+
+
 				// Einmalige ausgabe auf Console
 				foreach (FileInfo f in info)
 				{
@@ -890,7 +912,7 @@ public class CharacterCreationHelper : EditorWindow {
 	}
 
 
-	private bool AddSpritesheetToSmwCharacterSO(SmwCharacter character, string relSpritePath)
+	private bool AddSpritesheetToSmwCharacterSO(SmwCharacter currentCharacter, string relSpritePath)
 	{
 		Debug.Log("Loading Sprites @ " + relSpritePath);
 		//					slicedSprite = AssetDatabase.LoadAllAssetRepresentationsAtPath (myImporter.assetPath) as Sprite[];
@@ -920,8 +942,8 @@ public class CharacterCreationHelper : EditorWindow {
 		if(slicedSprites != null)
 		{
 			Debug.Log("slicedSprites SubAssets Anzahl = " + slicedSprites.Length);
-			smwCharacter.SetCharSpritesheet(slicedSprites);								// add to SmwCharacter
-			EditorUtility.SetDirty(smwCharacter);										// save ScriptableObject
+			currentCharacter.SetCharSpritesheet(slicedSprites);								// add to SmwCharacter
+			EditorUtility.SetDirty(currentCharacter);										// save ScriptableObject
 			return true;
 		}
 		else
