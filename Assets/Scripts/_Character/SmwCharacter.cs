@@ -6,8 +6,22 @@ public class SmwCharacter : ScriptableObject {
 
 	public string charName;
 	public int charId;
+	public GameObject charPrefab;
+	public bool charInUse;
+	public NetworkPlayer netPlayer;
+	public Player player;
 	public Sprite[] charSpritesheet;
 	public RuntimeAnimatorController runtimeAnimatorController;
+
+	public void SetPrefab(GameObject prefab)
+	{
+		this.charPrefab = prefab;
+	}
+
+	public void Save()
+	{
+		UnityEditor.EditorUtility.SetDirty (this);					// vielleicht 
+	}
 
 	public Sprite[] charIdleSprites;
 	public Sprite[] charRunSprites;

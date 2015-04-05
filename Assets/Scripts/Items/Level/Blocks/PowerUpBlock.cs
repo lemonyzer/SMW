@@ -57,6 +57,8 @@ public class PowerUpBlock : MonoBehaviour {
 		{
 			if(other.gameObject.layer == Layer.head)
 			{
+				if(hasPowerUp)
+				{
 				if(HeadTriggerUnderBlock(other))
 				{
 					//if(other.gameObject.transform.parent.rigidbody2D.velocity.y >= 0f)			// nur zerstören wenn Spieler nach oben springt
@@ -80,6 +82,7 @@ public class PowerUpBlock : MonoBehaviour {
 				{
 					Debug.Log("HeadTriggerUnderBlock() == false");
 				}
+				}
 			}
 		}
 	}
@@ -90,9 +93,11 @@ public class PowerUpBlock : MonoBehaviour {
 		float blockBottomPos = this.transform.position.y - this.transform.localScale.y*0.5f;
 		float headTriggerUpEdgePos = other.transform.position.y + ((BoxCollider2D)other).size.y*0.5f;// + ((BoxCollider2D)other).center.y;
 
+#if UNITY_EDITOR
 		Debug.DrawLine(Vector3.zero, new Vector3(5,5,0), Color.red, 5f);
 		Debug.DrawLine(Vector3.zero, new Vector3(5,4.5f,0), Color.magenta, 5f);
 		Debug.DrawLine(Vector3.zero, new Vector3(5,5.5f,0), Color.blue, 5f);
+#endif
 
 		//				Debug.Log("Block bottom Position: " + blockBottomPos);
 		//				Debug.Log("Head Trigger UpEdge Position: " + headTriggerUpEdgePos);
@@ -111,17 +116,20 @@ public class PowerUpBlock : MonoBehaviour {
 //		Debug.DrawLine(transform.position, (transform.position-blockSpriteRenderer.bounds.center)+blockSpriteRenderer.bounds.size, Color.yellow, 5f);
 
 		//blockBottomPos = this.transform.position.y - blockSpriteRenderer.bounds.extents.y * this.transform.localScale.y;
-
+#if UNITY_EDITOR
 		Debug.Log("Renderer Bounds " + blockSpriteRenderer.bounds); 
 		Debug.Log("BlockPosition " + this.transform.position); 
 		Debug.Log("LocalScale " + this.transform.localScale); 
-
+#endif
 		//blockBottomPos = this.transform.position.y 
-
 		float diff = blockBottomPos - headTriggerUpEdgePos;
+		
+
+#if UNITY_EDITOR
 		Debug.LogWarning("blockBottomPos: " + blockBottomPos);
 		Debug.LogWarning("headTriggerUpEdgePos: " + headTriggerUpEdgePos);
 		Debug.LogWarning("Difference: " + diff);
+#endif
 		//				if(Mathf.Abs(diff) < 0.02)
 		//					Debug.LogWarning("Head is under the PowerUpBlock; " + diff);
 		//				else

@@ -1,19 +1,20 @@
 fileFormatVersion: 2
-guid: f04afd3c337dc7941a0800241d37e0dd
-timeCreated: 1428229317
+guid: 5b528dc66dce881478c3e5c7c784bb21
+timeCreated: 1428269190
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: hazey_Trainer_alpha_rmFF00FF_0
-    21300002: hazey_Trainer_alpha_rmFF00FF_1
-    21300004: hazey_Trainer_alpha_rmFF00FF_2
-    21300006: hazey_Trainer_alpha_rmFF00FF_3
-    21300008: hazey_Trainer_alpha_rmFF00FF_4
-    21300010: hazey_Trainer_alpha_rmFF00FF_5
+    21300000: hazey_Trainer_alpha_rmFF00FF
+    21300002: hazey_Trainer_alpha_rmFF00FF_0
+    21300004: hazey_Trainer_alpha_rmFF00FF_1
+    21300006: hazey_Trainer_alpha_rmFF00FF_2
+    21300008: hazey_Trainer_alpha_rmFF00FF_3
+    21300010: hazey_Trainer_alpha_rmFF00FF_4
+    21300012: hazey_Trainer_alpha_rmFF00FF_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -33,10 +34,10 @@ TextureImporter:
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
-  maxTextureSize: 2048
+  maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class CharacterLibrary : MonoBehaviour {
 
+	public SmwCharacterList chars;
 	public GameObject[] characters;
 
 

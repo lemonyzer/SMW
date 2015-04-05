@@ -1,19 +1,20 @@
 fileFormatVersion: 2
-guid: e0dd49c887d6eb141a3676d7a9abcd55
-timeCreated: 1428229345
+guid: dd973f22e62820c42a0149a820b2a183
+timeCreated: 1428269195
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Sgraff_AntiGuy_alpha_rmFF00FF_0
-    21300002: Sgraff_AntiGuy_alpha_rmFF00FF_1
-    21300004: Sgraff_AntiGuy_alpha_rmFF00FF_2
-    21300006: Sgraff_AntiGuy_alpha_rmFF00FF_3
-    21300008: Sgraff_AntiGuy_alpha_rmFF00FF_4
-    21300010: Sgraff_AntiGuy_alpha_rmFF00FF_5
+    21300000: Sgraff_AntiGuy_alpha_rmFF00FF
+    21300002: Sgraff_AntiGuy_alpha_rmFF00FF_0
+    21300004: Sgraff_AntiGuy_alpha_rmFF00FF_1
+    21300006: Sgraff_AntiGuy_alpha_rmFF00FF_2
+    21300008: Sgraff_AntiGuy_alpha_rmFF00FF_3
+    21300010: Sgraff_AntiGuy_alpha_rmFF00FF_4
+    21300012: Sgraff_AntiGuy_alpha_rmFF00FF_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -33,10 +34,10 @@ TextureImporter:
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
-  maxTextureSize: 2048
+  maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0

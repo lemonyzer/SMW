@@ -1,19 +1,20 @@
 fileFormatVersion: 2
-guid: 178c9e412a187ad47a6383827f7adb18
-timeCreated: 1428229293
+guid: 349e4be9b1225694b843e3b4bb89b653
+timeCreated: 1428269188
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: BlackMage_alpha_rmFF00FF_0
-    21300002: BlackMage_alpha_rmFF00FF_1
-    21300004: BlackMage_alpha_rmFF00FF_2
-    21300006: BlackMage_alpha_rmFF00FF_3
-    21300008: BlackMage_alpha_rmFF00FF_4
-    21300010: BlackMage_alpha_rmFF00FF_5
+    21300000: BlackMage_alpha_rmFF00FF
+    21300002: BlackMage_alpha_rmFF00FF_0
+    21300004: BlackMage_alpha_rmFF00FF_1
+    21300006: BlackMage_alpha_rmFF00FF_2
+    21300008: BlackMage_alpha_rmFF00FF_3
+    21300010: BlackMage_alpha_rmFF00FF_4
+    21300012: BlackMage_alpha_rmFF00FF_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -33,10 +34,10 @@ TextureImporter:
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
-  maxTextureSize: 2048
+  maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0

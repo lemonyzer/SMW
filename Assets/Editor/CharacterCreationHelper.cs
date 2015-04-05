@@ -589,8 +589,19 @@ public class CharacterCreationHelper : EditorWindow {
 //		GUILayout.EndHorizontal ();
 //	}
 
-	void StartBatchImport()
+	void StartBatchImport(SmwCharacterList charList, bool clearListBeforeImport, FileInfo[] info)
 	{
+		if (charList == null) {
+			Debug.LogError ("SmwCharacterList == null !!!");
+			return;
+		}
+
+		if(clearListBeforeImport)
+		{
+			Debug.LogWarning("SmwCharacterList -> Clear()");
+			charList.characterList.Clear();
+		}
+
 		if(info != null)
 		{
 			foreach (FileInfo f in info)
@@ -604,20 +615,36 @@ public class CharacterCreationHelper : EditorWindow {
 				// relative pfad angabe
 				string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
 				GUILayout.Label ("Found " + currentSpritePath, GUILayout.ExpandWidth(false));
-				
-				// lade mit AssetDatabase
-				Sprite currentSprite = AssetDatabase.LoadAssetAtPath(currentSpritePath,typeof(Sprite)) as Sprite;
-				
-				// PerformMetaSlice
-				if(currentSprite != null)
+
+
+				TextureImporter spriteImporter = null;
+				spriteImporter = TextureImporter.GetAtPath (currentSpritePath) as TextureImporter ;
+				if(spriteImporter == null)
 				{
-					PerformMetaSlice(currentSprite);
+					Debug.LogError( currentSpritePath + " TextureImporter == null ");
+					continue;		// skip this character
 				}
 				else
 				{
-					Debug.LogError("PerformMetaSlice(currentSprite);");
-					continue;		// skip this character
+					// PerformMetaSlice
+					PerformMetaSlice(spriteImporter);
 				}
+
+				// BUGG
+				// lade mit AssetDatabase
+//				Sprite currentSprite = AssetDatabase.LoadAssetAtPath(currentSpritePath,typeof(Sprite)) as Sprite;
+//				if(currentSprite == null)
+//				{
+//					Debug.LogError( currentSpritePath + " currentSprite == null ");
+//					continue;		// skip this character
+//				}
+//				else
+//				{
+//					// PerformMetaSlice
+//					PerformMetaSlice(currentSprite);
+//				}				
+
+
 
 				//TODO ordner auf existenz prüfen
 
@@ -654,11 +681,25 @@ public class CharacterCreationHelper : EditorWindow {
 				}
 
 				//prefab erstellen
-				CreateCharacterPrefab(currentCharacter, smwCharacterGenerics);
+				GameObject currentPrefab = CreateCharacterPrefab(currentCharacter, smwCharacterGenerics);
 
+				//prefab in ScriptableObject referenzieren
+				currentCharacter.SetPrefab(currentPrefab);
+
+				//fertigen smwCharacter änderungen speichern
+				currentCharacter.Save();
+
+				//fertigen smwCharacter in liste speichern
+				charList.characterList.Add (currentCharacter);
+				//viewIndex = smwCharacterList.characterList.Count;
 			}
+			charList.Save();	//schleife fertig, gefüllte liste speichern
 		}
 	}
+
+	bool clearAndBatchImport = true;
+
+	Vector2 scrollPosition = Vector2.zero;
 
 	string EP_lastBatchImportFolder = "EP_lastBatchImportFolder";
 	string lastBatchImportFolder = "";
@@ -669,7 +710,6 @@ public class CharacterCreationHelper : EditorWindow {
 	{
 		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
 		GUILayout.BeginHorizontal ();
-		GUILayout.Label ("Path = " + lastBatchImportFolder, GUILayout.ExpandWidth(false));
 		if (GUILayout.Button("Select Import Folder", GUILayout.ExpandWidth(false)))
 		{
 			// open folder dialog
@@ -698,10 +738,13 @@ public class CharacterCreationHelper : EditorWindow {
 
 			}
 		}
+		GUILayout.Label ("Path = " + lastBatchImportFolder, GUILayout.ExpandWidth(false));
 		GUILayout.EndHorizontal ();
 
 		GUILayout.BeginVertical ();
 		if(info != null)
+			GUILayout.Label ( info.Length + " gefundene *.png im Ordner " + lastBatchImportFolder, GUILayout.ExpandWidth(false));
+		if(info != null && info.Length > 0)
 		{
 			if(smwCharacterGenerics != null)
 			{
@@ -722,16 +765,31 @@ public class CharacterCreationHelper : EditorWindow {
 				GUILayout.Label ("smwCharacterGenerics muss geladen sein", GUILayout.ExpandWidth(false));
 				GUI.enabled = false;
 			}
-			if (GUILayout.Button("Start Import ", GUILayout.ExpandWidth(false)))
+
+			if(smwCharacterList != null)
 			{
-				StartBatchImport();
+				GUI.enabled = true;
 			}
+			else
+			{
+				GUILayout.Label ("smwCharacterList muss geladen sein", GUILayout.ExpandWidth(false));
+				GUI.enabled = false;
+			}
+			clearAndBatchImport = GUILayout.Toggle(clearAndBatchImport, "Clear Character List before bacth import?");
+			if (GUILayout.Button("Start Import " + info.Length, GUILayout.ExpandWidth(false)))
+			{
+				StartBatchImport(smwCharacterList, clearAndBatchImport, info);		// TODO absOrdnerPfad angeben und erneut einlesen im BacthImport!!!!!
+			}
+			scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+			// aktuelle gefundenen Daten ausgeben
 			foreach (FileInfo f in info)
 			{
 				// relative pfad angabe
 				string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
 				GUILayout.Label ("Found " + currentSpritePath, GUILayout.ExpandWidth(false));
 			}
+			EditorGUILayout.EndScrollView();
+			
 		}
 		else
 		{
@@ -741,16 +799,55 @@ public class CharacterCreationHelper : EditorWindow {
 
 	}
 
+	protected static bool showGeneralSettings = true; //declare outside of function
+	protected static bool showGenerics = true;
+	protected static bool showAutoImport = true;
+	protected static bool showCharacterList = true;
+	protected static bool showCharacterEditor = true;
+
+	GUIStyle myFoldoutStyle;
+	
+
+	void InitFoldStyle()
+	{
+		myFoldoutStyle = new GUIStyle(EditorStyles.foldout);
+		myFoldoutStyle.fontStyle = FontStyle.Bold;
+		myFoldoutStyle.fontSize = 14;
+		Color myStyleColor = Color.red;
+		myFoldoutStyle.normal.textColor = myStyleColor;
+		myFoldoutStyle.onNormal.textColor = myStyleColor;
+		myFoldoutStyle.hover.textColor = myStyleColor;
+		myFoldoutStyle.onHover.textColor = myStyleColor;
+		myFoldoutStyle.focused.textColor = myStyleColor;
+		myFoldoutStyle.onFocused.textColor = myStyleColor;
+		myFoldoutStyle.active.textColor = myStyleColor;
+		myFoldoutStyle.onActive.textColor = myStyleColor;
+	}
+
 	void OnGUI ()
 	{
+		InitFoldStyle ();	// TODO put in OnEnable
 
-		OnGUI_Generics();
+		showGeneralSettings = EditorGUILayout.Foldout(showGeneralSettings, "General Settings", myFoldoutStyle);
+		if (!showGeneralSettings)
+			return;
 
-		OnGUI_AutoImport();
+		showGenerics = EditorGUILayout.Foldout(showGenerics, "Generics", myFoldoutStyle);
+		if(showGenerics)
+			OnGUI_Generics();
 
-		OnGUI_CharacterList();
+		showCharacterList = EditorGUILayout.Foldout(showCharacterList, "Character List", myFoldoutStyle);
+		if(showCharacterList)
+			OnGUI_CharacterList();
 
-		OnGUI_CharacterEditor();
+		showAutoImport = EditorGUILayout.Foldout(showAutoImport, "AutoImport", myFoldoutStyle);
+		if(showAutoImport)
+			OnGUI_AutoImport();
+
+
+		showCharacterEditor = EditorGUILayout.Foldout(showCharacterEditor, "Single Character Editor", myFoldoutStyle);
+		if(showCharacterEditor)
+			OnGUI_CharacterEditor();
 
 
 		GUILayout.Label ("Spritesheet Editor", EditorStyles.boldLabel);
@@ -802,7 +899,7 @@ public class CharacterCreationHelper : EditorWindow {
 				if (GUILayout.Button("meta. Slice"))
 				{
 					//Grid Slice
-					PerformMetaSlice(spritesheet);
+					PerformMetaSlice(myImporter);
 				}
 				GUILayout.EndHorizontal ();
 			}
@@ -959,15 +1056,32 @@ public class CharacterCreationHelper : EditorWindow {
 
 	// thx to http://www.toxicfork.com/154/importing-xml-spritesheet-into-unity3d
 
-	private void PerformMetaSlice(Sprite sprite)
+	private void PerformMetaSlice(TextureImporter spriteImporter)
 	{
-		if(sprite != null)
+		if(spriteImporter != null)
 		{
-			TextureImporter myImporter = null;
-			myImporter = TextureImporter.GetAtPath (AssetDatabase.GetAssetPath(sprite)) as TextureImporter ;
+			Debug.Log("PerformMetaSlice: " + spriteImporter.assetPath);
+//			TextureImporter myImporter = null;
+//			myImporter = TextureImporter.GetAtPath (AssetDatabase.GetAssetPath(sprite)) as TextureImporter ;
 
 			bool failed = false;
 			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
+
+			//TODO abfragen ob sprite <multiple> ist
+			//TODO abfragen ob größe stimmt, überspringen ???
+
+//			Debug.Log("SpriteMode geladen: " + spriteImporter.spriteImportMode.ToString());
+//			Debug.Log("SpriteMetaData länge geladen: " + spriteImporter.spritesheet.Length);
+//			if(spriteImporter.spriteImportMode == SpriteImportMode.Multiple)
+//			{
+//				spriteImporter.spriteImportMode = SpriteImportMode.Single;
+//				UnityEditor.EditorUtility.SetDirty(myImporter);
+//			}
+//			Debug.Log("SpriteMode (umgestellt): " + spriteImporter.spriteImportMode.ToString());
+//			Debug.Log("SpriteMetaData länge (umgestellt): " + spriteImporter.spritesheet.Length);
+			
+			// falls multiple 
+
 
 //			slicedSprite = new Sprite[subSpritesCount];
 			// Calculate SpriteMetaData (sliced SpriteSheet)
@@ -979,7 +1093,7 @@ public class CharacterCreationHelper : EditorWindow {
 					{
 						alignment = (int)spriteAlignment,
 						border = new Vector4(),
-						name = System.IO.Path.GetFileNameWithoutExtension(myImporter.assetPath) + "_" + i,
+						name = System.IO.Path.GetFileNameWithoutExtension(spriteImporter.assetPath) + "_" + i,
 						pivot = GetPivotValue(spriteAlignment, customOffset),
 						rect = new Rect(i*pixelSizeWidth, 	0, pixelSizeWidth, 	pixelSizeHeight)
 					};
@@ -997,16 +1111,16 @@ public class CharacterCreationHelper : EditorWindow {
 			}
 			
 			if (!failed) {
-				myImporter.spritePixelsPerUnit = pixelPerUnit;					// setze PixelPerUnit
-				myImporter.spriteImportMode = SpriteImportMode.Multiple; 		// setze MultipleMode
-				myImporter.spritesheet = metaDataList.ToArray();				// weiße metaDaten zu
+				spriteImporter.spritePixelsPerUnit = pixelPerUnit;					// setze PixelPerUnit
+				spriteImporter.spriteImportMode = SpriteImportMode.Multiple; 		// setze MultipleMode
+				spriteImporter.spritesheet = metaDataList.ToArray();				// weiße metaDaten zu
 				
-				EditorUtility.SetDirty (myImporter);
+				EditorUtility.SetDirty (spriteImporter);
 				
 				try
 				{
 					AssetDatabase.StartAssetEditing();
-					AssetDatabase.ImportAsset(myImporter.assetPath);
+					AssetDatabase.ImportAsset(spriteImporter.assetPath);
 				}
 				catch (Exception e)
 				{
@@ -1019,10 +1133,15 @@ public class CharacterCreationHelper : EditorWindow {
 					//Close();
 				}
 			}
+			else
+			{
+				Debug.LogError( spriteImporter.assetPath + " failed");
+				SpriteAssetInfo(spriteImporter);
+			}
 		}
 		else
 		{
-			Debug.LogError("sprite == null");
+			Debug.LogError( " sprite == null");
 		}
 	}
 
@@ -1060,7 +1179,7 @@ public class CharacterCreationHelper : EditorWindow {
 
 	bool networked = false;
 
-	void CreateCharacterPrefab(SmwCharacter smwCharacter, SmwCharacterGenerics smwCharacterGenerics)
+	GameObject CreateCharacterPrefab(SmwCharacter smwCharacter, SmwCharacterGenerics smwCharacterGenerics)
 	{
 		string charName = smwCharacter.charName;
 		if(smwCharacter.charName == "")
@@ -1079,7 +1198,7 @@ public class CharacterCreationHelper : EditorWindow {
 		if (!AnimationHelper.CreateFolder (pathRelativeToAssetsPath))
 		{
 			Debug.LogError("Ordner " + pathRelativeToAssetsPath + " konnte nicht erstellt werden");
-			return;
+			return null;
 		}
 
 		string pathRelativeToProject = "Assets/" + pathRelativeToAssetsPath;
@@ -1098,14 +1217,18 @@ public class CharacterCreationHelper : EditorWindow {
 
 		if( createdCharacterGO != null)
 		{
-			// save GO in prefab
-			PrefabUtility.ReplacePrefab(createdCharacterGO, emptyObj, ReplacePrefabOptions.ConnectToPrefab);
+			// save createt GO in prefab
+
+			GameObject createdCharacterPrefab = PrefabUtility.ReplacePrefab(createdCharacterGO, emptyObj, ReplacePrefabOptions.ConnectToPrefab);
+			return createdCharacterPrefab;
 		}
 		else
 		{
 			Debug.LogError("created CharacterGO ist NULL!!!");
+			return null;
 		}
 
+		return null;
 	}
 
 	ChildData root;
