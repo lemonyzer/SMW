@@ -156,8 +156,8 @@ public class PlatformCharacter : MonoBehaviour {
 	public Transform predictedPosCalculatedWithLastInput;
 	public SpriteRenderer predictedPosCalculatedWithLastInputRenderer;
 
-	public Transform predictedPosV3;
-	public SpriteRenderer predictedPosV3Renderer;
+//	public Transform predictedPosV3;
+//	public SpriteRenderer predictedPosV3Renderer;
 
 	public Transform iceWalled;
 	public SpriteRenderer iceWalledRenderer;
@@ -214,8 +214,8 @@ public class PlatformCharacter : MonoBehaviour {
 		predictedPosCalculatedWithLastInput = transform.FindChild(Tags.name_PredictedPosCalculatedWithLastInput);
 		predictedPosCalculatedWithLastInputRenderer = predictedPosCalculatedWithLastInput.GetComponent<SpriteRenderer>();
 
-		predictedPosV3 = transform.FindChild(Tags.name_PredictedPosV3);
-		predictedPosV3Renderer = predictedPosV3.GetComponent<SpriteRenderer>();
+//		predictedPosV3 = transform.FindChild(Tags.name_PredictedPosV3);
+//		predictedPosV3Renderer = predictedPosV3.GetComponent<SpriteRenderer>();
 
 		iceWalled = transform.FindChild(Tags.name_iceWalled);
 		iceWalledRenderer = iceWalled.GetComponent<SpriteRenderer>();
@@ -1013,6 +1013,7 @@ public class PlatformCharacter : MonoBehaviour {
 
 	void LateUpdate()
 	{
+		return;
 		if(!spawnProtection)
 		{
 			if(anim.GetCurrentAnimatorStateInfo(0).nameHash == HashID.spawnProtectionState)
@@ -1052,7 +1053,7 @@ public class PlatformCharacter : MonoBehaviour {
 			currentEstimatedPosOnServerRenderer.enabled = false;
 			predictedPosCalculatedWithLastInputRenderer.enabled = false;
 			predictedPosSimulatedWithLastInputRenderer.enabled = false;
-			predictedPosV3Renderer.enabled = false;
+//			predictedPosV3Renderer.enabled = false;
 			return;
 		}
 

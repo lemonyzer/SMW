@@ -218,6 +218,8 @@ public class StatsManager : MonoBehaviour {
 				return;
 			}
 		}
+		if(Network.peerType == NetworkPeerType.Disconnected)
+			return;
 		// wird nur von PhotonMasterClient ausgeführt....
 		if(GameState.currentState == GameState.States.Running)
 		{

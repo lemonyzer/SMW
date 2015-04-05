@@ -1189,6 +1189,7 @@ public class CharacterCreationHelper : EditorWindow {
 		root.Add(root.gameObject.AddComponent<Animator>(), true, null);		//TODO inspector
 		root.Add(root.gameObject.AddComponent<Rigidbody2D>(), 0f, true); 	//TODO inspector
 		root.Add(root.gameObject.AddComponent<AudioSource>(), true);
+		root.Add(root.gameObject.AddComponent<RealOwner>(), true);
 		root.Add(root.gameObject.AddComponent<PlatformUserControl>(), true);
 		root.Add(root.gameObject.AddComponent<PlatformCharacter>(), true);
 		root.Add(root.gameObject.AddComponent<PlatformJumperV2>(), true);

@@ -92,6 +92,8 @@ public class NetworkedPlayer : MonoBehaviour
 
 	void Start()
 	{
+		return;
+
 		if(Network.isServer)
 			return;
 
@@ -115,6 +117,9 @@ public class NetworkedPlayer : MonoBehaviour
 	float inputToRPCDelay = 0f;
 	void FixedUpdate()
 	{
+		if(Network.peerType == NetworkPeerType.Disconnected)
+			return;
+
 		if( ownerScript.owner == Network.player )
 		{
 			if(characterScript.GetPower() != null)
@@ -584,6 +589,9 @@ public class NetworkedPlayer : MonoBehaviour
 											// not used because i'm now using OnSerilizeNetworkView (send 15 times per second) and is unreliable
 	void Update()
 	{
+		if(Network.peerType == NetworkPeerType.Disconnected)
+			return;
+
 		UpdateConnectionInfo();
 		LastPosAndPrediction();
 
@@ -902,6 +910,8 @@ public class NetworkedPlayer : MonoBehaviour
 
 	void UpdateConnectionInfo()
 	{
+		if(Network.peerType == NetworkPeerType.Disconnected)
+			return;
 		if(!showConnectionInfo)
 			return;
 
@@ -917,6 +927,7 @@ public class NetworkedPlayer : MonoBehaviour
 
 		if( Network.isServer)
 			return;
+
 		if( ownerScript.owner == Network.player)
 		{
 			txtLastTripTime.text = ((double)(stateBuffer[0].tripTime)*1000).ToString("#### ms");
