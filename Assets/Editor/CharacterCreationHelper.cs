@@ -7,6 +7,7 @@ using System.Reflection;
 //using UnityEditor.TextureImporter;
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 //using System.Xml;
 
@@ -87,6 +88,10 @@ public class CharacterCreationHelper : EditorWindow {
 		{
 			string objectPath = EditorPrefs.GetString(SMWCharacterGenericsPath);
 			smwCharacterGenerics = AssetDatabase.LoadAssetAtPath(objectPath, typeof(SmwCharacterGenerics)) as SmwCharacterGenerics;
+		}
+		if(EditorPrefs.HasKey(EP_AutoImportPath))
+		{
+			autoImportPath = EditorPrefs.GetString(EP_AutoImportPath);
 		}
 
 		UpdateSortingLayers();
@@ -286,12 +291,11 @@ public class CharacterCreationHelper : EditorWindow {
 		smwCharacterList.characterList.RemoveAt (index);
 	}
 
-	void OnGUI ()
+	void OnGUI_Generics()
 	{
-
 		GUILayout.BeginHorizontal ();
 		GUILayout.Label ("Character Generics", EditorStyles.boldLabel);
-
+		
 		if(smwCharacterGenerics != null)
 			GUI.enabled = true;
 		else
@@ -301,7 +305,7 @@ public class CharacterCreationHelper : EditorWindow {
 			// ... kann man die Datei im ProjectWindow (Datei Explorer) öffnen
 			EditorUtility.SetDirty(smwCharacterGenerics);
 		}
-
+		
 		if(smwCharacterGenerics != null)
 			GUI.enabled = true;
 		else
@@ -328,7 +332,7 @@ public class CharacterCreationHelper : EditorWindow {
 			CreateNewCharacterGenerics();
 		}
 		GUILayout.EndHorizontal ();
-
+		
 		if(smwCharacterGenerics != null)
 		{
 			GUI.enabled = true;
@@ -400,11 +404,13 @@ public class CharacterCreationHelper : EditorWindow {
 			
 			GUILayout.EndVertical ();
 		}
+	}
 
-
+	void OnGUI_CharacterList()
+	{
 		GUILayout.BeginHorizontal ();
 		GUILayout.Label ("Character Library", EditorStyles.boldLabel);
-
+		
 		if(smwCharacterList != null)
 			GUI.enabled = true;
 		else
@@ -415,13 +421,13 @@ public class CharacterCreationHelper : EditorWindow {
 			EditorUtility.FocusProjectWindow();
 			Selection.activeObject = smwCharacterList;
 		}
-
+		
 		GUI.enabled = true;
 		if (GUILayout.Button("Open Existing Character List", GUILayout.ExpandWidth(false)))
 		{
 			OpenCharacterList();
 		}
-
+		
 		if(smwCharacterList == null)
 			GUI.enabled = true;
 		else
@@ -431,6 +437,8 @@ public class CharacterCreationHelper : EditorWindow {
 			CreateNewCharacterList();
 		}
 		GUILayout.EndHorizontal ();
+		
+		
 		GUILayout.BeginHorizontal ();
 		GUI.enabled = true;
 		smwCharacterList = EditorGUILayout.ObjectField(smwCharacterList, typeof(SmwCharacterList), false, GUILayout.ExpandWidth(false)) as SmwCharacterList;
@@ -441,7 +449,7 @@ public class CharacterCreationHelper : EditorWindow {
 			// character liste existiert...
 			// lese charactere aus
 			GUILayout.BeginHorizontal ();
-
+			
 			GUILayout.Space(10);
 			if(GUILayout.Button("Prev", GUILayout.ExpandWidth(false)))
 			{
@@ -465,14 +473,13 @@ public class CharacterCreationHelper : EditorWindow {
 			}
 			GUILayout.EndHorizontal ();
 		}
+	}
 
-
-
-
-
+	void OnGUI_CharacterEditor ()
+	{
 		GUILayout.BeginHorizontal ();
 		GUILayout.Label ("SMW Character Editor", EditorStyles.boldLabel);
-
+		
 		if (smwCharacter != null)
 		{
 			// wenn ein SMW Character gesetzt ist
@@ -489,8 +496,239 @@ public class CharacterCreationHelper : EditorWindow {
 			smwCharacter = CreateSmwCharacter.CreateAssetAndSetup();
 		}
 		GUILayout.EndHorizontal ();
-
+		
 		smwCharacter = EditorGUILayout.ObjectField("SMW Character SO", smwCharacter, typeof(SmwCharacter), false) as SmwCharacter;
+	}
+
+	string EP_AutoImportPath = "AutoImportPathString";
+	string autoImportPath = "";
+
+//	string OpenAutoImportFolderDialog(string relStartPath)
+//	{
+//		string absStartPath = Application.dataPath + relStartPath.Substring("Assets".Length);
+//		//Debug.Log(absStartPath);
+//		
+//		string absPath = EditorUtility.OpenFolderPanel ("Select Folder with Sprites", absStartPath, "");
+//		if (absPath.StartsWith(Application.dataPath))
+//		{
+//			string relPath = absPath.Substring(Application.dataPath.Length - "Assets".Length);
+//			if (!string.IsNullOrEmpty(relPath))
+//			{
+//				EditorPrefs.SetString(EP_AutoImportPath, relPath);
+//			}
+//			return relPath;
+//		}
+//		return null;
+//	}
+
+//	string OpenAutoImportFolderDialog_Resources(string relStartPath)
+//	{
+//		string absStartPath = Application.dataPath + relStartPath.Substring("Assets".Length);
+//		//Debug.Log(absStartPath);
+//		
+//		string absPath = EditorUtility.OpenFolderPanel ("Select Folder with Sprites", absStartPath, "");
+//		if (absPath.StartsWith(Application.dataPath))
+//		{
+//			string relPath = absPath.Substring(Application.dataPath.Length - "Assets".Length);
+//			if (!string.IsNullOrEmpty(relPath))
+//			{
+//				EditorPrefs.SetString(EP_AutoImportPath, relPath);
+//			}
+//
+//			//char[] divid = new char[10] ;
+//			//divid = (char[]) "/Resources";
+//			char[] divid = new char[] { '/','R','e','s','o','u','r','c','e','s' } ;
+//			string[] splitt = relPath.Split(divid);
+//			string resPath = splitt[splitt.Length - 1];
+//			Debug.Log(resPath + " splitt.Length=" + splitt.Length);
+//
+//			return resPath;
+//		}
+//		return null;
+//	}
+
+//	UnityEngine.Object[] importObjects;
+//	void OnGUI_AutoImport()
+//	{
+//		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
+//		GUILayout.BeginHorizontal ();
+//		GUILayout.Label ("Path = " + autoImportPath, GUILayout.ExpandWidth(false));
+//		if (GUILayout.Button("Select Import Folder", GUILayout.ExpandWidth(false)))
+//		{
+//			// open folder dialog
+//			//autoImportPath = Application.dataPath + "/" + OpenAutoImportFolderDialog (autoImportPath);// + "/";		// AssetsDatabase kann nur auf Assets/.. zugreifen
+//			autoImportPath = OpenAutoImportFolderDialog (autoImportPath);// + "/";
+//			if (!string.IsNullOrEmpty(autoImportPath))
+//			{
+//				//importObjects = AssetDatabase.LoadAllAssetsAtPath(autoImportPath);
+//				importObjects = Resources.LoadAll(autoImportPath);
+//				if(importObjects != null)
+//				{
+//					Debug.Log("Found " + importObjects.Length + " importObjects @ relPath " + autoImportPath);
+//				}
+//			}
+//		}
+//
+//		if(importObjects != null)
+//		{
+//			GUILayout.Label ( "Found " + importObjects.Length + " importObjects @ relPath " + autoImportPath, GUILayout.ExpandWidth(false));
+//			foreach(UnityEngine.Object obj in importObjects)
+//			{
+//				GUILayout.Label (obj.name , GUILayout.ExpandWidth(false));
+//			}
+//		}
+//		else
+//		{
+//			GUILayout.Label ("importedObjects == NULL! @ relPath " + autoImportPath, GUILayout.ExpandWidth(false));
+//		}
+//		
+//		GUILayout.EndHorizontal ();
+//	}
+
+	void StartBatchImport()
+	{
+		if(info != null)
+		{
+			foreach (FileInfo f in info)
+			{
+				//				Debug.Log("Found " + f.Name);
+				//				Debug.Log("f.DirectoryName=" + f.DirectoryName);
+				//				Debug.Log("f.FullName=" + f.FullName);
+				//				Debug.Log("modified=" + f.FullName.Substring(Application.dataPath.Length - "Assets".Length));
+				
+				
+				// relative pfad angabe
+				string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
+				GUILayout.Label ("Found " + currentSpritePath, GUILayout.ExpandWidth(false));
+				
+				// lade mit AssetDatabase
+				Sprite currentSprite = AssetDatabase.LoadAssetAtPath(currentSpritePath,typeof(Sprite)) as Sprite;
+				
+				// PerformMetaSlice
+				if(currentSprite != null)
+				{
+					PerformMetaSlice(currentSprite);
+				}
+				else
+				{
+					continue;		// skip this character
+				}
+
+				//TODO ordner auf existenz prüfen
+
+				//TODO character name extrahieren (string.splitt by _)
+
+				// Character ScriptableObject erstellen	(Ordner und name)
+				SmwCharacter currentCharacter = CreateSmwCharacter.CreateAssetWithPathAndName("Assets/Test", f.Name);
+
+				//überprüfe ob scriptableObject hinzugefügt wurde
+				if(currentCharacter == null)
+					continue;		// skip this character
+
+				AddSpritesheetToSmwCharacterSO(currentCharacter, currentSpritePath);
+
+				//überprüfe ob spritesheet hinzugefügt wurde //TODO inhalt ebenfalls prüfen!
+				if(currentCharacter.charSpritesheet == null)
+					continue;		// skip this character
+
+
+				//runtimeAnimatorController erstellen
+				CharacterAnimator.Create(smwCharacterGenerics, currentCharacter);
+
+				//überprüfe ob runtimeAnimatorController hinzugefügt wurde
+				if(currentCharacter.runtimeAnimatorController == null)					//TODO in welchem pfad wird das asset runtimeAnimatorController gespeichert???
+					continue;		// skip this character
+
+
+
+			}
+		}
+	}
+
+
+
+	DirectoryInfo dir = null;
+	FileInfo[] info = null;
+	void OnGUI_AutoImport()
+	{
+		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
+		GUILayout.BeginHorizontal ();
+		GUILayout.Label ("Path = " + autoImportPath, GUILayout.ExpandWidth(false));
+		if (GUILayout.Button("Select Import Folder", GUILayout.ExpandWidth(false)))
+		{
+			// open folder dialog
+			string absPath = EditorUtility.OpenFolderPanel ("Select Import Folder with Sprites", "", "");
+			if (!string.IsNullOrEmpty(absPath))
+			{
+				dir = new DirectoryInfo(absPath);
+				info = dir.GetFiles("*.png");
+				// Einmalige ausgabe auf Console
+				foreach (FileInfo f in info)
+				{
+					//				Debug.Log("Found " + f.Name);
+					//				Debug.Log("f.DirectoryName=" + f.DirectoryName);
+					//				Debug.Log("f.FullName=" + f.FullName);
+					//				Debug.Log("modified=" + f.FullName.Substring(Application.dataPath.Length - "Assets".Length));
+					// relative pfad angabe
+					string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
+					Debug.Log("currentSpritePath=" + currentSpritePath);
+				}
+
+			}
+		}
+		GUILayout.EndHorizontal ();
+
+		GUILayout.BeginVertical ();
+		if(info != null)
+		{
+			if(smwCharacterGenerics != null)
+			{
+				GUI.enabled = true;
+				// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO			smwCharacterGenerics muss komplett eingestellt sein
+				if(true)//smwCharacterGenerics.allPropertysSet)
+				{
+					GUI.enabled = true;
+				}
+				else
+				{
+					GUILayout.Label ("smwCharacterGenerics muss komplett eingestellt sein", GUILayout.ExpandWidth(false));
+					GUI.enabled = false;
+				}
+			}
+			else
+			{
+				GUILayout.Label ("smwCharacterGenerics muss geladen sein", GUILayout.ExpandWidth(false));
+				GUI.enabled = false;
+			}
+			if (GUILayout.Button("Start Import ", GUILayout.ExpandWidth(false)))
+			{
+				StartBatchImport();
+			}
+			foreach (FileInfo f in info)
+			{
+				// relative pfad angabe
+				string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
+				GUILayout.Label ("Found " + currentSpritePath, GUILayout.ExpandWidth(false));
+			}
+		}
+		else
+		{
+
+		}
+		GUILayout.EndVertical ();
+
+	}
+
+	void OnGUI ()
+	{
+
+		OnGUI_Generics();
+
+		OnGUI_AutoImport();
+
+		OnGUI_CharacterList();
+
+		OnGUI_CharacterEditor();
 
 
 		GUILayout.Label ("Spritesheet Editor", EditorStyles.boldLabel);
@@ -569,45 +807,7 @@ public class CharacterCreationHelper : EditorWindow {
 		}
 		if (GUILayout.Button("Add Spritesheet to Character"))
 		{
-			Debug.Log("Loading Sprites @ " + myImporter.assetPath);
-			//					slicedSprite = AssetDatabase.LoadAllAssetRepresentationsAtPath (myImporter.assetPath) as Sprite[];
-			//slicedSprite = ((Sprite)AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath)) //.Of //OfType<Sprite>().ToArray();
-			
-			UnityEngine.Object[] test = AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath);
-			
-			if(test != null)
-			{
-				if(test.Length > 1)
-				{
-					Debug.Log("SubAssets Anzahl = " + test.Length);
-					slicedSprite = new Sprite[test.Length -1 ];
-					for(int i=1; i< test.Length; i++)
-					{
-						slicedSprite[i-1] = test[i] as Sprite;
-					}
-				}
-				else
-				{
-					Debug.LogError("SubAssets Anzahl = " + test.Length);
-				}
-			}
-			
-			//slicedSprite = Resources.LoadAll(myImporter.assetPath) as Sprite[];
-			
-			//					Sprite[] temp = AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath) as Sprite[]; 
-			
-			if(slicedSprite != null)
-			{
-				Debug.Log("slicedSprite SubAssets Anzahl = " + slicedSprite.Length);
-				smwCharacter.SetCharSpritesheet(slicedSprite);
-			}
-			else
-			{
-				Debug.LogError("slicedSprite == null!!!");
-			}
-			//					EditorUtility.SetDirty(smwCharacter);
-			//					EditorUtility.FocusProjectWindow();
-			//					Selection.activeObject = smwCharacter;
+			AddSpritesheetToSmwCharacterSO(smwCharacter, myImporter.assetPath);
 		}
 
 
@@ -632,7 +832,7 @@ public class CharacterCreationHelper : EditorWindow {
 		if (GUILayout.Button("create Prefab"))
 		{
 			// create Prefab
-			CreateCharacterPrefab();
+			CreateCharacterPrefab(smwCharacter, smwCharacterGenerics);
         }
     }
 
@@ -689,6 +889,49 @@ public class CharacterCreationHelper : EditorWindow {
 			return false;
 	}
 
+
+	private bool AddSpritesheetToSmwCharacterSO(SmwCharacter character, string relSpritePath)
+	{
+		Debug.Log("Loading Sprites @ " + relSpritePath);
+		//					slicedSprite = AssetDatabase.LoadAllAssetRepresentationsAtPath (myImporter.assetPath) as Sprite[];
+		//slicedSprite = ((Sprite)AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath)) //.Of //OfType<Sprite>().ToArray();
+		
+		UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(relSpritePath);
+
+		Sprite[] slicedSprites = null;
+		if(assets != null)
+		{
+			if(assets.Length > 1)
+			{
+				Debug.Log("SubAssets Anzahl = " + assets.Length);
+				slicedSprites = new Sprite[assets.Length -1 ];							// generate Sprite[] aus asset
+				for(int i=1; i< assets.Length; i++)
+				{
+					slicedSprites[i-1] = assets[i] as Sprite;
+				}
+			}
+			else
+			{
+				Debug.LogError("SubAssets Anzahl = " + assets.Length);
+			}
+		}
+		
+
+		if(slicedSprites != null)
+		{
+			Debug.Log("slicedSprites SubAssets Anzahl = " + slicedSprites.Length);
+			smwCharacter.SetCharSpritesheet(slicedSprites);								// add to SmwCharacter
+			EditorUtility.SetDirty(smwCharacter);										// save ScriptableObject
+			return true;
+		}
+		else
+		{
+			Debug.LogError("slicedSprites == null!!!");
+			return false;
+		}
+	}
+
+
 //	[SerializeField] private TextAsset xmlAsset;
 //	public TextureImporter importer;
 
@@ -699,7 +942,7 @@ public class CharacterCreationHelper : EditorWindow {
 		if(sprite != null)
 		{
 			TextureImporter myImporter = null;
-			myImporter = TextureImporter.GetAtPath ( AssetDatabase.GetAssetPath(sprite) ) as TextureImporter ;
+			myImporter = TextureImporter.GetAtPath (AssetDatabase.GetAssetPath(sprite)) as TextureImporter ;
 
 			bool failed = false;
 			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
@@ -730,57 +973,11 @@ public class CharacterCreationHelper : EditorWindow {
 					Debug.LogException(exception);
 				}
 			}
-
-//XML not needed
-//		XmlDocument document = new XmlDocument();
-//		document.LoadXml(xmlAsset.text);
-		
-//		XmlElement root = document.DocumentElement;
-//		if (root.Name == "TextureAtlas")
-//		{
-//			bool failed = false;
-//			
-//			Texture2D texture = AssetDatabase.LoadMainAssetAtPath(importer.assetPath) as Texture2D;
-//			int textureHeight = texture.height;
-//			
-//			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
-//			
-//			foreach (XmlNode childNode in root.ChildNodes)
-//			{
-//				if (childNode.Name == "SubTexture") {
-//					try {
-//						int width = Convert.ToInt32(childNode.Attributes["width"].Value);
-//						int height = Convert.ToInt32(childNode.Attributes["height"].Value);
-//						int x = Convert.ToInt32(childNode.Attributes["x"].Value);
-//						int y = textureHeight - (height + Convert.ToInt32(childNode.Attributes["y"].Value));
-//						
-//						SpriteMetaData spriteMetaData = new SpriteMetaData
-//						{
-//							alignment = (int)spriteAlignment,
-//							border = new Vector4(),
-//							name = childNode.Attributes["name"].Value,
-//							pivot = GetPivotValue(spriteAlignment, customOffset),
-//							rect = new Rect(x, y, width, height)
-//						};
-//						
-//						metaDataList.Add(spriteMetaData);
-//					}
-//					catch (Exception exception) {
-//						failed = true;
-//						Debug.LogException(exception);
-//					}
-//				}
-//				else
-//				{
-//					Debug.LogError("Child nodes should be named 'SubTexture' !");
-//					failed = true;
-//				}
-//			}
 			
 			if (!failed) {
-				myImporter.spritePixelsPerUnit = pixelPerUnit;
-				myImporter.spriteImportMode = SpriteImportMode.Multiple; 
-				myImporter.spritesheet = metaDataList.ToArray();
+				myImporter.spritePixelsPerUnit = pixelPerUnit;					// setze PixelPerUnit
+				myImporter.spriteImportMode = SpriteImportMode.Multiple; 		// setze MultipleMode
+				myImporter.spritesheet = metaDataList.ToArray();				// weiße metaDaten zu
 				
 				EditorUtility.SetDirty (myImporter);
 				
@@ -841,7 +1038,7 @@ public class CharacterCreationHelper : EditorWindow {
 
 	bool networked = false;
 
-	void CreateCharacterPrefab()
+	void CreateCharacterPrefab(SmwCharacter smwCharacter, SmwCharacterGenerics smwCharacterGenerics)
 	{
 		string charName = smwCharacter.charName;
 		if(smwCharacter.charName == "")
@@ -875,7 +1072,7 @@ public class CharacterCreationHelper : EditorWindow {
 //		GameObject tempObj = new GameObject(charName);
 
 		// build character
-		GameObject createdCharacterGO = SmartCreate();
+		GameObject createdCharacterGO = SmartCreate(smwCharacter, smwCharacterGenerics);
 
 		if( createdCharacterGO != null)
 		{
@@ -892,7 +1089,7 @@ public class CharacterCreationHelper : EditorWindow {
 	ChildData root;
 	List<ChildData> childs;
 
-	public GameObject SmartCreate()
+	public GameObject SmartCreate(SmwCharacter smwCharacter, SmwCharacterGenerics smwCharacterGenerics)
 	{
 		// erzeuge rootGO
 //		GameObject characterGO = new GameObject();	// wird in ChildData root erzeugt (root.gameObject)
@@ -901,7 +1098,7 @@ public class CharacterCreationHelper : EditorWindow {
 		childs = new List<ChildData> ();
 
 		// fülle root und Child Liste
-		fillRootAndChildData();
+		fillRootAndChildData(smwCharacter, smwCharacterGenerics);
 
 		// lese Child Liste aus und erzeuge childGO's
 		foreach(ChildData child in childs)
@@ -917,7 +1114,7 @@ public class CharacterCreationHelper : EditorWindow {
 
 
 
-	public void fillRootAndChildData()
+	public void fillRootAndChildData(SmwCharacter smwCharacter, SmwCharacterGenerics smwCharacterGenerics)
 	{
 		
 		float leftPos = -20f;	// TODO inspector

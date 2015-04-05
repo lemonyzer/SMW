@@ -318,6 +318,7 @@ public class CharacterAnimator {
 		//TODO
 
 		smwCharacter.runtimeAnimatorController = controller;
+		EditorUtility.SetDirty(smwCharacter);					// save ScriptableObject
 		return controller;
 	}
 
