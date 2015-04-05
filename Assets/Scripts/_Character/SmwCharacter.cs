@@ -7,6 +7,7 @@ public class SmwCharacter : ScriptableObject {
 	public string charName;
 	public int charId;
 	public Sprite[] charSpritesheet;
+	public RuntimeAnimatorController runtimeAnimatorController;
 
 	public Sprite[] charIdleSprites;
 	public Sprite[] charRunSprites;
