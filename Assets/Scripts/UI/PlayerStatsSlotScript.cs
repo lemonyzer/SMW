@@ -61,7 +61,7 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 		{
 			Debug.LogError("slotAvatar not Set, Start() needs to run first!");
 		}
-		slotAvatar.sprite = player.characterAvatarScript.gameObject.GetComponent<SpriteRenderer>().sprite;
+		slotAvatar.sprite = player.characterScriptableObject.charIdleSprites[0];
 		slotName.text = player.getNetworkPlayer().ipAddress;
 
 		if(Network.isClient)

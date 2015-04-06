@@ -159,19 +159,19 @@ public class Player
 
 	/*************************************************/
 
-	public CharacterAvatar characterAvatarScript;
+	public SmwCharacter characterScriptableObject;
 	public PlatformCharacter platformCharacterScript;
 	
 	public SelectorSlotScript UISelectorSlotScript;
 	public PlayerStatsSlotScript UIStatsSlotScript;
 
 	// Construcor Unity Network
-	public Player(NetworkPlayer player, CharacterAvatar character)
+	public Player(NetworkPlayer player, SmwCharacter character)
 	{
 		this.networkPlayer = player;
 		this.name = networkPlayer.ToString (); 
 		this.id = int.Parse(name);
-		this.characterAvatarScript = character;
+		this.characterScriptableObject = character;
 	}
 
 	private GameObject StatsSlot;

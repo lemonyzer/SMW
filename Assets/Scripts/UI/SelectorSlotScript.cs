@@ -11,8 +11,8 @@ public class SelectorSlotScript : MonoBehaviour {
 
 	public void UpdateSlot(Player player)
 	{
-		characterName.text = player.characterAvatarScript.name;
+		characterName.text = player.characterScriptableObject.charName;
 		playerIdAndColor.transform.FindChild("TextSlotNumber").GetComponent<Text>().text = player.getNetworkPlayer().ToString();
-		characterImage.sprite = player.characterAvatarScript.gameObject.GetComponent<SpriteRenderer>().sprite;
+		characterImage.sprite = player.characterScriptableObject.charIdleSprites[0];
 	}
 }

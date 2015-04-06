@@ -93,7 +93,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	void InstantiateAndSetupPlayerCharacter(NetworkPlayer netPlayerOwner, Player realOwner)
 	{
 		GameObject playerCharacterGameObject;
-		playerCharacterGameObject = (GameObject) Network.Instantiate(realOwner.characterAvatarScript.prefabUnityCharacter, RandomSpawnPoint(), Quaternion.identity, 0);
+		playerCharacterGameObject = (GameObject) Network.Instantiate(realOwner.characterScriptableObject.unityNetworkPrefab, RandomSpawnPoint(), Quaternion.identity, 0);
 
 		// Keep track of this new player so we can properly destroy it when required.
 		RealOwner playerControlScript = playerCharacterGameObject.GetComponent<RealOwner>();

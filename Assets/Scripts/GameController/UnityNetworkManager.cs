@@ -374,11 +374,11 @@ public class UnityNetworkManager : MonoBehaviour {
 		}
 
 		//new Player gets first unselected Character
-		CharacterAvatar avatar = myCharacterLibrary.GetFirstUnselected();
+		SmwCharacter avatar = myCharacterLibrary.characterList.GetFirstUnselected();
 		if(avatar != null)
 		{
 			//new Player will be registered in PlayerDictionary (Server)
-			SetupNewPlayer(netPlayer, avatar.id);
+			SetupNewPlayer(netPlayer, avatar.charId);
 		}
 		else
 		{
@@ -387,7 +387,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		}
 
 		//Server notifys other Clients about new Player
-		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.All, netPlayer, avatar.id);
+		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.All, netPlayer, avatar.charId);
 	}
 
 
@@ -413,11 +413,11 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// <param name="characterAvatarId">Character avatar identifier.</param>
 	void SetupNewPlayer(NetworkPlayer netPlayer, int characterAvatarId)
 	{
-		CharacterAvatar cA = myCharacterLibrary.Get(characterAvatarId);
+		SmwCharacter cA = myCharacterLibrary.characterList.Get(characterAvatarId);
 		if(cA != null)
 		{
 			// character is selected
-			cA.inUse = true;
+			cA.charInUse = true;
 			
 			
 			// create new Player
@@ -455,7 +455,7 @@ public class UnityNetworkManager : MonoBehaviour {
 			if(PlayerDictionaryManager._instance.TryGetPlayer(currentNetPlayer, out currentPlayer))
 			{
 				// found Player in playerDictionary
-				myNetworkView.RPC("OnPlayerConnected_Rpc", netPlayer, currentNetPlayer, currentPlayer.characterAvatarScript.id);
+				myNetworkView.RPC("OnPlayerConnected_Rpc", netPlayer, currentNetPlayer, currentPlayer.characterScriptableObject.charId);
 			}
 		}
 
@@ -464,7 +464,7 @@ public class UnityNetworkManager : MonoBehaviour {
 			Player currentPlayer;
 			if(PlayerDictionaryManager._instance.TryGetPlayer(Network.player, out currentPlayer))
 			{
-				myNetworkView.RPC("OnPlayerConnected_Rpc", netPlayer, Network.player, currentPlayer.characterAvatarScript.id);
+				myNetworkView.RPC("OnPlayerConnected_Rpc", netPlayer, Network.player, currentPlayer.characterScriptableObject.charId);
 			}
 			else
 			{
@@ -510,7 +510,7 @@ public class UnityNetworkManager : MonoBehaviour {
 			{
 				RemoveCurrentPlayerCharacterGameObject(disconnectedPlayer);
 				PlayerDictionaryManager._instance.RemovePlayer(netPlayer);
-				disconnectedPlayer.characterAvatarScript.inUse = false;
+				disconnectedPlayer.characterScriptableObject.charInUse = false;
 			}
 			catch(UnityException e)
 			{
@@ -636,14 +636,14 @@ public class UnityNetworkManager : MonoBehaviour {
 
 		// aktuellen Character herausfinden
 		Player player = GetPlayer(requestedNetPlayer);
-		CharacterAvatar currentAvatar = null;
+		SmwCharacter currentAvatar = null;
 		int currentSelectedCharacterAvatarId = -1;
 		if(player != null)
 		{
-			currentAvatar = player.characterAvatarScript;
+			currentAvatar = player.characterScriptableObject;
 			if(currentAvatar != null)
 			{
-				currentSelectedCharacterAvatarId = currentAvatar.id;
+				currentSelectedCharacterAvatarId = currentAvatar.charId;
 			}
 			else
 			{
@@ -659,10 +659,11 @@ public class UnityNetworkManager : MonoBehaviour {
 
 		// hole nächsten verfügbaren Character aus library 
 		int nextUnSelectedCharacterAvatarId = -1;
-		CharacterAvatar nextAvatar = myCharacterLibrary.GetNextUnselected(currentSelectedCharacterAvatarId);
+		Debug.LogError("Spieler aktuelle charID= " + currentSelectedCharacterAvatarId);
+		SmwCharacter nextAvatar = myCharacterLibrary.characterList.GetNextUnselected(currentSelectedCharacterAvatarId);
 		if(nextAvatar != null)
 		{
-			nextUnSelectedCharacterAvatarId = nextAvatar.id;
+			nextUnSelectedCharacterAvatarId = nextAvatar.charId;
 			Debug.Log("neuer Character ist " + nextAvatar.name);
 		}
 		else
@@ -670,15 +671,15 @@ public class UnityNetworkManager : MonoBehaviour {
 			// kein freier Character gefunden!
 			Debug.LogWarning("kein freier Character gefunden!");
 			// wenn keiner mehr existiert abbrechen und requestedPlayer mitteilen (Sound)
-			myNetworkView.RPC("NextCharacterFailed_Rpc", requestedNetPlayer);
+			myNetworkView.RPC("NextCharacterFailed_Rpc", requestedNetPlayer);					//TODO server!!!!!!! cant send to server network.player
 			return;
 		}
 
 		// setzte aktuellen Character unSelected -> RPC
 		if(currentAvatar != null)
-			currentAvatar.inUse = false;
+			currentAvatar.charInUse = false;
 		// setzte neuen Character Selected -> RPC
-		nextAvatar.inUse = true;
+		nextAvatar.charInUse = true;
 
 		// teile allen Spieler neue selection mit
 		Debug.Log("info.sender = " + info.sender + ", requestedNetPlayer =" + requestedNetPlayer.ToString() + ", Lokaler Spieler = " + Network.player.ToString());
@@ -705,21 +706,21 @@ public class UnityNetworkManager : MonoBehaviour {
 			if(UserIsClient())
 			{
 				// nur auf Clients setzen (Server hat bereits)
-				player.characterAvatarScript.inUse = false;
+				player.characterScriptableObject.charInUse = false;
 			}
 
-			CharacterAvatar nextAvatar;
-			nextAvatar = myCharacterLibrary.Get(characterAvatarID);
+			SmwCharacter nextAvatar;
+			nextAvatar = myCharacterLibrary.characterList.Get(characterAvatarID);
 
 			//player neuen character zuweisen
-			player.characterAvatarScript = nextAvatar;
+			player.characterScriptableObject = nextAvatar;
 
-			Debug.LogWarning("UpdatePlayerSelection_Rpc, Next Avatar " + nextAvatar.name + " Id:" +nextAvatar.id);
+			Debug.LogWarning("UpdatePlayerSelection_Rpc, Next Avatar " + nextAvatar.name + " Id:" +nextAvatar.charId);
 
 			if(UserIsClient())
 			{
 				// nur auf Clients setzen (Server hat bereits)
-				nextAvatar.inUse = true;
+				nextAvatar.charInUse = true;
 			}
 		}
 		else

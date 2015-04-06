@@ -7,22 +7,35 @@ public class SmwCharacter : ScriptableObject {
 	public string charName;
 	public int charId;
 	public GameObject charPrefab;
+	public GameObject unityNetworkPrefab;
 	public bool charInUse;
 	public NetworkPlayer netPlayer;
 	public Player player;
 	public Sprite[] charSpritesheet;
 	public RuntimeAnimatorController runtimeAnimatorController;
 
+	public void SetID(int i)
+	{
+		charId = i;
+		Save ();
+	}
+	
+	public void SetUnityNetworkPrefab(GameObject prefab)
+	{
+		this.unityNetworkPrefab = prefab;
+	}
+
 	public void SetPrefab(GameObject prefab)
 	{
 		this.charPrefab = prefab;
 	}
-
+	
 	public void Save()
 	{
-		UnityEditor.EditorUtility.SetDirty (this);					// vielleicht 
+#if UNITY_EDITOR
+		UnityEditor.EditorUtility.SetDirty (this);					// vielleicht
+#endif
 	}
-
 	public Sprite[] charIdleSprites;
 	public Sprite[] charRunSprites;
 	public Sprite[] charJumpSprites;
@@ -68,7 +81,7 @@ public class SmwCharacter : ScriptableObject {
 		charHeadJumpedSprites[0] = charSpritesheet[5];
 
 		//TODO important
-		UnityEditor.EditorUtility.SetDirty (this);				// speichere Asset (Änderung wird übernommen)
+		Save ();				// speichere Asset (Änderung wird übernommen)
 		//TODO important
 	}
 
