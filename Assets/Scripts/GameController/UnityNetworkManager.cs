@@ -659,12 +659,12 @@ public class UnityNetworkManager : MonoBehaviour {
 
 		// hole nächsten verfügbaren Character aus library 
 		int nextUnSelectedCharacterAvatarId = -1;
-		Debug.LogError("Spieler aktuelle charID= " + currentSelectedCharacterAvatarId);
+		Debug.Log("Spieler aktuelle charID= " + currentSelectedCharacterAvatarId);
 		SmwCharacter nextAvatar = myCharacterLibrary.characterList.GetNextUnselected(currentSelectedCharacterAvatarId);
 		if(nextAvatar != null)
 		{
 			nextUnSelectedCharacterAvatarId = nextAvatar.charId;
-			Debug.Log("neuer Character ist " + nextAvatar.name);
+			Debug.Log("neuer Character ist charId=" + nextUnSelectedCharacterAvatarId + " charName= " + nextAvatar.name);
 		}
 		else
 		{
@@ -698,7 +698,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	[RPC]
 	void UpdatePlayerSelection_Rpc(NetworkPlayer selector, int characterAvatarID)
 	{
-		Debug.LogWarning("UpdatePlayerSelection_Rpc");
+		Debug.LogWarning("UpdatePlayerSelection_Rpc selector:" + selector + ", charID= " + characterAvatarID);
 		Player player = GetPlayer(selector);
 		if(player != null)
 		{

@@ -665,7 +665,7 @@ public class CharacterCreationHelper : EditorWindow {
 				//überprüfe ob scriptableObject hinzugefügt wurde
 				if(currentCharacter == null)
 				{
-					Debug.LogError("currentCharacter == null");
+					Debug.LogError(f.Name + " currentCharacter == null");
 					continue;		// skip this character
 				}
 
@@ -674,7 +674,7 @@ public class CharacterCreationHelper : EditorWindow {
 				//überprüfe ob spritesheet hinzugefügt wurde //TODO inhalt ebenfalls prüfen!
 				if(currentCharacter.charSpritesheet == null)
 				{
-					Debug.LogError("currentCharacter.charSpritesheet == null");
+					Debug.LogError(f.Name + " currentCharacter.charSpritesheet == null");
 					continue;		// skip this character
 				}
 
@@ -685,7 +685,7 @@ public class CharacterCreationHelper : EditorWindow {
 				//überprüfe ob runtimeAnimatorController hinzugefügt wurde
 				if(currentCharacter.runtimeAnimatorController == null)					//TODO in welchem pfad wird das asset runtimeAnimatorController gespeichert???
 				{
-					Debug.LogError("currentCharacter.runtimeAnimatorController == null");
+					Debug.LogError(f.Name + " currentCharacter.runtimeAnimatorController == null");
 					continue;		// skip this character
 				}
 
@@ -703,6 +703,7 @@ public class CharacterCreationHelper : EditorWindow {
 				//viewIndex = window_SmwCharacterList.characterList.Count;
 			}
 			charList.Save();	//schleife fertig, gefüllte liste speichern
+			charList.SetCharacterIDs();		// set characterIds
 		}
 	}
 
