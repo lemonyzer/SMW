@@ -725,6 +725,8 @@ public class CharacterCreationHelper : EditorWindow {
 				//fertigen SmwCharacter änderungen speichern
 				currentCharacter.Save();
 
+				Debug.LogWarning(currentCharacter.charName + " wurde erfolgreich erstellt.");
+
 				//fertigen SmwCharacter in liste speichern
 				charList.Add (currentCharacter);
 				//viewIndex = window_SmwCharacterList.characterList.Count;
@@ -789,9 +791,12 @@ public class CharacterCreationHelper : EditorWindow {
 		return null;
 	}
 
+	string window_batch_fileCount = "";
+
 	void OnGUI_AutoImport()
 	{
 		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
+		GUILayout.Label ("Path = " + batch_ImportPath, GUILayout.ExpandWidth(false));
 		GUILayout.BeginHorizontal ();
 		if (GUILayout.Button("Select Import Folder", GUILayout.ExpandWidth(false)))
 		{
@@ -827,45 +832,59 @@ public class CharacterCreationHelper : EditorWindow {
 				}
 			}
 		}
-		GUILayout.Label ("Path = " + batch_ImportPath, GUILayout.ExpandWidth(false));
 		GUILayout.EndHorizontal ();
 
 		GUILayout.BeginVertical ();
-		if(window_Batch_FileInfo != null)
+		if (window_Batch_FileInfo != null)
 			GUILayout.Label ( window_Batch_FileInfo.Length + " gefundene *.png im Ordner " + batch_ImportPath, GUILayout.ExpandWidth(false));
-		if(window_Batch_FileInfo != null && window_Batch_FileInfo.Length > 0)
+
+//		if (string.IsNullOrEmpty(batch_LastWorkingImportPath))
+//		{
+//			GUI.enabled = false;
+//		}
+		if (window_Batch_FileInfo != null && window_Batch_FileInfo.Length > 0)
 		{
-			if(window_SmwCharacterGenerics != null)
+			window_batch_fileCount = "" + window_Batch_FileInfo.Length;
+		}
+
+		if (window_SmwCharacterGenerics != null)
+		{
+			GUI.enabled = true;
+			// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO			window_SmwCharacterGenerics muss komplett eingestellt sein
+			if(true)//window_SmwCharacterGenerics.allPropertysSet)
 			{
 				GUI.enabled = true;
-				// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO// TODO			window_SmwCharacterGenerics muss komplett eingestellt sein
-				if(true)//window_SmwCharacterGenerics.allPropertysSet)
-				{
-					GUI.enabled = true;
-				}
-				else
-				{
-					GUILayout.Label ("window_SmwCharacterGenerics muss komplett eingestellt sein", GUILayout.ExpandWidth(false));
-					GUI.enabled = false;
-				}
 			}
 			else
 			{
-				GUILayout.Label ("window_SmwCharacterGenerics muss geladen sein", GUILayout.ExpandWidth(false));
+				GUILayout.Label ("window_SmwCharacterGenerics muss komplett eingestellt sein", GUILayout.ExpandWidth(false));
 				GUI.enabled = false;
 			}
+		}
+		else
+		{
+			GUILayout.Label ("window_SmwCharacterGenerics muss geladen sein", GUILayout.ExpandWidth(false));
+			GUI.enabled = false;
+		}
 
-			if(window_SmwCharacterList == null)
-			{
-				GUILayout.Label ("window_SmwCharacterList muss geladen sein", GUILayout.ExpandWidth(false));
-				GUI.enabled = false;
-			}
-			clearAndBatchImport = GUILayout.Toggle(clearAndBatchImport, "Clear Character List before bacth import?");
-			batch_KeepBatchCreatedPrefabsInScene = GUILayout.Toggle(batch_KeepBatchCreatedPrefabsInScene, "Keep created Prefabs In Scene?");
-			if (GUILayout.Button("Start Import " + window_Batch_FileInfo.Length, GUILayout.ExpandWidth(false)))
-			{
-				StartBatchImport(window_SmwCharacterList, window_SmwCharacterGenerics, clearAndBatchImport, batch_ImportPath);		// TODO absOrdnerPfad angeben und erneut einlesen im BacthImport!!!!!
-			}
+		if(window_SmwCharacterList == null)
+		{
+			GUILayout.Label ("window_SmwCharacterList muss geladen sein", GUILayout.ExpandWidth(false));
+			GUI.enabled = false;
+		}
+		clearAndBatchImport = GUILayout.Toggle(clearAndBatchImport, "Clear Character List before bacth import?");
+		batch_KeepBatchCreatedPrefabsInScene = GUILayout.Toggle(batch_KeepBatchCreatedPrefabsInScene, "Keep created Prefabs In Scene?");
+		if(string.IsNullOrEmpty(batch_ImportPath))
+		{
+			GUI.enabled = false;
+		}
+		if (GUILayout.Button("Start Import " + window_batch_fileCount, GUILayout.ExpandWidth(false)))
+		{
+			StartBatchImport(window_SmwCharacterList, window_SmwCharacterGenerics, clearAndBatchImport, batch_ImportPath);		// TODO absOrdnerPfad angeben und erneut einlesen im BacthImport!!!!!
+		}
+
+		if (window_Batch_FileInfo != null && window_Batch_FileInfo.Length > 0)
+		{
 			scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 			// aktuelle gefundenen Daten ausgeben
 			foreach (FileInfo f in window_Batch_FileInfo)
@@ -875,12 +894,8 @@ public class CharacterCreationHelper : EditorWindow {
 				GUILayout.Label ("Found " + currentSpritePath, GUILayout.ExpandWidth(false));
 			}
 			EditorGUILayout.EndScrollView();
-			
 		}
-		else
-		{
 
-		}
 		GUILayout.EndVertical ();
 
 	}
@@ -1104,7 +1119,7 @@ public class CharacterCreationHelper : EditorWindow {
 
 	private bool AddSpritesheetToSmwCharacterSO(SmwCharacter currentCharacter, string relSpritePath)
 	{
-		Debug.Log("Loading Sprites @ " + relSpritePath);
+//		Debug.Log("Loading Sprites @ " + relSpritePath);
 		//					slicedSprite = AssetDatabase.LoadAllAssetRepresentationsAtPath (myImporter.assetPath) as Sprite[];
 		//slicedSprite = ((Sprite)AssetDatabase.LoadAllAssetsAtPath(myImporter.assetPath)) //.Of //OfType<Sprite>().ToArray();
 		
@@ -1280,7 +1295,7 @@ public class CharacterCreationHelper : EditorWindow {
 			charName = "unnamedChar";
 			Debug.LogError("character.charName == \"\" (leer)");
 		}
-		Debug.Log(this.ToString() + " Create smwCharacter Name= " + charName);
+		Debug.Log(this.ToString() + " Create () " + charName);
 		
 
 		string pathRelativeToAssetsPath = "";
@@ -1336,7 +1351,7 @@ public class CharacterCreationHelper : EditorWindow {
 
 	public GameObject SmartCreate(SmwCharacter characterSO, SmwCharacterGenerics charGenerics)
 	{
-		Debug.Log(this.ToString() + " Create smwCharacter Name= " + characterSO.name);
+//		Debug.Log(this.ToString() + " Create smwCharacter Name= " + characterSO.name);
 		
 		// erzeuge rootGO
 //		GameObject characterGO = new GameObject();	// wird in ChildData root erzeugt (root.gameObject)

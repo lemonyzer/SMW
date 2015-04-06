@@ -1233,6 +1233,8 @@ public class PlatformCharacter : MonoBehaviour {
 
 	public void InvincibleMode()
 	{
+		anim.SetTrigger(HashID.p_rageModusBool);
+		anim.SetTrigger(HashID.p_rageTrigger);
 		headCollider2D.enabled = false;
 		feetCollider2D.enabled = false;			// keine headjumps!
 		bodyCollider2D.enabled = false;

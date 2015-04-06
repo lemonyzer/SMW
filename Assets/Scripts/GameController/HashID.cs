@@ -4,7 +4,7 @@ using System.Collections;
 public class HashID : MonoBehaviour {
 
 	public static string l_base = "Base Layer";
-	public static string l_overlay = "Overlay Layer";
+	public static string l_overlay = "Special Layer";
 
 	// Parameter
 	public static string p_hSpeed = "hSpeed";
@@ -21,7 +21,7 @@ public class HashID : MonoBehaviour {
 	public static string p_stopSpawnProtectionTrigger = "StopSpawnProtectionTrigger";
 	public static string p_changeRunDirectionTrigger = "ChangeRunDirection";
 	public static string p_rageTrigger = "RageTrigger";
-	public static string p_rageModus = "RageModus";
+	public static string p_rageModusBool = "RageModus";
 	public static string p_nextStateTrigger = "NextStateTrigger";
 
 	// States
@@ -70,7 +70,7 @@ public class HashID : MonoBehaviour {
 	
 	public static int groundedBool;
 	public static int walledBool;
-	
+
 	public static int hittedBool;
 	public static int gameOverBool;
 	public static int headJumpedBool;
@@ -80,6 +80,9 @@ public class HashID : MonoBehaviour {
 	public static int spawnProtectionBool;
 //	public static int spawnProtectionBool;
 	public static int stopSpawnProtectionTrigger;
+	public static int rageModeBool;
+	public static int startRageTrigger;
+	public static int stopRageTrigger;
 	public static int nextStateTrigger;
 
 	/**
@@ -143,6 +146,12 @@ public class HashID : MonoBehaviour {
 		spawnProtectionBool = Animator.StringToHash("SpawnProtection");
 		stopSpawnProtectionTrigger = Animator.StringToHash(p_stopSpawnProtectionTrigger);
 		nextStateTrigger = Animator.StringToHash("NextStateTrigger");
+
+
+		rageModeBool = Animator.StringToHash(p_rageModusBool);
+		startRageTrigger = Animator.StringToHash(p_rageTrigger);
+//		stopRageTrigger = Animator.StringToHash("NextStateTrigger");
+
 		
 		/**
 		 * Platform PowerUpBlock

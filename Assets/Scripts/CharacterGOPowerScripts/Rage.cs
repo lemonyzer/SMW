@@ -170,6 +170,7 @@ public class Rage : Power {
 	
 	// Update is called once per frame
 	void LateUpdate () {
+		return;
 		if(isInRageModus)
 		{
 			//			Debug.Log("currentAnimColor:" + currentAnimColor);

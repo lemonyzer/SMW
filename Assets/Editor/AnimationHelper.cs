@@ -144,7 +144,7 @@ public class AnimationHelper : EditorWindow {
 		controller.AddParameter(HashID.p_stopSpawnProtectionTrigger, AnimatorControllerParameterType.Trigger);
 
 		controller.AddParameter(HashID.p_rageTrigger, AnimatorControllerParameterType.Trigger);
-		controller.AddParameter(HashID.p_rageModus, AnimatorControllerParameterType.Bool);
+		controller.AddParameter(HashID.p_rageModusBool, AnimatorControllerParameterType.Bool);
 
 		// Layer 0 State Machine
 		AnimatorStateMachine rootStateMachine = controller.layers[0].stateMachine;
