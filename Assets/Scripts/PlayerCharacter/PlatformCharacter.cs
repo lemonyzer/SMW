@@ -1057,19 +1057,19 @@ public class PlatformCharacter : MonoBehaviour {
 			return;
 		}
 
-		lastReceivedPosRenderer.sprite = spriteRenderer.sprite;					// other player character
-		lastReceivedPosRenderer.color = new Color(0f,0f,0f,0.3f);
-
-		currentEstimatedPosOnServerRenderer.sprite = spriteRenderer.sprite;		// local player character
-		currentEstimatedPosOnServerRenderer.color = new Color(0f,0f,0f,0.3f);
-
-		predictedPosCalculatedWithLastInputRenderer.sprite = spriteRenderer.sprite;		// other player character
-		predictedPosCalculatedWithLastInputRenderer.color = new Color(0f,1f,0f,0.2f);
-		predictedPosCalculatedWithLastInputRenderer.material = predictionMaterial;
-
-		predictedPosSimulatedWithLastInputRenderer.sprite = spriteRenderer.sprite;		// other player character
-		predictedPosSimulatedWithLastInputRenderer.color = new Color(1f,0f,0f,0.2f);
-		predictedPosCalculatedWithLastInputRenderer.material = predictionMaterial;
+//		lastReceivedPosRenderer.sprite = spriteRenderer.sprite;					// other player character
+//		lastReceivedPosRenderer.color = new Color(0f,0f,0f,0.3f);
+//
+//		currentEstimatedPosOnServerRenderer.sprite = spriteRenderer.sprite;		// local player character
+//		currentEstimatedPosOnServerRenderer.color = new Color(0f,0f,0f,0.3f);
+//
+//		predictedPosCalculatedWithLastInputRenderer.sprite = spriteRenderer.sprite;		// other player character
+//		predictedPosCalculatedWithLastInputRenderer.color = new Color(0f,1f,0f,0.2f);
+//		predictedPosCalculatedWithLastInputRenderer.material = predictionMaterial;
+//
+//		predictedPosSimulatedWithLastInputRenderer.sprite = spriteRenderer.sprite;		// other player character
+//		predictedPosSimulatedWithLastInputRenderer.color = new Color(1f,0f,0f,0.2f);
+//		predictedPosCalculatedWithLastInputRenderer.material = predictionMaterial;
 	}
 
 	void SpawnProtection()

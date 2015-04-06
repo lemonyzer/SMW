@@ -14,7 +14,6 @@ public class CreateSmwCharacter : MonoBehaviour {
 		AssetDatabase.SaveAssets();
 
 		EditorUtility.FocusProjectWindow();
-
 		Selection.activeObject = asset;
 	}
 
@@ -25,9 +24,8 @@ public class CreateSmwCharacter : MonoBehaviour {
 		AssetDatabase.CreateAsset(asset, "Assets/newSmwCharacterSO.asset");
 		AssetDatabase.SaveAssets();
 		
-		EditorUtility.FocusProjectWindow();
-		
-		Selection.activeObject = asset;
+//		EditorUtility.FocusProjectWindow();
+//		Selection.activeObject = asset;
 
 		return asset;
 	}
@@ -39,9 +37,8 @@ public class CreateSmwCharacter : MonoBehaviour {
 		AssetDatabase.CreateAsset(asset, relPath + "/" + name + ".asset");
 		AssetDatabase.SaveAssets();
 		
-		EditorUtility.FocusProjectWindow();
-		
-		Selection.activeObject = asset;
+//		EditorUtility.FocusProjectWindow();
+//		Selection.activeObject = asset;
 		
 		return asset;
 	}

@@ -776,6 +776,19 @@ public class CharacterCreationHelper : EditorWindow {
 		}
 	}
 
+	string AbsolutPathToUnityProjectRelativePath(string absPath)
+	{
+		if (absPath.StartsWith(Application.dataPath))
+		{
+			string relPath = absPath.Substring(Application.dataPath.Length - "Assets".Length);
+			Debug.Log(absPath);
+			Debug.Log(relPath);
+
+			return relPath;
+		}
+		return null;
+	}
+
 	void OnGUI_AutoImport()
 	{
 		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
@@ -799,6 +812,20 @@ public class CharacterCreationHelper : EditorWindow {
 
 			}
 
+		}
+		if (GUILayout.Button("Open Folder", GUILayout.ExpandWidth(false)))
+		{
+			// open folder dialog
+			if(!string.IsNullOrEmpty(batch_LastWorkingImportPath))
+			{
+				string relPath = AbsolutPathToUnityProjectRelativePath(batch_LastWorkingImportPath);
+				if(relPath != null)
+				{
+					EditorUtility.FocusProjectWindow();
+					UnityEngine.Object folder = AssetDatabase.LoadAssetAtPath (relPath,typeof(UnityEngine.Object));
+					Selection.activeObject = folder;
+				}
+			}
 		}
 		GUILayout.Label ("Path = " + batch_ImportPath, GUILayout.ExpandWidth(false));
 		GUILayout.EndHorizontal ();

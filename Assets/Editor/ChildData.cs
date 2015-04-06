@@ -61,6 +61,7 @@ public class ChildData
 			if(true)
 			{
 				spriteRenderer.sprite = sprite;
+				spriteRenderer.color = color;
 				spriteRenderer.sortingLayerID = sortingLayer;
 				
 				//all

@@ -2,6 +2,35 @@
 using UnityEditor;
 using UnityEditor.Animations;
 using System.Collections;
+using System.Collections.Generic;
+
+
+class AnimationClipSettings
+{
+	SerializedProperty m_Property;
+	
+	private SerializedProperty Get (string property) { return m_Property.FindPropertyRelative(property); }
+	
+	public AnimationClipSettings(SerializedProperty prop) { m_Property = prop; }
+	
+	public float startTime   { get { return Get("m_StartTime").floatValue; } set { Get("m_StartTime").floatValue = value; } }
+	public float stopTime	{ get { return Get("m_StopTime").floatValue; }  set { Get("m_StopTime").floatValue = value; } }
+	public float orientationOffsetY { get { return Get("m_OrientationOffsetY").floatValue; } set { Get("m_OrientationOffsetY").floatValue = value; } }
+	public float level { get { return Get("m_Level").floatValue; } set { Get("m_Level").floatValue = value; } }
+	public float cycleOffset { get { return Get("m_CycleOffset").floatValue; } set { Get("m_CycleOffset").floatValue = value; } }
+	
+	public bool loopTime { get { return Get("m_LoopTime").boolValue; } set { Get("m_LoopTime").boolValue = value; } }
+	public bool loopBlend { get { return Get("m_LoopBlend").boolValue; } set { Get("m_LoopBlend").boolValue = value; } }
+	public bool loopBlendOrientation { get { return Get("m_LoopBlendOrientation").boolValue; } set { Get("m_LoopBlendOrientation").boolValue = value; } }
+	public bool loopBlendPositionY { get { return Get("m_LoopBlendPositionY").boolValue; } set { Get("m_LoopBlendPositionY").boolValue = value; } }
+	public bool loopBlendPositionXZ { get { return Get("m_LoopBlendPositionXZ").boolValue; } set { Get("m_LoopBlendPositionXZ").boolValue = value; } }
+	public bool keepOriginalOrientation { get { return Get("m_KeepOriginalOrientation").boolValue; } set { Get("m_KeepOriginalOrientation").boolValue = value; } }
+	public bool keepOriginalPositionY { get { return Get("m_KeepOriginalPositionY").boolValue; } set { Get("m_KeepOriginalPositionY").boolValue = value; } }
+	public bool keepOriginalPositionXZ { get { return Get("m_KeepOriginalPositionXZ").boolValue; } set { Get("m_KeepOriginalPositionXZ").boolValue = value; } }
+	public bool heightFromFeet { get { return Get("m_HeightFromFeet").boolValue; } set { Get("m_HeightFromFeet").boolValue = value; } }
+	public bool mirror { get { return Get("m_Mirror").boolValue; } set { Get("m_Mirror").boolValue = value; } }
+}
+
 
 public class CharacterAnimator {
 
@@ -13,11 +42,13 @@ public class CharacterAnimator {
 		public int keyFrames;
 		public int frameDistance;
 		public Sprite[] sprites;
+		public WrapMode wrapMode;
 		public AnimatorState animState;
 		
-		public SMWAnimation(string name, int framesPerSecond, int keyFrames, Sprite[] sprites, AnimatorState animState)
+		public SMWAnimation(string name, int framesPerSecond, int keyFrames, Sprite[] sprites, WrapMode wrapMode, AnimatorState animState)
 		{
 			this.name = name;
+			this.wrapMode = wrapMode;
 			this.framesPerSecond = framesPerSecond;
 			this.keyFrames = keyFrames;
 			this.animState = animState;
@@ -25,7 +56,7 @@ public class CharacterAnimator {
 		}
 	}
 
-	public static SMWAnimation[] smwAnimations = new SMWAnimation[6];
+	public static List<SMWAnimation> smwAnimations = new List<SMWAnimation>();	// = new SMWAnimation[6];
 
 	public static RuntimeAnimatorController Create (SmwCharacterGenerics smwCharacterGenerics, SmwCharacter smwCharacter)
 	{
@@ -274,16 +305,22 @@ public class CharacterAnimator {
 		
 		// init smwAnimations array
 		
-		int baseLayerStateCount = 0;
-		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Idle",			1,1,	smwCharacter.charIdleSprites,idleState);
-		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Run",			25,2,	smwCharacter.charRunSprites,runState);
-		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Jump",			1,1,	smwCharacter.charJumpSprites,jumpState);
-		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Skid",			1,1,	smwCharacter.charSkidSprites,skidState);
-		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Die",			1,1,	smwCharacter.charDieSprites,deadState);
-		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_HeadJumped",	1,1,	smwCharacter.charHeadJumpedSprites,headJumpedState);
+//		int baseLayerStateCount = 0;
+		smwAnimations.Clear();		// BUG FIX!
+		smwAnimations.Add(new SMWAnimation(charName+"_dynamic_Idle",		24,1,	smwCharacter.charIdleSprites,	WrapMode.Loop,	idleState));
+		smwAnimations.Add(new SMWAnimation(charName+"_dynamic_Run",			24,2,	smwCharacter.charRunSprites,	WrapMode.Loop,	runState));
+		smwAnimations.Add(new SMWAnimation(charName+"_dynamic_Jump",		24,1,	smwCharacter.charJumpSprites,	WrapMode.Loop,	jumpState));
+		smwAnimations.Add(new SMWAnimation(charName+"_dynamic_Skid",		24,1,	smwCharacter.charSkidSprites,	WrapMode.Loop,	skidState));
+		smwAnimations.Add(new SMWAnimation(charName+"_dynamic_Die",			24,1,	smwCharacter.charDieSprites,	WrapMode.Loop,	deadState));
+		smwAnimations.Add(new SMWAnimation(charName+"_dynamic_HeadJumped",	24,1,	smwCharacter.charHeadJumpedSprites,	WrapMode.Loop,	headJumpedState));
+//		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Run",			25,2,	smwCharacter.charRunSprites,	WrapMode.Loop,	runState);
+//		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Jump",			1,1,	smwCharacter.charJumpSprites,	WrapMode.Loop,	jumpState);
+//		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Skid",			1,1,	smwCharacter.charSkidSprites,	WrapMode.Loop,	skidState);
+//		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Die",			1,1,	smwCharacter.charDieSprites,	WrapMode.Loop,	deadState);
+//		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_HeadJumped",		1,1,	smwCharacter.charHeadJumpedSprites,	WrapMode.Loop, headJumpedState);
 		
 
-		for(int i=0; i < baseLayerStateCount; i++)
+		for(int i=0; i < smwAnimations.Count; i++)
 		{
 			// AnimationClip
 			AnimationClip tempAnimClip = new AnimationClip();
@@ -292,11 +329,38 @@ public class CharacterAnimator {
 			AnimationUtility.SetAnimationType(tempAnimClip, ModelImporterAnimationType.Generic);
 			#endif
 			tempAnimClip.name = smwAnimations[i].name;
-			CreateAnimationClip(tempAnimClip, smwAnimations[i].sprites, smwAnimations[i].keyFrames, 1.0f/smwAnimations[i].framesPerSecond);
+
+			// Frames Per Second //TODO ACHTUNG: 
+			tempAnimClip.frameRate = smwAnimations[i].framesPerSecond;
+
+			// LOOP
+//			Debug.Log( "before loopTime = " + AnimationUtility.GetAnimationClipSettings(tempAnimClip).loopTime);
+//			AnimationUtility.GetAnimationClipSettings(tempAnimClip).loopTime = true;
+//			Debug.Log( "after loopTime = " + AnimationUtility.GetAnimationClipSettings(tempAnimClip).loopTime);
+			
+			// LOOP
+			Debug.Log( "before serializedClip loopTime = " + AnimationUtility.GetAnimationClipSettings(tempAnimClip).loopTime);
+			SerializedObject serializedClip = new SerializedObject(tempAnimClip);
+			AnimationClipSettings clipSettings = new AnimationClipSettings(serializedClip.FindProperty("m_AnimationClipSettings"));
+			clipSettings.loopTime = true;
+			serializedClip.ApplyModifiedProperties();
+			Debug.Log( "after serializedClip loopTime = " + AnimationUtility.GetAnimationClipSettings(tempAnimClip).loopTime);
+			
+
+			// Wrap Mode (Loop, Once, PingPong....)
+			tempAnimClip.wrapMode = smwAnimations[i].wrapMode;
+			//tempAnimClip.
+
+			// Setup EditorCurveBinding of Animation Clip
+//			CreateAnimationClip(tempAnimClip, smwAnimations[i].sprites, smwAnimations[i].keyFrames, 1.0f/smwAnimations[i].framesPerSecond);
+			CreateAnimationClip(tempAnimClip, smwAnimations[i]);
+
+			// Add AnimationClip to State of StateMachine
 			smwAnimations[i].animState.motion = tempAnimClip;
 			
-			
+			// In order to insure better interpolation of quaternions, call this function after you are finished setting animation curves.
 			tempAnimClip.EnsureQuaternionContinuity();
+
 			if (AssetDatabase.Contains(tempAnimClip))
 			{
 				Debug.LogError(tempAnimClip.name + " in AssetDatabase bereits enthalten, darf nicht erscheinen");
@@ -323,7 +387,41 @@ public class CharacterAnimator {
 		return controller;
 	}
 
+	static void CreateAnimationClip(AnimationClip animClip, SMWAnimation animSettings )
+	{
+		Sprite[] sprites = animSettings.sprites;
+		int animationLength = animSettings.keyFrames;
+		float singleFrameTime = 1.0f / animSettings.framesPerSecond;
+//		Debug.Log("Create Animation: " + animClip.name + " " + " Spritearray = " + sprites.Length + ", Animation length = " + animationLength + ", single frame time = " + singleFrameTime );
+		// First you need to create e Editor Curve Binding
+		EditorCurveBinding curveBinding = new EditorCurveBinding();
+		
+		// I want to change the sprites of the sprite renderer, so I put the typeof(SpriteRenderer) as the binding type.
+		curveBinding.type = typeof(SpriteRenderer);
+		// Regular path to the gameobject that will be changed (empty string means root)
+		curveBinding.path = "";
+		// This is the property name to change the sprite of a sprite renderer
+		curveBinding.propertyName = "m_Sprite";
 
+//		curveBinding.propertyName = "
+
+		// An array to hold the object keyframes
+		ObjectReferenceKeyframe[] keyFrames = new ObjectReferenceKeyframe[animationLength];
+		
+		for (int i = 0; i < sprites.Length; i++)
+		{
+			keyFrames[i] = new ObjectReferenceKeyframe();
+			// set the time
+			keyFrames[i].time = i*singleFrameTime;			// TODO important
+			// set reference for the sprite you want
+			keyFrames[i].value = sprites[i];
+			
+		}
+		
+		AnimationUtility.SetObjectReferenceCurve(animClip, curveBinding, keyFrames);
+	}
+
+	
 	/// <summary>
 	/// Creates the folder.
 	/// </summary>
@@ -386,35 +484,6 @@ public class CharacterAnimator {
 			lastExistedFolder = accumulatedUnityFolder;
 		}
 		return true;
-	}
-
-	static void CreateAnimationClip(AnimationClip animClip, Sprite[] sprites, int animationLength, float singleFrameTime)
-	{
-//		Debug.Log("Create Animation: " + animClip.name + " " + " Spritearray = " + sprites.Length + ", Animation length = " + animationLength + ", single frame time = " + singleFrameTime );
-		// First you need to create e Editor Curve Binding
-		EditorCurveBinding curveBinding = new EditorCurveBinding();
-		
-		// I want to change the sprites of the sprite renderer, so I put the typeof(SpriteRenderer) as the binding type.
-		curveBinding.type = typeof(SpriteRenderer);
-		// Regular path to the gameobject that will be changed (empty string means root)
-		curveBinding.path = "";
-		// This is the property name to change the sprite of a sprite renderer
-		curveBinding.propertyName = "m_Sprite";
-		
-		// An array to hold the object keyframes
-		ObjectReferenceKeyframe[] keyFrames = new ObjectReferenceKeyframe[animationLength];
-		
-		for (int i = 0; i < sprites.Length; i++)
-		{
-			keyFrames[i] = new ObjectReferenceKeyframe();
-			// set the time
-			keyFrames[i].time = i*singleFrameTime;			// TODO important
-			// set reference for the sprite you want
-			keyFrames[i].value = sprites[i];
-			
-		}
-		
-		AnimationUtility.SetObjectReferenceCurve(animClip, curveBinding, keyFrames);
 	}
 
 }
