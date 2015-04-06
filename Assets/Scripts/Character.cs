@@ -9,32 +9,47 @@ public class Character : IComparable<Character>
 	public int name;
 	public bool inUse;
 
+	[SerializeField]
 	private string prefabFilename;
+
+	[SerializeField]
 	private GameObject characterGameObject;
+
+	[SerializeField]
 	private bool isAI;
 
+	[SerializeField]
 	private NetworkView gameObjectsNetworkView;
 //	private PhotonView gameObjectsPhotonView;
 
+	[SerializeField]
 	private string characterName;
 
+	[SerializeField]
 	private SpriteRenderer spriteRenderer;		// 2D 
+	[SerializeField]
 	private Sprite characterAvatarSprite;
-	
+	[SerializeField]
 	private MeshRenderer meshRenderer;			// 3D
+	[SerializeField]
 	private Texture characterAvatarTexture;
 
+	[SerializeField]
 	private Renderer renderer;					// 3D & 2D ?
 
-
+	[SerializeField]
 	public Behaviour characterScript;
+	[SerializeField]
 	public Behaviour characterAIScript;
+	[SerializeField]
 	public Behaviour characterInputControlsScript;
 //	public PartyCharacter3D partyCharacter3D;
 //	public PartyCharacter3DAI partyCharacter3DAI;
 //	public PartyCharacter3DControls partyCharacter3DControls;
 
+	[SerializeField]
 	public Component bodyCollider;
+	[SerializeField]
 	public Component bodyCollider2D;
 
 //	public SphereCollider sphereCollider;

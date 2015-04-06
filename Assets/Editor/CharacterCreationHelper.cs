@@ -72,6 +72,8 @@ public class CharacterCreationHelper : EditorWindow {
 	static string SMWCharacterListPath = "SMWCharacterListPath";
 	static string SMWCharacterGenericsPath = "SMWCharacterGenericsPath";
 
+	string EP_last_ShowGenericsFoldoutBool = "EP_last_ShowGenericsFoldoutBool";
+
 	/// <summary>
 	/// Raises the enable event. We use it to set some references and do some initialization. I don`t figured out how to make a variable persistent in Unity Editor yet so most of the codes here can useless
 	/// </summary>
@@ -95,7 +97,12 @@ public class CharacterCreationHelper : EditorWindow {
 //		}
 		if(EditorPrefs.HasKey(EP_lastBatchImportFolder))
 		{
-			lastBatchImportFolder = EditorPrefs.GetString(EP_lastBatchImportFolder);
+			batch_LastWorkingImportPath = EditorPrefs.GetString(EP_lastBatchImportFolder);
+		}
+
+		if(EditorPrefs.HasKey(EP_last_ShowGenericsFoldoutBool))
+		{
+			showGenerics = EditorPrefs.GetBool(EP_last_ShowGenericsFoldoutBool);
 		}
 
 		UpdateSortingLayers();
@@ -261,6 +268,11 @@ public class CharacterCreationHelper : EditorWindow {
 		}
 	}
 
+	void SaveBoolInEditorPrefs(bool value, string key)
+	{
+		EditorPrefs.SetBool(key, value);
+	}
+
 	void CreateNewCharacterList()
 	{
 		viewIndex = 1;
@@ -286,13 +298,13 @@ public class CharacterCreationHelper : EditorWindow {
 	{
 		SmwCharacter character = CreateSmwCharacter.CreateAssetAndSetup();
 		character.name = "New Character";
-		window_SmwCharacterList.characterList.Add (character);
-		viewIndex = window_SmwCharacterList.characterList.Count;
+		window_SmwCharacterList.Add (character);
+		viewIndex = window_SmwCharacterList.Count;
 	}
 
 	void DeleteCharacter(int index)
 	{
-		window_SmwCharacterList.characterList.RemoveAt (index);
+		window_SmwCharacterList.RemoveAt (index);
 	}
 
 	void OnGUI_Generics()
@@ -467,7 +479,7 @@ public class CharacterCreationHelper : EditorWindow {
 			GUILayout.Space(5);
 			if(GUILayout.Button("Next", GUILayout.ExpandWidth(false)))
 			{
-				if(viewIndex < window_SmwCharacterList.characterList.Count)
+				if(viewIndex < window_SmwCharacterList.Count)
 					viewIndex++;
 			}
 			GUILayout.Space(60);
@@ -593,8 +605,23 @@ public class CharacterCreationHelper : EditorWindow {
 //		GUILayout.EndHorizontal ();
 //	}
 
-	void StartBatchImport(SmwCharacterList charList, SmwCharacterGenerics characterGenerics, bool clearListBeforeImport, FileInfo[] info)
+	void StartBatchImport(SmwCharacterList charList, SmwCharacterGenerics characterGenerics, bool clearListBeforeImport, string importPath)
 	{
+
+		if(string.IsNullOrEmpty(importPath))
+		{
+			Debug.LogError ("importPath == \"\" oder null !!!");
+			return;
+		}
+
+		FileInfo[] info = GetFileList(importPath);
+
+		if(info == null)
+		{
+			Debug.LogError ("FileInfo[] == null !!!");
+			return;
+		}
+
 		if (charList == null) {
 			Debug.LogError ("SmwCharacterList == null !!!");
 			return;
@@ -608,7 +635,7 @@ public class CharacterCreationHelper : EditorWindow {
 		if(clearListBeforeImport)
 		{
 			Debug.LogWarning("SmwCharacterList -> Clear()");
-			charList.characterList.Clear();
+			charList.Clear();
 		}
 
 		if(info != null)
@@ -690,7 +717,7 @@ public class CharacterCreationHelper : EditorWindow {
 				}
 
 				//prefab erstellen
-				GameObject currentPrefab = CreateCharacterPrefab(currentCharacter, characterGenerics);
+				GameObject currentPrefab = CreateCharacterPrefab(currentCharacter, characterGenerics, batch_KeepBatchCreatedPrefabsInScene);
 
 				//prefab in ScriptableObject referenzieren
 				currentCharacter.SetUnityNetworkPrefab(currentPrefab);
@@ -699,23 +726,56 @@ public class CharacterCreationHelper : EditorWindow {
 				currentCharacter.Save();
 
 				//fertigen SmwCharacter in liste speichern
-				charList.characterList.Add (currentCharacter);
+				charList.Add (currentCharacter);
 				//viewIndex = window_SmwCharacterList.characterList.Count;
 			}
 			charList.Save();	//schleife fertig, gefüllte liste speichern
 			charList.SetCharacterIDs();		// set characterIds
 		}
 	}
+	bool window_KeepCreatedPrefabsInScene = true;
 
+	string batch_LastWorkingImportPath = "";
+	string batch_ImportPath = "";
+	bool batch_KeepBatchCreatedPrefabsInScene = false;
 	bool clearAndBatchImport = true;
 
 	Vector2 scrollPosition = Vector2.zero;
 
 	string EP_lastBatchImportFolder = "EP_lastBatchImportFolder";
-	string lastBatchImportFolder = "";
+//	string lastBatchImportFolder = "";
 
-	DirectoryInfo dir = null;
-	FileInfo[] info = null;
+//	DirectoryInfo dir = null;
+	FileInfo[] window_Batch_FileInfo = null;
+
+	FileInfo[] GetFileList(string absPath)
+	{
+		if (!string.IsNullOrEmpty(absPath))
+		{
+			DirectoryInfo dir = new DirectoryInfo(absPath);
+			FileInfo[] info = dir.GetFiles("*.png");
+			
+			
+			// Einmalige ausgabe auf Console
+			foreach (FileInfo f in info)
+			{
+				//				Debug.Log("Found " + f.Name);
+				//				Debug.Log("f.DirectoryName=" + f.DirectoryName);
+				//				Debug.Log("f.FullName=" + f.FullName);
+				//				Debug.Log("modified=" + f.FullName.Substring(Application.dataPath.Length - "Assets".Length));
+				// relative pfad angabe
+				string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
+				Debug.Log("currentSpritePath=" + currentSpritePath);
+			}
+			return info;
+		}
+		else
+		{
+			Debug.LogError("absPath == \"\" or NULL ");
+			return null;
+		}
+	}
+
 	void OnGUI_AutoImport()
 	{
 		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
@@ -723,38 +783,30 @@ public class CharacterCreationHelper : EditorWindow {
 		if (GUILayout.Button("Select Import Folder", GUILayout.ExpandWidth(false)))
 		{
 			// open folder dialog
-			string absPath = EditorUtility.OpenFolderPanel ("Select Import Folder with Sprites", lastBatchImportFolder, "");
-			if (!string.IsNullOrEmpty(absPath))
+			batch_ImportPath = EditorUtility.OpenFolderPanel ("Select Import Folder with Sprites", batch_LastWorkingImportPath, "");
+			if(!string.IsNullOrEmpty(batch_ImportPath))
 			{
+				batch_LastWorkingImportPath = batch_ImportPath;
 				//absolutenPath in EditorPrefs speichern 
-				lastBatchImportFolder = absPath;
-				EditorPrefs.SetString(EP_lastBatchImportFolder, lastBatchImportFolder);
-
-				dir = new DirectoryInfo(absPath);
-				info = dir.GetFiles("*.png");
-
-
-				// Einmalige ausgabe auf Console
-				foreach (FileInfo f in info)
-				{
-					//				Debug.Log("Found " + f.Name);
-					//				Debug.Log("f.DirectoryName=" + f.DirectoryName);
-					//				Debug.Log("f.FullName=" + f.FullName);
-					//				Debug.Log("modified=" + f.FullName.Substring(Application.dataPath.Length - "Assets".Length));
-					// relative pfad angabe
-					string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
-					Debug.Log("currentSpritePath=" + currentSpritePath);
-				}
+				EditorPrefs.SetString(EP_lastBatchImportFolder, batch_LastWorkingImportPath);
+				window_Batch_FileInfo = GetFileList(batch_ImportPath);
+			}
+			else
+			{
+				//WITCHTIG!!!!!!!!!!
+				batch_ImportPath = "";
+				window_Batch_FileInfo = null;
 
 			}
+
 		}
-		GUILayout.Label ("Path = " + lastBatchImportFolder, GUILayout.ExpandWidth(false));
+		GUILayout.Label ("Path = " + batch_ImportPath, GUILayout.ExpandWidth(false));
 		GUILayout.EndHorizontal ();
 
 		GUILayout.BeginVertical ();
-		if(info != null)
-			GUILayout.Label ( info.Length + " gefundene *.png im Ordner " + lastBatchImportFolder, GUILayout.ExpandWidth(false));
-		if(info != null && info.Length > 0)
+		if(window_Batch_FileInfo != null)
+			GUILayout.Label ( window_Batch_FileInfo.Length + " gefundene *.png im Ordner " + batch_ImportPath, GUILayout.ExpandWidth(false));
+		if(window_Batch_FileInfo != null && window_Batch_FileInfo.Length > 0)
 		{
 			if(window_SmwCharacterGenerics != null)
 			{
@@ -782,13 +834,14 @@ public class CharacterCreationHelper : EditorWindow {
 				GUI.enabled = false;
 			}
 			clearAndBatchImport = GUILayout.Toggle(clearAndBatchImport, "Clear Character List before bacth import?");
-			if (GUILayout.Button("Start Import " + info.Length, GUILayout.ExpandWidth(false)))
+			batch_KeepBatchCreatedPrefabsInScene = GUILayout.Toggle(batch_KeepBatchCreatedPrefabsInScene, "Keep created Prefabs In Scene?");
+			if (GUILayout.Button("Start Import " + window_Batch_FileInfo.Length, GUILayout.ExpandWidth(false)))
 			{
-				StartBatchImport(window_SmwCharacterList, window_SmwCharacterGenerics, clearAndBatchImport, info);		// TODO absOrdnerPfad angeben und erneut einlesen im BacthImport!!!!!
+				StartBatchImport(window_SmwCharacterList, window_SmwCharacterGenerics, clearAndBatchImport, batch_ImportPath);		// TODO absOrdnerPfad angeben und erneut einlesen im BacthImport!!!!!
 			}
 			scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 			// aktuelle gefundenen Daten ausgeben
-			foreach (FileInfo f in info)
+			foreach (FileInfo f in window_Batch_FileInfo)
 			{
 				// relative pfad angabe
 				string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
@@ -834,11 +887,16 @@ public class CharacterCreationHelper : EditorWindow {
 	{
 		InitFoldStyle ();	// TODO put in OnEnable
 
-		showGeneralSettings = EditorGUILayout.Foldout(showGeneralSettings, "General Settings", myFoldoutStyle);
-		if (!showGeneralSettings)
-			return;
+//		showGeneralSettings = EditorGUILayout.Foldout(showGeneralSettings, "General Settings", myFoldoutStyle);
+//		if (!showGeneralSettings)
+//			return;
 
+		EditorGUI.BeginChangeCheck ();
 		showGenerics = EditorGUILayout.Foldout(showGenerics, "Generics", myFoldoutStyle);
+		if( EditorGUI.EndChangeCheck () )
+		{
+			SaveBoolInEditorPrefs(showGenerics, EP_last_ShowGenericsFoldoutBool);
+		}
 		if(showGenerics)
 			OnGUI_Generics();
 
@@ -954,10 +1012,12 @@ public class CharacterCreationHelper : EditorWindow {
 			GUI.enabled = true;
 		else
 			GUI.enabled = false;
+		window_KeepCreatedPrefabsInScene = GUILayout.Toggle(window_KeepCreatedPrefabsInScene, "Keep created prefab In Scene?");
+			
 		if (GUILayout.Button("create Prefab"))
 		{
 			// create Prefab
-			CreateCharacterPrefab(window_SmwCharacter, window_SmwCharacterGenerics);
+			CreateCharacterPrefab(window_SmwCharacter, window_SmwCharacterGenerics, window_KeepCreatedPrefabsInScene);
         }
     }
 
@@ -1185,7 +1245,7 @@ public class CharacterCreationHelper : EditorWindow {
 
 	bool networked = false;
 
-	GameObject CreateCharacterPrefab(SmwCharacter characterSO, SmwCharacterGenerics generics)
+	GameObject CreateCharacterPrefab(SmwCharacter characterSO, SmwCharacterGenerics generics, bool keepTempCreatedGoInScene)
 	{
 		string charName = characterSO.charName;
 		if(characterSO.charName == "")
@@ -1193,6 +1253,8 @@ public class CharacterCreationHelper : EditorWindow {
 			charName = "unnamedChar";
 			Debug.LogError("character.charName == \"\" (leer)");
 		}
+		Debug.Log(this.ToString() + " Create smwCharacter Name= " + charName);
+		
 
 		string pathRelativeToAssetsPath = "";
 
@@ -1223,9 +1285,14 @@ public class CharacterCreationHelper : EditorWindow {
 
 		if( createdCharacterGO != null)
 		{
-			// save createt GO in prefab
-
+			// save created GO in prefab
 			GameObject createdCharacterPrefab = PrefabUtility.ReplacePrefab(createdCharacterGO, emptyObj, ReplacePrefabOptions.ConnectToPrefab);
+
+			// destroy created GO in Scene
+			if(!keepTempCreatedGoInScene)
+				DestroyImmediate(createdCharacterGO);
+
+			// return prefab
 			return createdCharacterPrefab;
 		}
 		else
@@ -1242,6 +1309,8 @@ public class CharacterCreationHelper : EditorWindow {
 
 	public GameObject SmartCreate(SmwCharacter characterSO, SmwCharacterGenerics charGenerics)
 	{
+		Debug.Log(this.ToString() + " Create smwCharacter Name= " + characterSO.name);
+		
 		// erzeuge rootGO
 //		GameObject characterGO = new GameObject();	// wird in ChildData root erzeugt (root.gameObject)
 

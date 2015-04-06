@@ -4,6 +4,22 @@ using System.Collections;
 [System.Serializable]
 public class SmwCharacter : ScriptableObject {
 
+
+	// Awake() wird bei ScriptableObject.Create asugeführt!!!!
+
+	public SmwCharacter ()
+	{
+		Debug.Log(this.ToString() + " konstruktor ()");			// wird auch at Runtime ausgeführt
+	}
+	public void Awake ()
+	{
+		Debug.Log(this.ToString() + " Awake ()");				// Awake() wird bei ScriptableObject.Create asugeführt!!!!
+	}
+	public void Start ()
+	{
+		Debug.Log(this.ToString() + " Start ()");
+	}
+
 	public string charName;
 	public int charId;
 	public GameObject charPrefab;
