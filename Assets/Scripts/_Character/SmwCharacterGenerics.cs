@@ -20,10 +20,10 @@ public class SmwCharacterGenerics : ScriptableObject {
 	public Color color_rootCloneRenderer 					= new Color(1f,1f,1f,1f);		// ALL
 	public Color color_kingRenderer		 					= new Color(1f,1f,1f,1f);		// ALL
 	public Color color_iceWallRenderer	 					= new Color(1f,1f,1f,1f);		// ALL
-	public Color color_currentEstimatedPosOnServer 			= new Color(1f,1f,1f,0.15f);	// localplayer Character's	only
-	public Color color_LastRecvedPos 						= new Color(1f,1f,1f,0.15f);	// all other Character's	vergangene Position
-	public Color color_PredictedPosSimulatedWithLastInput 	= new Color(1f,1f,1f,0.15f);	// all other Character's	vergangene Position
-	public Color color_PredictedPosCalculatedWithLastInput 	= new Color(1f,1f,1f,0.15f);	// all other Character's	vergangene Position
+	public Color color_currentEstimatedPosOnServer 			= new Color(1f,1f,1f,0.1f);	// localplayer Character's	only
+	public Color color_LastRecvedPos 						= new Color(1f,1f,1f,0.1f);	// all other Character's	vergangene Position
+	public Color color_PredictedPosSimulatedWithLastInput 	= new Color(1f,1f,1f,0.1f);	// all other Character's	vergangene Position
+	public Color color_PredictedPosCalculatedWithLastInput 	= new Color(1f,1f,1f,0.1f);	// all other Character's	vergangene Position
 	
 	public int rootRendererSortingLayer;
 	public string rootRendererSortingLayerName = SortingLayer.name_CharacterBackground;

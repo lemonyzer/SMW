@@ -31,8 +31,10 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 	
 
 	// Use this for initialization
-	public void Start () {
-		Debug.Log(this.ToString() + " Start()");
+	public void Awake () {																// Awake wird auch bei instanziierung ausgeführt!!!
+		Debug.Log(this.ToString() + " Wake()");
+		if(this.player != null)
+			Debug.LogError(this.ToString() + " " + this.player.GetHashCode());
 		border = GetComponent<Image>();
 		slotAvatar = transform.FindChild("SlotImage").GetComponent<Image>();
 		slotName = transform.FindChild("SlotName").GetComponent<Text>();
@@ -49,13 +51,31 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 
 	}
 
-	public void UpdateSlot(NetworkPlayer netPlayer, Player player)
+	public void UpdateSlot(NetworkPlayer slotNetPlayer, Player slotPlayer)
 	{
 		Debug.Log(this.ToString() + " UpdateSlot()");
-		if(player == null)
+
+		if(this.player != null)
+			Debug.LogError(this.ToString() + " " + this.player.GetHashCode());
+		else
+			Debug.LogError(this.ToString() + " " + "this.player == null");
+			
+		if(slotPlayer != null)
+			Debug.LogError(this.ToString() + " " + slotPlayer.GetHashCode());
+		else
+			Debug.LogError(this.ToString() + " " + "slotPlayer == null");
+
+		if(slotPlayer == null)
 			return;
 
-		this.player = player;
+		this.player = slotPlayer;		// Zuordnung
+
+		if(this.player != null)
+			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + this.player.GetHashCode());
+		else
+			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + "this.player == null");
+
+		this.netPlayer = slotNetPlayer;
 
 		if(slotAvatar == null)
 		{
@@ -101,6 +121,7 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 			if(OnClicked != null)
 			{
 				// we have event listeners
+				Debug.LogError(this.ToString() + " " + player.GetHashCode());
 				OnClicked(this);
 			}
 			else

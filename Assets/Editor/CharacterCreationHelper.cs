@@ -605,6 +605,38 @@ public class CharacterCreationHelper : EditorWindow {
 //		GUILayout.EndHorizontal ();
 //	}
 
+	public string GetCharNameFromFileName(string fileName)
+	{
+		string[] splitted = SplittFileName(fileName);
+
+		if(splitted == null)
+		{
+			Debug.LogError(fileName + " SpittFileName == null");
+		}
+		if(splitted.Length == 3)
+		{
+			if (!string.IsNullOrEmpty(splitted[0]))
+				return splitted[0];
+		}
+		else if(splitted.Length == 4)
+		{
+			if (!string.IsNullOrEmpty(splitted[1]))
+				return splitted[1];
+		}
+
+		Debug.LogError(fileName + " konnte Character namen nicht extrahieren");
+		return null;
+	}
+
+	public string[] SplittFileName(string fileName)
+	{
+		string[] result;
+		char[] charSeparators = new char[] {'_'};
+		string[] stringSeparators = new string[] {"[stop]"};
+		result = fileName.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
+		return result;
+	}
+
 	void StartBatchImport(SmwCharacterList charList, SmwCharacterGenerics characterGenerics, bool clearListBeforeImport, string importPath)
 	{
 
@@ -614,6 +646,7 @@ public class CharacterCreationHelper : EditorWindow {
 			return;
 		}
 
+		//TODO DONE ordner auf existenz prüfen
 		FileInfo[] info = GetFileList(importPath);
 
 		if(info == null)
@@ -666,28 +699,15 @@ public class CharacterCreationHelper : EditorWindow {
 					PerformMetaSlice(spriteImporter);
 				}
 
-				// BUGG
-				// lade mit AssetDatabase
-//				Sprite currentSprite = AssetDatabase.LoadAssetAtPath(currentSpritePath,typeof(Sprite)) as Sprite;
-//				if(currentSprite == null)
-//				{
-//					Debug.LogError( currentSpritePath + " currentSprite == null ");
-//					continue;		// skip this character
-//				}
-//				else
-//				{
-//					// PerformMetaSlice
-//					PerformMetaSlice(currentSprite);
-//				}				
-
-
-
-				//TODO ordner auf existenz prüfen
 
 				//TODO character name extrahieren (string.splitt by _)
+				string charName = GetCharNameFromFileName(f.Name);
+
+				if(string.IsNullOrEmpty(charName))
+					charName = f.Name;
 
 				// Character ScriptableObject erstellen	(Ordner und name)
-				SmwCharacter currentCharacter = CreateSmwCharacter.CreateAssetWithPathAndName("Assets/Test", f.Name);		//TODO ordner erstellen falls nicht vorhanden
+				SmwCharacter currentCharacter = CreateSmwCharacter.CreateAssetWithPathAndName("Assets/Test", charName);		//TODO ordner erstellen falls nicht vorhanden
 
 				//überprüfe ob scriptableObject hinzugefügt wurde
 				if(currentCharacter == null)
@@ -750,7 +770,7 @@ public class CharacterCreationHelper : EditorWindow {
 //	DirectoryInfo dir = null;
 	FileInfo[] window_Batch_FileInfo = null;
 
-	FileInfo[] GetFileList(string absPath)
+	FileInfo[] GetFileList (string absPath)
 	{
 		if (!string.IsNullOrEmpty(absPath))
 		{
@@ -768,6 +788,16 @@ public class CharacterCreationHelper : EditorWindow {
 				// relative pfad angabe
 				string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
 				Debug.Log("currentSpritePath=" + currentSpritePath);
+
+				string charName = GetCharNameFromFileName(f.Name);
+				if(charName != null)
+				{
+					Debug.Log(charName);
+				}
+				else
+				{
+					Debug.LogError(f.Name + " konnte Character Name nicht extrahieren");
+				}
 			}
 			return info;
 		}

@@ -24,6 +24,11 @@ public class RageTrigger : MonoBehaviour {
 	{
 		if(Network.isServer || Network.peerType == NetworkPeerType.Disconnected)
 		{
+			if(myCharacterScript == null)
+			{
+				Debug.LogError( "myCharacterScript == null");
+				return;
+			}
 			if(myCharacterScript.isInRageModus)
 			{
 				if(other.gameObject.layer == Layer.powerUp)											// problem player interacts not with player (because of collider)

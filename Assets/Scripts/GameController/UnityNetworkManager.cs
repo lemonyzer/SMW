@@ -36,6 +36,17 @@ public class UnityNetworkManager : MonoBehaviour {
 		Player player;
 		PlayerDictionaryManager._instance.TryGetPlayer(slot.netPlayer, out player);
 
+		Debug.LogError(this.ToString() + " " + player.GetHashCode());
+
+		if(player != slot.player)
+		{
+			Debug.LogError(this.ToString() + " " +  player.GetHashCode() + " != " + slot.player.GetHashCode());
+		}
+		else
+		{
+			Debug.LogError(this.ToString() + " " +  player.GetHashCode() + " == " + slot.player.GetHashCode());
+		}
+
 		if(player != null)
 		{
 			if(player.platformCharacterScript != null)
@@ -45,7 +56,8 @@ public class UnityNetworkManager : MonoBehaviour {
 					if(player.platformCharacterScript.gameObject.GetComponent<Bot>() != null)
 					{
 						Debug.Log("player -> sucessFull");
-						player.platformCharacterScript.gameObject.GetComponent<Bot>().enabled = !slot.player.platformCharacterScript.gameObject.GetComponent<Bot>().enabled;
+						//player.platformCharacterScript.gameObject.GetComponent<Bot>().enabled = !slot.player.platformCharacterScript.gameObject.GetComponent<Bot>().enabled;
+						player.platformCharacterScript.gameObject.GetComponent<Bot>().enabled = !player.platformCharacterScript.gameObject.GetComponent<Bot>().enabled;
 					}
 					else
 						Debug.LogError("player -> GetComponent<Bot>()");
@@ -192,7 +204,9 @@ public class UnityNetworkManager : MonoBehaviour {
 		myNetworkView = GetComponent<NetworkView>();
 
 		messages = new Queue<string>(messageCount);
-		Network.logLevel = NetworkLogLevel.Full;
+#if UNITY_EDITOR
+		Network.logLevel = NetworkLogLevel.Informational;
+#endif
 
 
 	}
@@ -422,10 +436,12 @@ public class UnityNetworkManager : MonoBehaviour {
 			
 			// create new Player
 			Player newPlayer = new Player(netPlayer, cA);
-			
+			Debug.LogError(this.ToString() + " newPlayer Hash: " + newPlayer.GetHashCode());
 			// register newPlayer in PlayerDictionary
 			PlayerDictionaryManager._instance.AddPlayer(netPlayer, newPlayer);
 
+			Debug.LogError(this.ToString() + " newPlayer in Dictionary Hash: " + newPlayer.GetHashCode());
+			
 			if(onNewPlayerConnected != null)
 			{
 				// we have event listeners

@@ -480,8 +480,8 @@ public class CharacterAnimator {
 			string guidFolder = "";
 			if (!System.IO.Directory.Exists(accumulatedSystemFolder))
 			{
-				Debug.LogWarning (accumulatedSystemFolder + " existiert nicht!\n" + 
-				                  accumulatedUnityFolder + " existiert nicht!");
+				Debug.LogWarning (accumulatedSystemFolder + " Ordner existiert nicht!\n" + 
+				                  accumulatedUnityFolder + " Ordner existiert nicht!");
 				
 				Debug.Log("parentFolder = " + lastExistedFolder + " (letzter existierender Ordner)");
 				string guidParentFolder =  AssetDatabase.AssetPathToGUID(lastExistedFolder);
@@ -491,8 +491,8 @@ public class CharacterAnimator {
 					guidFolder = AssetDatabase.CreateFolder( lastExistedFolder, folder );							// TODO  ------------ WTF ordnerangabe geht!  GUID angabe geht nicht!!!!
 					if( guidFolder != "" )
 					{
-						Debug.Log (accumulatedSystemFolder + " wurder erfolgreich erstellt! \n" +
-						           accumulatedUnityFolder + " wurder erfolgreich erstellt! \n");
+						Debug.Log (accumulatedSystemFolder + " Ordner wurder erfolgreich erstellt! \n" +
+						           accumulatedUnityFolder + " Ordner wurder erfolgreich erstellt! \n");
 					}
 					else
 					{

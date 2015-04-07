@@ -92,10 +92,17 @@ public class NetworkedPlayer : MonoBehaviour
 
 	void Start()
 	{
-		return;
+		if(Network.peerType == NetworkPeerType.Disconnected)
+		{
+			showConnectionInfo = false;
+			return;
+		}
 
 		if(Network.isServer)
+		{
+			showConnectionInfo = false;
 			return;
+		}
 
 		if( ownerScript.owner == Network.player )
 		{

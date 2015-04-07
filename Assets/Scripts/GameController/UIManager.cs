@@ -182,7 +182,8 @@ public class UIManager : MonoBehaviour {
 
 		// greife auf Referenz zu und Update Slot
 		//TODO alternative suchen Start() muss vorher einmal ausgeführt werden (initialisierung)
-		player.UIStatsSlotScript.Start();
+		//player.UIStatsSlotScript.Awake();															// wird implizit mit Instantiate ausgeführt!
+		Debug.LogError(this.ToString() + " " + player.GetHashCode());
 		player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
 	}
 
