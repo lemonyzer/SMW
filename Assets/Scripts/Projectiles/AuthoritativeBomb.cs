@@ -46,7 +46,9 @@ public class AuthoritativeBomb : AuthoritativeProjectile {
 			}
 			return;
 		}
+#if UNITY_EDITOR
 		Debug.Log(other.gameObject.name);
+#endif
 		if(other.gameObject.layer == Layer.powerUp)
 		{
 			if(exploding)

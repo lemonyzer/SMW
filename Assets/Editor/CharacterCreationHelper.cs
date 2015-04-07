@@ -1305,7 +1305,7 @@ public class CharacterCreationHelper : EditorWindow {
 		else
 			pathRelativeToAssetsPath = "Prefabs/AutoGen Characters";
 
-		if (!AnimationHelper.CreateFolder (pathRelativeToAssetsPath))
+		if (!CharacterAnimator.CreateFolder (pathRelativeToAssetsPath))
 		{
 			Debug.LogError("Ordner " + pathRelativeToAssetsPath + " konnte nicht erstellt werden");
 			return null;

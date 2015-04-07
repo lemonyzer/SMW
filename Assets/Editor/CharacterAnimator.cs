@@ -98,8 +98,9 @@ public class CharacterAnimator {
 		controller.AddParameter(HashID.p_dead, AnimatorControllerParameterType.Bool);
 		
 		controller.AddParameter(HashID.p_spawn, AnimatorControllerParameterType.Bool);
-		controller.AddParameter(HashID.p_spawnProtection, AnimatorControllerParameterType.Bool);
-		controller.AddParameter(HashID.p_stopSpawnProtectionTrigger, AnimatorControllerParameterType.Trigger);
+		controller.AddParameter(HashID.p_Protection, AnimatorControllerParameterType.Bool);
+		controller.AddParameter(HashID.p_startProtectionTrigger, AnimatorControllerParameterType.Trigger);
+		controller.AddParameter(HashID.p_stopProtectionTrigger, AnimatorControllerParameterType.Trigger);
 		
 		controller.AddParameter(HashID.p_rageTrigger, AnimatorControllerParameterType.Trigger);
 		controller.AddParameter(HashID.p_rageModusBool, AnimatorControllerParameterType.Bool);
@@ -120,7 +121,7 @@ public class CharacterAnimator {
 		AnimatorState skidState = controller.layers[0].stateMachine.AddState(HashID.s_ChangeRunDirection);
 		//		skidState.motion = changeRunDirectionAnim;
 		
-		AnimatorState hittedState = controller.layers[0].stateMachine.AddState(HashID.s_Hitted);
+		AnimatorState hittedState = controller.layers[0].stateMachine.AddState(HashID.s_Generic_Hitted);
 		//		hittedState.motion = idleAnim;
 		
 		AnimatorState headJumpedState = controller.layers[0].stateMachine.AddState(HashID.s_HeadJumped);
@@ -133,9 +134,16 @@ public class CharacterAnimator {
 		//		deadState.motion = headJumpedAnim;
 		
 		AnimatorState spawnState = controller.layers[0].stateMachine.AddState(HashID.s_Generic_Spawn);
+		spawnState.AddStateMachineBehaviour(typeof(SpawnStateScript));	//TODO reference zu characterScript direct mitgeben???
+//		spawnState.AddStateMachineBehaviour(new SpawnStateScript());
+
+		AnimatorState spawnDelayState = controller.layers[0].stateMachine.AddState(HashID.s_Generic_SpawnDelay);
+		spawnDelayState.AddStateMachineBehaviour(typeof(SpawnDelayStateScript));	//TODO reference zu characterScript direct mitgeben???
+//		spawnState.AddStateMachineBehaviour(new SpawnDelayStateScript());
+
 		//		spawnState.motion = headJumpedAnim;
 		
-		AnimatorState spawnProtectionState = controller.layers[0].stateMachine.AddState(HashID.s_Generic_SpawnProtection);
+//		AnimatorState spawnProtectionState = controller.layers[0].stateMachine.AddState(HashID.s_Generic_SpawnProtection);
 		//		spawnProtectionState.motion = headJumpedAnim;
 		
 		
@@ -153,14 +161,18 @@ public class CharacterAnimator {
 		if (AssetDatabase.GetAssetPath(controller) != "")
 			AssetDatabase.AddObjectToAsset(newLayer.stateMachine, AssetDatabase.GetAssetPath(controller));
 		//Custom
-		newLayer.blendingMode = AnimatorLayerBlendingMode.Additive;
+		newLayer.blendingMode = AnimatorLayerBlendingMode.Override;
 		newLayer.defaultWeight = 1f;
 		controller.AddLayer(newLayer);
 
 
+		// Another Way:
+		//Animator anim;
+		//anim.SetLayerWeight (layerIndex, weight)
+
 //		// Auto Creating Layer & StateMachine  AddLayer(string)!!!
 //		controller.AddLayer(HashID.l_overlay);
-//		controller.layers[1].blendingMode = AnimatorLayerBlendingMode.Override;			// setzt für die zeit die es aktiv ist die variablen und wenn deaktiviert wird variable auf vorherigen wert gesetzt
+//		controller.layers[1].blendingMode = AnimatorLayerBlendingMode.Additive;			// setzt für die zeit die es aktiv ist die variablen und wenn deaktiviert wird variable auf vorherigen wert gesetzt
 //		controller.layers[1].defaultWeight = 1f;
 
 		if(controller.layers[1].stateMachine == null)
@@ -175,9 +187,9 @@ public class CharacterAnimator {
 //		controller.layers[1].defaultWeight = 1f;
 		AnimatorStateMachine overlayStateMachine = controller.layers[1].stateMachine;
 		
-		AnimatorState defaultOverlayState = overlayStateMachine.AddState(HashID.s_l1_defaultState);
+		AnimatorState defaultOverlayState = overlayStateMachine.AddState(HashID.s_l1_Generic_DefaultState);
 		AnimatorState invincibleOverlayState = overlayStateMachine.AddState(HashID.s_l1_Generic_Invincible);
-		AnimatorState spawnProtectionOverlayState = overlayStateMachine.AddState(HashID.s_l1_Generic_SpawnProtection);
+		AnimatorState protectionOverlayState = overlayStateMachine.AddState(HashID.s_l1_Generic_Protection);
 		
 		AnimatorStateTransition leaveInvincibleEnterDefaultState = invincibleOverlayState.AddTransition(defaultOverlayState);
 		//		leaveInvincibleEnterDefaultState.AddCondition(AnimatorConditionMode.If, 0, HashID.p_rageTrigger);
@@ -186,19 +198,19 @@ public class CharacterAnimator {
 		leaveInvincibleEnterDefaultState.exitTime = 1f;
 		leaveInvincibleEnterDefaultState.canTransitionToSelf = false;
 		
-		AnimatorStateTransition leaveSpawnProtectionEnterDefaultStateByTime = spawnProtectionOverlayState.AddTransition(defaultOverlayState);
+		AnimatorStateTransition leaveProtectionEnterDefaultStateByTime = protectionOverlayState.AddTransition(defaultOverlayState);
 		//		leaveInvincibleEnterDefaultState.AddCondition(AnimatorConditionMode.If, 0, HashID.p_rageTrigger);
-		leaveSpawnProtectionEnterDefaultStateByTime.duration = 0;
-		leaveSpawnProtectionEnterDefaultStateByTime.hasExitTime = true;			//TODO achtung byTime!
-		leaveSpawnProtectionEnterDefaultStateByTime.exitTime = 1f;
-		leaveSpawnProtectionEnterDefaultStateByTime.canTransitionToSelf = false;
+		leaveProtectionEnterDefaultStateByTime.duration = 0;
+		leaveProtectionEnterDefaultStateByTime.hasExitTime = true;			//TODO achtung byTime!
+		leaveProtectionEnterDefaultStateByTime.exitTime = 1f;
+		leaveProtectionEnterDefaultStateByTime.canTransitionToSelf = false;
 		
-		AnimatorStateTransition leaveSpawnProtectionEnterDefaultStateByTrigger = spawnProtectionOverlayState.AddTransition(defaultOverlayState);
-		leaveSpawnProtectionEnterDefaultStateByTrigger.AddCondition(AnimatorConditionMode.If, 0, HashID.p_stopSpawnProtectionTrigger);				//TODO defaultOverlayState muss kräfte invincible/spawnprotection entfernen??
-		leaveSpawnProtectionEnterDefaultStateByTrigger.duration = 0;
-		leaveSpawnProtectionEnterDefaultStateByTrigger.hasExitTime = false;
-		leaveSpawnProtectionEnterDefaultStateByTrigger.exitTime = 1f;
-		leaveSpawnProtectionEnterDefaultStateByTrigger.canTransitionToSelf = false;
+		AnimatorStateTransition leaveProtectionEnterDefaultStateByTrigger = protectionOverlayState.AddTransition(defaultOverlayState);
+		leaveProtectionEnterDefaultStateByTrigger.AddCondition(AnimatorConditionMode.If, 0, HashID.p_stopProtectionTrigger);				//TODO defaultOverlayState muss kräfte invincible/spawnprotection entfernen??
+		leaveProtectionEnterDefaultStateByTrigger.duration = 0;
+		leaveProtectionEnterDefaultStateByTrigger.hasExitTime = false;
+		leaveProtectionEnterDefaultStateByTrigger.exitTime = 1f;
+		leaveProtectionEnterDefaultStateByTrigger.canTransitionToSelf = false;
 		
 		// Overlay Layer : AnyState Transitions to InvincibleState
 		AnimatorStateTransition enterInvincibleOverlayerState = overlayStateMachine.AddAnyStateTransition(invincibleOverlayState);
@@ -210,12 +222,12 @@ public class CharacterAnimator {
 		
 		
 		// Overlay Layer : AnyState Transitions to ProtectionState
-		AnimatorStateTransition enterSpawnProtectionOverlayerState = overlayStateMachine.AddAnyStateTransition(spawnProtectionOverlayState);	//TODO rename SpawnProtection to Protection
-		enterSpawnProtectionOverlayerState.AddCondition(AnimatorConditionMode.If, 0, HashID.p_spawnProtection);
-		enterSpawnProtectionOverlayerState.duration = 0;
-		enterSpawnProtectionOverlayerState.hasExitTime = false;
-		enterSpawnProtectionOverlayerState.exitTime = 1f;
-		enterSpawnProtectionOverlayerState.canTransitionToSelf = false;
+		AnimatorStateTransition enterProtectionOverlayerState = overlayStateMachine.AddAnyStateTransition(protectionOverlayState);	//TODO rename SpawnProtection to Protection
+		enterProtectionOverlayerState.AddCondition(AnimatorConditionMode.If, 0, HashID.p_startProtectionTrigger);
+		enterProtectionOverlayerState.duration = 0;
+		enterProtectionOverlayerState.hasExitTime = false;
+		enterProtectionOverlayerState.exitTime = 1f;
+		enterProtectionOverlayerState.canTransitionToSelf = false;
 		
 		
 		
@@ -339,11 +351,7 @@ public class CharacterAnimator {
 		smwAnimations.Add(new SMWAnimation(charName+"_dynamic_Skid",		24,1,	smwCharacter.charSkidSprites,	WrapMode.Loop,	skidState));
 		smwAnimations.Add(new SMWAnimation(charName+"_dynamic_Die",			24,1,	smwCharacter.charDieSprites,	WrapMode.Loop,	deadState));
 		smwAnimations.Add(new SMWAnimation(charName+"_dynamic_HeadJumped",	24,1,	smwCharacter.charHeadJumpedSprites,	WrapMode.Loop,	headJumpedState));
-//		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Run",			25,2,	smwCharacter.charRunSprites,	WrapMode.Loop,	runState);
-//		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Jump",			1,1,	smwCharacter.charJumpSprites,	WrapMode.Loop,	jumpState);
-//		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Skid",			1,1,	smwCharacter.charSkidSprites,	WrapMode.Loop,	skidState);
-//		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_Die",			1,1,	smwCharacter.charDieSprites,	WrapMode.Loop,	deadState);
-//		smwAnimations[baseLayerStateCount++] = new SMWAnimation(charName+"_dynamic_HeadJumped",		1,1,	smwCharacter.charHeadJumpedSprites,	WrapMode.Loop, headJumpedState);
+
 		
 
 		for(int i=0; i < smwAnimations.Count; i++)
@@ -404,7 +412,7 @@ public class CharacterAnimator {
 
 		//TODO:: add Generic AnimationClips to characterAnimatorController
 		spawnState.motion = smwCharacterGenerics.spawnAnimClip;
-		spawnProtectionOverlayState.motion = smwCharacterGenerics.protectionAnimClip;
+		protectionOverlayState.motion = smwCharacterGenerics.protectionAnimClip;
 		invincibleOverlayState.motion = smwCharacterGenerics.rageAnimClip;
 		//TODO
 

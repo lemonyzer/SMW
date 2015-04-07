@@ -197,7 +197,7 @@ public class ReSpawnScript : MonoBehaviour {
 	{
 		if(!spawnProtection)
 		{
-			if(anim.GetCurrentAnimatorStateInfo(0).nameHash == HashID.spawnProtectionState)
+			if(anim.GetCurrentAnimatorStateInfo(0).nameHash == HashID.spawnState)
 			{
 				if(debugSpawn && myCharacter.name.StartsWith("Carbuncle"))
 					Debug.LogWarning("SpawnProtectionState");

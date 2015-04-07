@@ -76,7 +76,9 @@ public class Shoot : Power {
 //			Debug.Log("lastPowerTimeStamp " + lastPowerTimeStamp);
 //			Debug.Log("nextPowerTimeStamp " + nextPowerTimeStamp);
 //			Debug.Log("Network.time " + Network.time);
+			#if UNITY_EDITOR
 			Debug.LogWarning("wait... firerate = " + (1.0f/bulletToBulletTime) + " bullets/second");
+			#endif
 		}
 	}
 

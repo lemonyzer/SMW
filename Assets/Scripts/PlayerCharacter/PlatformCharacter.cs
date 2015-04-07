@@ -240,11 +240,34 @@ public class PlatformCharacter : MonoBehaviour {
 //		whatIsGround |= 1 << layer.destroyAbleBlock;
 //	}
 
+	void AnimatorScriptsInitialisierung()
+	{
+		SpawnStateScript spawnScript = anim.GetBehaviour<SpawnStateScript>();
+		if(spawnScript != null)
+		{
+			spawnScript.myCharacter = this;
+		}
+		else
+			Debug.LogError("spawnScript not found!!!");
+
+		SpawnDelayStateScript spawnDelayScript = anim.GetBehaviour<SpawnDelayStateScript>();
+		if(spawnDelayScript != null)
+		{
+			spawnDelayScript.myCharacter = this;
+		}
+		else
+			Debug.LogError("spawnDelayScript not found!!!");
+	}
+
+
 	/// <summary>
 	/// Start this instance.
 	/// </summary>
 	void Start() {
 		anim = GetComponent<Animator>();
+
+		AnimatorScriptsInitialisierung();
+
 		ownerScript = GetComponent<RealOwner>();
 
 		if(Application.loadedLevelName == "UnityNetworkRace")
@@ -450,12 +473,17 @@ public class PlatformCharacter : MonoBehaviour {
 //		}
 //	}
 
-	float gravity = 30; // 8
 	public Vector3 moveDirection = Vector3.zero;
+	[SerializeField]
+	float gravity = 30; // 8
+	[SerializeField]
 	float jumpPower = 14; // 7
 
+	[SerializeField]
 	private bool kinematic = false;
+	[SerializeField]
 	private bool overrideGrounded = false;
+	[SerializeField]
 	private bool overrideGroundedValue = false;
 
 
@@ -925,6 +953,24 @@ public class PlatformCharacter : MonoBehaviour {
 		// server erhält erst input wenn spieler !isDead
 	}
 
+	//TODO 
+	public void StartBetterSpawnDelay()
+	{
+												// unabhängig von animationslängen von vorherigen states nach einem treffer!!
+//		StartCoroutine(BetterSpawnDelay());		// aufruf wird von StateMachine SpawnDelayStateScript gefordert -> genauer!!!
+	}
+
+	IEnumerator BetterSpawnDelay()
+	{
+		#if UNITY_EDITOR
+		if(debugSpawn && this.transform.name.StartsWith("Carbuncle"))
+			Debug.LogWarning("CoRoutine: SpawnDelay()");
+		#endif
+		yield return new WaitForSeconds(reSpawnDelayTimeNetwork);
+		StartSpawnAnimation();
+	}
+
+
 	[RPC]
 	void SpawnAnimationDelay(Vector3 spawnPosition, NetworkMessageInfo info)
 	{
@@ -1011,69 +1057,80 @@ public class PlatformCharacter : MonoBehaviour {
 
 	public Material predictionMaterial;
 
-	void LateUpdate()
+//	void LateUpdate()
+//	{
+////		return;
+//		if(!spawnProtection)
+//		{
+////			Debug.Log("nicht in SparnProtection");
+//			if(anim.GetCurrentAnimatorStateInfo(0).fullPathHash == HashID.spawnState)
+////			if(anim.GetCurrentAnimatorStateInfo(0).nameHash == HashID.spawnProtectionState)
+//			{
+//				#if UNITY_EDITOR
+//				if(debugSpawn && this.transform.name.StartsWith("Carbuncle"))
+//					Debug.LogError("SpawnProtectionState");
+//				#endif
+//				spawnProtection = true;	// coroutine ist zu langsam, wird sonst zweimal gestartet!
+//				anim.SetTrigger(HashID.nextStateTrigger);	// spawnprotection state verlassen
+//				// Spawn Animation finished!
+//				// nach SpawnAnimation Collider & Trigger auf SpawnProtection setzen
+//				SpawnProtection();
+//				// SpawnProtection Timer starten
+//				
+//			}
+//
+//			if(powerPredictedAnimation)
+//			{
+////				Debug.LogWarning("in powerPredictedAnimation");
+//				
+////				spriteRenderer.color = predictedShootAnimation[powerPredictedAnimationState];		// wurde von Rage LateUpdate () übeschrieben!!! geht jetzt nicht mehr
+//																									// TODO andere powerPredictionAnimaation!!!
+//			}
+//			else
+//			{
+////				Debug.LogWarning("nicht in powerPredictedAnimation");
+//				
+////				spriteRenderer.color = new Color(1f,1f,1f,1f);
+//			}
+//		}
+//		else //if(spawnProtection)
+//		{
+//			Debug.LogWarning("in SparnProtection");
+//			// in spawnProtection
+//			//spriteRenderer.color = spawnProtectionAnimation[0];
+//		}
+//
+//
+//		if(isAuthoritativeHost())
+//		{
+//			lastReceivedPosRenderer.enabled = true;
+//			currentEstimatedPosOnServerRenderer.enabled = false;
+//			predictedPosCalculatedWithLastInputRenderer.enabled = false;
+//			predictedPosSimulatedWithLastInputRenderer.enabled = false;
+////			predictedPosV3Renderer.enabled = false;
+//			return;
+//		}
+//
+////		lastReceivedPosRenderer.sprite = spriteRenderer.sprite;					// other player character
+////		lastReceivedPosRenderer.color = new Color(0f,0f,0f,0.3f);
+////
+////		currentEstimatedPosOnServerRenderer.sprite = spriteRenderer.sprite;		// local player character
+////		currentEstimatedPosOnServerRenderer.color = new Color(0f,0f,0f,0.3f);
+////
+////		predictedPosCalculatedWithLastInputRenderer.sprite = spriteRenderer.sprite;		// other player character
+////		predictedPosCalculatedWithLastInputRenderer.color = new Color(0f,1f,0f,0.2f);
+////		predictedPosCalculatedWithLastInputRenderer.material = predictionMaterial;
+////
+////		predictedPosSimulatedWithLastInputRenderer.sprite = spriteRenderer.sprite;		// other player character
+////		predictedPosSimulatedWithLastInputRenderer.color = new Color(1f,0f,0f,0.2f);
+////		predictedPosCalculatedWithLastInputRenderer.material = predictionMaterial;
+//	}
+
+	public void Protection()
 	{
-		return;
-		if(!spawnProtection)
-		{
-			if(anim.GetCurrentAnimatorStateInfo(0).nameHash == HashID.spawnProtectionState)
-			{
-				#if UNITY_EDITOR
-				if(debugSpawn && this.transform.name.StartsWith("Carbuncle"))
-					Debug.LogWarning("SpawnProtectionState");
-				#endif
-				spawnProtection = true;	// coroutine ist zu langsam, wird sonst zweimal gestartet!
-				anim.SetTrigger(HashID.nextStateTrigger);	// spawnprotection state verlassen
-				// Spawn Animation finished!
-				// nach SpawnAnimation Collider & Trigger auf SpawnProtection setzen
-				SpawnProtection();
-				// SpawnProtection Timer starten
-				
-			}
+		anim.SetTrigger(HashID.startProtectionTrigger);
+//		anim.SetBool(HashID.protectionBool,true);
 
-			if(powerPredictedAnimation)
-			{
-				spriteRenderer.color = predictedShootAnimation[powerPredictedAnimationState];
-			}
-			else
-			{
-				spriteRenderer.color = new Color(1f,1f,1f,1f);
-			}
-		}
-		else //if(spawnProtection)
-		{
-			// in spawnProtection
-			spriteRenderer.color = spawnProtectionAnimation[0];
-		}
-
-
-		if(isAuthoritativeHost())
-		{
-			lastReceivedPosRenderer.enabled = true;
-			currentEstimatedPosOnServerRenderer.enabled = false;
-			predictedPosCalculatedWithLastInputRenderer.enabled = false;
-			predictedPosSimulatedWithLastInputRenderer.enabled = false;
-//			predictedPosV3Renderer.enabled = false;
-			return;
-		}
-
-//		lastReceivedPosRenderer.sprite = spriteRenderer.sprite;					// other player character
-//		lastReceivedPosRenderer.color = new Color(0f,0f,0f,0.3f);
-//
-//		currentEstimatedPosOnServerRenderer.sprite = spriteRenderer.sprite;		// local player character
-//		currentEstimatedPosOnServerRenderer.color = new Color(0f,0f,0f,0.3f);
-//
-//		predictedPosCalculatedWithLastInputRenderer.sprite = spriteRenderer.sprite;		// other player character
-//		predictedPosCalculatedWithLastInputRenderer.color = new Color(0f,1f,0f,0.2f);
-//		predictedPosCalculatedWithLastInputRenderer.material = predictionMaterial;
-//
-//		predictedPosSimulatedWithLastInputRenderer.sprite = spriteRenderer.sprite;		// other player character
-//		predictedPosSimulatedWithLastInputRenderer.color = new Color(1f,0f,0f,0.2f);
-//		predictedPosCalculatedWithLastInputRenderer.material = predictionMaterial;
-	}
-
-	void SpawnProtection()
-	{
 		headCollider2D.enabled = false;
 		feetCollider2D.enabled = true;		// kann angreifen
 		//bodyCollider2D.enabled = false;										// zwischen body und world stopper unterscheiden?
