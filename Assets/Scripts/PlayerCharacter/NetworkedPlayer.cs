@@ -826,10 +826,15 @@ public class NetworkedPlayer : MonoBehaviour
 		// if Owner is Client, send to all Players (not only to Server!!!)
 		if (stream.isWriting)
 		{
-			Vector3 authoritativePos = transform.position;				// authorative calculated position
+			float authoritativePosX = transform.position.x;
+			float authoritativePosY = transform.position.y;
+			//save bandwidth
+			//Vector3 authoritativePos = transform.position;				// authorative calculated position
 			float receivedHorizontal = inputScript.inputHorizontal;		// received input from the character owner send to all clients (for prediction use and animation)
 			bool receivedInputJump = inputScript.inputJump;				// received input from the character owner send to all clients (for prediction use and animation)
-			stream.Serialize(ref authoritativePos);
+//			stream.Serialize(ref authoritativePos);
+			stream.Serialize(ref authoritativePosX);
+			stream.Serialize(ref authoritativePosY);
 			stream.Serialize(ref receivedHorizontal);
 			stream.Serialize(ref receivedInputJump);
 		}
@@ -837,11 +842,17 @@ public class NetworkedPlayer : MonoBehaviour
 		else
 		{
 			Vector3 authoritativePos = Vector3.zero;
+			float authoritativePosX = 0.0f;
+			float authoritativePosY = 0.0f;
 			float receivedHorizontal = 0;
 			bool receivedInputJump = false;
-			stream.Serialize(ref authoritativePos);
+//			stream.Serialize(ref authoritativePos);
+			stream.Serialize(ref authoritativePosX);
+			stream.Serialize(ref authoritativePosY);
 			stream.Serialize(ref receivedHorizontal);
 			stream.Serialize(ref receivedInputJump);
+
+			authoritativePos = new Vector3(authoritativePosX, authoritativePosY, 0.0f);
 
 			// Update: netUpdates buffers now also on local player character to get current TripTime :://TODO DONE and latest pos ( lastrecvdPos
 

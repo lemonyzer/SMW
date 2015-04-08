@@ -31,10 +31,16 @@ public class SmwCharacterList : ScriptableObject {
 	}
 
 
+	/**
+	 * ArgumentException: ToString can only be called from the main thread.
+	 * Constructors and field initializers will be executed from the loading thread when loading a scene.
+	 * Don't use this function in the constructor or field initializers, instead move initialization code to the Awake or Start function.
+	 * SmwCharacterList..ctor () (at Assets/Scripts/_Character/SmwCharacterList.cs:36)
+	 **/
 	public SmwCharacterList()
 	{
-		Debug.LogWarning(this.ToString() + " Konstruktor () - > ScriptableObject erzeugt");		// wird auch at Runtime ausgeführt
-		Check();
+//		Debug.LogWarning(this.ToString() + " Konstruktor () - > ScriptableObject erzeugt");		// wird auch at Runtime ausgeführt
+//		Check();
 	}
 
 	public void Awake()

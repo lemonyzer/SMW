@@ -5,6 +5,8 @@ public class BreakableBlock : MonoBehaviour {
 	
 	public string targetTag = "Head";
 
+	public bool breakTriggered = false;
+
 	public AudioClip destroyBlockSound;
 	public GameObject destroyedBlockPrefab;
 	public float destroyedBlockPrefabStayTime = 5.0f;
@@ -33,6 +35,9 @@ public class BreakableBlock : MonoBehaviour {
 	{
 		if(Network.isServer)
 		{
+			if(breakTriggered)
+				return;
+
 			Debug.Log("OnTriggerEnter2D: " + other.name);
 			if(other.gameObject.layer == Layer.head)
 			{
@@ -40,16 +45,21 @@ public class BreakableBlock : MonoBehaviour {
 				Debug.Log("Parent: " + other.gameObject.transform.parent.name);
 				if(HeadTriggerUnderBlock(other))
 				{
+
 					// velocity funktioniert nicht, da Player Collider mit BlockCollider collidiert und velocity = 0 setzt!
-					if(other.gameObject.transform.parent.GetComponent<Rigidbody2D>().velocity.y >= 0f)			// nur zerstören wenn Spieler nach oben springt
-					{
+//					if(other.gameObject.transform.parent.GetComponent<Rigidbody2D>().velocity.y >= 0f)			// nur zerstören wenn Spieler nach oben springt
+//					{
 //						other.gameObject.transform.parent.rigidbody2D.velocity = Vector2.zero;	// collision simulieren (player stoppt bei trigger erkennung kurz)
-						myNView.RPC("Breaking", RPCMode.AllBuffered);				// all buffered, level is changeing!!
-					}
-					else
-					{
-						Debug.LogError(this.ToString() + ": nicht gesprungen!");
-					}
+						breakTriggered = true;	
+						myNView.RPC("Breaking", RPCMode.All);				// all buffered, level is changeing!!
+
+						
+						Network.Destroy(myNView.viewID);					// this one is buffered!!!
+//					}
+//					else
+//					{
+//						Debug.LogError(this.ToString() + ": nicht gesprungen!");
+//					}
 				}
 			}
 		}
