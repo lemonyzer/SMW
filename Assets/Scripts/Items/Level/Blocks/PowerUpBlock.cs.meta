@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 4f8cfd1e1664c574087d04c0680b3602
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - powerUpReleaseSound: {fileID: 8300000, guid: c3ec25b23331eae408e58215b22de1e9,
+      type: 3}
+  - powerUpReloadedSound: {fileID: 8300000, guid: 22cd03809c013a245bdf6c341b9653ab,
+      type: 3}
+  - powerup: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 

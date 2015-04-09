@@ -1,6 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+/**
+	 * This function works only on ARGB32, RGB24 and Alpha8 texture formats.
+	 * For other formats SetPixel is ignored.
+	 * The texture also has to have Read/Write Enabled flag set in the import settings.
+	 * See Also: SetPixels, GetPixel, Apply.
+	 **/
+
 public class Team
 {
 	
