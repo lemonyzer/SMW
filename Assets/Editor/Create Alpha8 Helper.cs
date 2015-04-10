@@ -12,6 +12,7 @@ public class CreateAlpha8Helper : EditorWindow {
 		GetWindow (typeof (CreateAlpha8Helper));
 	}
 
+	int spritePixelsPerUnit = 32;
 	bool useSpreizFaktor = false;
 	Texture2D mOriginalTexture = EditorGUIUtility.whiteTexture;
 	int colorPaletteSize = 30;
@@ -349,13 +350,19 @@ public class CreateAlpha8Helper : EditorWindow {
 			{
 				testTexture.alphaIsTransparency = true;
 				if(spriteRenderer)
-					spriteRenderer.sprite.texture.alphaIsTransparency = true;
+				{
+					if(spriteRenderer.sprite)
+						spriteRenderer.sprite.texture.alphaIsTransparency = false;
+				}
 			}
 			else
 			{
 				testTexture.alphaIsTransparency = true;
 				if(spriteRenderer)
-					spriteRenderer.sprite.texture.alphaIsTransparency = true;
+				{
+					if(spriteRenderer.sprite)
+						spriteRenderer.sprite.texture.alphaIsTransparency = true;
+				}
 			}
 			//Repaint();	// repaint GUI zeichnet immer alpha kanal, preview texture nutzt alphakanal nicht
 		}
@@ -421,7 +428,7 @@ public class CreateAlpha8Helper : EditorWindow {
 
 			Color32[] palette = CreateColorPalette(mOriginalTexture);
 
-			testTexture.SetPixels32(CreateColorMap(mOriginalTexture, palette).GetPixels32());
+			testTexture.SetPixels32(CreateColorMap(mOriginalTexture, palette, mTextureFormat).GetPixels32());
 
 //			GreyScale(mUseRed, mUseGreen, mUseBlue, mUseAlpha, mRedConst, mRedConstValue, mAlphaConst, mAlphaConstValue, mUseAlphaFromGreyscale);
 
@@ -619,7 +626,7 @@ public class CreateAlpha8Helper : EditorWindow {
 		Color32[] spriteColorPalette = CreateColorPalette(texture);
 
 		// erstelle colorMap von original Sprite und ColoPalette
-		Texture2D colorMap = CreateColorMap(texture, spriteColorPalette);
+		Texture2D colorMap = CreateColorMap(texture, spriteColorPalette, mColorPaletteFormat);
 		if(colorMap == null)
 		{
 			Debug.LogError ("colorMap == null");
@@ -671,14 +678,40 @@ public class CreateAlpha8Helper : EditorWindow {
 
 //		Debug.LogWarning(spritePath);
 
-		string relPathColorPalete = spritePath + "_colorPalette_" + colorPaletteTexture.format.ToString() + ".png";
+		string relPathColorPalette = spritePath + "_colorPalette_" + colorPaletteTexture.format.ToString() + ".png";
 //		Debug.LogWarning(relPathColorPalete);
-		GenerateAssetFromTexture(colorPaletteTexture, relPathColorPalete, mColorPaletteImportSettings);
+		string uniqueColorPalettePath = GenerateAssetFromTexture(colorPaletteTexture, relPathColorPalette, mColorPaletteImportSettings);
 
 		string relPathColorMap = spritePath + "_colorMap_" + colorMap.format.ToString() + ".png";
 //		Debug.LogWarning(relPathColorMap);
-		GenerateAssetFromTexture(colorMap, relPathColorMap, mColorMapImportSettings);
+		string uniqueColorMapPath = GenerateAssetFromTexture(colorMap, relPathColorMap, mColorMapImportSettings);
 		
+
+		if(spriteRenderer != null)
+		{
+//			 Get Imported Texture
+
+			// V1
+
+			// lade asset als texture2d
+//			Texture2D tex = AssetDatabase.LoadAssetAtPath(relPathColorMap, typeof(Texture2D)) as Texture2D;
+			// mache ein sprite daraus
+//			Sprite colorMapSprite = Sprite.Create(tex, new Rect(0,0,tex.width,tex.height), new Vector2(0.5f,0.5f), spritePixelsPerUnit);
+			// zeige an SpriteRenderer
+//			spriteRenderer.sprite = colorMapSprite;
+			
+
+			// V2
+			// lade asset als Sprite
+			Sprite sprite = AssetDatabase.LoadAssetAtPath(uniqueColorMapPath, typeof(Sprite)) as Sprite;
+			// zeige an SpriteRenderer
+			spriteRenderer.sprite = sprite;
+			
+		}
+		else
+		{
+			Debug.LogError ("SpriteRenderer not selected!");
+		}
 
 		// Application.dataPath ohne /Assets
 //		string absPathColorMap = Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length) + spritePath + "_colorPalette_" + colorPaletteTexture.format.ToString() + ".png";
@@ -696,7 +729,7 @@ public class CreateAlpha8Helper : EditorWindow {
 	public Color32[] CreateColorPalette(Texture2D texture)
 	{
 		//		Texture2D copyTexture = new Texture2D(texture.width, texture.height, TextureFormat.Alpha8, false);
-		Color32[] copyColorArray = texture.GetPixels32();
+//		Color32[] copyColorArray = texture.GetPixels32();
 		
 		//		texture.filterMode = FilterMode.Point;
 		//		texture.wrapMode = TextureWrapMode.Clamp;
@@ -749,9 +782,9 @@ public class CreateAlpha8Helper : EditorWindow {
 	//	Unsupported texture format - needs to be ARGB32, RGBA32, RGB24, Alpha8 or one of float formats
 	//	UnityEngine.Texture2D:SetPixel(Int32, Int32, Color)
 
-	public Texture2D CreateColorMap(Texture2D texture, Color32[] colorPalette)
+	public Texture2D CreateColorMap(Texture2D texture, Color32[] colorPalette, TextureFormat textureFormat)
 	{
-		Texture2D mapTexture = new Texture2D(texture.width, texture.height, mColorMapFormat, false);		//TODO Alpha8 8bit			MIPMAP //TODO//TODO//TODO//TODO//TODO//TODO//TODO
+		Texture2D mapTexture = new Texture2D(texture.width, texture.height, textureFormat, false);		//TODO Alpha8 8bit			MIPMAP //TODO//TODO//TODO//TODO//TODO//TODO//TODO
 		if (!isTexturAccessable(mapTexture))
 		{
 			Debug.Log("mapTexture wrong TexturFormat!");
@@ -773,7 +806,7 @@ public class CreateAlpha8Helper : EditorWindow {
 
 //		List<string> msgs = new List<string>();
 		string msg ="";
-		for (int i=0; i < colorCount; i++)
+		for (int i=0; i < colorCount && i < colorPaletteSize; i++)
 		{
 //			msgs.Add("colorPalette["+i+"]="+colorPalette[i].ToString()+" -> "+i*intSpreizFaktor);
 			msg += "colorPalette["+i+"]="+colorPalette[i].ToString()+" -> "+i*intSpreizFaktor+"\n";
@@ -928,7 +961,7 @@ public class CreateAlpha8Helper : EditorWindow {
 //			}
 		}
 		// code wird nur erreich wenn color noch nicht in colorPalette
-		Debug.LogWarning("Schleife zu Ende, keine Farbe in Palette gefunden!");
+//		Debug.LogWarning("Schleife zu Ende, keine Farbe in Palette gefunden!");
 		return -1;
 	}
 
@@ -971,7 +1004,7 @@ public class CreateAlpha8Helper : EditorWindow {
 //		return 0;
 		if(index < 0 || index >= colorPalette.Length)
 		{
-			Debug.LogError("index ausßerhalb colorPalette size!!");
+			Debug.LogError("index "+index+" ausßerhalb colorPalette size "+ colorPaletteSize);
 			return false;
 		}
 		else
@@ -1008,7 +1041,7 @@ public class CreateAlpha8Helper : EditorWindow {
 
 
 
-	void GenerateAssetFromTexture(Texture2D texture, string relPath, TextureImporterSettings textureImporterSettings)
+	string GenerateAssetFromTexture(Texture2D texture, string relPath, TextureImporterSettings textureImporterSettings)
 	{
 		string AssetPath = AssetDatabase.GenerateUniqueAssetPath(relPath);
 		
@@ -1025,7 +1058,9 @@ public class CreateAlpha8Helper : EditorWindow {
 
 		ConfigureForAdvancedTexture(AssetPath, textureImporterSettings);
 		// Get Imported Texture
-		//Texture2D tex = AssetDatabase.LoadAllAssetsAtPath(AssetPath, typeof(Texture2D)) as Texture2D;
+		//Texture2D tex = AssetDatabase.LoadAssetAtPath(AssetPath, typeof(Texture2D)) as Texture2D;
+
+		return AssetPath;
 	}
 
 	void ConfigureForAdvancedTexture(string assetPath, TextureImporterSettings textureImporterSettings)
@@ -1043,6 +1078,7 @@ public class CreateAlpha8Helper : EditorWindow {
 		tiSettings.filterMode = FilterMode.Point;
 		tiSettings.wrapMode = TextureWrapMode.Clamp;
 		tiSettings.npotScale = TextureImporterNPOTScale.None;
+		tiSettings.spritePixelsPerUnit = spritePixelsPerUnit;
 		TexImport.SetTextureSettings(tiSettings);
 		//Save changes
 		AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
