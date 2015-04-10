@@ -146,7 +146,7 @@ public class ColorScript : MonoBehaviour {
 
 	SpriteRenderer spriteRenderer;
 
-	int colorId = 0;
+	public int colorId = 0;
 	int mColorCount = 4;
 	int mColorIntensityCount = 3;
 
@@ -160,18 +160,18 @@ public class ColorScript : MonoBehaviour {
 	
 	}
 
-	void OnGUI()
-	{
-		if (GUILayout.Button ("Change Color"))
-		{
-			EditSpriteRendererSprite(spriteRenderer, colorId);
-			colorId++;
-			colorId = colorId % mColorCount;
-//			Debug.Log(colorId);
-		}
-	}
+//	void OnGUI()
+//	{
+//		if (GUILayout.Button ("Change Color"))
+//		{
+//			EditSpriteRendererSprite(spriteRenderer, colorId);
+//			colorId++;
+//			colorId = colorId % mColorCount;
+////			Debug.Log(colorId);
+//		}
+//	}
 
-	void EditSpriteRendererSprite (SpriteRenderer fSpriteRenderer, int fColorId)
+	public void EditSpriteRendererSprite (SpriteRenderer fSpriteRenderer, int fColorId)
 	{
 		ModifyTexture2D(fSpriteRenderer.sprite.texture, fColorId);
 	}
