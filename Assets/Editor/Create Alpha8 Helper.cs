@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 using UnityEditor;
 
@@ -12,12 +13,13 @@ public class CreateAlpha8Helper : EditorWindow {
 	}
 
 	bool useSpreizFaktor = false;
-	Texture2D originalTexture = EditorGUIUtility.whiteTexture;
+	Texture2D mOriginalTexture = EditorGUIUtility.whiteTexture;
 	int colorPaletteSize = 30;
 	int minColorPaletteSize = 1;
 	int maxColorPaletteSize = 255;
 	int colorCount = 0;
 	bool ignoreSourceAlphaChannel = false;
+	int ignoreSourceAlphaChannelValue = 255;
 	bool overrideSourceAlpha = false;	// macht keinen sinn
 	int overrideAlphaValue = 255;		// 255 = full visible, 0 = transparent
 
@@ -32,7 +34,7 @@ public class CreateAlpha8Helper : EditorWindow {
 
 	// Color Map
 	TextureImporterFormat mColorMapImportFormat = TextureImporterFormat.Alpha8;
-	TextureFormat mColorMapFormat = TextureFormat.Alpha8;			
+	TextureFormat mColorMapFormat = TextureFormat.RGB24;			
 	// Color Map Channels
 	// Color.this[int]
 	// Access the r, g, b, a components using [0], [1], [2], [3] respectively.
@@ -88,7 +90,7 @@ public class CreateAlpha8Helper : EditorWindow {
 		mColorPaletteImportSettings = new TextureImporterSettings();
 		int lastValue = -10101;
 		lastValue = GetLastUsedFormat(CmColorPaletteImportSettingsTextureFormat);
-		Debug.Log("lastValue = " + lastValue);
+//		Debug.Log("lastValue = " + lastValue);
 		if( lastValue != -10101)
 			mColorPaletteImportSettings.textureFormat = (TextureImporterFormat) lastValue;
 		else
@@ -99,7 +101,7 @@ public class CreateAlpha8Helper : EditorWindow {
 		mColorMapImportSettings = new TextureImporterSettings();
 		lastValue = -10101;
 		lastValue = GetLastUsedFormat(CmColorMapImportSettingsTextureFormat);
-		Debug.Log("lastValue = " + lastValue);
+//		Debug.Log("lastValue = " + lastValue);
 		if( lastValue != -10101)
 			mColorMapImportSettings.textureFormat = (TextureImporterFormat) lastValue;			// kann auch negativ werden
 		else
@@ -127,7 +129,7 @@ public class CreateAlpha8Helper : EditorWindow {
 		invertedTexture.Apply();
 	}
 
-	void GreyScale(bool useRed, bool useGreen, bool useBlue, bool useAlpha, bool redConst, int redValue, bool alphaConst, int alphaValue) { 
+	void GreyScale(bool useRed, bool useGreen, bool useBlue, bool useAlpha, bool redConst, int redValue, bool alphaConst, int alphaValue, bool alphaFromGreyscale) { 
 		for (int y = 0; y < testTexture.height; y++)
 		{
 			for (int x = 0 ; x < testTexture.width; x++)
@@ -149,11 +151,18 @@ public class CreateAlpha8Helper : EditorWindow {
 				if(useBlue)
 					newColor.b = greyValue;
 
-				if(useAlpha)
-					newColor.a = greyValue;
-				// const alphaValue
-				if(alphaConst)
-					newColor.a = (byte) alphaValue;
+				if(alphaFromGreyscale)
+				{
+					newColor.a = (byte) Mathf.FloorToInt (1.0f/3.0f * (newColor.r + newColor.g + newColor.b)) ;
+				}
+				else
+				{
+					if(useAlpha)
+						newColor.a = greyValue;
+					// const alphaValue
+					if(alphaConst)
+						newColor.a = (byte) alphaValue;
+				}
 
 				testTexture.SetPixel(x,y, newColor);
 			}
@@ -176,14 +185,59 @@ public class CreateAlpha8Helper : EditorWindow {
 	bool mUseGreen = false;
 	bool mUseBlue = false;
 	bool mUseAlpha = false;
+	bool mUseAlphaFromGreyscale = false;
+	bool mUseBypassSRGBSampling = false;
 	bool mAlphaConst = false;
 	int mAlphaConstValue = 255;
 	bool mAlphaIsTransparency = false;
 
 	bool mOverrideMipMap = false;
 	bool mOverrideMipMapValue = false;
-	
 
+	// Textur
+	bool isTexturFormatNotUsingAlpha(TextureFormat textureFormat)
+	{
+		if (textureFormat == TextureFormat.RGB24 ||
+		    textureFormat == TextureFormat.RGB565 ||
+		    textureFormat == TextureFormat.RFloat ||
+		    textureFormat == TextureFormat.RGFloat)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	// TexturImporter
+	bool isTexturImporterFormatAccessable(TextureImporterFormat textureFormat)
+	{
+		if (textureFormat == TextureImporterFormat.Alpha8 ||
+		    textureFormat == TextureImporterFormat.RGBA16 ||
+//		    textureFormat == TextureImporterFormat.RGBA4444 ||
+		    textureFormat == TextureImporterFormat.ARGB16 ||
+//		    textureFormat == TextureImporterFormat.ARGB4444 ||
+		    textureFormat == TextureImporterFormat.ARGB32 ||
+		    textureFormat == TextureImporterFormat.RGBA32 ||
+		    textureFormat == TextureImporterFormat.RGB24 ||
+		    textureFormat == TextureImporterFormat.RGB16 ||
+		    textureFormat == TextureImporterFormat.AutomaticTruecolor)
+//		    textureFormat == TextureImporterFormat.RFloat ||
+//		    textureFormat == TextureImporterFormat.RGBAFloat ||
+//		    textureFormat == TextureImporterFormat.RGFloat)
+		{
+//			Debug.Log (textureFormat.ToString());
+			return true;
+		}
+		else
+		{
+			Debug.LogError("wrong TextureImporterFormat (" + textureFormat + ")");
+			return false;
+		}
+	}
+
+	// Textur
 	bool isTexturFormatAccessable(TextureFormat textureFormat)
 	{
 		if (textureFormat == TextureFormat.Alpha8 ||
@@ -192,11 +246,12 @@ public class CreateAlpha8Helper : EditorWindow {
 		    textureFormat == TextureFormat.ARGB32 ||
 		    textureFormat == TextureFormat.RGBA32 ||
 		    textureFormat == TextureFormat.RGB24 ||
+		    textureFormat == TextureFormat.RGB565 ||
 		    textureFormat == TextureFormat.RFloat ||
 		    textureFormat == TextureFormat.RGBAFloat ||
 		    textureFormat == TextureFormat.RGFloat)
 		{
-			Debug.Log (textureFormat.ToString());
+//			Debug.Log (textureFormat.ToString());
 			return true;
 		}
 		else
@@ -206,13 +261,37 @@ public class CreateAlpha8Helper : EditorWindow {
 		}
 	}
 
-	void OnGUI_OriginalTexurePreview()
+	void OnGUI_OriginalTexurePreview(bool fAccessable)
 	{
-		if(originalTexture) {
+		if(!fAccessable)
+			return;
+
+		if(mOriginalTexture) {
 			EditorGUI.PrefixLabel(new Rect(25,45,192,32),3,new GUIContent("Preview:"));
-			EditorGUI.DrawPreviewTexture(new Rect(25,60,192,32),originalTexture);
-			EditorGUI.PrefixLabel(new Rect(192 + 25 + 25,45,192,32),2,new GUIContent("Alpha:"));
-			EditorGUI.DrawTextureAlpha(new Rect(192 + 25 + 25,60,192,32),originalTexture);
+			EditorGUI.DrawPreviewTexture(new Rect(25,60,192,32),mOriginalTexture);
+			EditorGUI.PrefixLabel(new Rect(192 + 25 + 25,45,192,32),2,new GUIContent("Alpha " + mOriginalTexture.format.ToString()));
+			
+			if (isTexturFormatNotUsingAlpha(mOriginalTexture.format))
+			{
+				EditorGUI.PrefixLabel(new Rect(192 + 25 + 25,15,250,32),22, new GUIContent("TextureFormat ignoriert Alpha-Kanal"));
+				
+				if (!mOriginalTexture.alphaIsTransparency &&
+				    !mOriginalTextureImporter.alphaIsTransparency &&
+				    !mOriginalTextureImporter.grayscaleToAlpha)
+				{
+					GUI.Label(new Rect(192 + 25 + 25,30,260,32), "grey AND alphaIsTransparency == OFF", EditorStyles.boldLabel);
+				}
+				else
+				{
+					GUI.Label(new Rect(192 + 25 + 25,30,260,32), "grey OR alphaIsTransparency == ON", EditorStyles.boldLabel);
+					EditorGUI.DrawTextureAlpha(new Rect(192 + 25 + 25,60,192,32),mOriginalTexture);
+				}
+
+			}
+			else
+			{
+				EditorGUI.DrawTextureAlpha(new Rect(192 + 25 + 25,60,192,32),mOriginalTexture);
+			}
 			EditorGUI.PrefixLabel(new Rect(192 + 25 + 25 + 192 + 25 + 25,45,192,32),0,new GUIContent("Inverted:"));
 			if(showInverted)
 				EditorGUI.DrawPreviewTexture(new Rect(192 + 25 + 25 + 192 + 25 + 25,60,192,32),invertedTexture);
@@ -227,12 +306,12 @@ public class CreateAlpha8Helper : EditorWindow {
 			if(invertedTexture)
 				DestroyImmediate(invertedTexture);
 			//Copy the new texture
-			invertedTexture = new Texture2D(originalTexture.width, 
-			                                originalTexture.height, 
-			                                originalTexture.format, 
-			                                (originalTexture.mipmapCount != 0));
-			for (int m = 0; m < originalTexture.mipmapCount; m++) 
-				invertedTexture.SetPixels(originalTexture.GetPixels(m), m);
+			invertedTexture = new Texture2D(mOriginalTexture.width, 
+			                                mOriginalTexture.height, 
+			                                mOriginalTexture.format, 
+			                                (mOriginalTexture.mipmapCount != 0));
+			for (int m = 0; m < mOriginalTexture.mipmapCount; m++) 
+				invertedTexture.SetPixels(mOriginalTexture.GetPixels(m), m);
 			InvertColors();
 			showInverted = true;
 		}
@@ -242,10 +321,11 @@ public class CreateAlpha8Helper : EditorWindow {
 	void OnGUI_TestTexture()
 	{
 		if(testTexture) {
-			EditorGUI.PrefixLabel(			new Rect(256,128,100,15), 0, new GUIContent("Test Texture:"));			// 0 gibt an SortingLayer an
-			EditorGUI.DrawPreviewTexture(	new Rect(256,128,256,256), testTexture);
-			EditorGUI.PrefixLabel(			new Rect(256+25,128,100,15), 0, new GUIContent("Alpha:"));			// 0 gibt an SortingLayer an
-			EditorGUI.DrawTextureAlpha(		new Rect(256+256+25,128,256,256), testTexture);
+			EditorGUI.PrefixLabel(			new Rect(256,148,100,15), 10, new GUIContent("Test Texture:"));			// 0 gibt an SortingLayer an
+			EditorGUI.DrawPreviewTexture(	new Rect(256,160,testTexture.width, testTexture.height), testTexture);
+
+			EditorGUI.PrefixLabel(			new Rect(256+256+25,148,100,15), 11, new GUIContent("Alpha:"));			// 0 gibt an SortingLayer an
+			EditorGUI.DrawTextureAlpha(		new Rect(256+256+25,160,testTexture.width, testTexture.height), testTexture);
 		}
 
 		spriteRenderer = EditorGUILayout.ObjectField("Sprite Renderer", spriteRenderer, typeof(SpriteRenderer), true) as SpriteRenderer;
@@ -255,6 +335,8 @@ public class CreateAlpha8Helper : EditorWindow {
 			mRedConstValue = EditorGUILayout.IntSlider("Red Value", mRedConstValue, 0, 255);
 		mUseGreen = GUILayout.Toggle(mUseGreen, "use Green Channel");
 		mUseBlue = GUILayout.Toggle(mUseBlue, "use Blue Channel");
+		mUseAlphaFromGreyscale = GUILayout.Toggle(mUseAlphaFromGreyscale, "use Alpha From Greyscale");
+		mUseBypassSRGBSampling = GUILayout.Toggle(mUseBypassSRGBSampling, "use Bypass sRGB Sampling");
 		mUseAlpha = GUILayout.Toggle(mUseAlpha, "use Alpha Channel");
 		mAlphaConst = GUILayout.Toggle(mAlphaConst, "Alpha Konstant?");
 		if(mAlphaConst)
@@ -292,7 +374,7 @@ public class CreateAlpha8Helper : EditorWindow {
 		}
 		
 		
-		if(GUILayout.Button("Process GreyScale Alpha8"))
+		if(GUILayout.Button("Process Test Texture"))
 		{
 			if(testTexture)
 				DestroyImmediate(testTexture);
@@ -307,31 +389,137 @@ public class CreateAlpha8Helper : EditorWindow {
 			                            testTextureHeight, 
 			                            mTextureFormat,
 			                            mipmap);
-			GreyScale(mUseRed, mUseGreen, mUseBlue, mUseAlpha, mRedConst, mRedConstValue, mAlphaConst ,mAlphaConstValue);
+			GreyScale(mUseRed, mUseGreen, mUseBlue, mUseAlpha, mRedConst, mRedConstValue, mAlphaConst, mAlphaConstValue, mUseAlphaFromGreyscale);
 			showTestTexture = true;
 
 			if(spriteRenderer != null)
 			{
+				//testTexture.filterMode = Filterm //TODO
 				Sprite greyScaleSprite = Sprite.Create(testTexture, new Rect(0,0,testTexture.width,testTexture.height), new Vector2(0.5f,0.5f), testTexture.width);
+
 				spriteRenderer.sprite = greyScaleSprite;
 
 			}
 		}
+		if(!mOriginalTexture)
+			return;
+		if(GUILayout.Button("Process Original Texture"))
+		{
+			if(testTexture)
+				DestroyImmediate(testTexture);
+			else
+				testTexture = EditorGUIUtility.whiteTexture;
+			//Copy the new texture
+			//			bool mipmap = (originalTexture.mipmapCount != 0);
+			bool mipmap = (mOriginalTexture.mipmapCount != 0);
+			if(mOverrideMipMap)
+				mipmap = mOverrideMipMapValue;
+			testTexture = new Texture2D(mOriginalTexture.width, 
+			                            mOriginalTexture.height, 
+			                            mTextureFormat,
+			                            mipmap);
+
+			Color32[] palette = CreateColorPalette(mOriginalTexture);
+
+			testTexture.SetPixels32(CreateColorMap(mOriginalTexture, palette).GetPixels32());
+
+//			GreyScale(mUseRed, mUseGreen, mUseBlue, mUseAlpha, mRedConst, mRedConstValue, mAlphaConst, mAlphaConstValue, mUseAlphaFromGreyscale);
+
+			showTestTexture = true;
+			
+			if(spriteRenderer != null)
+			{
+				//testTexture.filterMode = Filterm //TODO
+				Sprite greyScaleSprite = Sprite.Create(testTexture, new Rect(0,0,testTexture.width,testTexture.height), new Vector2(0.5f,0.5f), testTexture.height);
+				
+				spriteRenderer.sprite = greyScaleSprite;
+				
+			}
+		}
 	}
 
+	TextureImporter mOriginalTextureImporter;
+//	TextureImporter TexImport = AssetImporter.GetAtPath(assetPath) as TextureImporter;
 
+//	bool newImport = false;
 	// Use this for initialization
 	void OnGUI () {
 
-
+		bool fAccessable = false;
 //		EditorGUILayout.PropertyField(this, "Window Script");
 //		EditorGUILayout.PropertyField("Window Script", this, typeof(CreateAlpha8Helper), false) as CreateAlpha8Helper;
 //		test = EditorGUILayout.ObjectField("Window Script", test, typeof(CreateAlpha8Helper), false) as CreateAlpha8Helper;
 
 		GUILayout.Label("Source", EditorStyles.boldLabel);
-		originalTexture = EditorGUILayout.ObjectField("Original Texture", originalTexture, typeof(Texture2D), false) as Texture2D;
+		EditorGUI.BeginChangeCheck();
+		mOriginalTexture = EditorGUILayout.ObjectField("Original Texture", mOriginalTexture, typeof(Texture2D), false) as Texture2D;
+		if (EditorGUI.EndChangeCheck())
+		{
+			if(mOriginalTexture)
+			{
+				mOriginalTextureImporter = AssetImporter.GetAtPath (AssetDatabase.GetAssetPath (mOriginalTexture)) as TextureImporter;
+			}
+		}
 
-		OnGUI_OriginalTexurePreview();
+		if(mOriginalTextureImporter)
+		{
+			if(!mOriginalTexture)
+			{
+				fAccessable = false;
+				return;
+			}
+
+			fAccessable = true;
+			// Texture
+			if (!isTexturFormatAccessable (mOriginalTexture.format))
+			{
+				GUILayout.Label("Texture is not Accessable! change TextureFormat", EditorStyles.boldLabel);
+				fAccessable = false;
+			}
+			if (mOriginalTexture.alphaIsTransparency)
+			{
+				GUILayout.Label("Texture uses Alpha channel, disable (Alpha Is Transparency)", EditorStyles.boldLabel);
+//				fAccessable = false;
+			}
+
+			// Texture Importer
+			if (!isTexturImporterFormatAccessable (mOriginalTextureImporter.textureFormat))
+			{
+				GUILayout.Label("Texture Importer is not Accessable! change TextureImportFormat", EditorStyles.boldLabel);
+				fAccessable = false;
+			}
+			if (!mOriginalTextureImporter.isReadable)
+			{
+				GUILayout.Label("Texture Importer is not Accessable! change isReadable to true", EditorStyles.boldLabel);
+				fAccessable = false;
+			}
+			if (mOriginalTextureImporter.wrapMode != TextureWrapMode.Clamp)
+			{
+				GUILayout.Label("Texture Importer wrapMode is wrong, change to TextureWrapMode.Clamp", EditorStyles.boldLabel);
+				fAccessable = false;
+			}
+			if (mOriginalTextureImporter.filterMode != FilterMode.Point)
+			{
+				GUILayout.Label("Texture Importer uses wrong FilterMode " + mOriginalTextureImporter.filterMode.ToString() + " change to " + FilterMode.Point.ToString(), EditorStyles.boldLabel);
+//				fAccessable = false;
+			}
+			if (mOriginalTextureImporter.grayscaleToAlpha)
+			{
+				GUILayout.Label("Texture Importer uses grayscaleToAlpha", EditorStyles.boldLabel);
+//				fAccessable = false;
+			}
+			if (mOriginalTextureImporter.alphaIsTransparency)
+			{
+				GUILayout.Label("Texture Importer uses Alpha channel, disable (Alpha Is Transparency)!", EditorStyles.boldLabel);
+//				fAccessable = false;
+			}
+
+		}
+
+		if(!fAccessable)
+			return;
+
+		OnGUI_OriginalTexurePreview(fAccessable);
 
 		OnGUI_TestTexture();
 
@@ -386,7 +574,7 @@ public class CreateAlpha8Helper : EditorWindow {
 
 		if(GUILayout.Button("Calculate Color Palette and Color Map"))
 		{
-			CreateAlpha8Asset(originalTexture);
+			CreateAlpha8Asset(mOriginalTexture);
 		}
 
 
@@ -521,9 +709,20 @@ public class CreateAlpha8Helper : EditorWindow {
 			for (int x = 0; x < texture.width; x++)
 			{
 				//				Color currentColor = copyColorArray[x*y];		//TODO
-				Color32 currentColor = texture.GetPixel(x,y);
+				Color32 originalColor = texture.GetPixel(x,y);
+
 				if(overrideSourceAlpha)
-					currentColor.a = (byte)overrideAlphaValue;			// Source Texture has ALPHA  FIX!!!!!
+				{
+					originalColor.a = (byte)overrideAlphaValue;			// Override Source Texture's Alpha Channel
+					texture.SetPixel(x,y, originalColor);				// Save in Source Texture
+				}
+
+				Color32 currentColor = new Color32(originalColor.r, originalColor.g, originalColor.b, originalColor.a);
+
+				if(ignoreSourceAlphaChannel)
+					currentColor.a = (byte) ignoreSourceAlphaChannelValue;
+
+
 				
 				if(!IsColorInPalette(colorPalette, currentColor))
 				{
@@ -532,7 +731,12 @@ public class CreateAlpha8Helper : EditorWindow {
 				}
 			}
 		}
-		
+
+		if(overrideSourceAlpha)
+		{
+			texture.Apply();
+		}
+
 		Debug.Log("Anzahl gefundener Farben: " + colorCount + ". Palette max. länge = " + colorPaletteSize);
 		
 		return colorPalette;
@@ -547,7 +751,7 @@ public class CreateAlpha8Helper : EditorWindow {
 
 	public Texture2D CreateColorMap(Texture2D texture, Color32[] colorPalette)
 	{
-		Texture2D mapTexture = new Texture2D(texture.width, texture.height, mColorMapFormat, false);		//TODO Alpha8 8bit
+		Texture2D mapTexture = new Texture2D(texture.width, texture.height, mColorMapFormat, false);		//TODO Alpha8 8bit			MIPMAP //TODO//TODO//TODO//TODO//TODO//TODO//TODO
 		if (!isTexturAccessable(mapTexture))
 		{
 			Debug.Log("mapTexture wrong TexturFormat!");
@@ -564,32 +768,52 @@ public class CreateAlpha8Helper : EditorWindow {
 		float spreizFaktor = 255.0f/ Mathf.Min(colorCount, colorPalette.Length);
 		if(!useSpreizFaktor)
 			spreizFaktor = 1.0f;
+
+		int intSpreizFaktor = Mathf.FloorToInt(spreizFaktor);
+
+//		List<string> msgs = new List<string>();
+		string msg ="";
+		for (int i=0; i < colorCount; i++)
+		{
+//			msgs.Add("colorPalette["+i+"]="+colorPalette[i].ToString()+" -> "+i*intSpreizFaktor);
+			msg += "colorPalette["+i+"]="+colorPalette[i].ToString()+" -> "+i*intSpreizFaktor+"\n";
+		}
+		Debug.Log(msg);
+//		foreach(string line in msgs)
+//		{
+//			Debug.Log(line);
+//		}
+
 //		Debug.Log(spreizFaktor);
-//		Debug.Log(Mathf.FloorToInt(spreizFaktor));
+		Debug.Log("gerundeter spreizFaktor = " + intSpreizFaktor);
 
 		for (int y = 0; y < mapTexture.height; y++)
 		{
 			for (int x = 0; x < mapTexture.width; x++)
 			{
-				Color32 currentColor = texture.GetPixel (x,y);				// GetPixel(0,0) <--- unten links ist Bildanfang
+				Color32 originalColor = texture.GetPixel (x,y);				// GetPixel(0,0) <--- unten links ist Bildanfang
+				
+				if(overrideSourceAlpha)
+				{
+					originalColor.a = ((byte)overrideAlphaValue);			// Override Source Texture's Alpha Channel
+					texture.SetPixel(x,y, originalColor);				// Save in Source Texture
+				}
+
+				Color32 currentColor = new Color32(originalColor.r, originalColor.g, originalColor.b, originalColor.a);
 
 //				if (y==0)
 //				{
-//					Debug.Log("GetPixel ("+x+","+y+" = " + currentColor);
+//					Debug.Log("GetPixel ("+x+","+y+") = " + currentColor);
 //				}
 //				if (y==0 && ( x>=10 && x <=15 ))
 //				{
-//					Debug.Log("GetPixel ("+x+","+y+" = " + currentColor);
+//					Debug.Log("GetPixel ("+x+","+y+") = " + currentColor);
 //				}
-
-				if(overrideSourceAlpha)
-					currentColor.a = (byte)overrideAlphaValue;
-				Color newColor;
 
 				int colorId = GetColorIdFromPalette(colorPalette, currentColor);
 
 				//Spektrumspreizung
-				colorId = colorId * Mathf.FloorToInt(spreizFaktor);
+				colorId = colorId * intSpreizFaktor;
 
 //				if(colorId == Mathf.FloorToInt(colorCount/2))
 //				{
@@ -605,21 +829,46 @@ public class CreateAlpha8Helper : EditorWindow {
 				}
 
 				// speichere Farbwert aus Farbpalette im Red Channel
-				newColor = new Color32(0,0,0,0);
+				Color32 newColor = new Color32(0,0,0,0);
+				byte greyValue = (byte) colorId;
+				
 //				newColor = new Color32((byte) colorId,0,0,0);
 				if(writeChRed)
-					newColor[0] = (byte) colorId;
+					newColor.r = greyValue;
 				if(writeChGreen)
-					newColor[1] = (byte) colorId;
+					newColor.g = greyValue;
 				if(writeChBlue)
-					newColor[2] = (byte) colorId;
+					newColor.b = greyValue;
 				if(writeChAlpha)
-					newColor[3] = (byte) colorId;
+					newColor.a = greyValue;
+
+//				if (y==0)
+//				{
+//					Debug.Log(currentColor.ToString()+" -> "+colorId+" -> "+colorPalette[colorId]);
+//				}
+				if (y==0 && ( x>=10 && x <=15 ))
+				{
+					//Debug.Log("GetPixel ("+x+","+y+") = " + currentColor.ToString()+" -> (byte)"+(byte)colorId+" -> "+colorPalette[colorId]);
+					Debug.Log("GetPixel ("+x+","+y+") = " + currentColor.ToString()+" -> (byte)"+(byte)colorId+ "==" + newColor.ToString() + " -> "+colorPalette[colorId]);
+				}
 
 //				newColor[mColorMapChannel] = (byte) colorId;
 
+				if (y==0 && ( x>=10 && x <=15 ))
+				{
+					//Debug.Log("GetPixel ("+x+","+y+") = " + currentColor.ToString()+" -> (byte)"+(byte)colorId+" -> "+colorPalette[colorId]);
+					Debug.Log("mapTexture.GetPixel ("+x+","+y+") = " + ((Color32)mapTexture.GetPixel (x,y)).ToString() );
+				}
+
 				// setze Pixel
-				mapTexture.SetPixel (x, y, newColor);
+				mapTexture.SetPixel(x,y, newColor);
+//				mapTexture.SetPixel (x, y, Color.red);
+
+				if (y==0 && ( x>=10 && x <=15 ))
+				{
+					//Debug.Log("GetPixel ("+x+","+y+") = " + currentColor.ToString()+" -> (byte)"+(byte)colorId+" -> "+colorPalette[colorId]);
+					Debug.Log("mapTexture.GetPixel ("+x+","+y+") = " + ((Color32)mapTexture.GetPixel (x,y)).ToString() );
+				}
 
 			}
 //			if(y == 1)
@@ -628,7 +877,11 @@ public class CreateAlpha8Helper : EditorWindow {
 //			}
 		}
 
-		mapTexture.Apply();
+		if(overrideSourceAlpha)
+			texture.Apply();
+
+		mapTexture.alphaIsTransparency = false;
+		mapTexture.Apply(true);
 		return mapTexture;
 	}
 
@@ -636,7 +889,7 @@ public class CreateAlpha8Helper : EditorWindow {
 	{
 		if (isTexturFormatAccessable(texture.format))
 		{
-			Debug.Log (texture.format.ToString());
+//			Debug.Log (texture.format.ToString());
 			return true;
 		}
 		else
