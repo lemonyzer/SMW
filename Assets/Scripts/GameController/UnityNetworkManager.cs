@@ -16,6 +16,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	{
 		//TODO there is no ButtonNextCharacterScript at the beginning... is this a Problem??
 		ButtonNextCharacterScript.OnClicked += NextCharacter_Button;
+		ButtonSwitchTeamScript.OnClicked += SwitchTeam_Button;
 		ButtonServerJoinGameScript.OnClicked += ServerJoins_Button;
 		ButtonStartLoadingGameScene.OnClicked += StartLoadingGameScene_Button;
 
@@ -25,6 +26,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	void OnDisable()
 	{
 		ButtonNextCharacterScript.OnClicked -= NextCharacter_Button;
+		ButtonSwitchTeamScript.OnClicked -= SwitchTeam_Button;
 		ButtonServerJoinGameScript.OnClicked -= ServerJoins_Button;
 		ButtonStartLoadingGameScene.OnClicked -= StartLoadingGameScene_Button;
 

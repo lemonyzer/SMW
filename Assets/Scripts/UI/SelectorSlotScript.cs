@@ -8,6 +8,7 @@ public class SelectorSlotScript : MonoBehaviour {
 	public Image characterImage;
 	public Button playerIdAndColor;
 	public Button next;
+	public Button switchTeams;
 
 	public void UpdateSlot(Player player)
 	{

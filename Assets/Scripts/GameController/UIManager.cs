@@ -91,6 +91,7 @@ public class UIManager : MonoBehaviour {
 			// Auswhl zum Joinen anzeigen
 			serverSelectorSlot = (GameObject) Instantiate(ServerSelectorSlotPrefab, Vector3.zero, Quaternion.identity);
 			serverSelectorSlot.GetComponent<SelectorSlotScript>().next.gameObject.SetActive(false);
+			serverSelectorSlot.GetComponent<SelectorSlotScript>().switchTeams.gameObject.SetActive(false);
 			serverSelectorSlot.transform.SetParent(SelectorSlotPanel.transform,false);
 		}
 	}
