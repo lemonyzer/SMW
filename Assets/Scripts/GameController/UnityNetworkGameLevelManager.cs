@@ -56,7 +56,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		}
 		else if(Network.isClient)
 		{
-			myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, Network.player);
+			myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, Network.player);		// ACHTUNG wird auch lokal ausgeführt!!!! für spieler der später kommt stehen seine eigenen informationen NOCH NICHT zur verfügung
 		}
 	}
 
@@ -66,8 +66,33 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	/// <param name="netPlayer">Net player.</param> ----------------- to work also on Server to Server message
 	/// <param name="info">Info.</param>
 	[RPC]
-	void ClientLoadingLevelComplete_Rpc(NetworkPlayer netPlayer, NetworkMessageInfo info)
+	void ClientLoadingLevelComplete_Rpc(NetworkPlayer otherNetPlayer, NetworkMessageInfo info)
 	{
+
+		/**
+		 * Clients: Da diese RPC auch lokal ausgeführt wird muss 
+		 * dafür gesorgt werden das diese RPC nur für andere Mitspieler ausgeführt wird
+		 * return Network.player == otherNetPlayer
+		 * 
+		 * Server: Da diese RPC auch lokal ausgeführt wird und Server sich nicht selbst bestätigen muss
+		 * kann Server direkt ausführen
+		 * 
+		 * Server: Aufgabe 2 bestätige die Clients, das diese auch Ihr UI Elemt für Ihren Eigenen Spieler erstellen!!!!
+		 **/
+
+
+
+		// TODO warum alle an alle? -> das Server diese RPC auch an sich selbst senden kannn!!
+		// server muss doch autoritative handeln, alle clients melden loading complete -> server gibt es weiter
+		// TODO
+		// Server erhält ClientLoadingLevelComplete und sendet an diese eine Person wer noch alles LoadingComplete
+
+		// Server könnte sich selbst nicht bestätigen wenn mit in diese IF aufgenommen
+		if (Network.isClient)
+		{	
+			if (Network.player == otherNetPlayer)
+				return;
+		}
 
 		// TODO instantiate Clients Character
 
@@ -75,16 +100,43 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 
 		// TODO update references in Player Class
 
+		// sende information von neuem Spieler in der Szene den anderen Spielern mit
+		// erstelle UI Stats Elemt für andere Clients
+		// auf Server wird auch für eigenen Spieler UI Elemt erstellt, er bestätigt sich nicht selbst
+		PlayerLoadWasComplete(otherNetPlayer);
+
+		if(Network.isServer)
+		{
+			// only Server
+
+			if (otherNetPlayer != Network.player)
+			{
+				// bestätige Spieler seine teilnahme an aktueller Scene! (jetzt hat er auch die Buffered informationen hinter sich und bekommt für seinen Character relevante Infos)
+				// auf Server wird auch für eigenen Spieler UI Elemt erstellt, er bestätigt sich nicht selbst
+				myNetworkView.RPC("PingPongClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, otherNetPlayer)
+			}
+
+			if(playerReadyCount >= Network.connections.Length)					//TODO >=
+			{
+				myNetworkView.RPC("SyncGameStart_Rpc", RPCMode.AllBuffered);			// TODO changed 11.04.2015		SyncGameStart & LateGameStart!
+			}
+		}
+	}
+
+
+	void PlayerLoadWasComplete(NetworkPlayer netPlayer)
+	{
 		Player player;
 		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
 		{
+			Debug.LogWarning("ERROORORORORORRORORORERROORORORORORROROROR -> NO ERROR für netPlayer " + netPlayer.ToString() + " =)");
 			player.loadingLevelComplete = true;
 			playerReadyCount++;												//TODO umgeht Update() iteration über Network.connections array
-
-
+			
+			
 			onPlayerLevelLoadComplete(netPlayer, player); // erzeuge UI Slot
-
-
+			
+			
 			if(Network.isServer)
 			{
 				// only Server
@@ -94,19 +146,29 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		}
 		else
 		{
-			Debug.LogError("ERROORORORORORROROROR -> UI Elemnt für " + netPlayer.ToString() + " wurde nicht erstellt, da Player nicht in playerDictionary gefunden wurde!!");
+			Debug.LogError("ERROORORORORORRORORORERROORORORORORROROROR -> UI Elemnt für netPlayer " + netPlayer.ToString() + " wurde nicht erstellt, da Player nicht in playerDictionary gefunden wurde!!");
 			// wird aufgerufen, wenn Spieler in laufende Game Session eingestiegen ist
-
+			
 		}
+	}
 
-		if(Network.isServer)
+	[RPC]
+	void PingPongClientLoadingLevelComplete_Rpc(NetworkPlayer netPlayer, NetworkMessageInfo info)
+	{
+		// client hat spätestens jetzt seine informationen (Buffered RPC's aus vorherigenden Scene wurde jetzt schon beantwortet)
+		if (Network.player != netPlayer)
 		{
-			// only Server
-			if(playerReadyCount >= Network.connections.Length)					//TODO >=
-			{
-				myNetworkView.RPC("SyncGameStart_Rpc", RPCMode.AllBuffered);			// TODO changed 11.04.2015		SyncGameStart & LateGameStart!
-			}
+			return;
 		}
+
+		if (Network.isServer)
+		{
+			// Server hat bereits sein UI Element erzeugt und muss sich nicht selbst bestätigen
+			return;
+		}
+
+		PlayerLoadWasComplete(netPlayer);
+
 	}
 
 	void InstantiateAndSetupPlayerCharacter(NetworkPlayer netPlayerOwner, Player realOwner)

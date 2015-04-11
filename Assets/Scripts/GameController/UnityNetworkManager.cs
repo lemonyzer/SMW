@@ -426,7 +426,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		if(netPlayer != Network.player)
 		{
 			// GENERIC: nicht für den Serverspieler ausführen!
-			SendCurrentPlayerDictionary(netPlayer);
+//TODO		SendCurrentPlayerDictionary(netPlayer);				//TODO changed to AllBuffered @ 12.04.2015
 		}
 
 		//new Player gets first unselected Character
@@ -465,7 +465,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		}
 
 		//Server notifys other Clients about new Player
-		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.All, netPlayer, avatar.charId, playerTeam.mId, teamPos);		// nicht RPCMode.AllBuffered ! 
+		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.AllBuffered, netPlayer, avatar.charId, playerTeam.mId, teamPos);		// nicht RPCMode.AllBuffered ! //TODO changed to AllBuffered @ 12.04.2015
 
 	}
 
@@ -628,7 +628,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		// TODO auf Reihenfolge ACHTEN in UnityNetworGameLevelkManager wird auf player aus playerDictionary zugeggriffen !!!
 		// TODO done, wenn IF IF IF delegate events DIREKT synchron aufgerufen werden ist!
 
-		myNetworkView.RPC("OnPlayerDisconnected_Rpc", RPCMode.All, netPlayer);
+		myNetworkView.RPC("OnPlayerDisconnected_Rpc", RPCMode.AllBuffered, netPlayer);	// RPCMode.All			// TODO changed @ 12.04.2015 to AllBuffered
 	}
 
 	/// <summary>
