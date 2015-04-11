@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 public class UnityNetworkManager : MonoBehaviour {
 
+	public GameObject prefabCharacterPreviewTemplate;
+
+
 	public delegate void OnNewPlayerConnected(NetworkPlayer netPlayer, Player newPlayer);
 	public static event OnNewPlayerConnected onNewPlayerConnected;
 
@@ -503,7 +506,15 @@ public class UnityNetworkManager : MonoBehaviour {
 			//TODO
 			// change Character Colors (Team Color)
 			TeamColor.ChangeColors(team.mColors, cA.charSpritesheet[0].texture);
-			
+
+			// TODO connect to PLAYER !!!!
+			GameObject charPreviewGo = (GameObject) Instantiate(prefabCharacterPreviewTemplate, new Vector3(-2f +teamId, 2f - teamPos, 0f), Quaternion.identity);
+			CharacterPreview charPreviewScript = charPreviewGo.GetComponent<CharacterPreview>();
+			charPreviewScript.run = cA.charRunSprites;
+			charPreviewScript.netPlayerOwner = netPlayer;		// connect to NetworPlayer GameObject.FindWithTag()
+			charPreviewScript.enabled = true;
+			charPreviewGo.transform.position =  GetTeamSlotPosition(teamId, teamPos);
+
 			// create new Player
 			Player newPlayer = new Player(netPlayer, cA);
 			Debug.LogError(this.ToString() + " newPlayer Hash: " + newPlayer.GetHashCode());
@@ -945,6 +956,22 @@ public class UnityNetworkManager : MonoBehaviour {
 		}
 	}
         
+	Vector3 GetTeamSlotPosition(int teamId, int teamPos)
+	{
+		// Team 1 oben links
+		// Vector3( -4.5, 2.5, 0 )
+		// Team 2 oben links
+		// Vector3( -1.5, 2.5, 0 )
+		// Team 3 oben links
+		// Vector3( 1.5, 2.5, 0 )
+		// Team 4 oben links
+		// Vector3( 4.5, 2.5, 0 )
+		float xPos = -4.5f + teamId*3.0f;
+		float yPos = 2.5f - teamPos*3.0f;
+		float zPos = 0f;
+		return new Vector3(xPos, yPos, zPos); 
+	}
+
 	/// <summary>
 	/// Updates the player selection_ rpc.
 	/// </summary>
@@ -976,6 +1003,17 @@ public class UnityNetworkManager : MonoBehaviour {
 				TeamColor.ChangeColors(player.team.mColors, nextAvatar.charSpritesheet[0].texture);
 			}
 
+			GameObject[] charPreviews = GameObject.FindGameObjectsWithTag(Tags.tag_CharacterPreview);
+			foreach(GameObject previewGo in charPreviews)
+			{
+				CharacterPreview charPreviewScript = previewGo.GetComponent<CharacterPreview>();
+				if(charPreviewScript.netPlayerOwner == selector)
+				{
+					charPreviewScript.run = nextAvatar.charRunSprites;
+					previewGo.transform.position = GetTeamSlotPosition(teamId, teamPos);
+					break;
+				}
+			}
 
 			Debug.LogWarning("UpdatePlayerSelection_Rpc, Next Avatar " + nextAvatar.name + " Id:" +nextAvatar.charId);
 
