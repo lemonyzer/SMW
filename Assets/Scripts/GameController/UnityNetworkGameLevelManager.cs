@@ -87,11 +87,11 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		// TODO
 		// Server erhält ClientLoadingLevelComplete und sendet an diese eine Person wer noch alles LoadingComplete
 
-		// Server könnte sich selbst nicht bestätigen wenn mit in diese IF aufgenommen
-		if (Network.isClient)
-		{	
-			if (Network.player == otherNetPlayer)
-				return;
+		if (Network.player != otherNetPlayer)
+		{
+			// sende information von neuem Spieler in der Szene den anderen Spielern mit
+			// erstelle UI Stats Elemt für andere Clients
+			PlayerLoadWasComplete(otherNetPlayer);
 		}
 
 		// TODO instantiate Clients Character
@@ -100,21 +100,14 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 
 		// TODO update references in Player Class
 
-		// sende information von neuem Spieler in der Szene den anderen Spielern mit
-		// erstelle UI Stats Elemt für andere Clients
-		// auf Server wird auch für eigenen Spieler UI Elemt erstellt, er bestätigt sich nicht selbst
-		PlayerLoadWasComplete(otherNetPlayer);
 
 		if(Network.isServer)
 		{
 			// only Server
 
-			if (otherNetPlayer != Network.player)
-			{
-				// bestätige Spieler seine teilnahme an aktueller Scene! (jetzt hat er auch die Buffered informationen hinter sich und bekommt für seinen Character relevante Infos)
-				// auf Server wird auch für eigenen Spieler UI Elemt erstellt, er bestätigt sich nicht selbst
-				myNetworkView.RPC("PingPongClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, otherNetPlayer)
-			}
+			// bestätige Spieler seine teilnahme an aktueller Scene! (jetzt hat er auch die Buffered informationen hinter sich und bekommt für seinen Character relevante Infos)
+			myNetworkView.RPC("PingPongClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, otherNetPlayer);
+
 
 			if(playerReadyCount >= Network.connections.Length)					//TODO >=
 			{
@@ -158,12 +151,6 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		// client hat spätestens jetzt seine informationen (Buffered RPC's aus vorherigenden Scene wurde jetzt schon beantwortet)
 		if (Network.player != netPlayer)
 		{
-			return;
-		}
-
-		if (Network.isServer)
-		{
-			// Server hat bereits sein UI Element erzeugt und muss sich nicht selbst bestätigen
 			return;
 		}
 
