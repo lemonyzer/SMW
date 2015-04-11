@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof(UnityNetworkManager))]
 public class UnityNetworkGameLevelManager : MonoBehaviour {
 
 	public delegate void OnPlayerLevelLoadComplete(NetworkPlayer netPlayer, Player newPlayer);
@@ -13,6 +14,18 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 //	UnityNetworkManager baseManager;
 
 	int playerReadyCount = 0;
+
+
+	void OnEnable()
+	{
+		UnityNetworkManager.onPlayerDisconnected += OnPlayerDisconnectedEvent;
+	}
+	
+	void OnDisable()
+	{
+		UnityNetworkManager.onPlayerDisconnected -= OnPlayerDisconnectedEvent;
+	}
+
 
 	void Awake()
 	{
@@ -38,12 +51,12 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		{
 			if(PlayerDictionaryManager.serverHasPlayer)
 			{
-				myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);
+				myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, Network.player);
 			}
 		}
 		else if(Network.isClient)
 		{
-			myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);
+			myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, Network.player);
 		}
 	}
 
@@ -79,13 +92,19 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 				InstantiateAndSetupPlayerCharacter(netPlayer, player);
 			}
 		}
+		else
+		{
+			Debug.LogError("ERROORORORORORROROROR -> UI Elemnt für " + netPlayer.ToString() + " wurde nicht erstellt, da Player nicht in playerDictionary gefunden wurde!!");
+			// wird aufgerufen, wenn Spieler in laufende Game Session eingestiegen ist
+
+		}
 
 		if(Network.isServer)
 		{
 			// only Server
 			if(playerReadyCount >= Network.connections.Length)					//TODO >=
 			{
-				myNetworkView.RPC("SyncGameStart_Rpc", RPCMode.All);
+				myNetworkView.RPC("SyncGameStart_Rpc", RPCMode.AllBuffered);			// TODO changed 11.04.2015		SyncGameStart & LateGameStart!
 			}
 		}
 	}
@@ -107,6 +126,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		//TODO myNetworkView.RPC("RegisterCharacterGameObjectInPlayerDictionary_Rpc", RPCMode.AllBuffered, netPlayer, newObjectsNetworkView.viewID );
 
 		// Call an RPC on this new PhotonView, set the NetworkPlayer who controls this new player
+		// TODO BUFFERED because Player joins running session needs to know who is owner!
 		newObjectsNetworkView.RPC("RegisterCharacterGameObjectInPlayerDictionary_Rpc", RPCMode.AllBuffered, netPlayerOwner );
 		newObjectsNetworkView.RPC("SetCharacterControlsOwner", RPCMode.AllBuffered, netPlayerOwner);			// RealOwner Script
 		newObjectsNetworkView.RPC("DeactivateKinematic", RPCMode.AllBuffered);							// PlatformCharacter Script
@@ -123,27 +143,38 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	}
 
 
-	void OnPlayerDisconnected(NetworkPlayer netPlayer)
+	void OnPlayerDisconnectedEvent(NetworkPlayer netPlayer, Player player)
 	{
-		Player player;
-		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
-		{
-			if(player.loadingLevelComplete)
-				playerReadyCount--;											//TODO consistent? disconnect kommt meistens später
+		if(player.loadingLevelComplete)
+			playerReadyCount--;		
+    }
 
-			// remove Character GameObject
-			RemoveCurrentPlayerCharacterGameObject(player);
-
-			// dont remove Stats
-
-		}
-		else
-		{
-			Debug.LogError("NetworkPlayer existiert nicht (mehr) in PlayerDictionary!!!");
-		}
-
-
-	}
+	// TODO event wird ausgeführt, somit is gewährleistet das die player reference noch existiert und nicht aus playerDictionary gelöscht wurde!! 
+//	void OnPlayerDisconnected(NetworkPlayer netPlayer)
+//	{
+//
+//
+//		// TODO auf Reihenfolge ACHTEN in UnityNetworkManager wird player aus playerDictionary gelöscht !!!
+//
+//		Player player;
+//		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
+//		{
+//			if(player.loadingLevelComplete)
+//				playerReadyCount--;											//TODO consistent? disconnect kommt meistens später
+//
+//			// remove Character GameObject
+//			RemoveCurrentPlayerCharacterGameObject(player);
+//
+//			// dont remove Stats
+//
+//		}
+//		else
+//		{
+//			Debug.LogError("NetworkPlayer existiert nicht (mehr) in PlayerDictionary!!!");
+//		}
+//
+//
+//	}
 
 	void RemoveCurrentPlayerCharacterGameObject(Player player)
 	{

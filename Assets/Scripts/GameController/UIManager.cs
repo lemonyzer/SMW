@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 
+[RequireComponent (typeof(UnityNetworkManager))]
+[RequireComponent (typeof(UnityNetworkGameLevelManager))]
 public class UIManager : MonoBehaviour {
 
 	NetworkView myNetworkView;
@@ -151,6 +153,13 @@ public class UIManager : MonoBehaviour {
 		Destroy(serverSelectorSlot);
 	}
 
+	bool IsCurrentlyInGameScene()
+	{
+		if (Application.loadedLevelName == Scenes.unityNetworkGame)
+			return true;
+		return false;
+	}
+
 	/// <summary>
 	/// Adds the new player slot.
 	/// </summary>
@@ -158,6 +167,10 @@ public class UIManager : MonoBehaviour {
 	/// <param name="newPlayer">New player.</param>
 	void AddNewPlayerSelectorSlot(NetworkPlayer netPlayer, Player newPlayer)
 	{
+
+		if (IsCurrentlyInGameScene())
+			return;
+
 		// create UI Element for player
 		GameObject newNetPlayerUiSlot = (GameObject) Instantiate(SelectorUiSlotPrefab,Vector3.zero, Quaternion.identity);
 		
@@ -241,7 +254,20 @@ public class UIManager : MonoBehaviour {
 
 	void OnPvPKill(Player killer, Player victim)
 	{
-		killer.UIStatsSlotScript.slotKills.text = "Kills: " + killer.getPoints();
+		if (killer.UIStatsSlotScript != null)
+		{
+			killer.UIStatsSlotScript.slotKills.text = "Kills: " + killer.getKills();
+			killer.UIStatsSlotScript.slotPoints.text = "Points: " + killer.getPoints();
+		}
+		else
+			Debug.LogError("killer.UIStatsSlotScript == NULL!");
+
+		if (victim.UIStatsSlotScript != null)
+		{
+			victim.UIStatsSlotScript.slotLifes.text = "Lifes: " + victim.GetLifes();
+		}
+		else
+			Debug.LogError("killer.UIStatsSlotScript == NULL!");
 	}
 
 	void AddPoints(Player killer, Player victim)
@@ -251,7 +277,23 @@ public class UIManager : MonoBehaviour {
 
 	void UpdateStatesSlot(NetworkPlayer netPlayer, Player player)
 	{
-		player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
+		if(player == null)
+		{
+			Debug.LogError("player == null");
+			return;
+		}
+		else
+		{
+			if(player.UIStatsSlotScript == null)
+			{
+				Debug.LogError("player.UIStatsSlotScript == null");
+				return;
+			}
+			else
+			{
+				player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
+			}
+		}
 	}
 
 }

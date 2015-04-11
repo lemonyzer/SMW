@@ -122,6 +122,8 @@ public class UnityNetworkManager : MonoBehaviour {
 		// Parameter wird übergeben da in NetworkMessageInfo bei Server -> Server kein sender drin steht (-1)!
     }
     
+	bool startAlreadyClicked = false;
+
 	//TODO Events / Actions / Delegates
 	//TODO persistent object (atleast playerDictionary)
 	/// <summary>
@@ -129,7 +131,11 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// </summary>
 	public void StartLoadingGameScene_Button()
 	{
-		myNetworkView.RPC("StartLoadingGameScene_Rpc", RPCMode.AllBuffered, nextScene);
+		if (!startAlreadyClicked)
+		{
+			startAlreadyClicked = true; // just in case  -> to fast to furiouse
+			myNetworkView.RPC("StartLoadingGameScene_Rpc", RPCMode.AllBuffered, nextScene);
+		}
 	}
 	
 	//TODO generic (like client connect)
@@ -246,6 +252,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	[RPC]
 	void StartLoadingGameScene_Rpc(string nextScene)
 	{
+		Debug.Log("Current Scene = " + Application.loadedLevelName + " (" + Application.loadedLevel + ") -> start loading GameScene " + nextScene);
 		this.nextScene = nextScene;
 
 		// MessageQueue pausieren
@@ -401,7 +408,15 @@ public class UnityNetworkManager : MonoBehaviour {
 	void OnPlayerConnected(NetworkPlayer netPlayer)
 	{
 		/** Server
-		 *  Called on the server whenever a new player has successfully connected.
+		 * 
+		 * Called on the server whenever a new player has successfully connected.
+		 * 
+		 * Sende aktuelle Spielerliste an neuen Spieler, (er steht nicht drin)
+		 * 
+		 * suche team und character für neuen spieler, server trägt in auch in Dictionary direkt ein.
+		 * 
+		 * sende RPC an ALLE um neuen neuen Spieler mit Team und Character in Spielerliste einzutragen
+		 * 
 		 **/
 
 		AddMessage("Player " + netPlayer.guid + " connected " + netPlayer.externalIP + " ID: " + netPlayer.ToString());
@@ -450,7 +465,8 @@ public class UnityNetworkManager : MonoBehaviour {
 		}
 
 		//Server notifys other Clients about new Player
-		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.All, netPlayer, avatar.charId, playerTeam.mId, teamPos);
+		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.All, netPlayer, avatar.charId, playerTeam.mId, teamPos);		// nicht RPCMode.AllBuffered ! 
+
 	}
 
 
@@ -559,7 +575,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// <param name="netPlayer">Net player.</param>
 	void SendCurrentPlayerDictionary(NetworkPlayer netPlayer)
 	{
-
+		//TODO DONE CLIENTS ONLY
 		// GENERIC (Other Clients und Server!)
 		foreach(NetworkPlayer currentNetPlayer in PlayerDictionaryManager._instance.Keys())
 		{
@@ -608,6 +624,9 @@ public class UnityNetworkManager : MonoBehaviour {
 		/** Server
 		 *  Called on the server whenever a player is disconnected from the server.
 		 **/
+
+		// TODO auf Reihenfolge ACHTEN in UnityNetworGameLevelkManager wird auf player aus playerDictionary zugeggriffen !!!
+		// TODO done, wenn IF IF IF delegate events DIREKT synchron aufgerufen werden ist!
 
 		myNetworkView.RPC("OnPlayerDisconnected_Rpc", RPCMode.All, netPlayer);
 	}
@@ -715,10 +734,17 @@ public class UnityNetworkManager : MonoBehaviour {
 			messages.Dequeue();
 		}
 
-		messageWindow.text = "";
-		foreach(string m in messages)
+		if (messageWindow != null)
 		{
-			messageWindow.text += m + "\n";
+			messageWindow.text = "";
+			foreach(string m in messages)
+			{
+				messageWindow.text += m + "\n";
+			}
+		}
+		else
+		{
+			Debug.LogError("No message window found!");
 		}
 	}
 

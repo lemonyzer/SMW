@@ -32,6 +32,17 @@ public class PlayerDictionaryManager : MonoBehaviour {
 			Debug.LogWarning(this.ToString() +": _instance is already instantiated!");
 			#endif
 			List<Player> buffer = new List<Player> ( _instance.Values() );
+
+			foreach(NetworkPlayer netPlayer in _instance.Keys())
+			{
+				Debug.Log ("Key: " + netPlayer.ToString() + " found");
+			}
+
+
+			if (buffer == null)
+			{
+				Debug.Log(Application.loadedLevelName + " playerDictionary.Values == empty!");
+			}
 			foreach(Player player in buffer)
 			{
 				Debug.Log(this.ToString() +": " + player.getName() + " in PlayerDictionary gefunden!");

@@ -16,6 +16,7 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 	public Text slotName;
 	public Text slotWho;
 	public Text slotKills;
+	public Text slotPoints;
 	public Text slotLifes;
 	public Text lastPing;		//Client ping to Server, (Servercharacter)
 	public Text avgPing;		//Client avg ping to Server, (Servercharacter)
@@ -40,6 +41,7 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 		slotName = transform.FindChild("SlotName").GetComponent<Text>();
 		slotWho = transform.FindChild("SlotWho").GetComponent<Text>();
 
+		slotPoints = transform.FindChild("SlotPoints").GetComponent<Text>();
 		slotKills = transform.FindChild("SlotKills").GetComponent<Text>();
 		slotLifes = transform.FindChild("SlotLifes").GetComponent<Text>();
 

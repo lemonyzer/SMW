@@ -146,11 +146,15 @@ public class StatsManager : MonoBehaviour {
 		if(currentGameMode == GameMode.Classic)
 		{
 			killer.addPoints(pointValueHeadJump);
+			killer.addKill();
+			victim.LostLife();
 		}
 		else if(currentGameMode == GameMode.ClassicReverse)
 		{
 			killer.addPoints(pointValueHeadJump);
-			victim.addHealth(-damageValueHeadJump);
+			killer.addKill();
+//			victim.addHealth(-damageValueHeadJump);
+			victim.LostLife();
 		}
 
 		if(onPvPKill != null)
@@ -191,14 +195,42 @@ public class StatsManager : MonoBehaviour {
 		{
 			Player playerAttacker;
 			Player playerVictim;
-			PlayerDictionaryManager._instance.TryGetPlayer(attackersRealOwner, out playerAttacker);
-			PlayerDictionaryManager._instance.TryGetPlayer(victimsRealOwner, out playerVictim);
+
+			bool foundAttacker = false;
+			bool foundVictim = false;
+
+			if (PlayerDictionaryManager._instance.TryGetPlayer(attackersRealOwner, out playerAttacker))
+			{
+				foundAttacker = true;
+			}
+			else
+			{
+				Debug.LogError("attackersRealOwner = " + attackersRealOwner.ToString() + " existiert nicht (mehr) in playerDictionary");
+			}
+			if (PlayerDictionaryManager._instance.TryGetPlayer(victimsRealOwner, out playerVictim))
+			{
+				foundVictim = true;
+				
+			}
+			else
+			{
+				Debug.LogError("victimsRealOwner = " + victimsRealOwner.ToString() + " existiert nicht (mehr) in playerDictionary");
+			}
 		
 			//AnimatorController victimsAnimationController = playerVictim.getCharacter().getGameObject().GetComponent<AnimatorController>();
 			//victimsAnimationController.HeadJumpAnimation();
 //TODO			PlatformCharacter victimCharacterScript = playerVictim.getCharacter().getGameObject().GetComponent<PlatformCharacter>();
 //TODO			victimCharacterScript.HeadJumpVictim();
-			playerVictim.platformCharacterScript.HeadJumpVictim();
+
+			if (foundVictim)
+			{
+				if (playerVictim.platformCharacterScript == null)
+				{
+					Debug.LogError("playerVictim " + victimsRealOwner.ToString() + " platformCharacterScript == NULL!");
+				}
+				else
+					playerVictim.platformCharacterScript.HeadJumpVictim();
+			}
 
 			AddKill(playerAttacker, playerVictim);
 		}

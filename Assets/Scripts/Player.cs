@@ -15,14 +15,41 @@ public class Player
 	private Character character;
 	private Character characterClone;			// Liste von Characteren
 	//	private bool isAI;
-	private int health;
-	private int points;
-	private int nemesis;
-	private int kills;
-	private int deads;
-	//	private int 
 
 
+	private int nemesis = 0;
+	// anzahl der punkte (setzt sich zusammen aus kills: headjumps, weapons kills, nemesis, multikill, combo...)
+	private int points = 0;
+	// anzahl der kills
+	private int kills = 0;
+	// anzahl der tote (wie oft gestorben)
+	private int deads = 0;
+	// anzahl der leben
+	private int lifes = 20;
+	// aktuelle lebensgesundheit; health = 0 -> lifes--
+	private int health = 0;
+	//
+
+	public int getKills()
+	{
+		return kills;
+	}
+
+	public void addKill()
+	{
+		kills++;
+	}
+
+	public int GetLifes()
+	{
+		return lifes;
+	}
+
+	public void LostLife()
+	{
+		if (lifes > 0)
+			lifes--;
+	}
 
 
 	public void addHealth(int value)

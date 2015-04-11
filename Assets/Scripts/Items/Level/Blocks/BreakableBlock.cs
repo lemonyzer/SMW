@@ -51,7 +51,7 @@ public class BreakableBlock : MonoBehaviour {
 //					{
 //						other.gameObject.transform.parent.rigidbody2D.velocity = Vector2.zero;	// collision simulieren (player stoppt bei trigger erkennung kurz)
 						breakTriggered = true;	
-						myNView.RPC("Breaking", RPCMode.AllBuffered);				// all buffered, level is changeing!!
+						myNView.RPC("Breaking", RPCMode.AllBuffered, (float)Network.time);				// all buffered, level is changeing!!
 //					}
 //					else
 //					{
@@ -91,19 +91,14 @@ public class BreakableBlock : MonoBehaviour {
 		}
 	}
 
-	[RPC]
-	void Breaking()
+	void BreakEffekt()
 	{
-		Debug.LogWarning("RPC Breaking");
+
 		if(destroyBlockSound != null)
 			AudioSource.PlayClipAtPoint(destroyBlockSound,transform.position,1);
 		else
 			Debug.LogError("no Destroy Sound set in Unity Inspector!");
 
-		myBlock.GetComponent<Renderer>().enabled = false;
-		myBlockCollider.enabled = false;
-//		myTriggerZone.enabled = false;
-		
 		Vector3 offset = new Vector3(0f,0f,0f);
 		GameObject cloneTopLeft = (GameObject)Instantiate(destroyedBlockPrefab,transform.position+offset, Quaternion.identity);
 		cloneTopLeft.GetComponent<Rigidbody2D>().AddForce(new Vector2(-250.0f,350.0f));
@@ -120,11 +115,51 @@ public class BreakableBlock : MonoBehaviour {
 		GameObject cloneBottomRight = (GameObject)Instantiate(destroyedBlockPrefab,transform.position+offset, Quaternion.identity);
 		cloneBottomRight.GetComponent<Rigidbody2D>().AddForce(new Vector2(+150.0f,150.0f));
 		cloneBottomRight.GetComponent<Rigidbody2D>().AddTorque(-1000f);
-		
+
 		Destroy(cloneTopLeft,destroyedBlockPrefabStayTime);
 		Destroy(cloneTopRight,destroyedBlockPrefabStayTime);
 		Destroy(cloneBottomLeft,destroyedBlockPrefabStayTime);
 		Destroy(cloneBottomRight,destroyedBlockPrefabStayTime);
+	}
+
+	[RPC]
+	void Breaking(float realTimeStamp, NetworkMessageInfo info)
+	{
+//		Debug.LogWarning("RPC Breaking Time.time = "+ Time.time +"\n" + 
+//		                 "Networktime = " + Network.time + "\n" +
+//		                 "RPC Timestamp = " + info.timestamp + "\n" +
+//		                 "(float) Real Timestamp = " + realTimeStamp + "\n" +
+//		                 "(float) Networktime = " + (float)Network.time);
+
+		// Example
+		// RPC was Buffered 23 seconds 
+		/**
+		 * RPC Breaking Time.time = 3.81071
+		 * Networktime = 17037.659
+		 * RPC Timestamp = 17037.274
+		 * (float) Real Timestamp = 17014.73
+		 * (float) Networktime = 17037.66
+		 */
+
+		//if(info.timestamp < Network.time - 3f)
+		if ( realTimeStamp < (float)Network.time - 3f)
+		{
+			// skip Break animation 
+			// TODO geht nicht, RPC bekommt aktuellen Timestamp und nicht Timestamp von früher
+		}
+		else
+		{
+			// Break animation
+			BreakEffekt();
+
+		}
+
+		//Network.Destroy(this.gameObject);
+		//GameObject.Destroy(this.gameObject);
+
+		myBlock.GetComponent<Renderer>().enabled = false;
+		myBlockCollider.enabled = false;
+//		myTriggerZone.enabled = false;
 		this.enabled = false;
 	}
 
