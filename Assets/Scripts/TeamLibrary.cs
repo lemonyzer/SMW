@@ -19,6 +19,44 @@ public class TeamLibrary : MonoBehaviour {
 		}
 	}
 
+	public int NextTeam(Player player)
+	{
+		if (player != null)
+		{
+			if (player.team != null)
+			{
+				int nextTeamId = 0;
+				int tryCount = 0;
+				bool teamFound = false;
+				while(!teamFound && tryCount < mNumberOfTeams)
+				{
+					nextTeamId = (player.team.mId + tryCount+1) % mNumberOfTeams;
+					if (teams[nextTeamId].mMemberCount < mMaxNumberOfTeamMember)
+					{
+						teamFound = true;
+					}
+
+					tryCount++;
+				}
+
+				if (teamFound)
+				{
+					player.team.RemoveMember(player);
+					player.team = GetTeam(nextTeamId);
+					player.teamPos = player.team.AddMember(player);
+					Debug.Log("Neues Team gefunden " + player.team.mId);
+					return player.team.mId;
+				}
+				else
+				{
+					Debug.Log("Neues Team gefunden, bleibe im alten " + player.team.mId);
+					return player.team.mId;
+				}
+			}
+		}
+		return TeamLibrary.TeamIdNoTeam;
+	}
+
 	public Team GetTeam(int teamId)
 	{
 		if (teams == null)

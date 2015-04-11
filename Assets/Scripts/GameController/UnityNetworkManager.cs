@@ -591,6 +591,8 @@ public class UnityNetworkManager : MonoBehaviour {
 
 		if(disconnectedPlayer != null)
 		{
+			disconnectedPlayer.team.RemoveMember(disconnectedPlayer);			// Important, remove Player from TeamLibrary
+
 			if(onPlayerDisconnected != null)
 			{
 				onPlayerDisconnected(netPlayer, disconnectedPlayer);
@@ -605,11 +607,16 @@ public class UnityNetworkManager : MonoBehaviour {
 				RemoveCurrentPlayerCharacterGameObject(disconnectedPlayer);
 				PlayerDictionaryManager._instance.RemovePlayer(netPlayer);
 				disconnectedPlayer.characterScriptableObject.charInUse = false;
+				disconnectedPlayer = null;
 			}
 			catch(UnityException e)
 			{
-				Debug.Log("OnPlayerDisconnected_Rpc: something went wrong");
+				Debug.Log("OnPlayerDisconnected_Rpc: something went wrong " + e);
 			}
+		}
+		else
+		{
+			Debug.LogError("disconnected Player was not in playerDictionary!!!");
 		}
 	}
 
@@ -739,7 +746,11 @@ public class UnityNetworkManager : MonoBehaviour {
 				//
 				currentTeamId = playerTeam.mId;
 
-				newTeamId = myTeams.GetTeamIdWithLowestMemberCount();
+				// simple, too simple can't reach yellow and blue if alone!
+//				newTeamId = myTeams.GetTeamIdWithLowestMemberCount();
+
+				// reach all Teams, with maxMemberCheck
+				newTeamId = myTeams.NextTeam(player);
 
 				Debug.Log("Server: currentTeamId = " + currentTeamId);
 				Debug.Log("Server: newTeamId = " + newTeamId);
