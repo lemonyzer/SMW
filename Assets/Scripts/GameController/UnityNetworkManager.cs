@@ -967,7 +967,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		// Team 4 oben links
 		// Vector3( 4.5, 2.5, 0 )
 		float xPos = -4.5f + teamId*3.0f;
-		float yPos = 2.5f - teamPos*3.0f;
+		float yPos = 2.5f - teamPos;
 		float zPos = 0f;
 		return new Vector3(xPos, yPos, zPos); 
 	}
@@ -1000,6 +1000,13 @@ public class UnityNetworkManager : MonoBehaviour {
 			if (player.team != null)
 			{
 				//TODO checks
+
+				if(player.team.mId != teamId)
+				{
+					// wenn er im gleichen Team ist
+					player.team.RemoveMember(player);			// Fix
+					myTeams.GetTeam(teamId).AddMember(player);	// Fix
+				}
 				TeamColor.ChangeColors(player.team.mColors, nextAvatar.charSpritesheet[0].texture);
 			}
 
