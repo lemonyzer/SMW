@@ -11,6 +11,9 @@ public class UnityNetworkManager : MonoBehaviour {
 	public delegate void OnNewPlayerConnected(NetworkPlayer netPlayer, Player newPlayer);
 	public static event OnNewPlayerConnected onNewPlayerConnected;
 
+	public delegate void OnPlayerChangedSelection(NetworkPlayer netPlayer, Player Player);
+	public static event OnPlayerChangedSelection onPlayerChangedSelection;
+    
 	public delegate void OnPlayerDisconnected_custom(NetworkPlayer netPlayer, Player newPlayer);
 	public static event OnPlayerDisconnected_custom onPlayerDisconnected;
 
@@ -507,13 +510,8 @@ public class UnityNetworkManager : MonoBehaviour {
 			// change Character Colors (Team Color)
 			TeamColor.ChangeColors(team.mColors, cA.charSpritesheet[0].texture);
 
-			// TODO connect to PLAYER !!!!
-			GameObject charPreviewGo = (GameObject) Instantiate(prefabCharacterPreviewTemplate, new Vector3(-2f +teamId, 2f - teamPos, 0f), Quaternion.identity);
-			CharacterPreview charPreviewScript = charPreviewGo.GetComponent<CharacterPreview>();
-			charPreviewScript.run = cA.charRunSprites;
-			charPreviewScript.netPlayerOwner = netPlayer;		// connect to NetworPlayer GameObject.FindWithTag()
-			charPreviewScript.enabled = true;
-			charPreviewGo.transform.position =  GetTeamSlotPosition(teamId, teamPos);
+			// TODO connect to PLAYER CLASS ??? !!!!
+			CreateNewCharacterPreviewTemplate(netPlayer, teamId, teamPos, cA);
 
 			// create new Player
 			Player newPlayer = new Player(netPlayer, cA);
@@ -546,12 +544,35 @@ public class UnityNetworkManager : MonoBehaviour {
 		}
 	}
 
+	void CreateNewCharacterPreviewTemplate(NetworkPlayer owningNetPlayer, int teamId, int teamPos, SmwCharacter character)
+	{
+		GameObject charPreviewGo = (GameObject) Instantiate(prefabCharacterPreviewTemplate, GetTeamSlotPosition(teamId,teamPos) , Quaternion.identity);
+		CharacterPreview charPreviewScript = charPreviewGo.GetComponent<CharacterPreview>();
+		charPreviewScript.run = character.charRunSprites;
+		charPreviewScript.netPlayerOwner = owningNetPlayer;		// connect to NetworPlayer GameObject.FindWithTag()
+		charPreviewScript.enabled = true;
+	}
+
 	/// <summary>
 	/// Sends the current player dictionary.
 	/// </summary>
 	/// <param name="netPlayer">Net player.</param>
 	void SendCurrentPlayerDictionary(NetworkPlayer netPlayer)
 	{
+
+		// GENERIC (Other Clients und Server!)
+		foreach(NetworkPlayer currentNetPlayer in PlayerDictionaryManager._instance.Keys())
+		{
+			Player currentPlayer;
+			if(PlayerDictionaryManager._instance.TryGetPlayer(currentNetPlayer, out currentPlayer))
+			{
+				// found Player in playerDictionary
+				myNetworkView.RPC("OnPlayerConnected_Rpc", netPlayer, currentNetPlayer, currentPlayer.characterScriptableObject.charId, currentPlayer.team.mId, currentPlayer.teamPos);
+			}
+		}
+
+		return;
+
 		// all other Clients
 		foreach(NetworkPlayer currentNetPlayer in Network.connections)
 		{
@@ -615,6 +636,7 @@ public class UnityNetworkManager : MonoBehaviour {
 
 			try
 			{
+				Destroy(FindNetPlayersCharacterPreviewGameObject(netPlayer));
 				RemoveCurrentPlayerCharacterGameObject(disconnectedPlayer);
 				PlayerDictionaryManager._instance.RemovePlayer(netPlayer);
 				disconnectedPlayer.characterScriptableObject.charInUse = false;
@@ -959,17 +981,68 @@ public class UnityNetworkManager : MonoBehaviour {
 	Vector3 GetTeamSlotPosition(int teamId, int teamPos)
 	{
 		// Team 1 oben links
-		// Vector3( -4.5, 2.5, 0 )
+		// Vector3( -4.5, 2.7, 0 )
 		// Team 2 oben links
-		// Vector3( -1.5, 2.5, 0 )
+		// Vector3( -1.5, 2.7, 0 )
 		// Team 3 oben links
-		// Vector3( 1.5, 2.5, 0 )
+		// Vector3( 1.5, 2.7, 0 )
 		// Team 4 oben links
-		// Vector3( 4.5, 2.5, 0 )
+		// Vector3( 4.5, 2.7, 0 )
+
+		// 0 -> 2.7
+		// 1 -> 1.6
+		// 2 -> 0.5
+		// 3 -> -0.6
+
+
 		float xPos = -4.5f + teamId*3.0f;
-		float yPos = 2.5f - teamPos;
+//		float yPos = 2.8f - teamPos -(0.2f* ( 0 == teamPos ? 0.0f : 1.0f));
+		float yPos = 2.7f - teamPos -(0.15f * teamPos);
+//		float yPos = 2.8f - teamPos;
+//		if (teamPos > 0)
+//		{
+//			yPos = 
+//		}
 		float zPos = 0f;
 		return new Vector3(xPos, yPos, zPos); 
+	}
+
+
+	GameObject FindNetPlayersCharacterPreviewGameObject(NetworkPlayer owningNetPlayer)
+	{
+		GameObject[] charPreviews = GameObject.FindGameObjectsWithTag(Tags.tag_CharacterPreview);
+		foreach(GameObject previewGo in charPreviews)
+		{
+			CharacterPreview charPreviewScript = previewGo.GetComponent<CharacterPreview>();
+			
+			if (!charPreviewScript)
+				continue;
+			
+			if(charPreviewScript.netPlayerOwner == owningNetPlayer)
+			{
+				return previewGo;
+			}
+		}
+		return null;
+	}
+
+
+	CharacterPreview FindNetPlayersCharacterPreviewScript(NetworkPlayer owningNetPlayer)
+	{
+		GameObject[] charPreviews = GameObject.FindGameObjectsWithTag(Tags.tag_CharacterPreview);
+		foreach(GameObject previewGo in charPreviews)
+		{
+			CharacterPreview charPreviewScript = previewGo.GetComponent<CharacterPreview>();
+
+			if (!charPreviewScript)
+				continue;
+
+			if(charPreviewScript.netPlayerOwner == owningNetPlayer)
+			{
+				return charPreviewScript;
+			}
+		}
+		return null;
 	}
 
 	/// <summary>
@@ -1010,16 +1083,12 @@ public class UnityNetworkManager : MonoBehaviour {
 				TeamColor.ChangeColors(player.team.mColors, nextAvatar.charSpritesheet[0].texture);
 			}
 
-			GameObject[] charPreviews = GameObject.FindGameObjectsWithTag(Tags.tag_CharacterPreview);
-			foreach(GameObject previewGo in charPreviews)
+			CharacterPreview charPreviewScript = FindNetPlayersCharacterPreviewScript(selector);
+			// check if return != null
+			if (charPreviewScript)
 			{
-				CharacterPreview charPreviewScript = previewGo.GetComponent<CharacterPreview>();
-				if(charPreviewScript.netPlayerOwner == selector)
-				{
-					charPreviewScript.run = nextAvatar.charRunSprites;
-					previewGo.transform.position = GetTeamSlotPosition(teamId, teamPos);
-					break;
-				}
+				charPreviewScript.run = nextAvatar.charRunSprites;
+				charPreviewScript.myTransform.position = GetTeamSlotPosition(teamId, teamPos);
 			}
 
 			Debug.LogWarning("UpdatePlayerSelection_Rpc, Next Avatar " + nextAvatar.name + " Id:" +nextAvatar.charId);
@@ -1051,7 +1120,11 @@ public class UnityNetworkManager : MonoBehaviour {
 			}
 		}
 
-		player.UISelectorSlotScript.UpdateSlot(player);
+		//player.UISelectorSlotScript.UpdateSlot(player);
+		if(onPlayerChangedSelection != null)
+			onPlayerChangedSelection(selector, player);
+
+
 	}
 
 

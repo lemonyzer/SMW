@@ -90,34 +90,45 @@ public class UIManager : MonoBehaviour {
 			// Server hat noch keinen Spieler
 			// Auswhl zum Joinen anzeigen
 			serverSelectorSlot = (GameObject) Instantiate(ServerSelectorSlotPrefab, Vector3.zero, Quaternion.identity);
-			serverSelectorSlot.GetComponent<SelectorSlotScript>().next.gameObject.SetActive(false);
-			serverSelectorSlot.GetComponent<SelectorSlotScript>().switchTeams.gameObject.SetActive(false);
+			serverSelectorSlot.GetComponent<SelectorSlotScript>().btnNextCharacter.gameObject.SetActive(false);
+			serverSelectorSlot.GetComponent<SelectorSlotScript>().btnSwitchTeams.gameObject.SetActive(false);
 			serverSelectorSlot.transform.SetParent(SelectorSlotPanel.transform,false);
 		}
 	}
 
 	void OnEnable()
 	{
-
+		// Selector Slot
 		UnityNetworkManager.onNewPlayerConnected += AddNewPlayerSelectorSlot;
+		UnityNetworkManager.onPlayerChangedSelection += UpdateSelectorSlot;
 		UnityNetworkManager.onPlayerDisconnected += PlayerDisconnected;
 
+		// Stats Slot
 		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete += AddNewPlayerStatsSlot;		// player has no properties set!!!
 		PlatformCharacter.onRegistered += UpdateStatesSlot;										// player gets properties from Character GO
+
+		// Server UI
 		ButtonServerJoinGameScript.OnClicked += ServerJoins_Button;
 
+		// Other
 		StatsManager.onPvPKill += OnPvPKill;
 	}
 	
 	void OnDisable()
 	{
+		// Selector Slot
 		UnityNetworkManager.onNewPlayerConnected -= AddNewPlayerSelectorSlot;
+		UnityNetworkManager.onPlayerChangedSelection -= UpdateSelectorSlot;
 		UnityNetworkManager.onPlayerDisconnected -= PlayerDisconnected;
 
+		// Selector Slot
 		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete -= AddNewPlayerStatsSlot;		// player has no properties set!!!
 		PlatformCharacter.onRegistered -= UpdateStatesSlot;										// player gets properties from Character GO
+
+		// Server UI
 		ButtonServerJoinGameScript.OnClicked -= ServerJoins_Button;
 
+		// Other
 		StatsManager.onPvPKill -= OnPvPKill;
 	}
 
@@ -154,7 +165,8 @@ public class UIManager : MonoBehaviour {
 		if(netPlayer != Network.player)
 		{
 			//newNetPlayerUiSlot.GetComponent<UiSlotScript>().next.enabled = false;
-			newNetPlayerUiSlot.GetComponent<SelectorSlotScript>().next.gameObject.SetActive(false);
+			newNetPlayerUiSlot.GetComponent<SelectorSlotScript>().btnNextCharacter.gameObject.SetActive(false);
+			newNetPlayerUiSlot.GetComponent<SelectorSlotScript>().btnSwitchTeams.gameObject.SetActive(false);
 		}
 		
 		// add it to GridLayout
@@ -164,8 +176,14 @@ public class UIManager : MonoBehaviour {
 		newPlayer.UISelectorSlotScript = newNetPlayerUiSlot.GetComponent<SelectorSlotScript>();
 
 		// Update Slot with correct Player and Character Information
-		newPlayer.UISelectorSlotScript.UpdateSlot(newPlayer);
+		UpdateSelectorSlot(netPlayer, newPlayer);
 	}
+
+	void UpdateSelectorSlot(NetworkPlayer netPlayer, Player player)
+	{
+		// Update Slot with correct Player and Character Information
+		player.UISelectorSlotScript.UpdateSlot(player);
+    }
 
 	void AddNewPlayerStatsSlot(NetworkPlayer netPlayer, Player player)
 	{
