@@ -15,6 +15,8 @@ public class PlayerDictionary : ScriptableObject {
 	// Key = instanz of PlayerCharacter GameObject
 	// Value = Player
 
+	public bool serverHasPlayer = false;
+
 	Dictionary<NetworkPlayer, Player> playerDictionary = new Dictionary<NetworkPlayer, Player>();
 
 	/// <summary>

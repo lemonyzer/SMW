@@ -1326,11 +1326,13 @@ public class PlatformCharacter : MonoBehaviour {
 	[RPC]
 	void RegisterCharacterGameObjectInPlayerDictionary_Rpc(NetworkPlayer netPlayerOwner)
 	{
+		Debug.LogWarning("RegisterCharacterGameObjectInPlayerDictionary_Rpc is running for netPlayer " + netPlayerOwner.ToString());
+
 		Player player;
 		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayerOwner, out player))
 		{
 			player.platformCharacterScript = this;
-			Debug.LogWarning("player.platformCharacterScript set");
+			Debug.LogWarning("netPlayer " + netPlayerOwner.ToString() + " -> player.platformCharacterScript set");
 			if(onRegistered != null)
 			{
 				onRegistered(netPlayerOwner, player);

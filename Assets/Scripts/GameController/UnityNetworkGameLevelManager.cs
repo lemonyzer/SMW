@@ -46,12 +46,21 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	void Start()
 	{
 		Network.isMessageQueueRunning = true;
-
+		Debug.LogWarning(this.ToString() + " Start()");
+		
 		if(Network.isServer)
 		{
-			if(PlayerDictionaryManager.serverHasPlayer)
+			Debug.LogWarning(this.ToString() + " Server!");
+			
+			if(PlayerDictionaryManager._instance.serverHasPlayer)
 			{
 				myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, Network.player);
+				Debug.LogWarning("Server: ClientLoadingLevelComplete_Rpc");
+				
+			}
+			else
+			{
+				Debug.LogWarning("PlayerDictionaryManager.serverHasPlayer == false");
 			}
 		}
 		else if(Network.isClient)
@@ -78,6 +87,8 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		 * kann Server direkt ausführen
 		 * 
 		 * Server: Aufgabe 2 bestätige die Clients, das diese auch Ihr UI Elemt für Ihren Eigenen Spieler erstellen!!!!
+		 * 
+		 * Server: Aufgabe 3 nach bestätigung der Clients, erstelle Charactere!
 		 **/
 
 
@@ -103,11 +114,22 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 
 		if(Network.isServer)
 		{
+			Player player = null;
+			if(!PlayerDictionaryManager._instance.TryGetPlayer(otherNetPlayer, out player))
+			{
+				Debug.LogError("ClientLoadingLevelComplete_Rpc ich bin netPlayer:" + Network.player + " und hab keinen Spieler zu NetPlayer:" + otherNetPlayer.ToString() + " gefunden!");
+				return;
+			}
 			// only Server
-
+			// TODO Reihenfolge beachten!!!
 			// bestätige Spieler seine teilnahme an aktueller Scene! (jetzt hat er auch die Buffered informationen hinter sich und bekommt für seinen Character relevante Infos)
-			myNetworkView.RPC("PingPongClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, otherNetPlayer);
-
+			// 1. erstelle UI Slot
+			myNetworkView.RPC("PingPongServerToAllClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, otherNetPlayer);
+			// only Server
+			// Instantiate Character GameObject
+			// 2. Spieler findet UI Slot
+			Debug.Log("InstantiateAndSetupPlayerCharacter");
+			InstantiateAndSetupPlayerCharacter(otherNetPlayer, player);
 
 			if(playerReadyCount >= Network.connections.Length)					//TODO >=
 			{
@@ -119,23 +141,15 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 
 	void PlayerLoadWasComplete(NetworkPlayer netPlayer)
 	{
+		Debug.LogWarning("PlayerLoadWasComplete() für " + netPlayer.ToString() + " erzeuge UI Element und speichere in PlayerDictionary<Player>!!!!!");
 		Player player;
 		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
 		{
 			Debug.LogWarning("ERROORORORORORRORORORERROORORORORORROROROR -> NO ERROR für netPlayer " + netPlayer.ToString() + " =)");
 			player.loadingLevelComplete = true;
 			playerReadyCount++;												//TODO umgeht Update() iteration über Network.connections array
-			
-			
+
 			onPlayerLevelLoadComplete(netPlayer, player); // erzeuge UI Slot
-			
-			
-			if(Network.isServer)
-			{
-				// only Server
-				// Instantiate Character GameObject
-				InstantiateAndSetupPlayerCharacter(netPlayer, player);
-			}
 		}
 		else
 		{
@@ -146,8 +160,9 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	}
 
 	[RPC]
-	void PingPongClientLoadingLevelComplete_Rpc(NetworkPlayer netPlayer, NetworkMessageInfo info)
+	void PingPongServerToAllClientLoadingLevelComplete_Rpc(NetworkPlayer netPlayer, NetworkMessageInfo info)
 	{
+		Debug.Log("PingPongServerToAllClientLoadingLevelComplete_Rpc von netPlayer: " + netPlayer);
 		// client hat spätestens jetzt seine informationen (Buffered RPC's aus vorherigenden Scene wurde jetzt schon beantwortet)
 		if (Network.player != netPlayer)
 		{

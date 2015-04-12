@@ -87,7 +87,7 @@ public class UIManager : MonoBehaviour {
 			btnStart.gameObject.SetActive(true);
 		}
 
-		if(!PlayerDictionaryManager.serverHasPlayer)
+		if(!PlayerDictionaryManager._instance.serverHasPlayer)
 		{
 			// Server hat noch keinen Spieler
 			// Auswhl zum Joinen anzeigen

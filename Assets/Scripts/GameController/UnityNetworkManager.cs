@@ -144,7 +144,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// </summary>
 	public void ServerJoins_Button()
 	{
-		PlayerDictionaryManager.serverHasPlayer = true;
+		PlayerDictionaryManager._instance.serverHasPlayer = true;
 		OnPlayerConnected(Network.player);
 	}
     
@@ -154,7 +154,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// </summary>
 	public void ServerLeave_Button()
 	{
-		PlayerDictionaryManager.serverHasPlayer = false;
+		PlayerDictionaryManager._instance.serverHasPlayer = false;
 		OnPlayerDisconnected(Network.player);
 	}
 
@@ -601,7 +601,7 @@ public class UnityNetworkManager : MonoBehaviour {
 		}
 
 		// Server!!!!
-		if(PlayerDictionaryManager.serverHasPlayer)
+		if(PlayerDictionaryManager._instance.serverHasPlayer)
 		{
 			Player currentPlayer;
 			if(PlayerDictionaryManager._instance.TryGetPlayer(Network.player, out currentPlayer))

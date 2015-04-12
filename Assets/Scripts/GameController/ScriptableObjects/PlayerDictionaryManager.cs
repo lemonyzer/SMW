@@ -6,13 +6,13 @@ public class PlayerDictionaryManager : MonoBehaviour {
 
 
 	public static PlayerDictionary _instance;
-	public static bool serverHasPlayer = false;//TODO//TODO//TODO//TODO//TODO//TODO//TODO
+//	public static bool serverHasPlayer = false;//TODO//TODO//TODO//TODO//TODO//TODO//TODO
 
 	void Awake()
 	{
 		#if UNITY_EDITOR
 		Debug.LogWarning(this.ToString() + ": Awake()");
-		Debug.LogWarning(this.ToString() + ": serverHasPlayer = " + serverHasPlayer);
+//		Debug.LogWarning(this.ToString() + ": serverHasPlayer = " + _instance.serverHasPlayer);
 		#endif
 		if(_instance == null)
 		{
@@ -55,7 +55,7 @@ public class PlayerDictionaryManager : MonoBehaviour {
 			{
 				// wenn aktuelles Level PhotonLobby ist, lösche alle Einträge aus PlayerDictionary
 				_instance.RemoveAll();
-				serverHasPlayer = false; //TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO
+				_instance.serverHasPlayer = false; //TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO
 				#if UNITY_EDITOR
 				Debug.LogWarning(this.ToString() +": _instance.RemoveAll() executed!!!");
 				#endif
