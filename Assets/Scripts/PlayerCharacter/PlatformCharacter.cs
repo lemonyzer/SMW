@@ -7,6 +7,9 @@ public class PlatformCharacter : MonoBehaviour {
 	public delegate void OnCharacterRegistered(NetworkPlayer netPlayer, Player player);
 	public static event OnCharacterRegistered onRegistered;
 
+	public delegate void OnLateJoinerInstantiateNetworkCharacter(NetworkPlayer netPlayer, Player player, int teamId);
+	public static event OnLateJoinerInstantiateNetworkCharacter onLateJoinerInstantiateNetworkCharacter;
+
 	public delegate void OnRageKill(GameObject killer, GameObject victim);
 	public static event OnRageKill onRageKill;
 
@@ -1324,25 +1327,41 @@ public class PlatformCharacter : MonoBehaviour {
 	/// </summary>
 	/// <param name="netPlayerOwner">Net player owner.</param>
 	[RPC]
-	void RegisterCharacterGameObjectInPlayerDictionary_Rpc(NetworkPlayer netPlayerOwner)
+	void RegisterCharacterGameObjectInPlayerDictionary_Rpc(NetworkPlayer netPlayerOwner, string userName, int teamId)
 	{
 		Debug.LogWarning("RegisterCharacterGameObjectInPlayerDictionary_Rpc is running for netPlayer " + netPlayerOwner.ToString());
 
-		Player player;
-		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayerOwner, out player))
+		Player player = PlayerDictionaryManager._instance.GetPlayerAndCreateIfNotInDictionary(netPlayerOwner);
+		if(player != null)
 		{
 			player.platformCharacterScript = this;
-			Debug.LogWarning("netPlayer " + netPlayerOwner.ToString() + " -> player.platformCharacterScript set");
-			if(onRegistered != null)
+			Debug.LogWarning("netPlayer " + userName + " " + netPlayerOwner.ToString() + " -> player.platformCharacterScript set");
+
+			if(player.UIStatsSlotScript == null)
 			{
-				onRegistered(netPlayerOwner, player);
+				Debug.LogError("Spieler " + userName + " " + netPlayerOwner.ToString() + " hat kein UIStatsSlotScript -> ich bin late joiner und muss Slots jettz erstellens");
+
+				if(onLateJoinerInstantiateNetworkCharacter != null)
+				{
+					onLateJoinerInstantiateNetworkCharacter(netPlayerOwner, player, teamId);
+				}
+				else
+					Debug.LogError(this.ToString() + " no onCharacterRegistered() listeners");
+
 			}
 			else
-				Debug.LogError(this.ToString() + " no onCharacterRegistered() listeners");
+			{
+				if(onRegistered != null)
+				{
+					onRegistered(netPlayerOwner, player);
+				}
+				else
+					Debug.LogError(this.ToString() + " no onCharacterRegistered() listeners");
+			}
 		}
 		else
 		{
-			Debug.LogError("RegisterCharacterGameObjectInPlayerDictionary_Rpc failed: NetworkPlayer not in playerDicionary");
+			Debug.LogError("RegisterCharacterGameObjectInPlayerDictionary_Rpc failed: NetworkPlayer not in playerDicionary and Could not be created!!");
 		}
 	}
 

@@ -55,17 +55,17 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 
 	public void UpdateSlot(NetworkPlayer slotNetPlayer, Player slotPlayer)
 	{
-		Debug.Log(this.ToString() + " UpdateSlot()");
+		Debug.Log(this.ToString() + " UpdateSlot() " + slotPlayer.getUserName());
 
 		if(this.player != null)
-			Debug.LogError(this.ToString() + " " + this.player.GetHashCode());
+			Debug.LogError(this.ToString() + " " + this.player.GetHashCode() + " "  + slotPlayer.getUserName());
 		else
 			Debug.LogError(this.ToString() + " " + "this.player == null");
 			
 		if(slotPlayer != null)
-			Debug.LogError(this.ToString() + " " + slotPlayer.GetHashCode());
+			Debug.LogError(this.ToString() + " " + slotPlayer.GetHashCode() + " "  + slotPlayer.getUserName());
 		else
-			Debug.LogError(this.ToString() + " " + "slotPlayer == null");
+			Debug.LogError(this.ToString() + " " + "slotPlayer == null" + " "  + slotPlayer.getUserName());
 
 		if(slotPlayer == null)
 			return;
@@ -73,18 +73,18 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 		this.player = slotPlayer;		// Zuordnung
 
 		if(this.player != null)
-			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + this.player.GetHashCode());
+			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + this.player.GetHashCode() + " "  + slotPlayer.getUserName());
 		else
-			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + "this.player == null");
+			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + "this.player == null" + " "  + slotPlayer.getUserName());
 
 		this.netPlayer = slotNetPlayer;
 
 		if(slotAvatar == null)
 		{
-			Debug.LogError("slotAvatar not Set, Start() needs to run first!");
+			Debug.LogError("slotAvatar not Set, Start() needs to run first!" + " "  + slotPlayer.getUserName());
 		}
 		slotAvatar.sprite = player.characterScriptableObject.charIdleSprites[0];
-		slotName.text = player.getNetworkPlayer().ipAddress;
+		slotName.text = player.getNetworkPlayer().ipAddress + " " + slotPlayer.getUserName();
 
 		if(Network.isClient)
 		{

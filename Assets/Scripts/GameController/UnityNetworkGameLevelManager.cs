@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent (typeof(UnityNetworkManager))]
 public class UnityNetworkGameLevelManager : MonoBehaviour {
 
-	public delegate void OnPlayerLevelLoadComplete(NetworkPlayer netPlayer, Player newPlayer);
+	public delegate void OnPlayerLevelLoadComplete(NetworkPlayer netPlayer, Player newPlayer, int teamId);
 	public static event OnPlayerLevelLoadComplete onPlayerLevelLoadComplete;
 
 	public GameObject _PrefabCharacterLibrary;
@@ -18,11 +18,13 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 
 	void OnEnable()
 	{
+		UnityNetworkManager.onNetworkLevelGameLoaded += onNetworkLevelGameLoaded;
 		UnityNetworkManager.onPlayerDisconnected += OnPlayerDisconnectedEvent;
 	}
 	
 	void OnDisable()
 	{
+		UnityNetworkManager.onNetworkLevelGameLoaded -= onNetworkLevelGameLoaded;
 		UnityNetworkManager.onPlayerDisconnected -= OnPlayerDisconnectedEvent;
 	}
 
@@ -43,11 +45,13 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 //		baseManager = this.GetComponent<UnityNetworkManager>();
 	}
 
-	void Start()
+	/// <summary>
+	/// Ons the network level game loaded.
+	/// 
+	///  NetworkLevelLoader -> SendMessage @ all GameObject -> OnNetworkLevelLoaded() -> UnityNetworkManager: checks which level (CharacterSlectionLevel or GameLevel) -> Delegate/Event onNetworkLevelGameLoaded
+	/// </summary>
+	void onNetworkLevelGameLoaded()
 	{
-		Network.isMessageQueueRunning = true;
-		Debug.LogWarning(this.ToString() + " Start()");
-		
 		if(Network.isServer)
 		{
 			Debug.LogWarning(this.ToString() + " Server!");
@@ -55,9 +59,8 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 			if(PlayerDictionaryManager._instance.serverHasPlayer)
 			{
 				Debug.LogWarning("Server: ClientLoadingLevelComplete_Rpc");
-				myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.OthersBuffered, Network.player);				//TODO this was the BUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				PlayerLoadWasComplete(Network.player);
-				
+				myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);
+//				PlayerLoadWasComplete(Network.player);
 			}
 			else
 			{
@@ -66,8 +69,14 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		}
 		else if(Network.isClient)
 		{
-			myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, Network.player);		// ACHTUNG wird auch lokal ausgeführt!!!! für spieler der später kommt stehen seine eigenen informationen NOCH NICHT zur verfügung
+			myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);		// ACHTUNG wird auch lokal ausgeführt!!!! für spieler der später kommt stehen seine eigenen informationen NOCH NICHT zur verfügung
 		}
+	}
+
+	void Start()
+	{
+//		Network.isMessageQueueRunning = true;
+		Debug.LogWarning(this.ToString() + " Start()");
 	}
 
 	/// <summary>
@@ -102,6 +111,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		// TODO
 		// Server erhält ClientLoadingLevelComplete und sendet an diese eine Person wer noch alles LoadingComplete
 
+		// nur für andere Spieler, Server bestätigt meinen Client		// dadurch können Late Join Spieler mitmachen (bekommen RPCs in Richtiger reihenfolge)
 		if (Network.player != otherNetPlayer)
 		{
 			// sende information von neuem Spieler in der Szene den anderen Spielern mit
@@ -128,7 +138,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 			// TODO Reihenfolge beachten!!!
 			// bestätige Spieler seine teilnahme an aktueller Scene! (jetzt hat er auch die Buffered informationen hinter sich und bekommt für seinen Character relevante Infos)
 			// 1. erstelle UI Slot
-			myNetworkView.RPC("PingPongServerToAllClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, otherNetPlayer);
+			myNetworkView.RPC("PingPongServerToAllClientLoadingLevelComplete_Rpc", RPCMode.All, otherNetPlayer);
 			// only Server
 			// Instantiate Character GameObject
 			// 2. Spieler findet UI Slot
@@ -153,13 +163,13 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 			player.loadingLevelComplete = true;
 			playerReadyCount++;												//TODO umgeht Update() iteration über Network.connections array
 
-			onPlayerLevelLoadComplete(netPlayer, player); // erzeuge UI Slot
+			onPlayerLevelLoadComplete(netPlayer, player, player.team.mId); // erzeuge UI Slot
 
-			//TODO wegen OthersBuffered!!
-			if(Network.isServer && netPlayer == Network.player)
-			{
-				InstantiateAndSetupPlayerCharacter(netPlayer, player);
-			}
+//			//TODO wegen OthersBuffered!!
+//			if(Network.isServer && netPlayer == Network.player)
+//			{
+//				InstantiateAndSetupPlayerCharacter(netPlayer, player);
+//			}
 		}
 		else
 		{
@@ -201,8 +211,8 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		//TODO myNetworkView.RPC("RegisterCharacterGameObjectInPlayerDictionary_Rpc", RPCMode.AllBuffered, netPlayer, newObjectsNetworkView.viewID );
 
 		// Call an RPC on this new PhotonView, set the NetworkPlayer who controls this new player
-		// TODO BUFFERED because Player joins running session needs to know who is owner!
-		newObjectsNetworkView.RPC("RegisterCharacterGameObjectInPlayerDictionary_Rpc", RPCMode.AllBuffered, netPlayerOwner );
+		// TODO BUFFERED because Player joins running session needs to know who is owner && owners TEAM! 
+		newObjectsNetworkView.RPC("RegisterCharacterGameObjectInPlayerDictionary_Rpc", RPCMode.AllBuffered, netPlayerOwner, realOwner.getUserName(), realOwner.team.mId );
 		newObjectsNetworkView.RPC("SetCharacterControlsOwner", RPCMode.AllBuffered, netPlayerOwner);			// RealOwner Script
 		newObjectsNetworkView.RPC("DeactivateKinematic", RPCMode.AllBuffered);							// PlatformCharacter Script
 	}

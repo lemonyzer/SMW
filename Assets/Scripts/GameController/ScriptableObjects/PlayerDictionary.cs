@@ -284,4 +284,67 @@ public class PlayerDictionary : ScriptableObject {
 		playerDictionary.Clear();
 		Debug.LogWarning("Dictionary cleared.");
 	}
+
+
+
+
+
+
+
+	public bool IsNetPlayerInDictionary(NetworkPlayer netPlayer, out Player player)
+	{
+		player = null;
+		if (PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public Player CreatePlayerInDictionary(NetworkPlayer netPlayer)
+	{
+		Player newPlayer = new Player(netPlayer);
+		PlayerDictionaryManager._instance.AddPlayer(netPlayer, newPlayer);
+		return newPlayer;
+	}
+	
+	public Player GetPlayerAndCreateIfNotInDictionary(NetworkPlayer netPlayer)
+	{
+		Player player = null;
+		if (IsNetPlayerInDictionary(netPlayer, out player))
+		{
+			// schon vorhanden
+			
+			if(player != null)
+			{
+				return player;
+			}
+		}
+		else
+		{
+			player = CreatePlayerInDictionary(netPlayer);
+			if (player != null)
+			{
+				return player;
+			}
+		}
+		Debug.LogError("ERROR GetPlayerAndCreateIfNotInDictionary ERROR");
+		return null;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -7,6 +7,11 @@ public class UnityNetworkManager : MonoBehaviour {
 
 	public GameObject prefabCharacterPreviewTemplate;
 
+	public delegate void OnNetworkLevelCharacterSelectionLoaded();
+	public static event OnNetworkLevelCharacterSelectionLoaded onNetworkLevelCharacterSelectionLoaded;
+
+	public delegate void OnNetworkLevelGameLoaded();
+	public static event OnNetworkLevelGameLoaded onNetworkLevelGameLoaded;
 
 	public delegate void OnNewPlayerConnected(NetworkPlayer netPlayer, Player newPlayer);
 	public static event OnNewPlayerConnected onNewPlayerConnected;
@@ -229,7 +234,6 @@ public class UnityNetworkManager : MonoBehaviour {
 
 	void OnNetworkLoadedLevel()
 	{
-
 		if(myNetworkView == null)
 		{
 			Debug.Log("OnNetworkLoadedLevel() ------------> myNetworkView == null");
@@ -238,18 +242,31 @@ public class UnityNetworkManager : MonoBehaviour {
 
 		if (!UIManager.IsCurrentlyInGameScene())
 		{
+			if(onNetworkLevelCharacterSelectionLoaded != null)
+			{
+				onNetworkLevelCharacterSelectionLoaded();
+			}
+
 			if (Network.isClient)
 			{
-				
-//				Debug.LogError("IsClient() Name " + UnityNetworkConnectMenu.GetLastUsedGameSessionNameStatic() );
 				myNetworkView.RPC("MyAdditionalInfo", RPCMode.Server, Network.player, UnityNetworkConnectMenu.GetLastUsedGameSessionNameStatic() );
 			}
 			else if (Network.isServer)
 			{
-				// enable join button, nicht zwingend notwendig. playerDictionary wird informiert.
-
-
-
+			}
+		}
+		else
+		{
+			// GameScene!
+			if(onNetworkLevelGameLoaded != null)
+			{
+				onNetworkLevelGameLoaded();
+			}
+			if (Network.isClient)
+			{
+			}
+			else if (Network.isServer)
+			{
 			}
 		}
 	}
@@ -288,11 +305,13 @@ public class UnityNetworkManager : MonoBehaviour {
 		Debug.Log("Current Scene = " + Application.loadedLevelName + " (" + Application.loadedLevel + ") -> start loading GameScene " + nextScene);
 		this.nextScene = nextScene;
 
-		// MessageQueue pausieren
-		Network.isMessageQueueRunning = false;
+		NetworkLevelLoader.Instance.LoadLevel( nextScene );		//TODO IMPORTANT -> OnNetworkLevelLoaded() will executed when RPCs are READY!!
 
-		// Level laden
-		Application.LoadLevel(nextScene);
+//		// MessageQueue pausieren
+//		Network.isMessageQueueRunning = false;
+//
+//		// Level laden
+//		Application.LoadLevel(nextScene);
 
 		// MessageQueue fortsetzen
 		//TODO ausgelagert UnityNetworkGameLevelManager

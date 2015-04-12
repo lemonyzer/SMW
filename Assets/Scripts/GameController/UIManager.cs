@@ -39,40 +39,20 @@ public class UIManager : MonoBehaviour {
 
 	void Start()
 	{
-		if(Network.peerType == NetworkPeerType.Server)
-		{
-			if(Application.loadedLevelName == Scenes.unityNetworkCharacterSelection)
-			{
-				// in CharacterSelection Scene 
-				Server();
-			}
-			else
-			{
-				//TODO GENERIC
-//				// in allen anderen Scenen in dem der UIManager sitzt
-//				if(Network.isServer)
-//				{
-//					if(PlayerDictionaryManager.serverHasPlayer)
-//					{
-//						Player serverPlayer;
-//						if( PlayerDictionaryManager._instance.TryGetPlayer(Network.player, out serverPlayer) )
-//						{
-//							AddNewPlayerStatsSlot(Network.player, serverPlayer);
-//						}
-//						else
-//						{
-//							Debug.LogError("Server Has Player set, but no player in dictionary found!");
-//						}
-//					}
-//				}
-			}
-		}
+
 	}
 
-	void OnServerInitialized()
+
+	void onNetworkLevelCharacterSelectionLoaded()
 	{
-		Debug.Log("OnServerInitialized");
-		Server ();
+		if (Network.isServer)
+		{
+			Server();
+		}
+		else
+		{
+			// Client Code...
+		}
 	}
 
 	/// <summary>
@@ -100,6 +80,9 @@ public class UIManager : MonoBehaviour {
 
 	void OnEnable()
 	{
+		// Server Join Button
+		UnityNetworkManager.onNetworkLevelCharacterSelectionLoaded += onNetworkLevelCharacterSelectionLoaded;
+
 		// Selector Slot
 		UnityNetworkManager.onNewPlayerConnected += AddNewPlayerSelectorSlot;
 		UnityNetworkManager.onPlayerChangedSelection += UpdateSelectorSlot;
@@ -107,6 +90,7 @@ public class UIManager : MonoBehaviour {
 
 		// Stats Slot
 		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete += AddNewPlayerStatsSlot;		// player has no properties set!!!
+		PlatformCharacter.onLateJoinerInstantiateNetworkCharacter += AddNewPlayerStatsSlot;										// player gets properties from Character GO
 		PlatformCharacter.onRegistered += UpdateStatesSlot;										// player gets properties from Character GO
 
 		// Server UI
@@ -118,6 +102,9 @@ public class UIManager : MonoBehaviour {
 	
 	void OnDisable()
 	{
+		// Server Join Button
+		UnityNetworkManager.onNetworkLevelCharacterSelectionLoaded -= onNetworkLevelCharacterSelectionLoaded;
+		
 		// Selector Slot
 		UnityNetworkManager.onNewPlayerConnected -= AddNewPlayerSelectorSlot;
 		UnityNetworkManager.onPlayerChangedSelection -= UpdateSelectorSlot;
@@ -125,6 +112,7 @@ public class UIManager : MonoBehaviour {
 
 		// Selector Slot
 		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete -= AddNewPlayerStatsSlot;		// player has no properties set!!!
+		PlatformCharacter.onLateJoinerInstantiateNetworkCharacter -= AddNewPlayerStatsSlot;										// player gets properties from Character GO
 		PlatformCharacter.onRegistered -= UpdateStatesSlot;										// player gets properties from Character GO
 
 		// Server UI
@@ -198,13 +186,27 @@ public class UIManager : MonoBehaviour {
 		player.UISelectorSlotScript.UpdateSlot(player);
     }
 
-	void AddNewPlayerStatsSlot(NetworkPlayer netPlayer, Player player)
+	void AddNewPlayerStatsSlot(NetworkPlayer netPlayer, Player player, int teamId)
 	{
 		//random Rand
-		int randomColor = Random.Range(0,playerStatsSlotPrefabs.Length);
+//		int randomColor = Random.Range(0,playerStatsSlotPrefabs.Length);
+		if(teamId > 0 && teamId < playerStatsSlotPrefabs.Length)
+		{
+
+		}
+		else
+		{
+			Debug.LogError ("TeamId " + teamId + " stimmt nicht mit playerStatsSlotPrefabs.Length = " + playerStatsSlotPrefabs.Length + " überein!");
+			if (playerStatsSlotPrefabs.Length > 0)
+				teamId = playerStatsSlotPrefabs.Length -1;
+			else
+			{
+				return;
+			}
+		}
 
 		// erzeuge UI Slot Element
-		GameObject statsSlot = Instantiate(playerStatsSlotPrefabs[randomColor].gameObject, Vector3.zero, Quaternion.identity) as GameObject;
+		GameObject statsSlot = Instantiate(playerStatsSlotPrefabs[teamId].gameObject, Vector3.zero, Quaternion.identity) as GameObject;
 
 		// füge es GridLayout hinzu
 		statsSlot.transform.SetParent(PlayerStatsSlotPanel.transform, false);
@@ -286,13 +288,10 @@ public class UIManager : MonoBehaviour {
 		{
 			if(player.UIStatsSlotScript == null)
 			{
-				Debug.LogError("player.UIStatsSlotScript == null");
-				return;
+				Debug.LogError("player.UIStatsSlotScript == null " + player.getUserName());
+//				AddNewPlayerStatsSlot(netPlayer, player);
 			}
-			else
-			{
-				player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
-			}
+			player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
 		}
 	}
 
