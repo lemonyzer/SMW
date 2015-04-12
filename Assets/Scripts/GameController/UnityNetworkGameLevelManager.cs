@@ -54,8 +54,9 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 			
 			if(PlayerDictionaryManager._instance.serverHasPlayer)
 			{
-				myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.AllBuffered, Network.player);
 				Debug.LogWarning("Server: ClientLoadingLevelComplete_Rpc");
+				myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.OthersBuffered, Network.player);				//TODO this was the BUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				PlayerLoadWasComplete(Network.player);
 				
 			}
 			else
@@ -75,9 +76,12 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	/// <param name="netPlayer">Net player.</param> ----------------- to work also on Server to Server message
 	/// <param name="info">Info.</param>
 	[RPC]
-	void ClientLoadingLevelComplete_Rpc(NetworkPlayer otherNetPlayer, NetworkMessageInfo info)
+	void ClientLoadingLevelComplete_Rpc(NetworkPlayer otherNetPlayer)
 	{
+		if (Network.isServer)
+		{
 
+		}
 		/**
 		 * Clients: Da diese RPC auch lokal ausgeführt wird muss 
 		 * dafür gesorgt werden das diese RPC nur für andere Mitspieler ausgeführt wird
@@ -150,6 +154,12 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 			playerReadyCount++;												//TODO umgeht Update() iteration über Network.connections array
 
 			onPlayerLevelLoadComplete(netPlayer, player); // erzeuge UI Slot
+
+			//TODO wegen OthersBuffered!!
+			if(Network.isServer && netPlayer == Network.player)
+			{
+				InstantiateAndSetupPlayerCharacter(netPlayer, player);
+			}
 		}
 		else
 		{
@@ -157,6 +167,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 			// wird aufgerufen, wenn Spieler in laufende Game Session eingestiegen ist
 			
 		}
+
 	}
 
 	[RPC]

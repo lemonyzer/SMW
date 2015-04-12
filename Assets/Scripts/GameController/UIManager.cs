@@ -153,7 +153,7 @@ public class UIManager : MonoBehaviour {
 		Destroy(serverSelectorSlot);
 	}
 
-	bool IsCurrentlyInGameScene()
+	static public bool IsCurrentlyInGameScene()
 	{
 		if (Application.loadedLevelName == Scenes.unityNetworkGame)
 			return true;

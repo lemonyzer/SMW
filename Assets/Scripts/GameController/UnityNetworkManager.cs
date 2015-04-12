@@ -465,8 +465,12 @@ public class UnityNetworkManager : MonoBehaviour {
 		}
 
 		//Server notifys other Clients about new Player
-		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.AllBuffered, netPlayer, avatar.charId, playerTeam.mId, teamPos);		// nicht RPCMode.AllBuffered ! //TODO changed to AllBuffered @ 12.04.2015
+		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.OthersBuffered, netPlayer, avatar.charId, playerTeam.mId, teamPos);		// nicht RPCMode.AllBuffered ! //TODO changed to AllBuffered @ 12.04.2015
 
+		if (UserIsAuthoritative())
+		{
+			OnPlayerConnected_Rpc(netPlayer, avatar.charId, playerTeam.mId, teamPos);
+		}
 	}
 
 
@@ -562,6 +566,12 @@ public class UnityNetworkManager : MonoBehaviour {
 
 	void CreateNewCharacterPreviewTemplate(NetworkPlayer owningNetPlayer, int teamId, int teamPos, SmwCharacter character)
 	{
+
+		if (UIManager.IsCurrentlyInGameScene())
+		{
+			return;
+		}
+
 		GameObject charPreviewGo = (GameObject) Instantiate(prefabCharacterPreviewTemplate, GetTeamSlotPosition(teamId,teamPos) , Quaternion.identity);
 		CharacterPreview charPreviewScript = charPreviewGo.GetComponent<CharacterPreview>();
 		charPreviewScript.run = character.charRunSprites;
@@ -628,7 +638,12 @@ public class UnityNetworkManager : MonoBehaviour {
 		// TODO auf Reihenfolge ACHTEN in UnityNetworGameLevelkManager wird auf player aus playerDictionary zugeggriffen !!!
 		// TODO done, wenn IF IF IF delegate events DIREKT synchron aufgerufen werden ist!
 
-		myNetworkView.RPC("OnPlayerDisconnected_Rpc", RPCMode.AllBuffered, netPlayer);	// RPCMode.All			// TODO changed @ 12.04.2015 to AllBuffered
+		myNetworkView.RPC("OnPlayerDisconnected_Rpc", RPCMode.OthersBuffered, netPlayer);	// RPCMode.All			// TODO changed @ 12.04.2015 to AllBuffered
+
+		if (UserIsAuthoritative())
+		{
+			OnPlayerDisconnected_Rpc (netPlayer);
+		}
 	}
 
 	/// <summary>
@@ -870,7 +885,7 @@ public class UnityNetworkManager : MonoBehaviour {
 				int newTeamPos = newTeam.AddMember(player);
 				if(newTeamPos != Team.ErrorNoFreePosition)
 				{
-					myNetworkView.RPC("UpdatePlayerSelection_Rpc", RPCMode.All, requestedNetPlayer, currentSelectedCharacterAvatarId, newTeamId, player.teamPos);
+					myNetworkView.RPC("UpdatePlayerSelection_Rpc", RPCMode.AllBuffered, requestedNetPlayer, currentSelectedCharacterAvatarId, newTeamId, player.teamPos);
 				}
 				else
 				{
@@ -981,7 +996,7 @@ public class UnityNetworkManager : MonoBehaviour {
 //			Debug.Log(requestedNetPlayer.ToString() + " ist Server (Hosting Player)");
 			
 
-		myNetworkView.RPC("UpdatePlayerSelection_Rpc", RPCMode.All, requestedNetPlayer, nextUnSelectedCharacterAvatarId, currentTeamId, player.teamPos);
+		myNetworkView.RPC("UpdatePlayerSelection_Rpc", RPCMode.AllBuffered, requestedNetPlayer, nextUnSelectedCharacterAvatarId, currentTeamId, player.teamPos);
 	}
 
 	[RPC]
