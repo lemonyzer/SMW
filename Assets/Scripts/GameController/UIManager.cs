@@ -188,9 +188,25 @@ public class UIManager : MonoBehaviour {
 
 	void AddNewPlayerStatsSlot(NetworkPlayer netPlayer, Player player, int teamId)
 	{
+
+		/**
+		 * Warum zwei mal AdNewPlayerStatsSlot ?
+		 * 
+		 * man könnte die StatsSlots bereits anzeigen lassen bevor die SpielCharacter Instantiert wurden!
+		 * 
+		 * waiting for other player -> isReady [x]
+		 * 
+		 **/
+
+		if (player.UIStatsSlotScript != null)
+		{
+			Debug.LogWarning(player.getUserName()+ " Id:" + netPlayer.ToString() + " hat bereits ein UI Stats Slots..."); 
+			return;
+		}
+
 		//random Rand
 //		int randomColor = Random.Range(0,playerStatsSlotPrefabs.Length);
-		if(teamId > 0 && teamId < playerStatsSlotPrefabs.Length)
+		if(teamId >= 0 && teamId < playerStatsSlotPrefabs.Length)
 		{
 
 		}

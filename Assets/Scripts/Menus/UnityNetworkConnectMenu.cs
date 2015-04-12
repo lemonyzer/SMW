@@ -6,6 +6,13 @@ using System.Collections.Generic;
 
 public class UnityNetworkConnectMenu : MonoBehaviour
 {
+
+	public void BtnDefaultPort()
+	{
+		myServerPort = defaultMyServerPort;
+		inputFieldMyServerPort.text = defaultMyServerPort + "";
+	}
+
 	void OnEnable()
 	{
 		ConnectButtonScript.OnClicked += Connect_Button;
@@ -15,6 +22,54 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 	{
 		ConnectButtonScript.OnClicked -= Connect_Button;
 	}
+
+	public void OnServernameHasChanged(string newServername)
+	{
+		SaveUsedGameSessionName(newServername);
+	}
+
+	public void OnMyServerPortHasChanged(string newMyServerPort)
+	{
+		bool error = false;
+		int port = defaultMyServerPort;
+		if (string.IsNullOrEmpty(newMyServerPort))
+		{
+			// port string is empty
+			error = true;
+		}
+		else
+		{
+			if (int.TryParse(newMyServerPort, out port))
+			{
+				if (IsPortValid(port))
+				{
+
+				}
+				else
+				{
+					// port is not Valid
+					error = true;
+				}
+			}
+			else
+			{
+				// int parsing failed
+				error = true;
+			}
+		}
+
+		if(error)
+		{
+			port = defaultMyServerPort;
+			// input was wrong, update InputField's text 
+			inputFieldMyServerPort.text = port + "";
+		}
+
+		SaveUsedGameSessionPort(port);
+
+
+	}
+
 
 
 	string nextScene = Scenes.unityNetworkCharacterSelection;
