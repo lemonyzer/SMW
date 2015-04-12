@@ -34,7 +34,7 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 	public InputField inputServerAdress;
 
 	private string registeredGameName = "smw";
-	private string registeredGameType = "smw_alpha_00";
+	public string registeredGameType = "smw_alpha_0.685";
 	private string registeredGameComment = "classic";
 
 	private string testStatus = "Testing network connection capabilities.";
