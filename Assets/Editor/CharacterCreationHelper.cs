@@ -632,7 +632,7 @@ public class CharacterCreationHelper : EditorWindow {
 	{
 		string[] result;
 		char[] charSeparators = new char[] {'_'};
-		string[] stringSeparators = new string[] {"[stop]"};
+		//string[] stringSeparators = new string[] {"[stop]"};
 		result = fileName.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
 		return result;
 	}
@@ -733,7 +733,17 @@ public class CharacterCreationHelper : EditorWindow {
 				if(currentCharacter.runtimeAnimatorController == null)					//TODO in welchem pfad wird das asset runtimeAnimatorController gespeichert???
 				{
 					Debug.LogError(f.Name + " currentCharacter.runtimeAnimatorController == null");
-					continue;		// skip this character
+
+					currentCharacter.runtimeAnimatorController = animController;
+					Debug.LogError(f.Name + " currentCharacter.runtimeAnimatorController Manuel hinzugefügt");
+					if(currentCharacter.runtimeAnimatorController == null)
+					{
+						continue;		// skip this character
+					}
+					else
+					{
+						Debug.LogError(f.Name + " currentCharacter.runtimeAnimatorController Manuel hinzugefügt: Erfolgreich");
+					}
 				}
 
 				//prefab erstellen
@@ -1341,7 +1351,7 @@ public class CharacterCreationHelper : EditorWindow {
 			return null;
 		}
 
-		string pathRelativeToProject = "Assets/" + pathRelativeToAssetsPath;
+//		string pathRelativeToProject = "Assets/" + pathRelativeToAssetsPath;
 		string prefabPathRelativeToProject = "Assets/" + pathRelativeToAssetsPath + "/" + charName + ".prefab";
 
 		UnityEngine.Object emptyObj = PrefabUtility.CreateEmptyPrefab (prefabPathRelativeToProject);

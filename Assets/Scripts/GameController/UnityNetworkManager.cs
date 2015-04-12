@@ -144,8 +144,11 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// </summary>
 	public void ServerJoins_Button()
 	{
+		//TODO abfrage ob NetworkLevelLoaded -> sonst wird OnPlayerConnected RPC nicht ausgeführt!!
+		//TODO abfrage ob NetworkLevelLoaded -> und myAdditionalInfos ebenfalls!
 		PlayerDictionaryManager._instance.serverHasPlayer = true;
 		OnPlayerConnected(Network.player);
+		MyAdditionalInfo(Network.player, "S_" + UnityNetworkConnectMenu.GetLastUsedGameSessionNameStatic());
 	}
     
 	//TODO generic (like client connect)
@@ -224,17 +227,47 @@ public class UnityNetworkManager : MonoBehaviour {
 		}
 	}
 
+	void OnNetworkLoadedLevel()
+	{
+
+		if(myNetworkView == null)
+		{
+			Debug.Log("OnNetworkLoadedLevel() ------------> myNetworkView == null");
+			myNetworkView = GetComponent<NetworkView>();
+		}
+
+		if (!UIManager.IsCurrentlyInGameScene())
+		{
+			if (Network.isClient)
+			{
+				
+//				Debug.LogError("IsClient() Name " + UnityNetworkConnectMenu.GetLastUsedGameSessionNameStatic() );
+				myNetworkView.RPC("MyAdditionalInfo", RPCMode.Server, Network.player, UnityNetworkConnectMenu.GetLastUsedGameSessionNameStatic() );
+			}
+			else if (Network.isServer)
+			{
+				// enable join button, nicht zwingend notwendig. playerDictionary wird informiert.
+
+
+
+			}
+		}
+	}
+
 	/// <summary>
 	/// Start this instance.
 	/// </summary>
-	void Start () {
+	void Start ()
+	{
+		myNetworkView = GetComponent<NetworkView>();
+
+
 
 		//TODO persistent
 		//method A
 		//DontDestroyOnLoad(gameObject);
 		//method B singleton
 
-		myNetworkView = GetComponent<NetworkView>();
 
 		messages = new Queue<string>(messageCount);
 #if UNITY_EDITOR
@@ -342,26 +375,110 @@ public class UnityNetworkManager : MonoBehaviour {
 		AddMessage("Server " + Network.player.externalIP + ":" + Network.player.externalPort + " initialized. Slots: " + Network.maxConnections );
 	}
 
-	/// <summary>
-	/// Raises the connected to server event.
-	/// </summary>
-	void OnConnectedToServer()
+//	/// <summary>
+//	/// Raises the connected to server event.
+//	/// </summary>
+//	void OnConnectedToServer()
+//	{
+//		//TODO TODO TODO TODO 
+//		// wird nicht ausgeführt, OnConnectToServer läuft in vorheriger scene!!!!
+//		//TODO TODO TODO TODO 
+//		/** Client
+//		 *  Called on the client when you have successfully connected to a server.
+//		 **/
+//		Debug.LogError("OnConnectedToServer()");
+//		myNetworkView.RPC("MyAdditionalInfo", RPCMode.All, Network.player, "rul0r");		//TODO name dynmic from PlayerPrefs
+//	}
+
+
+//	bool IsNetPlayerInDictionary(NetworkPlayer netPlayer)
+//	{
+//		Player player;
+//		if (PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
+//		{
+//			return true;
+//        }
+//		return false;
+//    }
+
+	bool IsNetPlayerInDictionary(NetworkPlayer netPlayer, out Player player)
 	{
-		/** Client
-		 *  Called on the client when you have successfully connected to a server.
-		 **/
-		myNetworkView.RPC("MyAdditionalInfo", RPCMode.Server, "rul0r");
+		player = null;
+		if (PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
+		{
+			return true;
+        }
+		return false;
+    }
+
+	Player CreatePlayerInDictionary(NetworkPlayer netPlayer)
+	{
+		Player newPlayer = new Player(netPlayer);
+		PlayerDictionaryManager._instance.AddPlayer(netPlayer, newPlayer);
+		return newPlayer;
 	}
 
-	/// <summary>
+	Player GetPlayerAndCreateIfNotInDictionary(NetworkPlayer netPlayer)
+	{
+		Player player = null;
+		if (IsNetPlayerInDictionary(netPlayer, out player))
+		{
+			// schon vorhanden
+
+			if(player != null)
+			{
+				return player;
+			}
+		}
+		else
+		{
+			player = CreatePlayerInDictionary(netPlayer);
+			if (player != null)
+			{
+				return player;
+			}
+		}
+		Debug.LogError("ERROR GetPlayerAndCreateIfNotInDictionary ERROR");
+		return null;
+	}
+    
+    
+    /// <summary>
 	/// Mies the additional info.
 	/// </summary>
 	/// <param name="name">Name.</param>
 	/// <param name="info">Info.</param>
 	[RPC]
-	void MyAdditionalInfo(string name, NetworkMessageInfo info)
+	void MyAdditionalInfo(NetworkPlayer netPlayer, string userName)
 	{
 		//TODO sync Server & Clients name/nick
+		Debug.LogError("MyAdditionalInfo : " + userName + " " + netPlayer.ToString());
+		Player player = GetPlayerAndCreateIfNotInDictionary(netPlayer);
+		if (player != null)
+		{
+			player.setUserName(userName);
+			Debug.Log("Aktueller Name = " + player.getUserName() + " neuer Name " + player.getUserName());
+
+			CharacterPreview charPreviewScript = FindNetPlayersCharacterPreviewScript(netPlayer);
+			if(charPreviewScript != null)
+			{
+				charPreviewScript.SetUserName(userName);
+			}
+			else
+			{
+				Debug.LogError("charPreviewScript für netPlayer " + userName + " " + netPlayer.ToString() + " == null!");
+			}
+
+		}
+		else
+		{
+			Debug.LogError("MyAdditionalInfo netPlayer " + userName  + " " + netPlayer.ToString() + " nicht in PlayerDictionary gefunden & konnte nicht erstellt werden!");
+		}
+
+		if (UserIsAuthoritative())
+		{
+			myNetworkView.RPC("MyAdditionalInfo", RPCMode.Others, netPlayer, userName);
+		}
 	}
 
 	/// <summary>
@@ -419,25 +536,27 @@ public class UnityNetworkManager : MonoBehaviour {
 		 * 
 		 **/
 
-		AddMessage("Player " + netPlayer.guid + " connected " + netPlayer.externalIP + " ID: " + netPlayer.ToString());
+		AddMessage("Player " + netPlayer.ToString() + " connected " + netPlayer.externalIP + " ID: " + netPlayer.ToString());
 
 		//TODO update new Client (send all other Player informations)
 		//before his own player is send! (order stays correct)
 		if(netPlayer != Network.player)
 		{
 			// GENERIC: nicht für den Serverspieler ausführen!
-//TODO		SendCurrentPlayerDictionary(netPlayer);				//TODO changed to AllBuffered @ 12.04.2015
+			SendCurrentPlayerDictionary(netPlayer);				//TODO changed to AllBuffered @ 12.04.2015
 		}
 
 		//new Player gets first unselected Character
 		SmwCharacter avatar = myCharacterLibrary.characterList.GetFirstUnselected();
 		Team playerTeam = myTeams.GetNewPlayerTeam();
 		if(playerTeam != null)
-			Debug.Log(playerTeam.mId);
+			Debug.Log("OnPlayerConnected TeamId:" + playerTeam.mId);
 		else
 			Debug.LogError("playerTeam == null");
 			
 		int teamPos = Team.ErrorNoFreePosition;
+		Player currentPlayer = null;
+
 		if(avatar != null && playerTeam != null)
 		{
 			teamPos = playerTeam.GetFirstFreePosition();
@@ -450,7 +569,7 @@ public class UnityNetworkManager : MonoBehaviour {
 			}
 
 			//new Player will be registered in PlayerDictionary (Server)
-			SetupNewPlayer(netPlayer, avatar.charId, playerTeam.mId, teamPos);
+			currentPlayer = SetupNewPlayer(netPlayer, avatar.charId, playerTeam.mId, teamPos);
 		}
 		else
 		{
@@ -464,13 +583,17 @@ public class UnityNetworkManager : MonoBehaviour {
 			return;
 		}
 
-		//Server notifys other Clients about new Player
-		myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.OthersBuffered, netPlayer, avatar.charId, playerTeam.mId, teamPos);		// nicht RPCMode.AllBuffered ! //TODO changed to AllBuffered @ 12.04.2015
-
-		if (UserIsAuthoritative())
+		if (currentPlayer != null)
 		{
-			OnPlayerConnected_Rpc(netPlayer, avatar.charId, playerTeam.mId, teamPos);
+			//Server notifys other Clients about new Player
+			myNetworkView.RPC("OnPlayerConnected_Rpc", RPCMode.All, netPlayer, avatar.charId, playerTeam.mId, teamPos);		// nicht RPCMode.AllBuffered ! //TODO changed to AllBuffered @ 12.04.2015
+//			myNetworkView.RPC("MyAdditionalInfo", netPlayer, netPlayer, currentPlayer.getUserName());
 		}
+
+//		if (UserIsAuthoritative())
+//		{
+//			OnPlayerConnected_Rpc(netPlayer, avatar.charId, playerTeam.mId, teamPos);
+//		}
 	}
 
 
@@ -498,7 +621,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="netPlayer">Net player.</param>
 	/// <param name="characterAvatarId">Character avatar identifier.</param>
-	void SetupNewPlayer(NetworkPlayer netPlayer, int characterAvatarId, int teamId, int teamPos)
+	Player SetupNewPlayer(NetworkPlayer netPlayer, int characterAvatarId, int teamId, int teamPos)
 	{
 		// hole Character aus CharacterLibrary
 		SmwCharacter cA = myCharacterLibrary.characterList.Get(characterAvatarId);
@@ -511,35 +634,36 @@ public class UnityNetworkManager : MonoBehaviour {
 			// abbrechen
 			// return null;
 			// return ErrorCode
-			Debug.LogError(this.ToString() + " team == null");
+			Debug.LogError(this.ToString() + " team == null netPlayer " + netPlayer.ToString());
         }
 
 		if(cA == null)
 		{
-			Debug.LogError("SetupNewPlayer() characterAvatarId " + characterAvatarId + " is wrong!");
+			Debug.LogError("SetupNewPlayer() " + netPlayer.ToString() + " characterAvatarId  " + characterAvatarId + " is wrong!");
         }
         
         if(cA != null && team != null)
         {
 
+			// get Player (create new Player if Not exists)
+			Player player = GetPlayerAndCreateIfNotInDictionary(netPlayer);
+//			Debug.LogError(this.ToString() + " Player Hash: " + player.GetHashCode());
+			Debug.LogError(this.ToString() + " Player in Dictionary Hash: " + player.GetHashCode());
+			if(player == null)
+			{
+				Debug.LogError("Player wurde nicht gefunden und konnt nicht erstellt werden!");
+				return null;
+			}
+
 			// character is selected
 			cA.charInUse = true;
+			player.SetCharacterScriptableObject(cA);
 
 			// check if Sprite can be accessed
 			//TODO
 			// change Character Colors (Team Color)
 			TeamColor.ChangeColors(team.mColors, cA.charSpritesheet[0].texture);
-
-			// TODO connect to PLAYER CLASS ??? !!!!
-			CreateNewCharacterPreviewTemplate(netPlayer, teamId, teamPos, cA);
-
-			// create new Player
-			Player newPlayer = new Player(netPlayer, cA);
-			Debug.LogError(this.ToString() + " newPlayer Hash: " + newPlayer.GetHashCode());
-			// register newPlayer in PlayerDictionary
-			PlayerDictionaryManager._instance.AddPlayer(netPlayer, newPlayer);
-
-			int tempTeamPos = team.AddMember(newPlayer);
+			int tempTeamPos = team.AddMember(player);
 			if(tempTeamPos == teamPos)
 			{
 				Debug.Log("tempTeamPos == teamPos");
@@ -549,22 +673,31 @@ public class UnityNetworkManager : MonoBehaviour {
 				Debug.LogError("tempTeamPos != teamPos -> clients bekommen falsche Team Position mitgeteilt");
 			}
 
-			Debug.LogError(this.ToString() + " newPlayer in Dictionary Hash: " + newPlayer.GetHashCode());
+			// TODO connect to PLAYER CLASS ??? !!!!
+			CreateNewCharacterPreviewTemplate(netPlayer, player, teamId, teamPos, cA);
+
+			Debug.LogError(this.ToString() + " Player Hash: " + player.GetHashCode());
+			Debug.LogError(this.ToString() + " Player in Dictionary Hash: " + player.GetHashCode());
+
 			
 			if(onNewPlayerConnected != null)
 			{
 				// we have event listeners
-				onNewPlayerConnected(netPlayer, newPlayer);
+				onNewPlayerConnected(netPlayer, player);
 			}
 			else
 			{
 				Debug.LogWarning("onNewPlayerConnected no listeners!");
 			}
+
+			return player;
 			
 		}
+
+		return null;
 	}
 
-	void CreateNewCharacterPreviewTemplate(NetworkPlayer owningNetPlayer, int teamId, int teamPos, SmwCharacter character)
+	void CreateNewCharacterPreviewTemplate(NetworkPlayer owningNetPlayer, Player owningPlayer, int teamId, int teamPos, SmwCharacter character)
 	{
 
 		if (UIManager.IsCurrentlyInGameScene())
@@ -576,6 +709,8 @@ public class UnityNetworkManager : MonoBehaviour {
 		CharacterPreview charPreviewScript = charPreviewGo.GetComponent<CharacterPreview>();
 		charPreviewScript.run = character.charRunSprites;
 		charPreviewScript.netPlayerOwner = owningNetPlayer;		// connect to NetworPlayer GameObject.FindWithTag()
+		//charPreviewScript.txtUserName.text = owningPlayer.getName();
+		charPreviewScript.SetUserName(owningPlayer.getUserName());
 		charPreviewScript.enabled = true;
 	}
 
@@ -593,7 +728,10 @@ public class UnityNetworkManager : MonoBehaviour {
 			if(PlayerDictionaryManager._instance.TryGetPlayer(currentNetPlayer, out currentPlayer))
 			{
 				// found Player in playerDictionary
+				Debug.Log("sende Spieler: " + currentNetPlayer.ToString() + " mit userName " + currentPlayer.getUserName() );
 				myNetworkView.RPC("OnPlayerConnected_Rpc", netPlayer, currentNetPlayer, currentPlayer.characterScriptableObject.charId, currentPlayer.team.mId, currentPlayer.teamPos);
+				if(!string.IsNullOrEmpty(currentPlayer.getUserName()))
+					myNetworkView.RPC("MyAdditionalInfo", netPlayer, currentNetPlayer, currentPlayer.getUserName());
 			}
 		}
 
@@ -638,12 +776,12 @@ public class UnityNetworkManager : MonoBehaviour {
 		// TODO auf Reihenfolge ACHTEN in UnityNetworGameLevelkManager wird auf player aus playerDictionary zugeggriffen !!!
 		// TODO done, wenn IF IF IF delegate events DIREKT synchron aufgerufen werden ist!
 
-		myNetworkView.RPC("OnPlayerDisconnected_Rpc", RPCMode.OthersBuffered, netPlayer);	// RPCMode.All			// TODO changed @ 12.04.2015 to AllBuffered
+		myNetworkView.RPC("OnPlayerDisconnected_Rpc", RPCMode.All, netPlayer);	// RPCMode.All			// TODO changed @ 12.04.2015 to AllBuffered
 
-		if (UserIsAuthoritative())
-		{
-			OnPlayerDisconnected_Rpc (netPlayer);
-		}
+//		if (UserIsAuthoritative())
+//		{
+//			OnPlayerDisconnected_Rpc (netPlayer);
+//		}
 	}
 
 	/// <summary>
@@ -885,7 +1023,7 @@ public class UnityNetworkManager : MonoBehaviour {
 				int newTeamPos = newTeam.AddMember(player);
 				if(newTeamPos != Team.ErrorNoFreePosition)
 				{
-					myNetworkView.RPC("UpdatePlayerSelection_Rpc", RPCMode.AllBuffered, requestedNetPlayer, currentSelectedCharacterAvatarId, newTeamId, player.teamPos);
+					myNetworkView.RPC("UpdatePlayerSelection_Rpc", RPCMode.All, requestedNetPlayer, currentSelectedCharacterAvatarId, newTeamId, player.teamPos);
 				}
 				else
 				{
@@ -996,7 +1134,7 @@ public class UnityNetworkManager : MonoBehaviour {
 //			Debug.Log(requestedNetPlayer.ToString() + " ist Server (Hosting Player)");
 			
 
-		myNetworkView.RPC("UpdatePlayerSelection_Rpc", RPCMode.AllBuffered, requestedNetPlayer, nextUnSelectedCharacterAvatarId, currentTeamId, player.teamPos);
+		myNetworkView.RPC("UpdatePlayerSelection_Rpc", RPCMode.All, requestedNetPlayer, nextUnSelectedCharacterAvatarId, currentTeamId, player.teamPos);
 	}
 
 	[RPC]

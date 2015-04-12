@@ -45,7 +45,7 @@ public class PlayerDictionaryManager : MonoBehaviour {
 			}
 			foreach(Player player in buffer)
 			{
-				Debug.Log(this.ToString() +": " + player.getName() + " in PlayerDictionary gefunden!");
+				Debug.Log(this.ToString() +": " + player.getUserName() + " in PlayerDictionary gefunden!");
             }
 			if(Application.loadedLevelName == Scenes.photonLobby ||
 			   Application.loadedLevelName == Scenes.mainmenu ||

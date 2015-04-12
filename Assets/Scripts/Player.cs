@@ -49,6 +49,17 @@ public class Player
 	{
 		if (lifes > 0)
 			lifes--;
+		AddDeath();
+	}
+
+	public void AddDeath()
+	{
+		deads++;
+	}
+
+	public void AddNemesis()
+	{
+		nemesis++;
 	}
 
 
@@ -57,13 +68,13 @@ public class Player
 		health += value;
 	}
 
-	// Constructor SinglePlayer
-	public Player(int id, string name, Character character)
-	{
-		this.id = id;
-		this.name = name;
-		this.character = character;
-	}
+//	// Constructor SinglePlayer
+//	public Player(int id, string name, Character character)
+//	{
+//		this.id = id;
+//		this.name = name;
+//		this.character = character;
+//	}
 
 //	// Construcor Photon Network, Character Selector
 //	public Player(PhotonPlayer player, GameObject characterSelector)
@@ -87,14 +98,14 @@ public class Player
 //		this.character = character;
 //	}
 
-	// Construcor Unity Network
-	public Player(NetworkPlayer player, Character character)
-	{
-		this.networkPlayer = player;
-		this.name = networkPlayer.ToString (); 
-		this.id = int.Parse(name);
-		this.character = character;
-	}
+//	// Construcor Unity Network
+//	public Player(NetworkPlayer player, Character character)
+//	{
+//		this.networkPlayer = player;
+//		this.name = networkPlayer.ToString (); 
+//		this.id = int.Parse(name);
+//		this.character = character;
+//	}
 	
 	//	public int CompareTo(Character other)
 	//	{
@@ -131,12 +142,12 @@ public class Player
 		this.points = points;
 	}
 	
-	public string getName()
+	public string getUserName()
 	{
 		return name;
 	}
 	
-	public void setName(string name)
+	public void setUserName(string name)
 	{
 		this.name = name;
 	}
@@ -195,11 +206,16 @@ public class Player
 	public PlayerStatsSlotScript UIStatsSlotScript;
 
 	// Construcor Unity Network
-	public Player(NetworkPlayer player, SmwCharacter character)
+	public Player(NetworkPlayer player)
 	{
 		this.networkPlayer = player;
-		this.name = networkPlayer.ToString (); 
-		this.id = int.Parse(name);
+//		this.name = networkPlayer.ToString (); 
+//		this.id = int.Parse(name);
+
+	}
+
+	public void SetCharacterScriptableObject(SmwCharacter character)
+	{
 		this.characterScriptableObject = character;
 	}
 

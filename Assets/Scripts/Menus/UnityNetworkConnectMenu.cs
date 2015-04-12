@@ -33,16 +33,23 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 
 	public InputField inputServerAdress;
 
-	private string registeredGameName = "smw";
-	public string registeredGameType = "smw_alpha_0.685";
+	private string registeredGameType = "";			// unique gamestring (splitt serverlist from other games running on the same masterserver ex. Half-Life / Battlefield
+	[SerializeField]
+	private string _registeredGameName = "smw";
+	[SerializeField]
+	private string registeredGameVersion = "alpha";
+	[SerializeField]
+	private string registeredNetworkProtocolVersion = "0.688";
 	private string registeredGameComment = "classic";
+
+	private string registeredGameSessionName ="";
 
 	private string testStatus = "Testing network connection capabilities.";
 	private string testMessage = "Test in progress";
 	private string shouldEnableNatMessage;
 	private bool doneTesting = false;
 	private bool probingPublicIP = false;
-	private int serverPort = 25005;
+	private int myServerPort = 25005;
 	private ConnectionTesterStatus connectionTestResult = ConnectionTesterStatus.Undetermined;
 	private float timer = 0;
 	// Indicates if the useNat parameter be enabled when starting a server
@@ -51,7 +58,8 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 	public int clientSlots = 10;
 
 	private string ip = "tofast.ddns.net";
-	private int port = 25005;
+	[SerializeField]
+	private int connectPort = 25005;
 
 
 	// masterserver host list
@@ -80,8 +88,102 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 		}
 	}
 
+	static public string defaultGameSessionName = "User";
+	static string playerPrefsGameSessionName = "playerPrefsGameSessionName";
+
+	public int defaultMyServerPort = 25005;
+	static string playerPrefsMyServerPort = "playerPrefsMyServerPort";
+
+
+	bool IsPortValid(int port)
+	{
+		// Registered Ports
+		//  Ports 1024–49151
+		// Dynamic Ports
+		//  Ports 49152–65535
+		if (port > 1024 && port < 49152)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+ 	   	}
+
+    }
+
+    
+	void GetLastUsedGameSessionPort()
+	{
+		if (PlayerPrefs.HasKey(playerPrefsMyServerPort))
+		{
+			int lastGameSessionPort = PlayerPrefs.GetInt(playerPrefsMyServerPort);
+			
+			if ( IsPortValid (lastGameSessionPort) )
+			{
+				inputFieldMyServerPort.text = lastGameSessionPort + "";
+				return;
+			}
+		}
+		int temp = defaultMyServerPort;
+        inputFieldMyServerPort.text = temp + "";
+        
+        SaveUsedGameSessionPort (temp);
+	} 
+
+	public static string GetLastUsedGameSessionNameStatic()
+	{
+		if (PlayerPrefs.HasKey(playerPrefsGameSessionName))
+		{
+			string lastGameSessionName = PlayerPrefs.GetString(playerPrefsGameSessionName);
+			
+			if (!string.IsNullOrEmpty(lastGameSessionName))
+			{
+				return lastGameSessionName;
+			}
+		}
+		string temp = defaultGameSessionName + " " + Random.Range(1000,2000);
+		SaveUsedGameSessionName (temp);
+		return temp;
+	} 
+
+	void GetLastUsedGameSessionName()
+	{
+		if (PlayerPrefs.HasKey(playerPrefsGameSessionName))
+		{
+			string lastGameSessionName = PlayerPrefs.GetString(playerPrefsGameSessionName);
+
+			if (!string.IsNullOrEmpty(lastGameSessionName))
+			{
+				myGameSessionName.text = lastGameSessionName;
+				return;
+			}
+		}
+		string temp = defaultGameSessionName + " " + Random.Range(1000,2000);
+		myGameSessionName.text = temp ;
+
+		SaveUsedGameSessionName (temp);
+	} 
+
+	void SaveUsedGameSessionPort(int currentSessionPort)
+	{
+		PlayerPrefs.SetInt (playerPrefsMyServerPort, currentSessionPort);
+    }
+    
+	static void SaveUsedGameSessionName(string currentSessionName)
+	{
+		PlayerPrefs.SetString (playerPrefsGameSessionName, currentSessionName);
+	}
+
 	void Awake()
 	{
+		// UI in Awake nicht verfügbar
+		GetLastUsedGameSessionName();
+		GetLastUsedGameSessionPort();
+
+		registeredGameType = _registeredGameName + "_" + registeredGameVersion + "_" + registeredNetworkProtocolVersion;
+		registeredGameSessionName = _registeredGameName + "_" + registeredGameVersion;
+
 		hostList = new List<Host>();
 		hostList.Add(new Host("PC", ipPC));
 		hostList.Add(new Host("MWhite", ipMWhite));
@@ -150,6 +252,10 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 
 	void Start()
 	{
+
+//		// UI in Awake nicht verfügbar
+//		GetLastUsedGameSessionName();
+
 		textIP.text = "IP: " +myIP;
 		textExternalIP.text = "External IP: " + myExternalIP;
 //		UPnPPortMapping();
@@ -274,7 +380,7 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 //			Debug.Log("Connecting to " + tmpIp + " no NAT punchthrough" );
 //			Network.Connect( tmpIp, hosts[i].port );
 //		}
-		Network.Connect( inputServerAdress.text, port );
+		Network.Connect( inputServerAdress.text, connectPort );
 	}
 
 	public void ConnectWithIp_Button(string host, int port)
@@ -305,16 +411,48 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 		Network.Connect( hostGUID );
 	}
 
-	public InputField gameName;
+	public InputField myGameSessionName;
+	public InputField inputFieldMyServerPort;
 
 	public void HostOnline()
 	{
 		Network.Disconnect();
 		hosting = true;
-		Network.InitializeServer( clientSlots, port, useNat );
+
+		int inputFieldPort = 0;
+
+		if (int.TryParse (inputFieldMyServerPort.text, out inputFieldPort))
+		{
+			// Registered Ports
+			//  Ports 1024–49151
+			// Dynamic Ports
+			//  Ports 49152–65535
+
+			if (IsPortValid(inputFieldPort))
+			{
+				myServerPort = inputFieldPort;
+			}
+			else
+			{
+				myServerPort = defaultMyServerPort;
+			}
+		}
+		else
+		{
+			myServerPort = defaultMyServerPort;
+		}
+
+		inputFieldMyServerPort.text = myServerPort + "";
+
+		Network.InitializeServer( clientSlots, myServerPort, useNat );
 		MasterServer.dedicatedServer = false;
+
+		SaveUsedGameSessionName(myGameSessionName.text);
+		SaveUsedGameSessionPort(myServerPort);
+
 		//MasterServer.RegisterHost(registeredGameType, registeredGameName + " " + port.ToString() + " NAT:" + useNat.ToString() , registeredGameComment);
-		MasterServer.RegisterHost(registeredGameType, gameName.text + "; uses Nat=" + useNat + "; IP=" + myIP + ":" + port , registeredGameComment);
+		registeredGameSessionName = myGameSessionName.text + "; uses Nat=" + useNat + "; IP=" + myIP + ":" + myServerPort;
+		MasterServer.RegisterHost(registeredGameType, registeredGameSessionName, registeredGameComment);
 		
 		//			You can call RegisterHost more than once while a server is running 
 		//			to update the information stored on the Master Server. For example, 
@@ -326,7 +464,7 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 	{
 		Network.Disconnect();
 		hosting = true;
-		Network.InitializeServer( clientSlots, port, useNat );
+		Network.InitializeServer( clientSlots, myServerPort, useNat );
 	}
 
 	public void NatTest()
@@ -396,7 +534,7 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 			// This case is a bit special as we now need to check if we can 
 			// circumvent the blocking by using NAT punchthrough
 		case ConnectionTesterStatus.PublicIPPortBlocked:
-			testMessage = "Non-connectable public IP address (port " + serverPort +" blocked), running a server is impossible.";
+			testMessage = "Non-connectable public IP address (port " + myServerPort +" blocked), running a server is impossible.";
 			useNat = false;
 			// If no NAT punchthrough test has been performed on this public 
 			// IP, force a test
@@ -479,8 +617,8 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 		yield return new WaitForSeconds(10);
 		if(upnp.status == TNet.UPnP.Status.Success)
 		{
-			upnp.name = registeredGameName;
-			upnp.OpenUDP(port);
+			upnp.name = registeredGameSessionName;
+			upnp.OpenUDP(myServerPort);
 		}
 		upnp.Close();
 		upnpActive = false;
@@ -541,10 +679,10 @@ public class UnityNetworkConnectMenu : MonoBehaviour
 				Debug.Log("starting server, useNAT = " +useNat.ToString());
 #endif
 				hosting = true;
-				registeredGameName += "headless, useNat:" + useNat.ToString();
+				registeredGameSessionName += "headless, useNat:" + useNat.ToString();
 				serverRunning = true;
-				Network.InitializeServer( clientSlots, port, useNat );
-				MasterServer.RegisterHost(registeredGameType, registeredGameName, registeredGameComment);
+				Network.InitializeServer( clientSlots, myServerPort, useNat );
+				MasterServer.RegisterHost(registeredGameType, registeredGameSessionName, registeredGameComment);
 			}
 		}
 	}

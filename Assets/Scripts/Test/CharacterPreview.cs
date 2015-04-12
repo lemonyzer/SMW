@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 //TODO ist default enabled = false!
@@ -10,6 +11,12 @@ public class CharacterPreview : MonoBehaviour {
 	public GameObject myGO;
 	public Sprite[] run;
 	public NetworkPlayer netPlayerOwner;
+
+	[SerializeField]
+	private Button btnUserNameAndColor;
+	[SerializeField]
+	private Text txtUserName;
+
 	int currentSpriteIndex = 0;
 	SpriteRenderer spriteRenderer;
 
@@ -35,6 +42,18 @@ public class CharacterPreview : MonoBehaviour {
 		if(run == null)
 		{
 			this.enabled = false;
+		}
+	}
+
+	public void SetUserName(string userName)
+	{
+		if (btnUserNameAndColor != null)
+		{
+			btnUserNameAndColor.enabled = true;
+			ColorBlock cb = btnUserNameAndColor.colors;
+			cb.normalColor = Color.white;					// TODO color of team
+
+			txtUserName.text = userName;
 		}
 	}
 	

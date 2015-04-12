@@ -159,13 +159,13 @@ public class PlayerDictionary : ScriptableObject {
 		{
 			// alten Wert überschreiben
 			playerDictionary[networkPlayer] = player;
-			Debug.LogError(networkPlayer.ToString() + " was already in Dictionary. overwritten!");
+			Debug.LogError("networkPlayer " + networkPlayer.ToString() + " " + player.getUserName() + " was already in Dictionary. overwritten!");
 		}
 		else
 		{
 			// noch nicht vorhanden, item eintragen
 			playerDictionary.Add(networkPlayer, player);
-			Debug.Log(networkPlayer.ToString() + " added to Dictionary.");
+			Debug.Log("networkPlayer " + networkPlayer.ToString() + " " + player.getUserName() + " added to Dictionary.");
 		}
 	}
 
@@ -239,7 +239,7 @@ public class PlayerDictionary : ScriptableObject {
 		if(playerDictionary.TryGetValue(key, out currentPlayer))
 		{
 			playerDictionary[key] = value;
-			Debug.Log(key.ToString() + " was already in Dictionary, value " + currentPlayer.getName() + " replaced by " + value.getName());
+			Debug.Log(key.ToString() + " was already in Dictionary, value " + currentPlayer.getUserName() + " replaced by " + value.getUserName());
 		}
 		else
 		{

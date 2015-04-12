@@ -44,5 +44,10 @@ public class NetworkLevelLoader : MonoBehaviour
 
 		Network.isMessageQueueRunning = true;
 		Network.SetSendingEnabled( 0, true );
+
+		foreach (GameObject go in FindObjectsOfType(typeof(GameObject)))									// TODO IMPOARTANT
+		{
+			go.SendMessage("OnNetworkLoadedLevel", SendMessageOptions.DontRequireReceiver); 
+		}
 	}
 }
