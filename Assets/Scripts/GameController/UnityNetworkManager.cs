@@ -631,6 +631,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	[RPC]
 	void OnPlayerConnected_Rpc(NetworkPlayer netPlayer, int characterAvatarId, int teamId, int teamPos)
 	{
+		Debug.LogWarning("OnPlayerConnected_Rpc netPlayer:" + netPlayer.ToString() + " characterId: " + characterAvatarId + " " + myCharacterLibrary.characterList.Get(characterAvatarId).charName + " TeamID: " + teamId + " TeamPOS: " + teamPos);
 		if(UserIsAuthoritative())
 		{
 			// Server hat Spieler bereits registriert und eingestellt!

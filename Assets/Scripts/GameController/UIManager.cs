@@ -200,11 +200,11 @@ public class UIManager : MonoBehaviour {
 
 		if (player.UIStatsSlotScript != null)
 		{
-			Debug.LogWarning(player.getUserName()+ " Id:" + netPlayer.ToString() + " hat bereits ein UI Stats Slots..."); 
+			Debug.LogWarning(this.ToString() + " Player " + player.getUserName()+ " Id:" + netPlayer.ToString() + " hat bereits ein UI Stats Slots..."); 
 			UpdateStatesSlot (netPlayer, player);
 			return;
 		}
-
+		Debug.LogWarning(this.ToString() + " Player " + player.getUserName() + " hat noch kein UIStatsSlot, Instantierte und update Slot informationen!");
 		//random Rand
 //		int randomColor = Random.Range(0,playerStatsSlotPrefabs.Length);
 		if(teamId >= 0 && teamId < playerStatsSlotPrefabs.Length)
@@ -275,15 +275,18 @@ public class UIManager : MonoBehaviour {
 	{
 		if (killer.UIStatsSlotScript != null)
 		{
-			killer.UIStatsSlotScript.slotKills.text = "Kills: " + killer.getKills();
-			killer.UIStatsSlotScript.slotPoints.text = "Points: " + killer.getPoints();
+//			killer.UIStatsSlotScript.slotKills.text = "Kills: " + killer.getKills();
+//			killer.UIStatsSlotScript.slotPoints.text = "Points: " + killer.getPoints();
+			killer.UIStatsSlotScript.AddKill();
+			killer.UIStatsSlotScript.AddPoint();
 		}
 		else
 			Debug.LogError("killer.UIStatsSlotScript == NULL!");
 
 		if (victim.UIStatsSlotScript != null)
 		{
-			victim.UIStatsSlotScript.slotLifes.text = "Lifes: " + victim.GetLifes();
+//			victim.UIStatsSlotScript.slotLifes.text = "Lifes: " + victim.GetLifes();
+			victim.UIStatsSlotScript.LostLife();
 		}
 		else
 			Debug.LogError("killer.UIStatsSlotScript == NULL!");

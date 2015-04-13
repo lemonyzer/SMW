@@ -1346,17 +1346,23 @@ public class PlatformCharacter : MonoBehaviour {
 		Player player = PlayerDictionaryManager._instance.GetPlayerAndCreateIfNotInDictionary(netPlayerOwner);
 		if(player != null)
 		{
+			// setzte Username
+			player.setUserName(userName);
+
+			// setze Platform Character Script
 			player.platformCharacterScript = this;
-			Debug.LogWarning("netPlayer " + userName + " " + netPlayerOwner.ToString() + " -> player.platformCharacterScript set");
+
+			Debug.LogWarning("netPlayer " + player.getUserName() + " " + netPlayerOwner.ToString() + " -> player.platformCharacterScript set");
 
 			if(player.UIStatsSlotScript == null)
 			{
-				Debug.LogError("Spieler " + userName + " " + netPlayerOwner.ToString() + " hat kein UIStatsSlotScript -> ich bin late joiner und muss jetzt Slots erstellen");
+
+				Debug.LogError("Spieler " + player.getUserName() + " " + netPlayerOwner.ToString() + " hat kein UIStatsSlotScript -> ich bin late joiner und muss jetzt Slots erstellen");
 
 				// LateJoin Spieler muss in seiner Player Classe noch den SMWCharacter (ScriptableObject) setzten
 				// diese Information ist für jeden Character individuell und hängt daher jetzt direkt im PlatformCharacterScript!! Build > 701
 				// LateJoin Spieler braucht Character informationen
-				player.characterScriptableObject = this.GetSmwCharacterSO();
+				player.characterScriptableObject = this.GetSmwCharacterSO(); //TODO auch bei UIStatsSlotScript != null ?!!!
 
 //-> blabla				// Eigene Farbe und von Anderen Spielern bekommt er von UnityNetworkManager OnPlayerConnected -> OnPlayerConnected_Rpc gesendet
 
