@@ -1,16 +1,15 @@
 fileFormatVersion: 2
-guid: 6de8feeb7409b884781f84fc7ab748d0
-timeCreated: 1428709989
+guid: b913a42d433b47144867c1b405de13a2
+timeCreated: 1428881331
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: SuperWario_Bowser_alpha_rmFF00FF
-    21300002: SuperWario_Bowser_alpha_rmFF00FF_0
-    21300004: SuperWario_Bowser_alpha_rmFF00FF_1
-    21300006: SuperWario_Bowser_alpha_rmFF00FF_2
-    21300008: SuperWario_Bowser_alpha_rmFF00FF_3
-    21300010: SuperWario_Bowser_alpha_rmFF00FF_4
-    21300012: SuperWario_Bowser_alpha_rmFF00FF_5
+    21300000: SuperWario_DK_alpha_rmFF00FF_0
+    21300002: SuperWario_DK_alpha_rmFF00FF_1
+    21300004: SuperWario_DK_alpha_rmFF00FF_2
+    21300006: SuperWario_DK_alpha_rmFF00FF_3
+    21300008: SuperWario_DK_alpha_rmFF00FF_4
+    21300010: SuperWario_DK_alpha_rmFF00FF_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -56,7 +55,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: SuperWario_Bowser_alpha_rmFF00FF_0
+    - name: SuperWario_DK_alpha_rmFF00FF_0
       rect:
         serializedVersion: 2
         x: 0
@@ -66,7 +65,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: SuperWario_Bowser_alpha_rmFF00FF_1
+    - name: SuperWario_DK_alpha_rmFF00FF_1
       rect:
         serializedVersion: 2
         x: 32
@@ -76,7 +75,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: SuperWario_Bowser_alpha_rmFF00FF_2
+    - name: SuperWario_DK_alpha_rmFF00FF_2
       rect:
         serializedVersion: 2
         x: 64
@@ -86,7 +85,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: SuperWario_Bowser_alpha_rmFF00FF_3
+    - name: SuperWario_DK_alpha_rmFF00FF_3
       rect:
         serializedVersion: 2
         x: 96
@@ -96,7 +95,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: SuperWario_Bowser_alpha_rmFF00FF_4
+    - name: SuperWario_DK_alpha_rmFF00FF_4
       rect:
         serializedVersion: 2
         x: 128
@@ -106,7 +105,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: SuperWario_Bowser_alpha_rmFF00FF_5
+    - name: SuperWario_DK_alpha_rmFF00FF_5
       rect:
         serializedVersion: 2
         x: 160

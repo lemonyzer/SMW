@@ -35,7 +35,11 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 	public void Awake () {																// Awake wird auch bei instanziierung ausgeführt!!!
 		Debug.Log(this.ToString() + " Wake()");
 		if(this.player != null)
-			Debug.LogError(this.ToString() + " " + this.player.GetHashCode());
+		{
+//			Debug.LogError("player != null Name:" + player.getUserName() + " Id: " + player.getNetworkPlayer().ToString());
+		}
+		else
+			Debug.LogError("player == null");
 		border = GetComponent<Image>();
 		slotAvatar = transform.FindChild("SlotImage").GetComponent<Image>();
 		slotName = transform.FindChild("SlotName").GetComponent<Text>();
@@ -58,22 +62,31 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 		Debug.Log(this.ToString() + " UpdateSlot() " + slotPlayer.getUserName());
 
 		if(this.player != null)
-			Debug.LogError(this.ToString() + " " + this.player.GetHashCode() + " "  + slotPlayer.getUserName());
+		{
+//			Debug.LogError(this.ToString() + " " + this.player.GetHashCode() + " "  + slotPlayer.getUserName());
+		}
 		else
 			Debug.LogError(this.ToString() + " " + "this.player == null");
 			
 		if(slotPlayer != null)
-			Debug.LogError(this.ToString() + " " + slotPlayer.GetHashCode() + " "  + slotPlayer.getUserName());
+		{
+//			Debug.LogError(this.ToString() + " " + slotPlayer.GetHashCode() + " "  + slotPlayer.getUserName());
+		}
 		else
 			Debug.LogError(this.ToString() + " " + "slotPlayer == null" + " "  + slotPlayer.getUserName());
 
 		if(slotPlayer == null)
+		{
+			Debug.LogError("slotPlayer == null ->>>>>>>>>>>>>>>>>> STOP UpdateSlot()");
 			return;
+		}
 
 		this.player = slotPlayer;		// Zuordnung
 
 		if(this.player != null)
-			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + this.player.GetHashCode() + " "  + slotPlayer.getUserName());
+		{
+//			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + this.player.GetHashCode() + " "  + slotPlayer.getUserName());
+		}
 		else
 			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + "this.player == null" + " "  + slotPlayer.getUserName());
 

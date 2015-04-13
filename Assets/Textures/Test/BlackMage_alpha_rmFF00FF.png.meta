@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: e3835db317b16af4bbfd0050512c4737
-timeCreated: 1428710037
+guid: 349e4be9b1225694b843e3b4bb89b653
+timeCreated: 1428881319
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: link901_Tails_alpha_rmFF00FF
-    21300002: link901_Tails_alpha_rmFF00FF_0
-    21300004: link901_Tails_alpha_rmFF00FF_1
-    21300006: link901_Tails_alpha_rmFF00FF_2
-    21300008: link901_Tails_alpha_rmFF00FF_3
-    21300010: link901_Tails_alpha_rmFF00FF_4
-    21300012: link901_Tails_alpha_rmFF00FF_5
+    21300000: BlackMage_alpha_rmFF00FF
+    21300002: BlackMage_alpha_rmFF00FF_0
+    21300004: BlackMage_alpha_rmFF00FF_1
+    21300006: BlackMage_alpha_rmFF00FF_2
+    21300008: BlackMage_alpha_rmFF00FF_3
+    21300010: BlackMage_alpha_rmFF00FF_4
+    21300012: BlackMage_alpha_rmFF00FF_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -56,7 +56,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: link901_Tails_alpha_rmFF00FF_0
+    - name: BlackMage_alpha_rmFF00FF_0
       rect:
         serializedVersion: 2
         x: 0
@@ -66,7 +66,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: link901_Tails_alpha_rmFF00FF_1
+    - name: BlackMage_alpha_rmFF00FF_1
       rect:
         serializedVersion: 2
         x: 32
@@ -76,7 +76,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: link901_Tails_alpha_rmFF00FF_2
+    - name: BlackMage_alpha_rmFF00FF_2
       rect:
         serializedVersion: 2
         x: 64
@@ -86,7 +86,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: link901_Tails_alpha_rmFF00FF_3
+    - name: BlackMage_alpha_rmFF00FF_3
       rect:
         serializedVersion: 2
         x: 96
@@ -96,7 +96,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: link901_Tails_alpha_rmFF00FF_4
+    - name: BlackMage_alpha_rmFF00FF_4
       rect:
         serializedVersion: 2
         x: 128
@@ -106,7 +106,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: link901_Tails_alpha_rmFF00FF_5
+    - name: BlackMage_alpha_rmFF00FF_5
       rect:
         serializedVersion: 2
         x: 160

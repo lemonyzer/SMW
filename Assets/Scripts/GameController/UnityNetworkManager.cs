@@ -471,23 +471,30 @@ public class UnityNetworkManager : MonoBehaviour {
 	void MyAdditionalInfo(NetworkPlayer netPlayer, string userName)
 	{
 		//TODO sync Server & Clients name/nick
-		Debug.LogError("MyAdditionalInfo : " + userName + " " + netPlayer.ToString());
+		Debug.LogWarning("MyAdditionalInfo : " + userName + " " + netPlayer.ToString());
 		Player player = GetPlayerAndCreateIfNotInDictionary(netPlayer);
 		if (player != null)
 		{
 			player.setUserName(userName);
 			Debug.Log("Aktueller Name = " + player.getUserName() + " neuer Name " + player.getUserName());
 
-			CharacterPreview charPreviewScript = FindNetPlayersCharacterPreviewScript(netPlayer);
-			if(charPreviewScript != null)
+
+			if (!UIManager.IsCurrentlyInGameScene())
 			{
-				charPreviewScript.SetUserName(userName);
+				CharacterPreview charPreviewScript = FindNetPlayersCharacterPreviewScript(netPlayer);
+				if(charPreviewScript != null)
+				{
+					charPreviewScript.SetUserName(userName);
+				}
+				else
+				{
+					Debug.LogError("charPreviewScript für netPlayer " + userName + " " + netPlayer.ToString() + " == null!");
+				}
 			}
 			else
 			{
-				Debug.LogError("charPreviewScript für netPlayer " + userName + " " + netPlayer.ToString() + " == null!");
+				Debug.LogWarning("Zurzeit nicht in CharacterSelection Scene -> PreviewCharacter muss nicht benannt werden.");
 			}
-
 		}
 		else
 		{
@@ -667,7 +674,7 @@ public class UnityNetworkManager : MonoBehaviour {
 			// get Player (create new Player if Not exists)
 			Player player = GetPlayerAndCreateIfNotInDictionary(netPlayer);
 //			Debug.LogError(this.ToString() + " Player Hash: " + player.GetHashCode());
-			Debug.LogError(this.ToString() + " Player in Dictionary Hash: " + player.GetHashCode());
+//			Debug.LogError(this.ToString() + " Player in Dictionary Hash: " + player.GetHashCode());
 			if(player == null)
 			{
 				Debug.LogError("Player wurde nicht gefunden und konnt nicht erstellt werden!");
@@ -695,8 +702,8 @@ public class UnityNetworkManager : MonoBehaviour {
 			// TODO connect to PLAYER CLASS ??? !!!!
 			CreateNewCharacterPreviewTemplate(netPlayer, player, teamId, teamPos, cA);
 
-			Debug.LogError(this.ToString() + " Player Hash: " + player.GetHashCode());
-			Debug.LogError(this.ToString() + " Player in Dictionary Hash: " + player.GetHashCode());
+//			Debug.LogError(this.ToString() + " Player Hash: " + player.GetHashCode());
+//			Debug.LogError(this.ToString() + " Player in Dictionary Hash: " + player.GetHashCode());
 
 			
 			if(onNewPlayerConnected != null)
@@ -1251,7 +1258,7 @@ public class UnityNetworkManager : MonoBehaviour {
 	[RPC]
 	void UpdatePlayerSelection_Rpc(NetworkPlayer selector, int characterAvatarID, int teamId, int teamPos)
 	{
-		Debug.LogWarning("UpdatePlayerSelection_Rpc selector:" + selector + ", charID= " + characterAvatarID);
+		Debug.LogWarning("UpdatePlayerSelection_Rpc selector:" + selector.ToString() + ", charID= " + characterAvatarID);
 		Player player = GetPlayer(selector);
 		if(player != null)
 		{
@@ -1289,7 +1296,7 @@ public class UnityNetworkManager : MonoBehaviour {
 				charPreviewScript.myTransform.position = GetTeamSlotPosition(teamId, teamPos);
 			}
 
-			Debug.LogWarning("UpdatePlayerSelection_Rpc, Next Avatar " + nextAvatar.name + " Id:" +nextAvatar.charId);
+			Debug.LogWarning("UpdatePlayerSelection_Rpc, Next Avatar selector:" + selector.ToString() + nextAvatar.name + " Id:" +nextAvatar.charId);
 
 			if(UserIsClient())
 			{

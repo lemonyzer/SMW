@@ -3,6 +3,18 @@ using System.Collections;
 
 public class PlatformCharacter : MonoBehaviour {
 
+	[SerializeField]
+	private SmwCharacter myCharScriptableObject;
+
+	public SmwCharacter GetSmwCharacterSO()
+	{
+		return myCharScriptableObject;
+	}
+
+	public void SetSmwCharacterSO(SmwCharacter charSO)
+	{
+		this.myCharScriptableObject = charSO;
+	}
 	
 	public delegate void OnCharacterRegistered(NetworkPlayer netPlayer, Player player);
 	public static event OnCharacterRegistered onRegistered;
@@ -1339,7 +1351,14 @@ public class PlatformCharacter : MonoBehaviour {
 
 			if(player.UIStatsSlotScript == null)
 			{
-				Debug.LogError("Spieler " + userName + " " + netPlayerOwner.ToString() + " hat kein UIStatsSlotScript -> ich bin late joiner und muss Slots jettz erstellens");
+				Debug.LogError("Spieler " + userName + " " + netPlayerOwner.ToString() + " hat kein UIStatsSlotScript -> ich bin late joiner und muss jetzt Slots erstellen");
+
+				// LateJoin Spieler muss in seiner Player Classe noch den SMWCharacter (ScriptableObject) setzten
+				// diese Information ist für jeden Character individuell und hängt daher jetzt direkt im PlatformCharacterScript!! Build > 701
+				// LateJoin Spieler braucht Character informationen
+				player.characterScriptableObject = this.GetSmwCharacterSO();
+
+//-> blabla				// Eigene Farbe und von Anderen Spielern bekommt er von UnityNetworkManager OnPlayerConnected -> OnPlayerConnected_Rpc gesendet
 
 				if(onLateJoinerInstantiateNetworkCharacter != null)
 				{

@@ -87,6 +87,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	[RPC]
 	void ClientLoadingLevelComplete_Rpc(NetworkPlayer otherNetPlayer)
 	{
+		Debug.Log("ClientLoadingLevelComplete_Rpc netPlayer: " + otherNetPlayer.ToString()); 
 		if (Network.isServer)
 		{
 
@@ -134,6 +135,8 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 				Debug.LogError("ClientLoadingLevelComplete_Rpc ich bin netPlayer:" + Network.player + " und hab keinen Spieler zu NetPlayer:" + otherNetPlayer.ToString() + " gefunden!");
 				return;
 			}
+			Debug.Log("ClientLoadingLevelComplete_Rpc netPlayer: " + otherNetPlayer.ToString() + " (" + player.getUserName() + ")");
+			
 			// only Server
 			// TODO Reihenfolge beachten!!!
 			// bestätige Spieler seine teilnahme an aktueller Scene! (jetzt hat er auch die Buffered informationen hinter sich und bekommt für seinen Character relevante Infos)
@@ -142,7 +145,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 			// only Server
 			// Instantiate Character GameObject
 			// 2. Spieler findet UI Slot
-			Debug.Log("InstantiateAndSetupPlayerCharacter");
+			Debug.Log("InstantiateAndSetupPlayerCharacter netPlayer: " + otherNetPlayer.ToString() + " " + player.getUserName());
 			InstantiateAndSetupPlayerCharacter(otherNetPlayer, player);
 
 			if(playerReadyCount >= Network.connections.Length)					//TODO >=
@@ -159,7 +162,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		Player player;
 		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
 		{
-			Debug.LogWarning("ERROORORORORORRORORORERROORORORORORROROROR -> NO ERROR für netPlayer " + netPlayer.ToString() + " =)");
+			Debug.LogWarning("PlayerLoadWasComplete -> NO ERROR für netPlayer " + netPlayer.ToString() + " " + player.getUserName() + " =)");
 			player.loadingLevelComplete = true;
 			playerReadyCount++;												//TODO umgeht Update() iteration über Network.connections array
 
@@ -181,7 +184,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	}
 
 	[RPC]
-	void PingPongServerToAllClientLoadingLevelComplete_Rpc(NetworkPlayer netPlayer, NetworkMessageInfo info)
+	void PingPongServerToAllClientLoadingLevelComplete_Rpc(NetworkPlayer netPlayer)
 	{
 		Debug.Log("PingPongServerToAllClientLoadingLevelComplete_Rpc von netPlayer: " + netPlayer);
 		// client hat spätestens jetzt seine informationen (Buffered RPC's aus vorherigenden Scene wurde jetzt schon beantwortet)

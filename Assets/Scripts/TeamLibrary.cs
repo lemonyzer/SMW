@@ -129,6 +129,7 @@ public class TeamLibrary : MonoBehaviour {
 		int currentMemberCountMin = int.MaxValue;
 		for(int i=0; i< mNumberOfTeams; i++)
 		{
+			Debug.Log("Team " + i + " Member Anzahl: " + teams[i].mMemberCount); 
 			if (teams[i].mMemberCount < currentMemberCountMin)
 			{
 				currentMemberCountMin = teams[i].mMemberCount;

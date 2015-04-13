@@ -82,13 +82,13 @@ public class StarItem : Item {
 		if(characterPowerScript != null)
 		{
 			//characterPowerScript.gained(info);
-			Debug.LogError("GetComponent(string) hat funktioniert!");
+			Debug.LogWarning(this.ToString() + " GetComponent(string) hat funktioniert!");
 			characterPowerScript.gained(collectedTimeStamp);
 			return;
 		}
 		else
 		{
-			Debug.LogError("GetComponent(string) hat nicht funktioniert!");
+			Debug.LogError(this.ToString() + " GetComponent(string) hat nicht funktioniert!");
 		}
 		
 		

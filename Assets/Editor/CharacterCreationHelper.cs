@@ -1389,6 +1389,12 @@ public class CharacterCreationHelper : EditorWindow {
 	ChildData root;
 	List<ChildData> childs;
 
+	/// <summary>
+	/// Smarts the create. Create special Body Parts MultipleTimes
+	/// </summary>
+	/// <returns>The create.</returns>
+	/// <param name="characterSO">Character S.</param>
+	/// <param name="charGenerics">Char generics.</param>
 	public GameObject SmartCreate(SmwCharacter characterSO, SmwCharacterGenerics charGenerics)
 	{
 //		Debug.Log(this.ToString() + " Create smwCharacter Name= " + characterSO.name);
@@ -1471,7 +1477,11 @@ public class CharacterCreationHelper : EditorWindow {
 		root.Add(root.gameObject.AddComponent<AudioSource>(), true);
 		root.Add(root.gameObject.AddComponent<RealOwner>(), true);
 		root.Add(root.gameObject.AddComponent<PlatformUserControl>(), true);
-		root.Add(root.gameObject.AddComponent<PlatformCharacter>(), true);
+		PlatformCharacter platformCharScript = root.gameObject.AddComponent<PlatformCharacter>();
+		// build > 0.701
+		// add CharSO to CharPrefab
+		platformCharScript.SetSmwCharacterSO(characterSO);
+		root.Add(platformCharScript, true);
 		root.Add(root.gameObject.AddComponent<PlatformJumperV2>(), true);
 		root.Add(root.gameObject.AddComponent<Rage>(), true);
 		root.Add(root.gameObject.AddComponent<Shoot>(), true);

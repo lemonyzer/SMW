@@ -1,16 +1,15 @@
 fileFormatVersion: 2
-guid: 1df30b8e1c538d74ab5e8b6ec06a31d9
-timeCreated: 1428710042
+guid: 9252418fe4a387d479fd7017cf34fa86
+timeCreated: 1428881318
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Sonic_alpha_rmFF00FF
-    21300002: Sonic_alpha_rmFF00FF_0
-    21300004: Sonic_alpha_rmFF00FF_1
-    21300006: Sonic_alpha_rmFF00FF_2
-    21300008: Sonic_alpha_rmFF00FF_3
-    21300010: Sonic_alpha_rmFF00FF_4
-    21300012: Sonic_alpha_rmFF00FF_5
+    21300000: al_tiggaDeKoppNigga2_alpha_FF00FF_0
+    21300002: al_tiggaDeKoppNigga2_alpha_FF00FF_1
+    21300004: al_tiggaDeKoppNigga2_alpha_FF00FF_2
+    21300006: al_tiggaDeKoppNigga2_alpha_FF00FF_3
+    21300008: al_tiggaDeKoppNigga2_alpha_FF00FF_4
+    21300010: al_tiggaDeKoppNigga2_alpha_FF00FF_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -34,10 +33,10 @@ TextureImporter:
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: 4
-  maxTextureSize: 1024
+  maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 16
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -56,7 +55,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Sonic_alpha_rmFF00FF_0
+    - name: al_tiggaDeKoppNigga2_alpha_FF00FF_0
       rect:
         serializedVersion: 2
         x: 0
@@ -66,7 +65,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Sonic_alpha_rmFF00FF_1
+    - name: al_tiggaDeKoppNigga2_alpha_FF00FF_1
       rect:
         serializedVersion: 2
         x: 32
@@ -76,7 +75,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Sonic_alpha_rmFF00FF_2
+    - name: al_tiggaDeKoppNigga2_alpha_FF00FF_2
       rect:
         serializedVersion: 2
         x: 64
@@ -86,7 +85,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Sonic_alpha_rmFF00FF_3
+    - name: al_tiggaDeKoppNigga2_alpha_FF00FF_3
       rect:
         serializedVersion: 2
         x: 96
@@ -96,7 +95,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Sonic_alpha_rmFF00FF_4
+    - name: al_tiggaDeKoppNigga2_alpha_FF00FF_4
       rect:
         serializedVersion: 2
         x: 128
@@ -106,7 +105,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Sonic_alpha_rmFF00FF_5
+    - name: al_tiggaDeKoppNigga2_alpha_FF00FF_5
       rect:
         serializedVersion: 2
         x: 160

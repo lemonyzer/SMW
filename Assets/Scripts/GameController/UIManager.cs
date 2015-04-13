@@ -201,6 +201,7 @@ public class UIManager : MonoBehaviour {
 		if (player.UIStatsSlotScript != null)
 		{
 			Debug.LogWarning(player.getUserName()+ " Id:" + netPlayer.ToString() + " hat bereits ein UI Stats Slots..."); 
+			UpdateStatesSlot (netPlayer, player);
 			return;
 		}
 
@@ -233,7 +234,7 @@ public class UIManager : MonoBehaviour {
 		// greife auf Referenz zu und Update Slot
 		//TODO alternative suchen Start() muss vorher einmal ausgeführt werden (initialisierung)
 		//player.UIStatsSlotScript.Awake();															// wird implizit mit Instantiate ausgeführt!
-		Debug.LogError(this.ToString() + " " + player.GetHashCode());
+//		Debug.LogError(this.ToString() + " " + player.GetHashCode());
 		player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
 	}
 

@@ -1,15 +1,16 @@
 fileFormatVersion: 2
-guid: d270db89281ee7046a8e0b21b27579ed
-timeCreated: 1428710254
+guid: 9cfe7236015d0dd4db96178627ac499b
+timeCreated: 1428881321
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: ssl_tiggaDeKoppNigga_alpha_FF00FF_0
-    21300002: ssl_tiggaDeKoppNigga_alpha_FF00FF_1
-    21300004: ssl_tiggaDeKoppNigga_alpha_FF00FF_2
-    21300006: ssl_tiggaDeKoppNigga_alpha_FF00FF_3
-    21300008: ssl_tiggaDeKoppNigga_alpha_FF00FF_4
-    21300010: ssl_tiggaDeKoppNigga_alpha_FF00FF_5
+    21300000: Kooper_alpha_rmFF00FF
+    21300002: Kooper_alpha_rmFF00FF_0
+    21300004: Kooper_alpha_rmFF00FF_1
+    21300006: Kooper_alpha_rmFF00FF_2
+    21300008: Kooper_alpha_rmFF00FF_3
+    21300010: Kooper_alpha_rmFF00FF_4
+    21300012: Kooper_alpha_rmFF00FF_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -33,10 +34,10 @@ TextureImporter:
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: 4
-  maxTextureSize: 2048
+  maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -55,7 +56,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: ssl_tiggaDeKoppNigga_alpha_FF00FF_0
+    - name: Kooper_alpha_rmFF00FF_0
       rect:
         serializedVersion: 2
         x: 0
@@ -65,7 +66,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: ssl_tiggaDeKoppNigga_alpha_FF00FF_1
+    - name: Kooper_alpha_rmFF00FF_1
       rect:
         serializedVersion: 2
         x: 32
@@ -75,7 +76,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: ssl_tiggaDeKoppNigga_alpha_FF00FF_2
+    - name: Kooper_alpha_rmFF00FF_2
       rect:
         serializedVersion: 2
         x: 64
@@ -85,7 +86,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: ssl_tiggaDeKoppNigga_alpha_FF00FF_3
+    - name: Kooper_alpha_rmFF00FF_3
       rect:
         serializedVersion: 2
         x: 96
@@ -95,7 +96,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: ssl_tiggaDeKoppNigga_alpha_FF00FF_4
+    - name: Kooper_alpha_rmFF00FF_4
       rect:
         serializedVersion: 2
         x: 128
@@ -105,7 +106,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: ssl_tiggaDeKoppNigga_alpha_FF00FF_5
+    - name: Kooper_alpha_rmFF00FF_5
       rect:
         serializedVersion: 2
         x: 160

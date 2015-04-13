@@ -200,11 +200,11 @@ public class PlayerDictionary : ScriptableObject {
 		if(playerDictionary.TryGetValue(networkPlayer, out removedPlayer))
 		{
 			playerDictionary.Remove(networkPlayer);
-			Debug.Log(networkPlayer.ToString() + " removed from Dictionary.");
+			Debug.Log("NetPlayer: " + networkPlayer.ToString() + " " + removedPlayer.getUserName() + " removed from Dictionary.");
 		}
 		else
 		{
-			Debug.LogWarning(networkPlayer.ToString() + " was not added to Dictionary.");
+			Debug.LogWarning("NetPlayer: " + networkPlayer.ToString() + " was not added to Dictionary.");
 		}
 	}
 

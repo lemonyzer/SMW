@@ -1,15 +1,16 @@
 fileFormatVersion: 2
-guid: b913a42d433b47144867c1b405de13a2
-timeCreated: 1428709990
+guid: 5b528dc66dce881478c3e5c7c784bb21
+timeCreated: 1428881320
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: SuperWario_DK_alpha_rmFF00FF_0
-    21300002: SuperWario_DK_alpha_rmFF00FF_1
-    21300004: SuperWario_DK_alpha_rmFF00FF_2
-    21300006: SuperWario_DK_alpha_rmFF00FF_3
-    21300008: SuperWario_DK_alpha_rmFF00FF_4
-    21300010: SuperWario_DK_alpha_rmFF00FF_5
+    21300000: hazey_Trainer_alpha_rmFF00FF
+    21300002: hazey_Trainer_alpha_rmFF00FF_0
+    21300004: hazey_Trainer_alpha_rmFF00FF_1
+    21300006: hazey_Trainer_alpha_rmFF00FF_2
+    21300008: hazey_Trainer_alpha_rmFF00FF_3
+    21300010: hazey_Trainer_alpha_rmFF00FF_4
+    21300012: hazey_Trainer_alpha_rmFF00FF_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -32,11 +33,11 @@ TextureImporter:
   cubemapConvolutionSteps: 8
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
-  textureFormat: -3
-  maxTextureSize: 256
+  textureFormat: 4
+  maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: 0
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -55,7 +56,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: SuperWario_DK_alpha_rmFF00FF_0
+    - name: hazey_Trainer_alpha_rmFF00FF_0
       rect:
         serializedVersion: 2
         x: 0
@@ -65,7 +66,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: SuperWario_DK_alpha_rmFF00FF_1
+    - name: hazey_Trainer_alpha_rmFF00FF_1
       rect:
         serializedVersion: 2
         x: 32
@@ -75,7 +76,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: SuperWario_DK_alpha_rmFF00FF_2
+    - name: hazey_Trainer_alpha_rmFF00FF_2
       rect:
         serializedVersion: 2
         x: 64
@@ -85,7 +86,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: SuperWario_DK_alpha_rmFF00FF_3
+    - name: hazey_Trainer_alpha_rmFF00FF_3
       rect:
         serializedVersion: 2
         x: 96
@@ -95,7 +96,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: SuperWario_DK_alpha_rmFF00FF_4
+    - name: hazey_Trainer_alpha_rmFF00FF_4
       rect:
         serializedVersion: 2
         x: 128
@@ -105,7 +106,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: SuperWario_DK_alpha_rmFF00FF_5
+    - name: hazey_Trainer_alpha_rmFF00FF_5
       rect:
         serializedVersion: 2
         x: 160
