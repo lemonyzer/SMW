@@ -160,7 +160,20 @@ public class NetworkedPlayer : MonoBehaviour
 
 						if(Network.isClient)
 						{
-							myNetworkView.RPC( "ProcessInput", RPCMode.Server, lastMoveStateWithPhysics.left, lastMoveStateWithPhysics.right, lastMoveStateWithPhysics.jump, this.transform.position.x, this.transform.position.y );
+							//TODO works BUT BIG
+							//myNetworkView.RPC( "ProcessInput", RPCMode.Server, lastMoveStateWithPhysics.left, lastMoveStateWithPhysics.right, lastMoveStateWithPhysics.jump, this.transform.position.x, this.transform.position.y );
+
+							//TODO Sytem.char NOT supported
+//							char inputChar = ConvertInputToOneCharByte(lastMoveStateWithPhysics.left, lastMoveStateWithPhysics.right, lastMoveStateWithPhysics.jump, lastMoveStateWithPhysics.power);
+//							myNetworkView.RPC( "ProcessInput", RPCMode.Server, inputChar, this.transform.position.x, this.transform.position.y );
+
+							//TODO Sytem.byte NOT supported
+							//byte inputByte = ConvertInputToByte(lastMoveStateWithPhysics.left, lastMoveStateWithPhysics.right, lastMoveStateWithPhysics.jump, lastMoveStateWithPhysics.power);
+							//myNetworkView.RPC( "ProcessInput", RPCMode.Server, inputByte, this.transform.position.x, this.transform.position.y );
+
+							byte[] inputByteArray = new byte[1];
+							inputByteArray[0] = ConvertInputToByte(lastMoveStateWithPhysics.left, lastMoveStateWithPhysics.right, lastMoveStateWithPhysics.jump, lastMoveStateWithPhysics.power);
+							myNetworkView.RPC( "ProcessInput", RPCMode.Server, inputByteArray, this.transform.position.x, this.transform.position.y );
 						}
 						else
 						{
@@ -223,7 +236,21 @@ public class NetworkedPlayer : MonoBehaviour
 //					myNetworkView.RPC( "ClientACKPositionCorrection", RPCMode.Server );
 //					clientNeedsToSendNewInput = false;
 //				}
-				myNetworkView.RPC( "ProcessInput", RPCMode.Server, moveState.left, moveState.right, moveState.jump, this.transform.position.x, this.transform.position.y);
+				//TODO works BUT BIG
+//				myNetworkView.RPC( "ProcessInput", RPCMode.Server, moveState.left, moveState.right, moveState.jump, this.transform.position.x, this.transform.position.y);
+
+				//TODO NOT supported System.char
+				//char inputChar = ConvertInputToOneCharByte(moveState.left, moveState.right, moveState.jump, moveState.power);
+				//myNetworkView.RPC( "ProcessInput", RPCMode.Server, inputChar, this.transform.position.x, this.transform.position.y );
+
+				//TODO NOT supported System.byte
+				//byte inputByte = ConvertInputToByte(moveState.left, moveState.right, moveState.jump, moveState.power);
+				//myNetworkView.RPC( "ProcessInput", RPCMode.Server, inputByte, this.transform.position.x, this.transform.position.y );
+
+				byte[] inputByteArray = new byte[1];
+				inputByteArray[0] = ConvertInputToByte(moveState.left, moveState.right, moveState.jump, moveState.power);
+				myNetworkView.RPC( "ProcessInput", RPCMode.Server, inputByteArray, this.transform.position.x, this.transform.position.y );
+
 //				if(characterScript.canUsePowerButton)
 //				{
 //					if(inputScript.inputPower)
@@ -292,8 +319,11 @@ public class NetworkedPlayer : MonoBehaviour
 //	}
 
 	[RPC]
-	//void ProcessInput( bool recvedLeft, bool recvedRight, bool recvedInputJump, Vector3 recvedPosition, NetworkMessageInfo info )
-	void ProcessInput( bool recvedLeft, bool recvedRight, bool recvedInputJump, float recvedPositionX, float recvedPositionY, NetworkMessageInfo info )
+// works BUT VERY BIG			void ProcessInput( bool recvedLeft, bool recvedRight, bool recvedInputJump, Vector3 recvedPosition, NetworkMessageInfo info )
+// works BUT BIG				void ProcessInput( bool recvedLeft, bool recvedRight, bool recvedInputJump, float recvedPositionX, float recvedPositionY, NetworkMessageInfo info )
+// System.char NOT SUPPORTED	void ProcessInput( char inputCharByte, float recvedPositionX, float recvedPositionY, NetworkMessageInfo info )
+// System.byte NOT SUPPORTED	void ProcessInput( byte inputByte, float recvedPositionX, float recvedPositionY, NetworkMessageInfo info )
+	void ProcessInput( byte[] inputByteArray, float recvedPositionX, float recvedPositionY, NetworkMessageInfo info )
 	{
 //		Debug.Log(this.ToString() + ": ProcessInput");
 		// aktuell gehören photonviews dem masterclient
@@ -326,8 +356,22 @@ public class NetworkedPlayer : MonoBehaviour
 //		}
 
 		// execute input
-		inputScript.SetInputHorizontal(recvedLeft, recvedRight);
-		inputScript.inputJump = recvedInputJump;
+
+		// TODO System.char NOT supported
+//		bool[] recvedBools = ConvertInputCharToBoolArray(inputCharByte);
+//		inputScript.SetInputHorizontal(recvedBools[0], recvedBools[1]);
+//		inputScript.inputJump = recvedBools[2];
+
+		// TODO System.char NOT supported
+//		bool[] recvedBools = ConvertInputByteToBoolArray(inputByte);
+//		inputScript.SetInputHorizontal(recvedBools[0], recvedBools[1]);
+//		inputScript.inputJump = recvedBools[2];
+
+		byte inputByte = inputByteArray[0];
+		bool[] recvedBools = ConvertInputByteToBoolArray(inputByte);
+		inputScript.SetInputHorizontal(recvedBools[0], recvedBools[1]);
+		inputScript.inputJump = recvedBools[2];
+
 		characterScript.Simulate();
 
 		if(characterScript.isDead)	// no position correction needed!
@@ -346,7 +390,7 @@ public class NetworkedPlayer : MonoBehaviour
 		{
 			// error is too big, tell client to rewind and replay								// berücksichtigt die, die zu stark abweichen
 			serverCorrectsClientPositionCount++;
-			myNetworkView.RPC( "CorrectState", info.sender, this.transform.position, characterScript.moveDirection );
+			myNetworkView.RPC( "CorrectState", info.sender, this.transform.position.x, this.transform.position.y, characterScript.moveDirection.x, characterScript.moveDirection.y );
 //			waitingForNewClientInput = true;															// drop already send ProcessInput RPC's from Client
 			// compare results
 			deltaPositions.Insert(0, (this.transform.position - recvedPosition));						
@@ -386,7 +430,7 @@ public class NetworkedPlayer : MonoBehaviour
 	public uint correctPositionCount = 0;
 //	public bool clientNeedsToSendNewInput = false;
 	[RPC]
-	void CorrectState( Vector3 correctPosition, Vector3 moveDirection, NetworkMessageInfo info )
+	void CorrectState( float correctPositionX, float correctPositionY, float moveDirectionX, float moveDirectionY, NetworkMessageInfo info )
 	{
 		correctPositionCount++;
 //		clientNeedsToSendNewInput = true;
@@ -411,8 +455,8 @@ public class NetworkedPlayer : MonoBehaviour
 			//v1 3 frames to smooth correction
 			//a) Coroutine triggers every deltaFixedUpdateTime
 			//b) FixedUpdate
-			this.transform.position = correctPosition;
-			characterScript.moveDirection = moveDirection;				// FIX, less desync?
+			this.transform.position = new Vector3(correctPositionX, correctPositionY, 0f);
+			characterScript.moveDirection = new Vector3(moveDirectionX, moveDirectionY, 0f);				// FIX, less desync?
 
 		}
 
@@ -865,6 +909,113 @@ public class NetworkedPlayer : MonoBehaviour
 
 		}
 	}
+
+
+	
+//	chars[0] = 'X';        // Character literal
+//	chars[1] = '\x0058';   // Hexadecimal
+//	chars[2] = (char)88;   // Cast from integral type
+//	chars[3] = '\u0058';   // Unicode
+
+	private char ConvertInputToOneCharByte(bool left, bool right, bool jump, bool power)
+	{
+		char result = '0';
+		// This assumes the array never contains more than 8 elements!
+		
+		if (left)
+			result |= (char)(1 << (0));
+		
+		if (right)
+			result |= (char)(1 << (1));
+		
+		if (jump)
+			result |= (char)(1 << (2));
+		
+		if (power)
+			result |= (char)(1 << (3));
+		
+		return result;
+	}
+
+	private byte ConvertInputToByte(bool left, bool right, bool jump, bool power)
+	{
+		byte result = 0;
+		// This assumes the array never contains more than 8 elements!
+
+		if (left)
+			result |= (byte)(1 << (0));
+
+		if (right)
+			result |= (byte)(1 << (1));
+
+		if (jump)
+			result |= (byte)(1 << (2));
+
+		if (power)
+			result |= (byte)(1 << (3));
+
+		return result;
+	}
+
+	private static bool[] ConvertInputByteToBoolArray(byte b)
+	{
+		// prepare the return result
+		bool[] result = new bool[8];
+		
+		// check each bit in the byte. if 1 set to true, if 0 set to false
+		for (int i = 0; i < 8; i++)
+			result[i] = (b & (1 << i)) == 0 ? false : true;
+		
+		return result;
+	}
+
+	private static bool[] ConvertInputCharToBoolArray(char b)
+	{
+		// prepare the return result
+		bool[] result = new bool[8];
+		
+		// check each bit in the byte. if 1 set to true, if 0 set to false
+		for (int i = 0; i < 8; i++)
+			result[i] = (b & (1 << i)) == 0 ? false : true;
+		
+		return result;
+	}
+
+
+
+//	private byte ConvertBoolArrayToByte(bool[] source)
+//	{
+//		byte result = 0;
+//		// This assumes the array never contains more than 8 elements!
+//		int index = 8 - source.Length;
+//		
+//		// Loop through the array
+//		foreach (bool b in source)
+//		{
+//			// if the element is 'true' set the bit at that position
+//			if (b)
+//				result |= (byte)(1 << (7 - index));
+//			
+//			index++;
+//		}
+//		
+//		return result;
+//	}
+//
+//	private static bool[] ConvertByteToBoolArray(byte b)
+//	{
+//		// prepare the return result
+//		bool[] result = new bool[8];
+//		
+//		// check each bit in the byte. if 1 set to true, if 0 set to false
+//		for (int i = 0; i < 8; i++)
+//			result[i] = (b & (1 << i)) == 0 ? false : true;
+//		
+//		// reverse the array
+//		Array.Reverse(result);
+//		
+//		return result;
+//	}
 	
 	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
 	{
@@ -880,35 +1031,59 @@ public class NetworkedPlayer : MonoBehaviour
 			float authoritativePosX = authoritativePos.x;
 			float authoritativePosY = authoritativePos.y;
 //2D -> Z=0	//float authoritativePosZ = authoritativePos.z;
-			float receivedHorizontal = inputScript.GetInputHorizontal();		// received input from the character owner send to all clients (for prediction use and animation)
-			bool receivedInputJump = inputScript.inputJump;				// received input from the character owner send to all clients (for prediction use and animation)
+			//float receivedHorizontal = inputScript.GetInputHorizontal();		// received input from the character owner send to all clients (for prediction use and animation)
+//			bool receivedInputJump = inputScript.inputJump;				// received input from the character owner send to all clients (for prediction use and animation)
+			char receivedInput = ConvertInputToOneCharByte(inputScript.inputLeft, inputScript.inputRight, inputScript.inputJump, inputScript.inputPower);
 //			stream.Serialize(ref authoritativePos);
 			stream.Serialize(ref authoritativePosX);
 			stream.Serialize(ref authoritativePosY);
-			stream.Serialize(ref receivedHorizontal);
-			stream.Serialize(ref receivedInputJump);
+			stream.Serialize(ref receivedInput);
+//			stream.Serialize(ref receivedHorizontal);
+//			stream.Serialize(ref receivedInputJump);
 		}
 		// Read data from Server
 		else
 		{
+			bool left = false;
+			bool right = false;
+			bool jump = false;
+			bool power = false;
 			Vector3 authoritativePos = Vector3.zero;
 			float authoritativePosX = 0f;
 			float authoritativePosY = 0f;
-			float receivedHorizontal = 0f;
-			bool receivedInputJump = false;
+//			byte receivedHorizontal = 0f;
+//			bool receivedInputJump = false;
+			char receivedInput = '\x0000';
 //			stream.Serialize(ref authoritativePos);
 			stream.Serialize(ref authoritativePosX);
 			stream.Serialize(ref authoritativePosY);
-			stream.Serialize(ref receivedHorizontal);
-			stream.Serialize(ref receivedInputJump);
+			stream.Serialize(ref receivedInput);
+//			stream.Serialize(ref receivedHorizontal);
+//			stream.Serialize(ref receivedInputJump);
+
+			bool[] booleans = ConvertInputCharToBoolArray(receivedInput);
+			left = booleans[0];
+			right = booleans[1];
+			jump = booleans[2];
+			power = booleans[3];
 
 			authoritativePos = new Vector3(authoritativePosX, authoritativePosY, authoritativePosZ);
 
 			// Update: netUpdates buffers now also on local player character to get current TripTime :://TODO DONE and latest pos ( lastrecvdPos
 
 			//netUpdate(pos, info);			// will buffer state only on characters not controlled by local player
-			netUpdate(authoritativePos, receivedHorizontal, receivedInputJump, info);			// will buffer state only on characters not controlled by local player
+			netUpdate(authoritativePos, GetInputHorizontal(left,right), jump, info);			// will buffer state only on characters not controlled by local player
 		}
+	}
+
+	public float GetInputHorizontal(bool left, bool right)
+	{
+		if(left)
+			return -1.0f;
+		else if(right)
+			return 1.0f;
+		else
+			return 0f;
 	}
 
 
@@ -998,20 +1173,20 @@ public class NetworkedPlayer : MonoBehaviour
 
 		if( ownerScript.owner == Network.player)
 		{
-			txtLastTripTime.text = "LTT: " + ((double)(stateBuffer[0].tripTime)*1000).ToString("#### ms");
-			txtLastTripTimeSteps.text = "LTTS: " + ((double)(stateBuffer[0].tripTime/Time.fixedDeltaTime)).ToString("#.#");
-			txtLastTripTimeSteps2.text = "LTTS2: " +  (GetPastState(Network.time - stateBuffer[0].tripTime)+1).ToString();
+			txtLastTripTime.text = "LTT:\n" + ((double)(stateBuffer[0].tripTime)*1000).ToString("#### ms");
+			txtLastTripTimeSteps.text = "LTTS:\n" + ((double)(stateBuffer[0].tripTime/Time.fixedDeltaTime)).ToString("#.#");
+			txtLastTripTimeSteps2.text = "LTTS2:\n" +  (GetPastState(Network.time - stateBuffer[0].tripTime)+1).ToString();
 			// kann sein das LastTripTime nicht im avgTripTime eingerechnet wurde da der avg zum anderen zeitpunkt berechnet wird und da das neuste paket noch nicht angekommen ist. 
 			//TODO // lösung -> avg immer bei ankommendem paket berechnen!
 			//TODO // LÖSUNG v2: static avgTripTime ... eine TripTime für alle NetworkedPlayer!
 
-			txtAvarageTripTime.text = "avgTT: " + ((double)(avgTripTime*1000)).ToString("#### ms");
-			txtAvarageTripTimeSteps.text = "avgTTS: " + ((double)(avgTripTime/Time.fixedDeltaTime)).ToString("#.#");
-			txtAvarageTripTimeSteps2.text = "avgLTTS2: " + ((GetPastState(Network.time - avgTripTime)+1)).ToString();
+			txtAvarageTripTime.text = "avgTT:\n" + ((double)(avgTripTime*1000)).ToString("#### ms");
+			txtAvarageTripTimeSteps.text = "avgTTS:\n" + ((double)(avgTripTime/Time.fixedDeltaTime)).ToString("#.#");
+			txtAvarageTripTimeSteps2.text = "avgLTTS2:\n" + ((GetPastState(Network.time - avgTripTime)+1)).ToString();
 
-			txtMaxTripTime.text = "maxTT: " + maxTripTime.ToString("0.###");
-			txtMaxTripTimeSteps.text = "maxTTS: " + ((double)(maxTripTime/Time.fixedDeltaTime)).ToString("#");
-			txtMaxTripTimeSteps2.text = "maxTTS2: " + (GetPastState(Network.time - maxTripTime)+1).ToString();
+			txtMaxTripTime.text = "maxTT:\n" + maxTripTime.ToString("0.###");
+			txtMaxTripTimeSteps.text = "maxTTS:\n" + ((double)(maxTripTime/Time.fixedDeltaTime)).ToString("#");
+			txtMaxTripTimeSteps2.text = "maxTTS2:\n" + (GetPastState(Network.time - maxTripTime)+1).ToString();
 		}
 	}
 

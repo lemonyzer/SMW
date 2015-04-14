@@ -28,7 +28,7 @@ public class PlatformUserControl : MonoBehaviour {
 
 	[SerializeField]
 	bool useThreeStateMovement = true;
-	float threeStateMovementSchwellwert= 0.1f;		// schwellwert
+	float threeStateMovementSchwellwert = 0.5f;		// schwellwert
 //	float threeStateMovementHystereseCenter = 0f;		// center of hysterese
 
 	[SerializeField]
@@ -201,8 +201,13 @@ public class PlatformUserControl : MonoBehaviour {
 	/**
 	* Input Keyboard
 	**/
-	private float inputKeyboardHorizontal = 0f;
-	private float inputKeyboardVertical = 0f;
+	private bool useRawKeyboardInput = true;
+//	private float inputKeyboardHorizontal = 0f;
+	private float inputKeyboardHorizontalSmooth = 0f;
+	private float inputKeyboardHorizontalRaw = 0f;
+//	private float inputKeyboardVertical = 0f;
+	private float inputKeyboardVerticalSmooth = 0f;
+	private float inputKeyboardVerticalRaw = 0f;
 	private bool inputKeyboardJump = false;                    
 	private bool inputKeyboardPower = false;
 
@@ -414,7 +419,15 @@ public class PlatformUserControl : MonoBehaviour {
 //		}
 
 		// combine the horizontal input
-		inputHorizontal = inputTouchHorizontal + inputKeyboardHorizontal;
+		if(useRawKeyboardInput)
+		{
+			inputHorizontal = inputTouchHorizontal + inputKeyboardHorizontalRaw;
+			
+		}
+		else
+		{
+			inputHorizontal = inputTouchHorizontal + inputKeyboardHorizontalSmooth;
+		}
 
 
 		SetInputHorizontal(inputHorizontal);
@@ -426,8 +439,10 @@ public class PlatformUserControl : MonoBehaviour {
 	/// Keyboard this instance.
 	/// </summary>
 	void Keyboard() {
-		inputKeyboardHorizontal = Input.GetAxis ("Horizontal");
-		inputKeyboardVertical = Input.GetAxis ("Vertical");
+		inputKeyboardHorizontalSmooth = Input.GetAxis ("Horizontal");
+		inputKeyboardHorizontalRaw = Input.GetAxisRaw ("Horizontal");
+		inputKeyboardVerticalSmooth = Input.GetAxis ("Vertical");
+		inputKeyboardVerticalRaw = Input.GetAxisRaw ("Vertical");
 		if(keyPressed)
 		{
 			inputKeyboardJump = Input.GetKey (KeyCode.Space);
