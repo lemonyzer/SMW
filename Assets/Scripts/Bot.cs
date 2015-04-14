@@ -42,7 +42,7 @@ public class Bot : MonoBehaviour {
 		target = FindClosestPlayerWithGameControllerNew2015();
 		AIMove();
 		inputScript.inputJump = inputJump;
-		inputScript.inputHorizontal = inputVelocity;
+		inputScript.SetInputHorizontal(inputVelocity);
 //		MoveKeyboard(inputVelocity, inputJump);
 	}
 

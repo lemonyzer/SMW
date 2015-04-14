@@ -546,7 +546,7 @@ public class PlatformCharacter : MonoBehaviour {
 		}
 		else
 		{
-			moveDirection.x = inputScript.inputHorizontal * currentSpeed;	// Horizontal Movement
+			moveDirection.x = inputScript.GetInputHorizontal() * currentSpeed;	// Horizontal Movement
 
 			// Vertical Movement
 			if(grounded)
@@ -1434,7 +1434,7 @@ public class PlatformCharacter : MonoBehaviour {
 		inputScript.enabled = false;
 		inputScript.inputJump = false;
 		inputScript.inputPower = false;
-		inputScript.inputHorizontal = 0f;
+		inputScript.SetInputHorizontal(0f);
 
 	}
 

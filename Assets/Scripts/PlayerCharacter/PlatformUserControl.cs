@@ -25,10 +25,119 @@ public class PlatformUserControl : MonoBehaviour {
 	/** 
 	 * Combined Input
 	 **/
-	
-	//	[System.NonSerialized]
-	public float inputHorizontal = 0f;
-	
+
+	[SerializeField]
+	bool useThreeStateMovement = true;
+	float threeStateMovementSchwellwert= 0.1f;		// schwellwert
+//	float threeStateMovementHystereseCenter = 0f;		// center of hysterese
+
+	[SerializeField]
+	private float inputHorizontal = 0f;
+
+	public float GetInputHorizontal()
+	{
+		if(useThreeStateMovement)
+		{
+			if(inputLeft)
+				return -1.0f;
+			else if(inputRight)
+				return 1.0f;
+			else
+				return 0f;
+		}
+		else
+		{
+			return inputHorizontal;
+		}
+	}
+
+	public void SetInputHorizontal(bool left, bool right)
+	{
+		if(left)
+		{
+			inputHorizontal = -1f;
+			inputLeft = true;
+			inputRight = false;
+		}
+		else if(right)
+		{
+			inputHorizontal = 1f;
+			inputLeft = false;
+			inputRight = true;
+		}
+		else
+		{
+			inputHorizontal = 0f;
+			inputLeft = false;
+			inputRight = false;
+		}
+	}
+
+	public void SetInputHorizontal(float value)
+	{
+		inputHorizontal = value;
+		// limit combination to [-1,1]
+		Mathf.Clamp(inputHorizontal, -1, +1);    // kein cheaten möglich mit touch+keyboard steuerung
+
+		if( inputHorizontal < -threeStateMovementSchwellwert)
+		{
+			if(useThreeStateMovement)
+				inputHorizontal = -1f;
+			inputLeft = true;
+			inputRight = false;
+		}
+		else if( inputHorizontal > threeStateMovementSchwellwert)
+		{
+			if(useThreeStateMovement)
+				inputHorizontal = 1f;
+			inputLeft = false;
+			inputRight = true;
+		}
+		else
+		{
+			if(useThreeStateMovement)
+				inputHorizontal = 0f;
+			inputLeft = false;
+			inputRight = false;
+		}
+	}
+
+//	public void SetInputHorizontal(float value)
+//	{
+//		if(threeStateMovement)
+//		{
+//			if(inputHorizontal < threeStateMovementHysterese)
+//			{
+//				inputHorizontal = -1f;
+//				inputLeft = true;
+//				inputRight = false;
+//			}
+//			else if(inputHorizontal > threeStateMovementHysterese)
+//			{
+//				inputHorizontal = 1f;
+//				inputLeft = false;
+//				inputRight = true;
+//			}
+//			else
+//			{
+//				inputHorizontal = 0f;
+//				inputLeft = false;
+//				inputRight = false;
+//			}
+//		}
+//		else
+//		{
+//			inputHorizontal = value;
+//			// limit combination to [-1,1]
+//			Mathf.Clamp(inputHorizontal, -1, +1);    // kein cheaten möglich mit touch+keyboard steuerung
+//		}
+//	}
+
+	public bool inputLeft;
+	public bool inputRight;
+	public bool inputUp;
+	public bool inputDown;
+
 	//	[System.NonSerialized]
 	public float inputVertical = 0f;
 	
@@ -307,16 +416,10 @@ public class PlatformUserControl : MonoBehaviour {
 		// combine the horizontal input
 		inputHorizontal = inputTouchHorizontal + inputKeyboardHorizontal;
 
-		// 3 stateMovement	(prediction will be more precis)
-		if(inputHorizontal < 0f)
-			inputHorizontal = -1f;
-		else if(inputHorizontal > 0f)
-			inputHorizontal = 1f;
-		else
-			inputHorizontal = 0f;
 
-		// limit combination to [-1,1]
-		Mathf.Clamp(inputHorizontal, -1, +1);    // kein cheaten möglich mit touch+keyboard steuerung
+		SetInputHorizontal(inputHorizontal);
+		
+
 	}
 
 	/// <summary>

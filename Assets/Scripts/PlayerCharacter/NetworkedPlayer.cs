@@ -3,6 +3,14 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 
+[System.Serializable]
+public struct NetworkedInput{
+	public bool left;
+	public bool right;
+	public bool jump;
+	public bool power;
+}
+
 public class NetworkedPlayer : MonoBehaviour
 {
 	// how far back to rewind interpolation?
@@ -42,16 +50,20 @@ public class NetworkedPlayer : MonoBehaviour
 	// represents a move command sent to the server
 	private struct move
 	{
-		public float HorizontalAxis;
+//		public float HorizontalAxis;
+		public bool left;
+		public bool right;
 		public bool jump;
 		public bool power;
 		public double Timestamp;
 		public Vector3 Position;
 
 		
-		public move( float horiz, bool jump, bool power, double timestamp )
+		public move (bool left, bool right, bool jump, bool power, double timestamp)
 		{
-			this.HorizontalAxis = horiz;
+//			this.HorizontalAxis = horiz;
+			this.left = left;
+			this.right = right;
 			this.jump = jump;
 			this.power = power;
 			this.Timestamp = timestamp;
@@ -148,7 +160,7 @@ public class NetworkedPlayer : MonoBehaviour
 
 						if(Network.isClient)
 						{
-							myNetworkView.RPC( "ProcessInput", RPCMode.Server, lastMoveStateWithPhysics.HorizontalAxis, lastMoveStateWithPhysics.jump, this.transform.position );
+							myNetworkView.RPC( "ProcessInput", RPCMode.Server, lastMoveStateWithPhysics.left, lastMoveStateWithPhysics.right, lastMoveStateWithPhysics.jump, this.transform.position.x, this.transform.position.y );
 						}
 						else
 						{
@@ -186,7 +198,7 @@ public class NetworkedPlayer : MonoBehaviour
 
 			// this is my character
 			// get current move state
-			move moveState = new move( inputScript.inputHorizontal , inputScript.inputJump, inputScript.inputPower, Network.time );
+			move moveState = new move( inputScript.inputLeft, inputScript.inputRight, inputScript.inputJump, inputScript.inputPower, Network.time );
 
 			if(!localPlayerUnityEnginePhysicsUsed)
 			{
@@ -211,7 +223,7 @@ public class NetworkedPlayer : MonoBehaviour
 //					myNetworkView.RPC( "ClientACKPositionCorrection", RPCMode.Server );
 //					clientNeedsToSendNewInput = false;
 //				}
-				myNetworkView.RPC( "ProcessInput", RPCMode.Server, moveState.HorizontalAxis, moveState.jump, this.transform.position );
+				myNetworkView.RPC( "ProcessInput", RPCMode.Server, moveState.left, moveState.right, moveState.jump, this.transform.position.x, this.transform.position.y);
 //				if(characterScript.canUsePowerButton)
 //				{
 //					if(inputScript.inputPower)
@@ -280,7 +292,8 @@ public class NetworkedPlayer : MonoBehaviour
 //	}
 
 	[RPC]
-	void ProcessInput( float recvedInputHorizontal, bool recvedInputJump, Vector3 recvedPosition, NetworkMessageInfo info )
+	//void ProcessInput( bool recvedLeft, bool recvedRight, bool recvedInputJump, Vector3 recvedPosition, NetworkMessageInfo info )
+	void ProcessInput( bool recvedLeft, bool recvedRight, bool recvedInputJump, float recvedPositionX, float recvedPositionY, NetworkMessageInfo info )
 	{
 //		Debug.Log(this.ToString() + ": ProcessInput");
 		// aktuell gehören photonviews dem masterclient
@@ -313,7 +326,7 @@ public class NetworkedPlayer : MonoBehaviour
 //		}
 
 		// execute input
-		inputScript.inputHorizontal = recvedInputHorizontal;
+		inputScript.SetInputHorizontal(recvedLeft, recvedRight);
 		inputScript.inputJump = recvedInputJump;
 		characterScript.Simulate();
 
@@ -328,7 +341,7 @@ public class NetworkedPlayer : MonoBehaviour
 		//return;
 																									// berücksichtigt alle
 
-
+		Vector3 recvedPosition = new Vector3(recvedPositionX, recvedPositionY, 0f);
 		if( Vector3.Distance( this.transform.position, recvedPosition ) > 0.2f )
 		{
 			// error is too big, tell client to rewind and replay								// berücksichtigt die, die zu stark abweichen
@@ -421,7 +434,7 @@ public class NetworkedPlayer : MonoBehaviour
 //					inputScript.inputJump = false;
 //					characterScript.Simulate();
 //				}
-				inputScript.inputHorizontal = moveHistory[ i ].HorizontalAxis;
+				inputScript.SetInputHorizontal(moveHistory[ i ].left, moveHistory[ i ].right);
 				inputScript.inputJump = moveHistory[ i ].jump;
 				characterScript.Simulate();
 			}
@@ -461,6 +474,26 @@ public class NetworkedPlayer : MonoBehaviour
 //	void SimulationBack()
 //	{
 //	}
+
+	void SetLastRecvdPos()
+	{
+
+	}
+
+	void SetTransformToCalculatedEstiminatedPositionOnServer(Transform transform)
+	{
+
+	}
+
+	void SetTransformToLastRecevedPosition(Transform transform)
+	{
+		if(stateCount > 0)
+		{
+			//characterScript.lastReceivedPos.position = stateBuffer[0].Position;		// stateBuffer[0]
+			transform.position = stateBuffer[0].Position;		// stateBuffer[0]
+        }
+    }
+
 
 	void LastPosAndPrediction()
 	{
@@ -518,7 +551,9 @@ public class NetworkedPlayer : MonoBehaviour
 				{
 					//TODO
 				}
+#if UNITY_EDITOR
 				Debug.DrawLine(this.transform.position, moveHistory[pastState].Position, Color.red, 5f);
+#endif				
 			}
 			else
 			{
@@ -721,7 +756,7 @@ public class NetworkedPlayer : MonoBehaviour
 			networkState last = stateBuffer[0];
 			Vector3 tempPosition = transform.position;
 			
-			inputScript.inputHorizontal = last.InputHorizontal;	// show animation
+			inputScript.SetInputHorizontal(last.InputHorizontal);	// show animation
 			//inputScript.inputJump = last.InputJump;
 			characterScript.Simulate();
 			
@@ -733,14 +768,16 @@ public class NetworkedPlayer : MonoBehaviour
 			//int count = GetPastState(Network.time - avgTripTime) + 1 ;
 			for(int i=0; i< ((int)((avgTripTime)/Time.fixedDeltaTime)); i++)			// TODO calculate prediction steps with avgTripTime in receiving method!!
 			{
-				inputScript.inputHorizontal = last.InputHorizontal;	// predict that user is still moving in same direction.
+				inputScript.SetInputHorizontal(last.InputHorizontal);	// predict that user is still moving in same direction.
 				//inputScript.inputJump = last.InputJump;
 				characterScript.Simulate();
 			}
 			Vector3 predictedPosition = characterScript.predictedPosSimulatedWithLastInput.position;		// stateBuffer[0].pos + predictiontime*stateBuffer[0].inputH could be wrong?
 			transform.position = tempPosition;
 			characterScript.predictedPosSimulatedWithLastInput.position = predictedPosition;
+#if UNITY_EDITOR
 			Debug.DrawLine(tempPosition, predictedPosition);
+#endif
 		}
 	}
 
@@ -818,8 +855,21 @@ public class NetworkedPlayer : MonoBehaviour
 		// increment state count (up to buffer size)
 		stateCount = Mathf.Min( stateCount + 1, stateBuffer.Length );
 	}
+
+	void NetworkDataOptimizationAndCompression(BitStream stream)
+	{
+		int dataCount = 3;
+
+		for(int i=0; i < dataCount; i++)
+		{
+
+		}
+	}
 	
-	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info) {
+	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
+	{
+
+		float authoritativePosZ = 0f;
 
 		// Code runs on NetworkView Owner
 		// if Owner is Server, send to all Clients
@@ -827,9 +877,14 @@ public class NetworkedPlayer : MonoBehaviour
 		if (stream.isWriting)
 		{
 			Vector3 authoritativePos = transform.position;				// authorative calculated position
-			float receivedHorizontal = inputScript.inputHorizontal;		// received input from the character owner send to all clients (for prediction use and animation)
+			float authoritativePosX = authoritativePos.x;
+			float authoritativePosY = authoritativePos.y;
+//2D -> Z=0	//float authoritativePosZ = authoritativePos.z;
+			float receivedHorizontal = inputScript.GetInputHorizontal();		// received input from the character owner send to all clients (for prediction use and animation)
 			bool receivedInputJump = inputScript.inputJump;				// received input from the character owner send to all clients (for prediction use and animation)
-			stream.Serialize(ref authoritativePos);
+//			stream.Serialize(ref authoritativePos);
+			stream.Serialize(ref authoritativePosX);
+			stream.Serialize(ref authoritativePosY);
 			stream.Serialize(ref receivedHorizontal);
 			stream.Serialize(ref receivedInputJump);
 		}
@@ -837,11 +892,17 @@ public class NetworkedPlayer : MonoBehaviour
 		else
 		{
 			Vector3 authoritativePos = Vector3.zero;
-			float receivedHorizontal = 0;
+			float authoritativePosX = 0f;
+			float authoritativePosY = 0f;
+			float receivedHorizontal = 0f;
 			bool receivedInputJump = false;
-			stream.Serialize(ref authoritativePos);
+//			stream.Serialize(ref authoritativePos);
+			stream.Serialize(ref authoritativePosX);
+			stream.Serialize(ref authoritativePosY);
 			stream.Serialize(ref receivedHorizontal);
 			stream.Serialize(ref receivedInputJump);
+
+			authoritativePos = new Vector3(authoritativePosX, authoritativePosY, authoritativePosZ);
 
 			// Update: netUpdates buffers now also on local player character to get current TripTime :://TODO DONE and latest pos ( lastrecvdPos
 
@@ -937,19 +998,20 @@ public class NetworkedPlayer : MonoBehaviour
 
 		if( ownerScript.owner == Network.player)
 		{
-			txtLastTripTime.text = ((double)(stateBuffer[0].tripTime)*1000).ToString("#### ms");
-			txtLastTripTimeSteps.text = ((double)(stateBuffer[0].tripTime/Time.fixedDeltaTime)).ToString("#.#");
-			txtLastTripTimeSteps2.text = (GetPastState(Network.time - stateBuffer[0].tripTime)+1).ToString();
+			txtLastTripTime.text = "LTT: " + ((double)(stateBuffer[0].tripTime)*1000).ToString("#### ms");
+			txtLastTripTimeSteps.text = "LTTS: " + ((double)(stateBuffer[0].tripTime/Time.fixedDeltaTime)).ToString("#.#");
+			txtLastTripTimeSteps2.text = "LTTS2: " +  (GetPastState(Network.time - stateBuffer[0].tripTime)+1).ToString();
 			// kann sein das LastTripTime nicht im avgTripTime eingerechnet wurde da der avg zum anderen zeitpunkt berechnet wird und da das neuste paket noch nicht angekommen ist. 
 			//TODO // lösung -> avg immer bei ankommendem paket berechnen!
+			//TODO // LÖSUNG v2: static avgTripTime ... eine TripTime für alle NetworkedPlayer!
 
-			txtAvarageTripTime.text = ((double)(avgTripTime*1000)).ToString("#### ms");
-			txtAvarageTripTimeSteps.text = ((double)(avgTripTime/Time.fixedDeltaTime)).ToString("#.#");
-			txtAvarageTripTimeSteps2.text = ((GetPastState(Network.time - avgTripTime)+1)).ToString();
+			txtAvarageTripTime.text = "avgTT: " + ((double)(avgTripTime*1000)).ToString("#### ms");
+			txtAvarageTripTimeSteps.text = "avgTTS: " + ((double)(avgTripTime/Time.fixedDeltaTime)).ToString("#.#");
+			txtAvarageTripTimeSteps2.text = "avgLTTS2: " + ((GetPastState(Network.time - avgTripTime)+1)).ToString();
 
-			txtMaxTripTime.text = maxTripTime.ToString("0.###");
-			txtMaxTripTimeSteps.text = ((double)(maxTripTime/Time.fixedDeltaTime)).ToString("#");
-			txtMaxTripTimeSteps2.text = (GetPastState(Network.time - maxTripTime)+1).ToString();
+			txtMaxTripTime.text = "maxTT: " + maxTripTime.ToString("0.###");
+			txtMaxTripTimeSteps.text = "maxTTS: " + ((double)(maxTripTime/Time.fixedDeltaTime)).ToString("#");
+			txtMaxTripTimeSteps2.text = "maxTTS2: " + (GetPastState(Network.time - maxTripTime)+1).ToString();
 		}
 	}
 
