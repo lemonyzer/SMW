@@ -33,7 +33,7 @@ public class TilesetManagerWindow : EditorWindow {
 		{
 			currWindow = (TilesetManagerWindow) EditorWindow.GetWindow(typeof(TilesetManagerWindow));
 			currWindow.title = "Tileset Manager";
-			currWindow.minSize = new Vector2(256,512);
+//			currWindow.minSize = new Vector2(256,512);
 		}
 		else
 		{

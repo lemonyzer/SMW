@@ -149,7 +149,7 @@ public class CMap {
 	void initSwitches()
 	{
 		iSwitches = new short[Globals.NUM_SWITCHES];
-		for(short iSwitch = 0; iSwitch < 4; iSwitch++)
+		for(short iSwitch = 0; iSwitch < iSwitches.Length; iSwitch++)
 			iSwitches[iSwitch] = 0;
 	}
 
@@ -328,9 +328,10 @@ public class CMap {
 			}
 			else
 			{
-				tilesetwidths[iID] = m_TilesetManager.GetTileset(translationid[iID]).Width;
-				tilesetheights[iID] = m_TilesetManager.GetTileset(translationid[iID]).Height;
+				tilesetwidths[iID] = m_TilesetManager.GetTileset(translationid[iID]).width;
+				tilesetheights[iID] = m_TilesetManager.GetTileset(translationid[iID]).height;
 			}
+			Debug.Log("Tileset width = " + tilesetwidths[iID] + ", height = " + tilesetheights[iID]);
 		}
 
 		mapdata = new TilesetTile[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];	// mapdata, hier werden die eingelesenen Daten gespeichert
@@ -379,13 +380,15 @@ public class CMap {
 		initSwitches();
 
 		//Read on/off switches
-		for(short iSwitch = 0; iSwitch < 4; iSwitch++)
+		for(short iSwitch = 0; iSwitch < iSwitches.Length; iSwitch++)
 		{
 			iSwitches[iSwitch] = (short)ReadInt(binReader);
 			Debug.Log("readed iSwitches["+iSwitch+"] = " + iSwitches[iSwitch]);
 		}
 
 	}
+
+
 
 	public void OnGUI()
 	{

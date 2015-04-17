@@ -10,21 +10,21 @@ public class TilesetManager : ScriptableObject {
 
 	// bei Programmstart lade alle Tilesets
 	[SerializeField]
-	List<CTiletset> tilesetList;
+	List<Tileset> tilesetList;
 
 	public void OnEnable()
 	{
-		Debug.Log("OnEnable()");
+		Debug.Log(this.ToString() + " OnEnable()");
 		if(tilesetList == null)
 		{
-			Debug.Log("tilesetList == null");
-			tilesetList = new List<CTiletset>();
+			Debug.Log(this.ToString() + " tilesetList == null");
+			Init();
 		}
 	}
 
 	public void Init()
 	{
-		tilesetList = new List<CTiletset>();
+		tilesetList = new List<Tileset>();
 	}
 
 //	public short GetIndexFromName(const char * szName)
@@ -36,14 +36,14 @@ public class TilesetManager : ScriptableObject {
 		for(int i = 0; i < iLength; i++)
 		{
 
-			if(!tilesetList[i].Name.Equals(Name))
+			if(!tilesetList[i].tilesetName.Equals(Name))
 				return i;
 		}
 		
 		return (int) TilesetIndex.TILESETUNKNOWN;
 	}
 
-	public CTiletset GetTileset(int index)
+	public Tileset GetTileset(int index)
 	{
 		return tilesetList[index];
 	}

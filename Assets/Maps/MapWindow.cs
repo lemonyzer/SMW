@@ -34,7 +34,7 @@ public class MapWindow : EditorWindow {
 		{
 			currWindow = (MapWindow) EditorWindow.GetWindow(typeof(MapWindow));
 			currWindow.title = "SMW Map";
-			currWindow.minSize = new Vector2(256,512);
+//			currWindow.minSize = new Vector2(256,512);
 		}
 		else
 		{

@@ -17,7 +17,7 @@ public class TilesetWindow : EditorWindow {
 	[MenuItem("SMW/Tileset Create")]
 	public static void Create()
 	{
-		CTiletset newTilesetAsset = ScriptableObject.CreateInstance<CTiletset>();
+		Tileset newTilesetAsset = ScriptableObject.CreateInstance<Tileset>();
 
 		AssetDatabase.CreateAsset(newTilesetAsset, "Assets/Maps/newCTiletsetSO.asset");
 		AssetDatabase.SaveAssets();
@@ -33,7 +33,7 @@ public class TilesetWindow : EditorWindow {
 		{
 			currWindow = (TilesetWindow) EditorWindow.GetWindow(typeof(TilesetWindow));
 			currWindow.title = "Tileset";
-			currWindow.minSize = new Vector2(256,512);
+//			currWindow.minSize = new Vector2(256,512);
 		}
 		else
 		{
