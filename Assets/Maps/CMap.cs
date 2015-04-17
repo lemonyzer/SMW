@@ -11,9 +11,38 @@
 //	#define SDL_BYTEORDER = SDL_LITTLE_ENDIAN
 
 using UnityEngine;
+using UnityEditor;
 using System.Collections;
 using System;
 using System.IO;
+
+public struct MapTile
+{
+	public TileType iType;
+	public int iFlags;
+};
+
+public struct MapBlock
+{
+	public short iType;
+	//	public short iSettings[NUM_BLOCK_SETTINGS];
+	public short[] iSettings;
+	public bool fHidden;
+	
+	public MapBlock(short iType)
+	{
+		this.iType = iType;
+		iSettings = new short[Globals.NUM_BLOCK_SETTINGS];
+		fHidden = false;
+	}
+};
+
+public struct TilesetTile
+{
+	public short iID;
+	public short iCol;
+	public short iRow;
+};
 
 public class MovingPlatform {
 
@@ -26,6 +55,10 @@ public class MovingPlatform {
 	}
 
 }
+
+public enum TilesetIndex {
+	TILESETUNKNOWN = -3,
+};
 
 public enum TileType {
 	tile_nonsolid = 0,
@@ -69,8 +102,13 @@ public struct TilesetTranslation
 
 public class CMap {
 
+	public CMap(TilesetManager tilesetManager)
+	{
+		this.m_TilesetManager = tilesetManager;
+	}
+
 	int[] g_iVersion = new int[] {1, 8, 0, 3};
-	TilesetManager g_TilesetManager = new TilesetManager();
+	TilesetManager m_TilesetManager;
 
 	int iNumPlatforms = 0;
 	int iPlatformCount = 0;
@@ -91,10 +129,29 @@ public class CMap {
 	bool[,,]		nospawn;
 	bool[] fAutoFilter = new bool[Globals.NUM_AUTO_FILTERS];
 
+//	char szBackgroundFile[128];	// BACKGROUND_CSTRING_SIZE
+	string szBackgroundFile;
+
+	short[] iSwitches;
 	
 	MovingPlatform[] platforms;
 
+	public void SetTiletsetManager(TilesetManager tilesetManager)
+	{
+		this.m_TilesetManager = tilesetManager;
+	}
 
+	public TilesetManager GetTilesetManager()
+	{
+		return this.m_TilesetManager;
+	}
+
+	void initSwitches()
+	{
+		iSwitches = new short[Globals.NUM_SWITCHES];
+		for(short iSwitch = 0; iSwitch < 4; iSwitch++)
+			iSwitches[iSwitch] = 0;
+	}
 
 	public void loadMap(string filePath, ReadType iReadType)
 	{
@@ -131,7 +188,33 @@ public class CMap {
 			//Read summary information here
 			Debug.Log("Version is Equal or After: 1, 8, 0, 0");
 
-			loadMapVersionEqualOrAfter1800(binReader, iReadType);
+			try
+			{
+				loadMapVersionEqualOrAfter1800(binReader, iReadType);
+			}
+			// Catch the EndOfStreamException and write an error message.
+			catch (EndOfStreamException e)
+			{
+				Debug.LogError("Error writing the data.\n" + e.GetType().Name);
+			}
+			// Catch the EndOfStreamException and write an error message.
+			catch (ObjectDisposedException e)
+			{
+				Debug.LogError("Error writing the data.\n" + e.GetType().Name);
+			}
+			// Catch the EndOfStreamException and write an error message.
+			catch (IOException e)
+			{
+				Debug.LogError("Error writing the data.\n" + e.GetType().Name);
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError("loadMapVersionEqualOrAfter1800 failed\n" + ex);
+			}
+			finally
+			{
+
+			}
 		}
 
 		// close stream and file
@@ -172,7 +255,10 @@ public class CMap {
 		ReadIntChunk(iAutoFilterValues, Globals.NUM_AUTO_FILTERS + 1, binReader);
 		
 		for(short iFilter = 0; iFilter < Globals.NUM_AUTO_FILTERS; iFilter++)
+		{
+			Debug.Log("fAutoFilter["+iFilter+"] = " + iAutoFilterValues[iFilter]);
 			fAutoFilter[iFilter] = iAutoFilterValues[iFilter] > 0;
+		}
 		
 		if(iReadType == ReadType.read_type_summary)
 		{
@@ -233,7 +319,7 @@ public class CMap {
 		{
 			short iID = translation[iTileset].iID;
 //			translationid[iID] = g_tilesetmanager.GetIndexFromName(translation[iTileset].szName);
-			translationid[iID] = g_TilesetManager.GetIndexFromName(translation[iTileset].Name);
+			translationid[iID] = m_TilesetManager.GetIndexFromName(translation[iTileset].Name);
 			
 			if(translationid[iID] == (int) TilesetIndex.TILESETUNKNOWN)	//TODO achtung int cast
 			{
@@ -242,8 +328,8 @@ public class CMap {
 			}
 			else
 			{
-				tilesetwidths[iID] = g_TilesetManager.GetTileset(translationid[iID]).Width;
-				tilesetheights[iID] = g_TilesetManager.GetTileset(translationid[iID]).Height;
+				tilesetwidths[iID] = m_TilesetManager.GetTileset(translationid[iID]).Width;
+				tilesetheights[iID] = m_TilesetManager.GetTileset(translationid[iID]).Height;
 			}
 		}
 
@@ -251,14 +337,14 @@ public class CMap {
 		objectdata = new MapBlock[Globals.MAPWIDTH, Globals.MAPHEIGHT];
 
 		//2. load map data
-		for(int j = 0; j < Globals.MAPHEIGHT; j++)
+		for(int y = 0; y < Globals.MAPHEIGHT; y++)
 		{
-			for(int i = 0; i < Globals.MAPWIDTH; i++)
+			for(int x = 0; x < Globals.MAPWIDTH; x++)
 			{
-				for(int k = 0; k < Globals.MAPLAYERS; k++)
+				for(int l = 0; l < Globals.MAPLAYERS; l++)
 				{
 //					TilesetTile * tile = &mapdata[i][j][k];	// zeigt auf aktuelles Element in mapdata
-					TilesetTile tile = mapdata[i,j,k];
+					TilesetTile tile = mapdata[x, y, l];
 					tile.iID = ReadByteAsShort(binReader);
 					tile.iCol = ReadByteAsShort(binReader);
 					tile.iRow = ReadByteAsShort(binReader);
@@ -280,16 +366,29 @@ public class CMap {
 					}
 				}
 				
-				objectdata[i,j].iType = ReadByteAsShort(binReader);
-				objectdata[i,j].fHidden = ReadBool(binReader);
+				objectdata[x,y].iType = ReadByteAsShort(binReader);
+				objectdata[x,y].fHidden = ReadBool(binReader);
+//				Debug.LogWarning("objectdata["+x+", "+y+"].fHidden = " + objectdata[x,y].fHidden.ToString()); 
 			}
+		}
+
+		//Read in background to use
+		szBackgroundFile = ReadString(Globals.BACKGROUND_CSTRING_SIZE, binReader);
+		Debug.Log("BackgroundFile = " + szBackgroundFile);
+
+		initSwitches();
+
+		//Read on/off switches
+		for(short iSwitch = 0; iSwitch < 4; iSwitch++)
+		{
+			iSwitches[iSwitch] = (short)ReadInt(binReader);
+			Debug.Log("readed iSwitches["+iSwitch+"] = " + iSwitches[iSwitch]);
 		}
 
 	}
 
 	public void OnGUI()
 	{
-
 	}
 
 	void saveMap(string filePath)

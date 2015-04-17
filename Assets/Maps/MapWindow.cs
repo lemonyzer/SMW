@@ -10,9 +10,23 @@ public class MapWindow : EditorWindow {
 
 	#region Variables
 	static MapWindow currWindow;
+	TilesetManager g_TilesetManager;
 	#endregion
 
 	#region Main Methods
+
+	[MenuItem("SMW/Map Create")]
+	public static void Create()
+	{
+//		CMap newTilesetAsset = ScriptableObject.CreateInstance<CMap>();
+//		
+//		AssetDatabase.CreateAsset(newTilesetAsset, "Assets/Maps/newCTiletsetSO.asset");
+//		AssetDatabase.SaveAssets();
+//		
+//		EditorUtility.FocusProjectWindow();
+//		Selection.activeObject = newTilesetAsset;
+	}
+
 	[MenuItem("SMW/Map Window")]
 	public static void Init()
 	{
@@ -39,12 +53,23 @@ public class MapWindow : EditorWindow {
 
 		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
 
+		g_TilesetManager = (TilesetManager) EditorGUILayout.ObjectField("TilesetManager", g_TilesetManager, typeof(TilesetManager), false, GUILayout.ExpandWidth(true));
+
+//		if (GUILayout.Button("Select TileManager", GUILayout.ExpandWidth(false)))
+//		{
+//		}
+
+		if(g_TilesetManager == null)
+			GUI.enabled = false;
+		else
+			GUI.enabled = true;
+
 		if (GUILayout.Button("Open File", GUILayout.ExpandWidth(false)))
 		{
 			if(OnGUI_OpenFile(out m_LastMapPath))
 			{
 				m_FileOpened = true;
-				currentMap = new CMap();		// on time (on button clicked)
+				currentMap = new CMap(g_TilesetManager);		// on time (on button clicked)
 				currentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_preview);
 			}
 			else

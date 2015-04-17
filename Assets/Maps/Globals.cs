@@ -9,8 +9,12 @@ static class Globals {
 
 	public const int VERSIONLENGTH = 4;
 	public const int NUM_AUTO_FILTERS = 12;
-	
+
+	// Custom
 	public const int TILESET_TRANSLATION_CSTRING_SIZE = 128;
+	public const int BACKGROUND_CSTRING_SIZE = 128;
+	public const int NUM_SWITCHES = 4;
+	// Custom
 
 	public const int NUM_POWERUPS = 26;
 	public const int NUM_BLOCK_SETTINGS = NUM_POWERUPS;

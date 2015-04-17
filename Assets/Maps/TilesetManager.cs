@@ -5,77 +5,22 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public struct MapTile
-{
-	public TileType iType;
-	public int iFlags;
-};
-
-public struct MapBlock
-{
-	public short iType;
-//	public short iSettings[NUM_BLOCK_SETTINGS];
-	public short[] iSettings;
-	public bool fHidden;
-
-	public MapBlock(short iType)
-	{
-		this.iType = iType;
-		iSettings = new short[Globals.NUM_BLOCK_SETTINGS];
-		fHidden = false;
-	}
-};
-
-public struct TilesetTile
-{
-	public short iID;
-	public short iCol;
-	public short iRow;
-};
-
-public class CTiletset {
-
-	private string name;
-	private int height;
-	private int width;
-
-	public string Name {
-		get {
-			return this.name;
-		}
-		set {
-			name = value;
-		}
-	}
-	
-	public int Height {
-		get {
-			return this.height;
-		}
-		set {
-			height = value;
-		}
-	}
-
-	public int Width {
-		get {
-			return this.width;
-		}
-		set {
-			width = value;
-		}
-	}
-
-}
-
-public enum TilesetIndex {
-	TILESETUNKNOWN = -3,
-};
-
-public class TilesetManager {
+[System.Serializable]
+public class TilesetManager : ScriptableObject {
 
 	// bei Programmstart lade alle Tilesets
+	[SerializeField]
 	List<CTiletset> tilesetList;
+
+	public void OnEnable()
+	{
+		Debug.Log("OnEnable()");
+		if(tilesetList == null)
+		{
+			Debug.Log("tilesetList == null");
+			tilesetList = new List<CTiletset>();
+		}
+	}
 
 	public void Init()
 	{
