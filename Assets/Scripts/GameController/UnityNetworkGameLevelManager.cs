@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof(UnityNetworkManager))]
 public class UnityNetworkGameLevelManager : MonoBehaviour {
 
-	public delegate void OnPlayerLevelLoadComplete(NetworkPlayer netPlayer, Player newPlayer, int teamId);
+	public delegate void OnPlayerLevelLoadComplete(NetworkPlayer netPlayer, Player newPlayer);
 	public static event OnPlayerLevelLoadComplete onPlayerLevelLoadComplete;
 
 	public GameObject _PrefabCharacterLibrary;
@@ -14,20 +13,6 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 //	UnityNetworkManager baseManager;
 
 	int playerReadyCount = 0;
-
-
-	void OnEnable()
-	{
-		UnityNetworkManager.onNetworkLevelGameLoaded += onNetworkLevelGameLoaded;
-		UnityNetworkManager.onPlayerDisconnected += OnPlayerDisconnectedEvent;
-	}
-	
-	void OnDisable()
-	{
-		UnityNetworkManager.onNetworkLevelGameLoaded -= onNetworkLevelGameLoaded;
-		UnityNetworkManager.onPlayerDisconnected -= OnPlayerDisconnectedEvent;
-	}
-
 
 	void Awake()
 	{
@@ -45,38 +30,21 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 //		baseManager = this.GetComponent<UnityNetworkManager>();
 	}
 
-	/// <summary>
-	/// Ons the network level game loaded.
-	/// 
-	///  NetworkLevelLoader -> SendMessage @ all GameObject -> OnNetworkLevelLoaded() -> UnityNetworkManager: checks which level (CharacterSlectionLevel or GameLevel) -> Delegate/Event onNetworkLevelGameLoaded
-	/// </summary>
-	void onNetworkLevelGameLoaded()
+	void Start()
 	{
+		Network.isMessageQueueRunning = true;
+
 		if(Network.isServer)
 		{
-			Debug.LogWarning(this.ToString() + " Server!");
-			
-			if(PlayerDictionaryManager._instance.serverHasPlayer)
+			if(PlayerDictionaryManager.serverHasPlayer)
 			{
-				Debug.LogWarning("Server: ClientLoadingLevelComplete_Rpc");
 				myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);
-//				PlayerLoadWasComplete(Network.player);
-			}
-			else
-			{
-				Debug.LogWarning("PlayerDictionaryManager.serverHasPlayer == false");
 			}
 		}
 		else if(Network.isClient)
 		{
-			myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);		// ACHTUNG wird auch lokal ausgeführt!!!! für spieler der später kommt stehen seine eigenen informationen NOCH NICHT zur verfügung
+			myNetworkView.RPC("ClientLoadingLevelComplete_Rpc", RPCMode.All, Network.player);
 		}
-	}
-
-	void Start()
-	{
-//		Network.isMessageQueueRunning = true;
-		Debug.LogWarning(this.ToString() + " Start()");
 	}
 
 	/// <summary>
@@ -85,40 +53,8 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	/// <param name="netPlayer">Net player.</param> ----------------- to work also on Server to Server message
 	/// <param name="info">Info.</param>
 	[RPC]
-	void ClientLoadingLevelComplete_Rpc(NetworkPlayer otherNetPlayer)
+	void ClientLoadingLevelComplete_Rpc(NetworkPlayer netPlayer, NetworkMessageInfo info)
 	{
-		Debug.Log("ClientLoadingLevelComplete_Rpc netPlayer: " + otherNetPlayer.ToString()); 
-		if (Network.isServer)
-		{
-
-		}
-		/**
-		 * Clients: Da diese RPC auch lokal ausgeführt wird muss 
-		 * dafür gesorgt werden das diese RPC nur für andere Mitspieler ausgeführt wird
-		 * return Network.player == otherNetPlayer
-		 * 
-		 * Server: Da diese RPC auch lokal ausgeführt wird und Server sich nicht selbst bestätigen muss
-		 * kann Server direkt ausführen
-		 * 
-		 * Server: Aufgabe 2 bestätige die Clients, das diese auch Ihr UI Elemt für Ihren Eigenen Spieler erstellen!!!!
-		 * 
-		 * Server: Aufgabe 3 nach bestätigung der Clients, erstelle Charactere!
-		 **/
-
-
-
-		// TODO warum alle an alle? -> das Server diese RPC auch an sich selbst senden kannn!!
-		// server muss doch autoritative handeln, alle clients melden loading complete -> server gibt es weiter
-		// TODO
-		// Server erhält ClientLoadingLevelComplete und sendet an diese eine Person wer noch alles LoadingComplete
-
-		// nur für andere Spieler, Server bestätigt meinen Client		// dadurch können Late Join Spieler mitmachen (bekommen RPCs in Richtiger reihenfolge)
-		if (Network.player != otherNetPlayer)
-		{
-			// sende information von neuem Spieler in der Szene den anderen Spielern mit
-			// erstelle UI Stats Elemt für andere Clients
-			PlayerLoadWasComplete(otherNetPlayer);
-		}
 
 		// TODO instantiate Clients Character
 
@@ -126,75 +62,32 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 
 		// TODO update references in Player Class
 
-
-		if(Network.isServer)
-		{
-			Player player = null;
-			if(!PlayerDictionaryManager._instance.TryGetPlayer(otherNetPlayer, out player))
-			{
-				Debug.LogError("ClientLoadingLevelComplete_Rpc ich bin netPlayer:" + Network.player + " und hab keinen Spieler zu NetPlayer:" + otherNetPlayer.ToString() + " gefunden!");
-				return;
-			}
-			Debug.Log("ClientLoadingLevelComplete_Rpc netPlayer: " + otherNetPlayer.ToString() + " (" + player.getUserName() + ")");
-			
-			// only Server
-			// TODO Reihenfolge beachten!!!
-			// bestätige Spieler seine teilnahme an aktueller Scene! (jetzt hat er auch die Buffered informationen hinter sich und bekommt für seinen Character relevante Infos)
-			// 1. erstelle UI Slot
-			myNetworkView.RPC("PingPongServerToAllClientLoadingLevelComplete_Rpc", RPCMode.All, otherNetPlayer);
-			// only Server
-			// Instantiate Character GameObject
-			// 2. Spieler findet UI Slot
-			Debug.Log("InstantiateAndSetupPlayerCharacter netPlayer: " + otherNetPlayer.ToString() + " " + player.getUserName());
-			InstantiateAndSetupPlayerCharacter(otherNetPlayer, player);
-
-			if(playerReadyCount >= Network.connections.Length)					//TODO >=
-			{
-				myNetworkView.RPC("SyncGameStart_Rpc", RPCMode.AllBuffered);			// TODO changed 11.04.2015		SyncGameStart & LateGameStart!
-			}
-		}
-	}
-
-
-	void PlayerLoadWasComplete(NetworkPlayer netPlayer)
-	{
-		Debug.LogWarning("PlayerLoadWasComplete() für " + netPlayer.ToString() + " erzeuge UI Element und speichere in PlayerDictionary<Player>!!!!!");
 		Player player;
 		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
 		{
-			Debug.LogWarning("PlayerLoadWasComplete -> NO ERROR für netPlayer " + netPlayer.ToString() + " " + player.getUserName() + " =)");
 			player.loadingLevelComplete = true;
 			playerReadyCount++;												//TODO umgeht Update() iteration über Network.connections array
 
-			onPlayerLevelLoadComplete(netPlayer, player, player.team.mId); // erzeuge UI Slot
 
-//			//TODO wegen OthersBuffered!!
-//			if(Network.isServer && netPlayer == Network.player)
-//			{
-//				InstantiateAndSetupPlayerCharacter(netPlayer, player);
-//			}
+			onPlayerLevelLoadComplete(netPlayer, player); // erzeuge UI Slot
+
+
+			if(Network.isServer)
+			{
+				// only Server
+				// Instantiate Character GameObject
+				InstantiateAndSetupPlayerCharacter(netPlayer, player);
+			}
 		}
-		else
+
+		if(Network.isServer)
 		{
-			Debug.LogError("ERROORORORORORRORORORERROORORORORORROROROR -> UI Elemnt für netPlayer " + netPlayer.ToString() + " wurde nicht erstellt, da Player nicht in playerDictionary gefunden wurde!!");
-			// wird aufgerufen, wenn Spieler in laufende Game Session eingestiegen ist
-			
+			// only Server
+			if(playerReadyCount >= Network.connections.Length)					//TODO >=
+			{
+				myNetworkView.RPC("SyncGameStart_Rpc", RPCMode.All);
+			}
 		}
-
-	}
-
-	[RPC]
-	void PingPongServerToAllClientLoadingLevelComplete_Rpc(NetworkPlayer netPlayer)
-	{
-		Debug.Log("PingPongServerToAllClientLoadingLevelComplete_Rpc von netPlayer: " + netPlayer);
-		// client hat spätestens jetzt seine informationen (Buffered RPC's aus vorherigenden Scene wurde jetzt schon beantwortet)
-		if (Network.player != netPlayer)
-		{
-			return;
-		}
-
-		PlayerLoadWasComplete(netPlayer);
-
 	}
 
 	void InstantiateAndSetupPlayerCharacter(NetworkPlayer netPlayerOwner, Player realOwner)
@@ -214,8 +107,7 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 		//TODO myNetworkView.RPC("RegisterCharacterGameObjectInPlayerDictionary_Rpc", RPCMode.AllBuffered, netPlayer, newObjectsNetworkView.viewID );
 
 		// Call an RPC on this new PhotonView, set the NetworkPlayer who controls this new player
-		// TODO BUFFERED because Player joins running session needs to know who is owner && owners TEAM! 
-		newObjectsNetworkView.RPC("RegisterCharacterGameObjectInPlayerDictionary_Rpc", RPCMode.AllBuffered, netPlayerOwner, realOwner.getUserName(), realOwner.team.mId );
+		newObjectsNetworkView.RPC("RegisterCharacterGameObjectInPlayerDictionary_Rpc", RPCMode.AllBuffered, netPlayerOwner );
 		newObjectsNetworkView.RPC("SetCharacterControlsOwner", RPCMode.AllBuffered, netPlayerOwner);			// RealOwner Script
 		newObjectsNetworkView.RPC("DeactivateKinematic", RPCMode.AllBuffered);							// PlatformCharacter Script
 	}
@@ -231,38 +123,27 @@ public class UnityNetworkGameLevelManager : MonoBehaviour {
 	}
 
 
-	void OnPlayerDisconnectedEvent(NetworkPlayer netPlayer, Player player)
+	void OnPlayerDisconnected(NetworkPlayer netPlayer)
 	{
-		if(player.loadingLevelComplete)
-			playerReadyCount--;		
-    }
+		Player player;
+		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
+		{
+			if(player.loadingLevelComplete)
+				playerReadyCount--;											//TODO consistent? disconnect kommt meistens später
 
-	// TODO event wird ausgeführt, somit is gewährleistet das die player reference noch existiert und nicht aus playerDictionary gelöscht wurde!! 
-//	void OnPlayerDisconnected(NetworkPlayer netPlayer)
-//	{
-//
-//
-//		// TODO auf Reihenfolge ACHTEN in UnityNetworkManager wird player aus playerDictionary gelöscht !!!
-//
-//		Player player;
-//		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
-//		{
-//			if(player.loadingLevelComplete)
-//				playerReadyCount--;											//TODO consistent? disconnect kommt meistens später
-//
-//			// remove Character GameObject
-//			RemoveCurrentPlayerCharacterGameObject(player);
-//
-//			// dont remove Stats
-//
-//		}
-//		else
-//		{
-//			Debug.LogError("NetworkPlayer existiert nicht (mehr) in PlayerDictionary!!!");
-//		}
-//
-//
-//	}
+			// remove Character GameObject
+			RemoveCurrentPlayerCharacterGameObject(player);
+
+			// dont remove Stats
+
+		}
+		else
+		{
+			Debug.LogError("NetworkPlayer existiert nicht (mehr) in PlayerDictionary!!!");
+		}
+
+
+	}
 
 	void RemoveCurrentPlayerCharacterGameObject(Player player)
 	{

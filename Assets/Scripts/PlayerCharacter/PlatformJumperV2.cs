@@ -10,10 +10,6 @@ using System.Collections;
 
 public class PlatformJumperV2 : MonoBehaviour {
 
-	//TODO überschreibt vererbung, zum cachen
-	new public Transform transform;
-
-
 	// relevant world stoppers
 	BoxCollider2D bodyCollider;
 	BoxCollider2D groundStopper;
@@ -27,7 +23,6 @@ public class PlatformJumperV2 : MonoBehaviour {
 
 	void Awake()
 	{
-		this.transform = GetComponent<Transform>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		gameController = GameObject.FindGameObjectWithTag(Tags.tag_gameController);
 		layer = gameController.GetComponent<Layer>();

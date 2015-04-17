@@ -28,9 +28,8 @@ public class SingleplayerMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Debug.LogError("Konstruktor has Changed!!!!");
-		//currentPlayer = new Player(1,"player1",null);
-		this.enabled = false;
+		currentPlayer = new Player(1,"player1",null);
+
 	}
 	
 	// Update is called once per frame

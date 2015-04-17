@@ -3,11 +3,6 @@ using System.Collections;
 
 public class MainMenu : MonoBehaviour {
 
-
-	static public int buildNumber = 707;
-
-	static public int versionNumber = 0;
-
 	// GUI
 	private float halfScreenWidth;
 	private float halfScreenHeight;

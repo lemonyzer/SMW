@@ -64,7 +64,6 @@ public class Tags : MonoBehaviour {
 	/**
 	 * Character Selection
 	 **/
-	public const string tag_CharacterPreview = "ChararacterPreview";
 	public const string character = "Character";
 	public const string ai = "AI";
 	public const string death = "Death";

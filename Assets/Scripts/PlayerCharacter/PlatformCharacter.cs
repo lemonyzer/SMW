@@ -3,24 +3,9 @@ using System.Collections;
 
 public class PlatformCharacter : MonoBehaviour {
 
-	[SerializeField]
-	private SmwCharacter myCharScriptableObject;
-
-	public SmwCharacter GetSmwCharacterSO()
-	{
-		return myCharScriptableObject;
-	}
-
-	public void SetSmwCharacterSO(SmwCharacter charSO)
-	{
-		this.myCharScriptableObject = charSO;
-	}
 	
 	public delegate void OnCharacterRegistered(NetworkPlayer netPlayer, Player player);
 	public static event OnCharacterRegistered onRegistered;
-
-	public delegate void OnLateJoinerInstantiateNetworkCharacter(NetworkPlayer netPlayer, Player player, int teamId);
-	public static event OnLateJoinerInstantiateNetworkCharacter onLateJoinerInstantiateNetworkCharacter;
 
 	public delegate void OnRageKill(GameObject killer, GameObject victim);
 	public static event OnRageKill onRageKill;
@@ -546,7 +531,7 @@ public class PlatformCharacter : MonoBehaviour {
 		}
 		else
 		{
-			moveDirection.x = inputScript.GetInputHorizontal() * currentSpeed;	// Horizontal Movement
+			moveDirection.x = inputScript.inputHorizontal * currentSpeed;	// Horizontal Movement
 
 			// Vertical Movement
 			if(grounded)
@@ -1339,54 +1324,23 @@ public class PlatformCharacter : MonoBehaviour {
 	/// </summary>
 	/// <param name="netPlayerOwner">Net player owner.</param>
 	[RPC]
-	void RegisterCharacterGameObjectInPlayerDictionary_Rpc(NetworkPlayer netPlayerOwner, string userName, int teamId)
+	void RegisterCharacterGameObjectInPlayerDictionary_Rpc(NetworkPlayer netPlayerOwner)
 	{
-		Debug.LogWarning("RegisterCharacterGameObjectInPlayerDictionary_Rpc is running for netPlayer " + netPlayerOwner.ToString());
-
-		Player player = PlayerDictionaryManager._instance.GetPlayerAndCreateIfNotInDictionary(netPlayerOwner);
-		if(player != null)
+		Player player;
+		if(PlayerDictionaryManager._instance.TryGetPlayer(netPlayerOwner, out player))
 		{
-			// setzte Username
-			player.setUserName(userName);
-
-			// setze Platform Character Script
 			player.platformCharacterScript = this;
-
-			Debug.LogWarning("netPlayer " + player.getUserName() + " " + netPlayerOwner.ToString() + " -> player.platformCharacterScript set");
-
-			if(player.UIStatsSlotScript == null)
+			Debug.LogWarning("player.platformCharacterScript set");
+			if(onRegistered != null)
 			{
-
-				Debug.LogError("Spieler " + player.getUserName() + " " + netPlayerOwner.ToString() + " hat kein UIStatsSlotScript -> ich bin late joiner und muss jetzt Slots erstellen");
-
-				// LateJoin Spieler muss in seiner Player Classe noch den SMWCharacter (ScriptableObject) setzten
-				// diese Information ist für jeden Character individuell und hängt daher jetzt direkt im PlatformCharacterScript!! Build > 701
-				// LateJoin Spieler braucht Character informationen
-				player.characterScriptableObject = this.GetSmwCharacterSO(); //TODO auch bei UIStatsSlotScript != null ?!!!
-
-//-> blabla				// Eigene Farbe und von Anderen Spielern bekommt er von UnityNetworkManager OnPlayerConnected -> OnPlayerConnected_Rpc gesendet
-
-				if(onLateJoinerInstantiateNetworkCharacter != null)
-				{
-					onLateJoinerInstantiateNetworkCharacter(netPlayerOwner, player, teamId);
-				}
-				else
-					Debug.LogError(this.ToString() + " no onCharacterRegistered() listeners");
-
+				onRegistered(netPlayerOwner, player);
 			}
 			else
-			{
-				if(onRegistered != null)
-				{
-					onRegistered(netPlayerOwner, player);
-				}
-				else
-					Debug.LogError(this.ToString() + " no onCharacterRegistered() listeners");
-			}
+				Debug.LogError(this.ToString() + " no onCharacterRegistered() listeners");
 		}
 		else
 		{
-			Debug.LogError("RegisterCharacterGameObjectInPlayerDictionary_Rpc failed: NetworkPlayer not in playerDicionary and Could not be created!!");
+			Debug.LogError("RegisterCharacterGameObjectInPlayerDictionary_Rpc failed: NetworkPlayer not in playerDicionary");
 		}
 	}
 
@@ -1434,7 +1388,7 @@ public class PlatformCharacter : MonoBehaviour {
 		inputScript.enabled = false;
 		inputScript.inputJump = false;
 		inputScript.inputPower = false;
-		inputScript.SetInputHorizontal(0f);
+		inputScript.inputHorizontal = 0f;
 
 	}
 

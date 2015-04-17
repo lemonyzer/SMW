@@ -24,20 +24,18 @@ public class Shoot : Power {
 	NetworkedPlayer networkedPlayer;
 	NetworkView myNetworkView;
 
-	// OnInstantiate
 	void Awake()
 	{
 		myBullets = new List<GameObject>();
+	}
+	
+	// Use this for initialization
+	void Start () {
 		inputScript = this.GetComponent<PlatformUserControl> ();
 		characterScript = this.GetComponent<PlatformCharacter> ();
 		inputScript = this.GetComponent<PlatformUserControl> ();
 		networkedPlayer = this.GetComponent<NetworkedPlayer> ();
 		myNetworkView = this.GetComponent<NetworkView> ();
-	}
-	
-	// Use this for initialization
-	void Start () {
-
 	}
 	
 	// Update is called once per frame
@@ -79,7 +77,7 @@ public class Shoot : Power {
 //			Debug.Log("nextPowerTimeStamp " + nextPowerTimeStamp);
 //			Debug.Log("Network.time " + Network.time);
 			#if UNITY_EDITOR
-			Debug.Log("wait... firerate = " + (1.0f/bulletToBulletTime) + " bullets/second");
+			Debug.LogWarning("wait... firerate = " + (1.0f/bulletToBulletTime) + " bullets/second");
 			#endif
 		}
 	}

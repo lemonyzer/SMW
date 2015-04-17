@@ -12,10 +12,16 @@ public class CloneSpriteScript : MonoBehaviour {
 		sourceSpriteRenderer = this.transform.parent.GetComponent<SpriteRenderer>();
 	}
 
+	void Start()
+	{
+		//cloneSpriteRenderer.sprite = sourceSpriteRenderer.sprite;
+		cloneSpriteRenderer.sortingLayerID = sourceSpriteRenderer.sortingLayerID;
+	}
+
 	// Update is called once per frame
 	void LateUpdate () {
 
-		cloneSpriteRenderer.sortingLayerID = sourceSpriteRenderer.sortingLayerID;
+		//cloneSpriteRenderer.sortingLayerID = sourceSpriteRenderer.sortingLayerID;
 		cloneSpriteRenderer.color = sourceSpriteRenderer.color;
 		cloneSpriteRenderer.sprite = sourceSpriteRenderer.sprite;
 
