@@ -17,19 +17,31 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 
-public struct MapTile
+[Serializable]
+public class MapTile
 {
+	[SerializeField]
 	public TileType iType;
+	[SerializeField]
 	public int iFlags;
 };
 
-public struct MapBlock
+[Serializable]
+public class MapBlock
 {
+	[SerializeField]
 	public short iType;
 	//	public short iSettings[NUM_BLOCK_SETTINGS];
+	[SerializeField]
 	public short[] iSettings;
+	[SerializeField]
 	public bool fHidden;
-	
+
+	public MapBlock()
+	{
+		iSettings = new short[Globals.NUM_BLOCK_SETTINGS];
+	}
+
 	public MapBlock(short iType)
 	{
 		this.iType = iType;
@@ -38,16 +50,23 @@ public struct MapBlock
 	}
 };
 
-public struct TilesetTile
+[Serializable]
+public class TilesetTile
 {
+	[SerializeField]
 	public short iID;
+	[SerializeField]
 	public short iCol;
+	[SerializeField]
 	public short iRow;
 };
 
+[Serializable]
 public class MovingPlatform {
 
+	[SerializeField]
 	public int iTileWidth;
+	[SerializeField]
 	public int iTileHeight;
 
 	public MovingPlatform()
@@ -57,90 +76,62 @@ public class MovingPlatform {
 
 }
 
-public enum TilesetIndex {
-	TILESETUNKNOWN = -3,
-};
-
-public enum TileType {
-	tile_nonsolid = 0,
-	tile_solid = 1,
-	tile_solid_on_top = 2,
-	tile_ice = 3,
-	tile_death = 4,
-	tile_death_on_top = 5,
-	tile_death_on_bottom = 6,
-	tile_death_on_left = 7,
-	tile_death_on_right = 8,
-	tile_ice_on_top = 9, 
-	tile_ice_death_on_bottom = 10, 
-	tile_ice_death_on_left = 11, 
-	tile_ice_death_on_right = 12, 
-	tile_super_death = 13, 
-	tile_super_death_top = 14, 
-	tile_super_death_bottom = 15, 
-	tile_super_death_left = 16, 
-	tile_super_death_right = 17, 
-	tile_player_death = 18, 
-	tile_gap = 19
-};
-
-public enum TileTypeFlag {
-	tile_flag_nonsolid = 0, 
-	tile_flag_solid = 1, 
-	tile_flag_solid_on_top = 2, 
-	tile_flag_ice = 4, 
-	tile_flag_death_on_top = 8,
-	tile_flag_death_on_bottom = 16,
-	tile_flag_death_on_left = 32,
-	tile_flag_death_on_right = 64,
-	tile_flag_gap = 128,
-	tile_flag_has_death = 8056, 
-	tile_flag_super_death_top = 256, 
-	tile_flag_super_death_bottom = 512, 
-	tile_flag_super_death_left = 1024,
-	tile_flag_super_death_right = 2048,
-	tile_flag_player_death = 4096,
-	tile_flag_super_or_player_death_top = 4352,
-	tile_flag_super_or_player_death_bottom = 4608,
-	tile_flag_super_or_player_death_left = 5120,
-	tile_flag_super_or_player_death_right = 6144, 
-	tile_flag_player_or_death_on_bottom = 4112
-};
-
-public enum ReadType {
-	read_type_full = 0, 
-	read_type_preview = 1, 
-	read_type_summary = 2
-};
-
-public struct TilesetTranslation
+[Serializable]
+public class TilesetTranslation
 {
+	[SerializeField]
 	public short iID;
 //	public char[] szName;	// TODO 128 -> TILESET_TRANSLATION_CSTRING_SIZE
 	// szName ersetzt durch string!!!
+	[SerializeField]
 	public string Name;
+
+	public TilesetTranslation()
+	{
+		iID = 0;
+		Name = null;
+	}
 };
 
+[Serializable]
+public class Map : ScriptableObject {
 
-
-
-public class CMap {
+	public void OnEnable()
+	{
+		Debug.LogWarning(this.ToString() + " OnEnable()");
+		if(m_TilesetManager == null)
+		{
+			Debug.LogWarning("m_TilesetManager == NULL");
+		}
+		else
+		{
+			Debug.Log("m_TilesetManager is set");
+		}
+	}
 
 	//Converts the tile type into the flags that this tile carries (solid + ice + death, etc)
 //	short[] g_iTileTypeConversion = new short[Globals.NUMTILETYPES] = {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
+	[SerializeField]
 	short[] g_iTileTypeConversion = new short[] {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
 
-	public CMap(TilesetManager tilesetManager)
-	{
-		this.m_TilesetManager = tilesetManager;
-	}
+//	public Map(TilesetManager tilesetManager)
+//	{
+//		this.m_TilesetManager = tilesetManager;
+//	}
 
-	int[] g_iVersion = new int[] {1, 8, 0, 3};
+	[SerializeField]
+	int[] m_Version = new int[] {0, 0, 0, 0};
+//	int[] g_iVersion = new int[] {0, 0, 0, 0};
+	[SerializeField]
 	TilesetManager m_TilesetManager;
 
+	[SerializeField]
 	int iNumPlatforms = 0;
+	[SerializeField]
 	int iPlatformCount = 0;
+	[SerializeField]
 	int iHazardCount = 0;
+	[SerializeField]
 	int iIceCount = 0;
 
 	//	TilesetTile	mapdata[MAPWIDTH][MAPHEIGHT][MAPLAYERS];
@@ -150,30 +141,57 @@ public class CMap {
 	//	bool		nospawn[NUMSPAWNAREATYPES][MAPWIDTH][MAPHEIGHT];
 	//	bool[] 		fAutoFilter = new bool[NUM_AUTO_FILTERS];
 
+	[SerializeField]
 	TilesetTile[,,] mapdata;	// komplett eingelesene Tiles der Map
-	MapTile[,]		mapdatatop;		// Oberste Kayer der eingelesenen Map
-	MapBlock[,]		objectdata;		// ka.
-//	IO_Block[,]   	blockdata;
-	bool[,,]		nospawn;
+	[SerializeField]
+	MapTile[,] mapdatatop;		// Oberste Kayer der eingelesenen Map
+	[SerializeField]
+	MapBlock[,] objectdata;		// ka.
+//	IO_Block[,] blockdata;
+	[SerializeField]
+	bool[,,] nospawn;
+	[SerializeField]
 	bool[] fAutoFilter = new bool[Globals.NUM_AUTO_FILTERS];
 
 //	char szBackgroundFile[128];	// BACKGROUND_CSTRING_SIZE
+	[SerializeField]
 	string szBackgroundFile;
 
+	[SerializeField]
+	TilesetTranslation[] translations;
+
+	[SerializeField]
+	int[] translationid;
+	[SerializeField]
+	int[] tilesetwidths;
+	[SerializeField]
+	int[] tilesetheights;
+
+	[SerializeField]
 	short[] iSwitches;
 	
+	[SerializeField]
 	MovingPlatform[] platforms;
+	[SerializeField]
 	List<MovingPlatform> platformsList = new List<MovingPlatform>();
 
+	[SerializeField]
 	MovingPlatform[] tempPlatforms = new MovingPlatform[Globals.PLATFORMDRAWLAYERS];
+	[SerializeField]
 	List<MovingPlatform> tempPlatformsList = new List<MovingPlatform>();
 
+	[SerializeField]
 	MovingPlatform[] platformdrawlayer = new MovingPlatform[Globals.PLATFORMDRAWLAYERS];
+	[SerializeField]
 	List<MovingPlatform> platformdrawlayerList = new List<MovingPlatform>();
 
 	public void SetTiletsetManager(TilesetManager tilesetManager)
 	{
 		this.m_TilesetManager = tilesetManager;
+		if(m_TilesetManager != null)
+			Debug.Log("<color=green>m_TilesetManager is set</color>");
+		else
+			Debug.LogWarning("m_TilesetManager == NULL");
 	}
 
 	public TilesetManager GetTilesetManager()
@@ -205,27 +223,27 @@ public class CMap {
 		}
 
 		//Load version number
-		int[] version = new int[Globals.VERSIONLENGTH];
-		Debug.Log("version.length = " + version.Length);
-		ReadIntChunk(version, (uint)version.Length, binReader);
+		m_Version = new int[Globals.VERSIONLENGTH];
+		Debug.Log("version.length = " + m_Version.Length);
+		ReadIntChunk(m_Version, (uint)m_Version.Length, binReader);
 		string sversion = "";
-		for(int i=0; i<version.Length; i++)
+		for(int i=0; i<m_Version.Length; i++)
 		{
-			if(i != version.Length -1)
-				sversion += version[i] + ", ";  
+			if(i != m_Version.Length -1)
+				sversion += m_Version[i] + ", ";  
 			else
-				sversion += version[i];  
+				sversion += m_Version[i];  
 		}
 		Debug.Log("Map Version = " + sversion);
 
-		if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
+		if(VersionIsEqualOrAfter(m_Version, 1, 8, 0, 0))
 		{
 			//Read summary information here
 			Debug.Log("Version is Equal or After: 1, 8, 0, 0");
 
 			try
 			{
-				loadMapVersionEqualOrAfter1800(binReader, iReadType, version);
+				loadMapVersionEqualOrAfter1800(binReader, iReadType, m_Version);
 			}
 			// Catch the EndOfStreamException and write an error message.
 			catch (EndOfStreamException e)
@@ -284,6 +302,11 @@ public class CMap {
 
 	void loadMapVersionEqualOrAfter1800(BinaryReader binReader, ReadType iReadType, int[] version)
 	{
+		Debug.Log("loading map ");	//TODO mapname
+		
+		if(iReadType == ReadType.read_type_preview)
+			Debug.LogWarning("(preview)");
+
 		//Read summary information here
 		
 		int[] iAutoFilterValues = new int[Globals.NUM_AUTO_FILTERS + 1];
@@ -291,36 +314,48 @@ public class CMap {
 		
 		for(short iFilter = 0; iFilter < Globals.NUM_AUTO_FILTERS; iFilter++)
 		{
-			Debug.Log("fAutoFilter["+iFilter+"] = " + iAutoFilterValues[iFilter]);
+			Debug.Log("fAutoFilter["+iFilter+"] = " + iAutoFilterValues[iFilter] + " von " + fAutoFilter.Length);
 			fAutoFilter[iFilter] = iAutoFilterValues[iFilter] > 0;
 		}
 		
 		if(iReadType == ReadType.read_type_summary)
 		{
-			Debug.Log("summary only");
+			Debug.LogWarning("summary only");
 //			binReader.Close();
 			return;
 		}
 
 		//clearPlatforms();
 
-		Debug.Log("loading map ");	//TODO mapname
-
-		if(iReadType == ReadType.read_type_preview)
-			Debug.Log("(preview)");
-
 		//Load tileset information
 		short iNumTilesets = (short) ReadInt(binReader);
 
-		Debug.Log("iNumTilesets = " + iNumTilesets);
-		TilesetTranslation[] translation = new TilesetTranslation[iNumTilesets];
+		Debug.Log("iNumTilesets = " + iNumTilesets + " Anzahl an Tileset Translations");
+		translations = new TilesetTranslation[iNumTilesets];
 
 		short iMaxTilesetID = 0; //Figure out how big the translation array needs to be
 		for(short iTileset = 0; iTileset < iNumTilesets; iTileset++)
 		{
+			Debug.LogWarning("Tileset Translation: " + iTileset+1 + " von " + iNumTilesets);
+			
 			short iTilesetID = (short) ReadInt(binReader);
-			Debug.Log("iTileset = " + iTileset + ", iID = " + iTilesetID + ", iMaxTilesetID = " + iMaxTilesetID); 
-			translation[iTileset].iID = iTilesetID;
+			Debug.Log("iTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", iMaxTilesetID = " + iMaxTilesetID);
+
+			translations[iTilesetID] = new TilesetTranslation();
+
+			if(translations == null)
+				Debug.LogError("translation == null");
+			else
+				Debug.Log("translation != null");
+
+			if(translations[iTilesetID] == null)
+				Debug.LogError("translation["+iTilesetID+"] == null");
+			else
+				Debug.Log("translation["+iTilesetID+"] != null");
+				
+
+			Debug.Log("translation[iTileset].iID = " + translations[iTileset].iID);
+			translations[iTileset].iID = iTilesetID;
 			
 			if(iTilesetID > iMaxTilesetID)
 				iMaxTilesetID = iTilesetID;
@@ -337,23 +372,23 @@ public class CMap {
 //			Debug.Log("iTileset = " + iTileset + ", iID = " + iTilesetID + ", szName = " + new string(translation[iTileset].szName) + ", iMaxTilesetID = " + iMaxTilesetID); 
 			//TODO NOTE: char array in struct kann nicht direkt adressiert werden, kein Ahnung warum. ersetzt durch string.
 
-			translation[iTileset].Name = ReadString(Globals.TILESET_TRANSLATION_CSTRING_SIZE, binReader);
-			Debug.Log("TilesetName in struct object: " + translation[iTileset].Name);
-			Debug.Log("iTileset = " + iTileset + ", iID = " + iTilesetID + ", Name = " + translation[iTileset].Name + ", iMaxTilesetID = " + iMaxTilesetID); 
+			translations[iTileset].Name = ReadString(Globals.TILESET_TRANSLATION_CSTRING_SIZE, binReader);
+			Debug.Log("TilesetName in struct object: " + translations[iTileset].Name);
+			Debug.Log("iTileset = " + iTileset + ", iID = " + iTilesetID + ", Name = " + translations[iTileset].Name + ", iMaxTilesetID = " + iMaxTilesetID); 
 		}
 
 		
-		int[] translationid = new int[iMaxTilesetID + 1];
-		int[] tilesetwidths = new int[iMaxTilesetID + 1];
-		int[] tilesetheights = new int[iMaxTilesetID + 1];
+		translationid = new int[iMaxTilesetID + 1];
+		tilesetwidths = new int[iMaxTilesetID + 1];
+		tilesetheights = new int[iMaxTilesetID + 1];
 
 		for(short iTileset = 0; iTileset < iNumTilesets; iTileset++)
 		{
-			short iID = translation[iTileset].iID;
+			short iID = translations[iTileset].iID;
 //			translationid[iID] = g_tilesetmanager.GetIndexFromName(translation[iTileset].szName);
-			translationid[iID] = m_TilesetManager.GetIndexFromName(translation[iTileset].Name);
+			translationid[iID] = m_TilesetManager.GetIndexFromName(translations[iTileset].Name);
 			
-			if(translationid[iID] == (int) TilesetIndex.TILESETUNKNOWN)	//TODO achtung int cast
+			if(translationid[iID] == (int) Globals.TILESETUNKNOWN)	//TODO achtung int cast
 			{
 				tilesetwidths[iID] = 1;
 				tilesetheights[iID] = 1;
@@ -378,6 +413,7 @@ public class CMap {
 				{
 //					TilesetTile * tile = &mapdata[i][j][k];	// zeigt auf aktuelles Element in mapdata
 					TilesetTile tile = mapdata[x, y, l];
+					tile = new TilesetTile();
 					tile.iID = ReadByteAsShort(binReader);
 					tile.iCol = ReadByteAsShort(binReader);
 					tile.iRow = ReadByteAsShort(binReader);
@@ -398,7 +434,7 @@ public class CMap {
 						tile.iID = (short) translationid[tile.iID];
 					}
 				}
-				
+				objectdata[x,y] = new MapBlock();
 				objectdata[x,y].iType = ReadByteAsShort(binReader);
 				objectdata[x,y].fHidden = ReadBool(binReader);
 //				Debug.LogWarning("objectdata["+x+", "+y+"].fHidden = " + objectdata[x,y].fHidden.ToString()); 
@@ -475,7 +511,7 @@ public class CMap {
 					
 					//TilesetTile * tile = &tiles[iCol][iRow];
 					TilesetTile tile = tiles[iCol][iRow];
-
+					tile = new TilesetTile();
 //			TilesetTile[][] tiles = new TilesetTile[iWidth][];
 //			MapTile[][] types = new MapTile[iWidth][];
 
@@ -532,7 +568,7 @@ public class CMap {
 					}
 					else
 					{
-						Debug.Log("VersionIsBefore < 1, 8, 0, 0");
+						Debug.LogWarning("VersionIsBefore < 1, 8, 0, 0");
 						short iTile = (short) ReadInt(binReader);
 						TileType type;
 						
@@ -685,10 +721,10 @@ public class CMap {
 
 		//First write the map compatibility version number 
 		//(this will allow the map loader to identify if the map needs conversion)
-		WriteInt(g_iVersion[0], binWriter); //Major
-		WriteInt(g_iVersion[1], binWriter); //Minor
-		WriteInt(g_iVersion[2], binWriter); //Micro
-		WriteInt(g_iVersion[3], binWriter); //Build
+		WriteInt(Globals.version[0], binWriter); //Major
+		WriteInt(Globals.version[1], binWriter); //Minor
+		WriteInt(Globals.version[2], binWriter); //Micro
+		WriteInt(Globals.version[3], binWriter); //Build
 		
 		bool[,] usedtile = new bool[Globals.MAPWIDTH, Globals.MAPHEIGHT];
 

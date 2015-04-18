@@ -6,10 +6,10 @@ using System;
 using System.IO;
 using UnityEditor;
 
-public class MapWindow : EditorWindow {
+public class MapWindowCreation : EditorWindow {
 
 	#region Variables
-	static MapWindow currWindow;
+	static MapWindowCreation currWindow;
 	TilesetManager g_TilesetManager;
 	#endregion
 
@@ -25,17 +25,17 @@ public class MapWindow : EditorWindow {
 		
 		EditorUtility.FocusProjectWindow();
 		Selection.activeObject = newTilesetAsset;
-
+		
 		return newTilesetAsset;
 	}
 
-	[MenuItem("SMW/Map Window")]
+	[MenuItem("SMW/Map Creation Window")]
 	public static void Init()
 	{
 		if(currWindow == null)
 		{
-			currWindow = (MapWindow) EditorWindow.GetWindow(typeof(MapWindow));
-			currWindow.title = "SMW Map";
+			currWindow = (MapWindowCreation) EditorWindow.GetWindow(typeof(MapWindowCreation));
+			currWindow.title = "SMW Map Creation";
 //			currWindow.minSize = new Vector2(256,512);
 		}
 		else
@@ -133,45 +133,4 @@ public class MapWindow : EditorWindow {
 			
 		}
 	}
-
-
-//	FileInfo[] GetFileList (string absPath)
-//	{
-//		if (!string.IsNullOrEmpty(absPath))
-//		{
-//			DirectoryInfo dir = new DirectoryInfo(absPath);
-//			FileInfo[] info = dir.GetFiles("*.png");
-//			
-//			
-//			// Einmalige ausgabe auf Console
-//			foreach (FileInfo f in info)
-//			{
-//				//				Debug.Log("Found " + f.Name);
-//				//				Debug.Log("f.DirectoryName=" + f.DirectoryName);
-//				//				Debug.Log("f.FullName=" + f.FullName);
-//				//				Debug.Log("modified=" + f.FullName.Substring(Application.dataPath.Length - "Assets".Length));
-//				// relative pfad angabe
-//				string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
-//				Debug.Log("currentSpritePath=" + currentSpritePath);
-//				
-////				string charName = GetCharNameFromFileName(f.Name);
-//				string charName = f.Name;
-//				if(charName != null)
-//				{
-//					Debug.Log(charName);
-//				}
-//				else
-//				{
-//					Debug.LogError(f.Name + " konnte Character Name nicht extrahieren");
-//				}
-//			}
-//			return info;
-//		}
-//		else
-//		{
-//			Debug.LogError("absPath == \"\" or NULL ");
-//			return null;
-//		}
-//	}
-
 }

@@ -42,7 +42,7 @@ public class TilesetManager : ScriptableObject {
 				return i;
 		}
 		
-		return (int) TilesetIndex.TILESETUNKNOWN;
+		return (int) Globals.TILESETUNKNOWN;
 	}
 
 	public Tileset GetTileset(int index)

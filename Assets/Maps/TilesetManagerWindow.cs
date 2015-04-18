@@ -69,7 +69,7 @@ public class TilesetManagerWindow : EditorWindow {
 	string m_LastWorkingMapImportPath = "";
 	string m_LastMapPath = "";
 	bool m_FileOpened = false;
-	CMap currentMap;
+	Map currentMap;
 
 	bool OnGUI_OpenFile(out string absPath)
 	{
