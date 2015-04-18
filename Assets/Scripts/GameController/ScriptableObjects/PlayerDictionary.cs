@@ -15,6 +15,9 @@ public class PlayerDictionary : ScriptableObject {
 	// Key = instanz of PlayerCharacter GameObject
 	// Value = Player
 
+	public int nextLevelId = 0;
+	public bool serverHasPlayer = false;
+
 	Dictionary<NetworkPlayer, Player> playerDictionary = new Dictionary<NetworkPlayer, Player>();
 
 	/// <summary>
@@ -30,11 +33,11 @@ public class PlayerDictionary : ScriptableObject {
 		 	{
 				// Key NetworkPlayer has Value in Dictionary (Player exists in Dictionary)
 				currPlayer.getCharacter().RemoveCharacterGameObject();
-				Debug.Log("removed GameObject referenz (" + currPlayer.getCharacter().getPrefabFilename() + ") from Player: " + networkPlayer.guid );
+				Debug.Log("removed GameObject referenz (" + currPlayer.getCharacter().getPrefabFilename() + ") from Player: " + networkPlayer.ToString() );
 			}
 			else
 			{
-				Debug.Log("Player: " + networkPlayer.guid + " is not in Dictionary! WTF, how is that possible?!!");
+				Debug.Log("Player: " + networkPlayer.ToString() + " is not in Dictionary! WTF, how is that possible?!!");
 			}
 		}
 	}
@@ -64,18 +67,18 @@ public class PlayerDictionary : ScriptableObject {
 				else
 				{
 					// Character but no GameObject
-					Debug.LogError(networkPlayer.guid + " has Player and Character but no PrefabFilename!!!");
+					Debug.LogError(networkPlayer.ToString() + " has Player and Character but no PrefabFilename!!!");
 				}
 			}
 			else
 			{
 				// no Character
-				Debug.LogError(networkPlayer.guid + " has Player but no Character set in Dictionary!!!");
+				Debug.LogError(networkPlayer.ToString() + " has Player but no Character set in Dictionary!!!");
 			}
 		}
 		else
 		{
-//			Debug.LogError(networkPlayer.guid + " has no Player set in Dictionary!!!");
+//			Debug.LogError(networkPlayer.ToString() + " has no Player set in Dictionary!!!");
 		}
 		return null;
 	}
@@ -105,17 +108,17 @@ public class PlayerDictionary : ScriptableObject {
 				else
 				{
 					// Character but no GameObject
-					Debug.LogError(networkPlayer.guid + " has Player and Character but no GameObject!!!");
+					Debug.LogError(networkPlayer.ToString() + " has Player and Character but no GameObject!!!");
 				}
 			}
 			else
 			{
 				// no Character
-				Debug.LogError(networkPlayer.guid + " has Player but no Character set in Dictionary!!!");
+				Debug.LogError(networkPlayer.ToString() + " has Player but no Character set in Dictionary!!!");
 			}
 		}
 		{
-			Debug.LogError(networkPlayer.guid + " has no Player set in Dictionary!!!");
+			Debug.LogError(networkPlayer.ToString() + " has no Player set in Dictionary!!!");
 		}
 		return null;
 	}
@@ -135,7 +138,7 @@ public class PlayerDictionary : ScriptableObject {
 				if(currPlayer.getCharacter().getPrefabFilename() == prefabFileName)
 				{
 					// already in use
-					Debug.LogWarning(currPlayer.getNetworkPlayer().guid + " verwendet " + prefabFileName + " schon.");
+					Debug.LogWarning(currPlayer.getNetworkPlayer().ToString() + " verwendet " + prefabFileName + " schon.");
 					return true;
 				}
 			}
@@ -157,13 +160,13 @@ public class PlayerDictionary : ScriptableObject {
 		{
 			// alten Wert überschreiben
 			playerDictionary[networkPlayer] = player;
-			Debug.LogError(networkPlayer.guid + " was already in Dictionary. overwritten!");
+			Debug.LogError("networkPlayer " + networkPlayer.ToString() + " " + player.getUserName() + " was already in Dictionary. overwritten!");
 		}
 		else
 		{
 			// noch nicht vorhanden, item eintragen
 			playerDictionary.Add(networkPlayer, player);
-			Debug.Log(networkPlayer.guid + " added to Dictionary.");
+			Debug.Log("networkPlayer " + networkPlayer.ToString() + " " + player.getUserName() + " added to Dictionary.");
 		}
 	}
 
@@ -198,11 +201,11 @@ public class PlayerDictionary : ScriptableObject {
 		if(playerDictionary.TryGetValue(networkPlayer, out removedPlayer))
 		{
 			playerDictionary.Remove(networkPlayer);
-			Debug.Log(networkPlayer.guid + " removed from Dictionary.");
+			Debug.Log("NetPlayer: " + networkPlayer.ToString() + " " + removedPlayer.getUserName() + " removed from Dictionary.");
 		}
 		else
 		{
-			Debug.LogWarning(networkPlayer.guid + " was not added to Dictionary.");
+			Debug.LogWarning("NetPlayer: " + networkPlayer.ToString() + " was not added to Dictionary.");
 		}
 	}
 
@@ -226,7 +229,7 @@ public class PlayerDictionary : ScriptableObject {
 		}
 		else
 		{
-			Debug.LogError(key.guid + " has no Player in Dictionary, to set Character!");
+			Debug.LogError(key.ToString() + " has no Player in Dictionary, to set Character!");
 		}
 	}
 
@@ -237,7 +240,7 @@ public class PlayerDictionary : ScriptableObject {
 		if(playerDictionary.TryGetValue(key, out currentPlayer))
 		{
 			playerDictionary[key] = value;
-			Debug.Log(key.guid + " was already in Dictionary, value " + currentPlayer.getName() + " replaced by " + value.getName());
+			Debug.Log(key.ToString() + " was already in Dictionary, value " + currentPlayer.getUserName() + " replaced by " + value.getUserName());
 		}
 		else
 		{
@@ -282,4 +285,67 @@ public class PlayerDictionary : ScriptableObject {
 		playerDictionary.Clear();
 		Debug.LogWarning("Dictionary cleared.");
 	}
+
+
+
+
+
+
+
+	public bool IsNetPlayerInDictionary(NetworkPlayer netPlayer, out Player player)
+	{
+		player = null;
+		if (PlayerDictionaryManager._instance.TryGetPlayer(netPlayer, out player))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public Player CreatePlayerInDictionary(NetworkPlayer netPlayer)
+	{
+		Player newPlayer = new Player(netPlayer);
+		PlayerDictionaryManager._instance.AddPlayer(netPlayer, newPlayer);
+		return newPlayer;
+	}
+	
+	public Player GetPlayerAndCreateIfNotInDictionary(NetworkPlayer netPlayer)
+	{
+		Player player = null;
+		if (IsNetPlayerInDictionary(netPlayer, out player))
+		{
+			// schon vorhanden
+			
+			if(player != null)
+			{
+				return player;
+			}
+		}
+		else
+		{
+			player = CreatePlayerInDictionary(netPlayer);
+			if (player != null)
+			{
+				return player;
+			}
+		}
+		Debug.LogError("ERROR GetPlayerAndCreateIfNotInDictionary ERROR");
+		return null;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

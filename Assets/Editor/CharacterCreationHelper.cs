@@ -632,7 +632,7 @@ public class CharacterCreationHelper : EditorWindow {
 	{
 		string[] result;
 		char[] charSeparators = new char[] {'_'};
-		string[] stringSeparators = new string[] {"[stop]"};
+		//string[] stringSeparators = new string[] {"[stop]"};
 		result = fileName.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
 		return result;
 	}
@@ -733,7 +733,17 @@ public class CharacterCreationHelper : EditorWindow {
 				if(currentCharacter.runtimeAnimatorController == null)					//TODO in welchem pfad wird das asset runtimeAnimatorController gespeichert???
 				{
 					Debug.LogError(f.Name + " currentCharacter.runtimeAnimatorController == null");
-					continue;		// skip this character
+
+					currentCharacter.runtimeAnimatorController = animController;
+					Debug.LogError(f.Name + " currentCharacter.runtimeAnimatorController Manuel hinzugefügt");
+					if(currentCharacter.runtimeAnimatorController == null)
+					{
+						continue;		// skip this character
+					}
+					else
+					{
+						Debug.LogError(f.Name + " currentCharacter.runtimeAnimatorController Manuel hinzugefügt: Erfolgreich");
+					}
 				}
 
 				//prefab erstellen
@@ -1341,7 +1351,7 @@ public class CharacterCreationHelper : EditorWindow {
 			return null;
 		}
 
-		string pathRelativeToProject = "Assets/" + pathRelativeToAssetsPath;
+//		string pathRelativeToProject = "Assets/" + pathRelativeToAssetsPath;
 		string prefabPathRelativeToProject = "Assets/" + pathRelativeToAssetsPath + "/" + charName + ".prefab";
 
 		UnityEngine.Object emptyObj = PrefabUtility.CreateEmptyPrefab (prefabPathRelativeToProject);
@@ -1379,6 +1389,12 @@ public class CharacterCreationHelper : EditorWindow {
 	ChildData root;
 	List<ChildData> childs;
 
+	/// <summary>
+	/// Smarts the create. Create special Body Parts MultipleTimes
+	/// </summary>
+	/// <returns>The create.</returns>
+	/// <param name="characterSO">Character S.</param>
+	/// <param name="charGenerics">Char generics.</param>
 	public GameObject SmartCreate(SmwCharacter characterSO, SmwCharacterGenerics charGenerics)
 	{
 //		Debug.Log(this.ToString() + " Create smwCharacter Name= " + characterSO.name);
@@ -1411,11 +1427,15 @@ public class CharacterCreationHelper : EditorWindow {
 		
 		float leftPos = -20f;	// TODO inspector
 		float rightPos = 20f;	// TODO inspector
+		float topPos = 15f;	// TODO inspector
+		float bottomPos = -15f;	// TODO inspector
 		
 		Vector3 rootTransformPos = 			Vector3.zero;
 		Vector3 centerTransformPos = 		rootTransformPos;
 		Vector3 leftTransformPos = 			new Vector3(leftPos,0f,0f);
 		Vector3 rightTransformPos = 		new Vector3(rightPos,0f,0f);
+		Vector3 topTransformPos = 			new Vector3(0f,topPos,0f);
+		Vector3 bottomTransformPos = 		new Vector3(0f,bottomPos,0f);
 		Vector3 headTransformPos = 			new Vector3(0f,0.3f,0f);
 		Vector3 feetTransformPos = 			new Vector3(0f,-0.3f,0f);
 		Vector3 bodyTransformPos = 			new Vector3(0f,0f,0f);
@@ -1461,7 +1481,11 @@ public class CharacterCreationHelper : EditorWindow {
 		root.Add(root.gameObject.AddComponent<AudioSource>(), true);
 		root.Add(root.gameObject.AddComponent<RealOwner>(), true);
 		root.Add(root.gameObject.AddComponent<PlatformUserControl>(), true);
-		root.Add(root.gameObject.AddComponent<PlatformCharacter>(), true);
+		PlatformCharacter platformCharScript = root.gameObject.AddComponent<PlatformCharacter>();
+		// build > 0.701
+		// add CharSO to CharPrefab
+		platformCharScript.SetSmwCharacterSO(characterSO);
+		root.Add(platformCharScript, true);
 		root.Add(root.gameObject.AddComponent<PlatformJumperV2>(), true);
 		root.Add(root.gameObject.AddComponent<Rage>(), true);
 		root.Add(root.gameObject.AddComponent<Shoot>(), true);
@@ -1481,6 +1505,18 @@ public class CharacterCreationHelper : EditorWindow {
 		
 		// Clone Right
 		child = new ChildData (Tags.name_cloneRight, Tags.tag_player, Layer.playerLayerName, rightTransformPos);
+		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, characterSO.charIdleSprites[0], charGenerics.color_rootCloneRenderer, charGenerics.rootCloneRendererSortingLayer);
+		child.Add(child.gameObject.AddComponent<CloneSpriteScript>(), true);
+		childs.Add (child);
+
+		// Clone Top
+		child = new ChildData (Tags.name_CloneTop, Tags.tag_player, Layer.playerLayerName, topTransformPos);
+		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, characterSO.charIdleSprites[0], charGenerics.color_rootCloneRenderer, charGenerics.rootCloneRendererSortingLayer);
+		child.Add(child.gameObject.AddComponent<CloneSpriteScript>(), true);
+		childs.Add (child);
+
+		// Clone Bottom
+		child = new ChildData (Tags.name_CloneBottom, Tags.tag_player, Layer.playerLayerName, bottomTransformPos);
 		child.Add(child.gameObject.AddComponent<SpriteRenderer>(), true, characterSO.charIdleSprites[0], charGenerics.color_rootCloneRenderer, charGenerics.rootCloneRendererSortingLayer);
 		child.Add(child.gameObject.AddComponent<CloneSpriteScript>(), true);
 		childs.Add (child);

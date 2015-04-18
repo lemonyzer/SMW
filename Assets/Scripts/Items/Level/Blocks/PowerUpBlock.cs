@@ -59,29 +59,29 @@ public class PowerUpBlock : MonoBehaviour {
 			{
 				if(hasPowerUp)
 				{
-				if(HeadTriggerUnderBlock(other))
-				{
-					//if(other.gameObject.transform.parent.rigidbody2D.velocity.y >= 0f)			// nur zerstören wenn Spieler nach oben springt
-					//{
-						if(hasPowerUp)
-						{
-							if(Network.peerType == NetworkPeerType.Disconnected)
+					if(HeadTriggerUnderBlock(other))
+					{
+						//if(other.gameObject.transform.parent.rigidbody2D.velocity.y >= 0f)			// nur zerstören wenn Spieler nach oben springt
+						//{
+							if(hasPowerUp)
 							{
-								ReleasingRandomPowerUp();
+								if(Network.peerType == NetworkPeerType.Disconnected)
+								{
+									ReleasingRandomPowerUp();
+								}
+								if(Network.isServer)
+									GetComponent<NetworkView>().RPC("ReleasingRandomPowerUp", RPCMode.All);			// PowerUpBlock animation setzen, Item selbst wird über Network.instantiated
 							}
-							if(Network.isServer)
-								GetComponent<NetworkView>().RPC("ReleasingRandomPowerUp", RPCMode.All);			// PowerUpBlock animation setzen, Item selbst wird über Network.instantiated
-						}
-					//}
-					//else
-					//{
-					//	Debug.LogError(this.ToString() + ": nicht gesprungen!");
-					//}
-				}
-				else
-				{
-					Debug.Log("HeadTriggerUnderBlock() == false");
-				}
+						//}
+						//else
+						//{
+						//	Debug.LogError(this.ToString() + ": nicht gesprungen!");
+						//}
+					}
+					else
+					{
+						Debug.Log("HeadTriggerUnderBlock() == false");
+					}
 				}
 			}
 		}

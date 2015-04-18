@@ -13,6 +13,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 using System.IO;
 
@@ -83,6 +84,28 @@ public enum TileType {
 	tile_gap = 19
 };
 
+public enum TileTypeFlag {
+	tile_flag_nonsolid = 0, 
+	tile_flag_solid = 1, 
+	tile_flag_solid_on_top = 2, 
+	tile_flag_ice = 4, 
+	tile_flag_death_on_top = 8,
+	tile_flag_death_on_bottom = 16,
+	tile_flag_death_on_left = 32,
+	tile_flag_death_on_right = 64,
+	tile_flag_gap = 128,
+	tile_flag_has_death = 8056, 
+	tile_flag_super_death_top = 256, 
+	tile_flag_super_death_bottom = 512, 
+	tile_flag_super_death_left = 1024,
+	tile_flag_super_death_right = 2048,
+	tile_flag_player_death = 4096,
+	tile_flag_super_or_player_death_top = 4352,
+	tile_flag_super_or_player_death_bottom = 4608,
+	tile_flag_super_or_player_death_left = 5120,
+	tile_flag_super_or_player_death_right = 6144, 
+	tile_flag_player_or_death_on_bottom = 4112
+};
 
 public enum ReadType {
 	read_type_full = 0, 
@@ -100,7 +123,12 @@ public struct TilesetTranslation
 
 
 
+
 public class CMap {
+
+	//Converts the tile type into the flags that this tile carries (solid + ice + death, etc)
+//	short[] g_iTileTypeConversion = new short[Globals.NUMTILETYPES] = {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
+	short[] g_iTileTypeConversion = new short[] {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
 
 	public CMap(TilesetManager tilesetManager)
 	{
@@ -135,6 +163,13 @@ public class CMap {
 	short[] iSwitches;
 	
 	MovingPlatform[] platforms;
+	List<MovingPlatform> platformsList = new List<MovingPlatform>();
+
+	MovingPlatform[] tempPlatforms = new MovingPlatform[Globals.PLATFORMDRAWLAYERS];
+	List<MovingPlatform> tempPlatformsList = new List<MovingPlatform>();
+
+	MovingPlatform[] platformdrawlayer = new MovingPlatform[Globals.PLATFORMDRAWLAYERS];
+	List<MovingPlatform> platformdrawlayerList = new List<MovingPlatform>();
 
 	public void SetTiletsetManager(TilesetManager tilesetManager)
 	{
@@ -190,7 +225,7 @@ public class CMap {
 
 			try
 			{
-				loadMapVersionEqualOrAfter1800(binReader, iReadType);
+				loadMapVersionEqualOrAfter1800(binReader, iReadType, version);
 			}
 			// Catch the EndOfStreamException and write an error message.
 			catch (EndOfStreamException e)
@@ -247,7 +282,7 @@ public class CMap {
 		return false;
 	}
 
-	void loadMapVersionEqualOrAfter1800(BinaryReader binReader, ReadType iReadType)
+	void loadMapVersionEqualOrAfter1800(BinaryReader binReader, ReadType iReadType, int[] version)
 	{
 		//Read summary information here
 		
@@ -279,9 +314,6 @@ public class CMap {
 
 		Debug.Log("iNumTilesets = " + iNumTilesets);
 		TilesetTranslation[] translation = new TilesetTranslation[iNumTilesets];
-
-//		TODO check
-//		translation[0].szName = new char[TILESET_TRANSLATION_CSTRING_SIZE];
 
 		short iMaxTilesetID = 0; //Figure out how big the translation array needs to be
 		for(short iTileset = 0; iTileset < iNumTilesets; iTileset++)
@@ -386,9 +418,261 @@ public class CMap {
 			Debug.Log("readed iSwitches["+iSwitch+"] = " + iSwitches[iSwitch]);
 		}
 
+		bool fPreview;
+		if(iReadType == ReadType.read_type_preview)
+			fPreview = true;
+		else
+			fPreview = false;
+
+		loadPlatforms(binReader, fPreview, version, translationid, tilesetwidths, tilesetheights, iMaxTilesetID);
+
 	}
 
+	void loadPlatforms(BinaryReader binReader, bool fPreview, int[] version, int[] translationid, int[] tilesetwidths, int[] tilesetheights, short iMaxTilesetID)
+	{
+		clearPlatforms();
 
+		// Load moving platforms
+		iNumPlatforms = (short) ReadInt(binReader);
+		Debug.Log("iNumPlatforms = " + iNumPlatforms);
+		platforms = new MovingPlatform[iNumPlatforms];
+
+		for(short iPlatform = 0; iPlatform < iNumPlatforms; iPlatform++)
+		{
+			short iWidth = (short) ReadInt(binReader);
+			short iHeight = (short) ReadInt(binReader);
+			Debug.Log("iPlatform = " + iPlatform + ", iWidth = " + iWidth);
+			Debug.Log("iPlatform = " + iPlatform + ", iHeight = " + iHeight);
+
+//			TilesetTile[,] tiles = new TilesetTile[iWidth, iHeight];
+//			MapTile[,] types = new MapTile[iWidth, iHeight];
+//
+//
+//			for(short iCol = 0; iCol < iWidth; iCol++)
+//			{
+//				tiles[iCol] = new TilesetTile[iHeight];
+//				types[iCol] = new MapTile[iHeight];
+//				
+//				for(short iRow = 0; iRow < iHeight; iRow++)
+//				{
+//					//TilesetTile * tile = &tiles[iCol][iRow];
+//					TilesetTile tile = tiles[iCol][iRow];
+
+			TilesetTile[][] tiles = new TilesetTile[iWidth][];
+			MapTile[][] types = new MapTile[iWidth][];
+
+			mapdatatop = new MapTile[iWidth, iHeight];
+
+			for(short iCol = 0; iCol < iWidth; iCol++)
+			{
+				Debug.Log("Platform iCol = " + iCol);
+				tiles[iCol] = new TilesetTile[iHeight];
+				types[iCol] = new MapTile[iHeight];
+
+				for(short iRow = 0; iRow < iHeight; iRow++)
+				{
+					Debug.Log("Platform iRow = " + iRow);
+					
+					//TilesetTile * tile = &tiles[iCol][iRow];
+					TilesetTile tile = tiles[iCol][iRow];
+
+//			TilesetTile[][] tiles = new TilesetTile[iWidth][];
+//			MapTile[][] types = new MapTile[iWidth][];
+
+//			for(short iCol = 0; iCol < iWidth; iCol++)
+//			{
+//				tiles[iCol] = new TilesetTile[iHeight];
+//				types[iCol] = new MapTile[iHeight];
+//
+//				for(short iRow = 0; iRow < iHeight; iRow++)
+//				{
+//					//TilesetTile * tile = &tiles[iCol][iRow];
+//					TilesetTile tile = tiles[iCol][iRow];
+
+					if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
+					{
+						Debug.LogWarning("VersionIsEqualOrAfter = 1, 8, 0, 0");
+						tile.iID = ReadByteAsShort(binReader);
+						tile.iCol = ReadByteAsShort(binReader);
+						tile.iRow = ReadByteAsShort(binReader);
+						
+						if(tile.iID >= 0)
+						{
+							if(iMaxTilesetID != -1 && tile.iID > iMaxTilesetID)
+								tile.iID = 0;
+							
+							//Make sure the column and row we read in is within the bounds of the tileset
+//							if(tile.iCol < 0 || (tilesetwidths && tile.iCol >= tilesetwidths[tile.iID]))
+							if(tile.iCol < 0 || (tilesetwidths != null && tile.iCol >= tilesetwidths[tile.iID]))
+								tile.iCol = 0;
+							
+//							if(tile.iRow < 0 || (tilesetheights && tile.iRow >= tilesetheights[tile.iID]))
+							if(tile.iRow < 0 || (tilesetheights != null && tile.iRow >= tilesetheights[tile.iID]))
+								tile.iRow = 0;
+							
+							//Convert tileset ids into the current game's tileset's ids
+							if(translationid != null)
+								tile.iID = (short) translationid[tile.iID];
+						}
+						
+						TileType iType = (TileType)ReadInt(binReader);
+						
+//						if(iType >= 0 && (iType) < Globals.NUMTILETYPES)
+						if(iType >= 0 && ((int)iType) < Globals.NUMTILETYPES)
+						{
+							types[iCol][iRow].iType = iType;
+//							types[iCol][iRow].iFlags = g_iTileTypeConversion[iType];
+							types[iCol][iRow].iFlags = g_iTileTypeConversion[(int)iType];
+						}
+						else
+						{
+							types[iCol][iRow].iType = (int) TileType.tile_nonsolid;
+							types[iCol][iRow].iFlags = (int) TileTypeFlag.tile_flag_nonsolid;
+						}
+					}
+					else
+					{
+						Debug.Log("VersionIsBefore < 1, 8, 0, 0");
+						short iTile = (short) ReadInt(binReader);
+						TileType type;
+						
+						if(iTile == Globals.TILESETSIZE)
+						{
+							tile.iID = Globals.TILESETNONE;
+							tile.iCol = 0;
+							tile.iRow = 0;
+							
+							type = TileType.tile_nonsolid;
+						}
+						else
+						{
+							tile.iID = m_TilesetManager.GetClassicTilesetIndex();
+							tile.iCol = (short)(iTile % Globals.TILESETWIDTH);
+							tile.iRow = (short)(iTile / Globals.TILESETWIDTH);
+							
+							type = m_TilesetManager.GetClassicTileset().GetTileType(tile.iCol, tile.iRow);
+						}
+						
+						if(type >= 0 && (int)type < Globals.NUMTILETYPES)
+						{
+							types[iCol][iRow].iType = type;
+							types[iCol][iRow].iFlags = g_iTileTypeConversion[(int)type];
+						}
+						else
+						{
+							mapdatatop[iCol,iRow].iType = TileType.tile_nonsolid;
+							mapdatatop[iCol,iRow].iFlags = (int) TileTypeFlag.tile_flag_nonsolid;
+						}
+					}
+				}
+			}
+
+//			short iDrawLayer = 2;
+//			if(VersionIsEqualOrAfter(version, 1, 8, 0, 1))
+//				iDrawLayer = (short)ReadInt(binReader);
+//			
+//			//printf("Layer: %d\n", iDrawLayer);
+//			
+//			short iPathType = 0;
+//			
+//			if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
+//				iPathType = ReadInt(binReader);
+//			
+//			//printf("PathType: %d\n", iPathType);
+//			
+//			MovingPlatformPath * path = NULL;
+//			if(iPathType == 0) //segment path
+//			{
+//				float fStartX = ReadFloat(binReader);
+//				float fStartY = ReadFloat(binReader);
+//				float fEndX = ReadFloat(binReader);
+//				float fEndY = ReadFloat(binReader);
+//				float fVelocity = ReadFloat(binReader);
+//				
+//				path = new StraightPath(fVelocity, fStartX, fStartY, fEndX, fEndY, fPreview);
+//				
+//				//printf("Read segment path\n");
+//				//printf("StartX: %.2f StartY:%.2f EndX:%.2f EndY:%.2f Velocity:%.2f\n", fStartX, fStartY, fEndX, fEndY, fVelocity);
+//			}
+//			else if(iPathType == 1) //continuous path
+//			{
+//				float fStartX = ReadFloat(binReader);
+//				float fStartY = ReadFloat(binReader);
+//				float fAngle = ReadFloat(binReader);
+//				float fVelocity = ReadFloat(binReader);
+//				
+//				path = new StraightPathContinuous(fVelocity, fStartX, fStartY, fAngle, fPreview);
+//				
+//				//printf("Read continuous path\n");
+//				//printf("StartX: %.2f StartY:%.2f Angle:%.2f Velocity:%.2f\n", fStartX, fStartY, fAngle, fVelocity);
+//			}
+//			else if(iPathType == 2) //elliptical path
+//			{
+//				float fRadiusX = ReadFloat(binReader);
+//				float fRadiusY = ReadFloat(binReader);
+//				float fCenterX = ReadFloat(binReader);
+//				float fCenterY = ReadFloat(binReader);
+//				float fAngle = ReadFloat(binReader);
+//				float fVelocity = ReadFloat(binReader);
+//				
+//				path = new EllipsePath(fVelocity, fAngle, fRadiusX, fRadiusY, fCenterX, fCenterY, fPreview);
+//				
+//				//printf("Read elliptical path\n");
+//				//printf("CenterX: %.2f CenterY:%.2f Angle:%.2f RadiusX: %.2f RadiusY: %.2f Velocity:%.2f\n", fCenterX, fCenterY, fAngle, fRadiusX, fRadiusY, fVelocity);
+//			}
+//			
+//			MovingPlatform * platform = new MovingPlatform(tiles, types, iWidth, iHeight, iDrawLayer, path, fPreview);
+//			platforms[iPlatform] = platform;
+//			platformdrawlayer[iDrawLayer].push_back(platform);
+
+		}
+
+	}
+
+	void clearPlatforms()
+	{
+//		foreach(MovingPlatform mp in platformdrawlayerList)
+//		{
+//
+//		}
+		platformdrawlayerList.Clear();
+
+//		for(short iLayer = 0; iLayer < platformdrawlayerList ; iLayer++)
+//			platformdrawlayer[iLayer].clear();
+
+
+		if(platformsList != null)
+		{
+			platformsList.Clear();
+		}
+
+//		if(platforms != null)
+//		{
+//			for(short iPlatform = 0; iPlatform < iNumPlatforms; iPlatform++)
+//			{
+//				platforms[iPlatform] = null;
+//				//platforms.delete	// list
+//			}
+//			platforms = NULL;
+//		}
+		
+		iNumPlatforms = 0;
+		
+//		std::list<MovingPlatform*>::iterator iter = tempPlatforms.begin(), lim = tempPlatforms.end();
+//		while (iter != lim)
+//		{
+//			delete (*iter);
+//			++iter;
+//		}
+//		for(int i=0; i<tempPlatforms.Length; i++)
+//		{
+//			tempPlatforms[i] = null;
+//		}
+
+		tempPlatformsList.Clear();
+		
+//		tempPlatforms.clear();
+	}
 
 	public void OnGUI()
 	{

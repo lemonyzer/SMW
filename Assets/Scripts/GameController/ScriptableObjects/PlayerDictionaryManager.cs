@@ -4,15 +4,16 @@ using System.Collections.Generic;
 
 public class PlayerDictionaryManager : MonoBehaviour {
 
+	//public static Level nextLevel; // reference müsste auch nach Scenenwechsel noch stimmen...
 
 	public static PlayerDictionary _instance;
-	public static bool serverHasPlayer = false;//TODO//TODO//TODO//TODO//TODO//TODO//TODO
+//	public static bool serverHasPlayer = false;//TODO//TODO//TODO//TODO//TODO//TODO//TODO
 
 	void Awake()
 	{
 		#if UNITY_EDITOR
 		Debug.LogWarning(this.ToString() + ": Awake()");
-		Debug.LogWarning(this.ToString() + ": serverHasPlayer = " + serverHasPlayer);
+//		Debug.LogWarning(this.ToString() + ": serverHasPlayer = " + _instance.serverHasPlayer);
 		#endif
 		if(_instance == null)
 		{
@@ -32,9 +33,20 @@ public class PlayerDictionaryManager : MonoBehaviour {
 			Debug.LogWarning(this.ToString() +": _instance is already instantiated!");
 			#endif
 			List<Player> buffer = new List<Player> ( _instance.Values() );
+
+			foreach(NetworkPlayer netPlayer in _instance.Keys())
+			{
+				Debug.Log ("Key: " + netPlayer.ToString() + " found");
+			}
+
+
+			if (buffer == null)
+			{
+				Debug.Log(Application.loadedLevelName + " playerDictionary.Values == empty!");
+			}
 			foreach(Player player in buffer)
 			{
-				Debug.Log(this.ToString() +": " + player.getName() + " in PlayerDictionary gefunden!");
+				Debug.Log(this.ToString() +": " + player.getUserName() + " in PlayerDictionary gefunden!");
             }
 			if(Application.loadedLevelName == Scenes.photonLobby ||
 			   Application.loadedLevelName == Scenes.mainmenu ||
@@ -44,7 +56,7 @@ public class PlayerDictionaryManager : MonoBehaviour {
 			{
 				// wenn aktuelles Level PhotonLobby ist, lösche alle Einträge aus PlayerDictionary
 				_instance.RemoveAll();
-				serverHasPlayer = false; //TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO
+				_instance.serverHasPlayer = false; //TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO//TODO
 				#if UNITY_EDITOR
 				Debug.LogWarning(this.ToString() +": _instance.RemoveAll() executed!!!");
 				#endif

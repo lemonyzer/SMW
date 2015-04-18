@@ -8,7 +8,7 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 	public static event ClickAction OnClicked;
 
 	public NetworkPlayer netPlayer;
-	public Player player;
+	public Player player = null;
 
 	//All
 	public Image border;
@@ -16,6 +16,7 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 	public Text slotName;
 	public Text slotWho;
 	public Text slotKills;
+	public Text slotPoints;
 	public Text slotLifes;
 	public Text lastPing;		//Client ping to Server, (Servercharacter)
 	public Text avgPing;		//Client avg ping to Server, (Servercharacter)
@@ -32,14 +33,19 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 
 	// Use this for initialization
 	public void Awake () {																// Awake wird auch bei instanziierung ausgeführt!!!
-		Debug.Log(this.ToString() + " Wake()");
-		if(this.player != null)
-			Debug.LogError(this.ToString() + " " + this.player.GetHashCode());
+		Debug.Log(this.ToString() + " Wake() Instantiert?!");
+//		if(this.player != null)
+//		{
+//			Debug.LogError("player != null Name:" + player.getUserName() + " Id: " + player.getNetworkPlayer().ToString());
+//		}
+//		else
+//			Debug.LogError("player == null");
 		border = GetComponent<Image>();
 		slotAvatar = transform.FindChild("SlotImage").GetComponent<Image>();
 		slotName = transform.FindChild("SlotName").GetComponent<Text>();
 		slotWho = transform.FindChild("SlotWho").GetComponent<Text>();
 
+		slotPoints = transform.FindChild("SlotPoints").GetComponent<Text>();
 		slotKills = transform.FindChild("SlotKills").GetComponent<Text>();
 		slotLifes = transform.FindChild("SlotLifes").GetComponent<Text>();
 
@@ -51,38 +57,67 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 
 	}
 
+	public void SetOwner(NetworkPlayer owningNetPlayer, Player owningPlayer)
+	{
+		this.netPlayer = owningNetPlayer;
+		this.player = owningPlayer;
+
+//		UpdateSlot();		//TODO
+	}
+
+	public void AddPoint()
+	{
+		this.slotPoints.text = "Points: " + player.getPoints();
+	}
+
+	public void AddKill()
+	{
+		this.slotKills.text = "Kills: " + player.getKills();
+	}
+
+	public void LostLife()
+	{
+		this.slotLifes.text = "Lifes: " + player.GetLifes();
+	}
+
 	public void UpdateSlot(NetworkPlayer slotNetPlayer, Player slotPlayer)
 	{
-		Debug.Log(this.ToString() + " UpdateSlot()");
-
-		if(this.player != null)
-			Debug.LogError(this.ToString() + " " + this.player.GetHashCode());
-		else
-			Debug.LogError(this.ToString() + " " + "this.player == null");
-			
-		if(slotPlayer != null)
-			Debug.LogError(this.ToString() + " " + slotPlayer.GetHashCode());
-		else
-			Debug.LogError(this.ToString() + " " + "slotPlayer == null");
+		Debug.Log(this.ToString() + " UpdateSlot() " + slotPlayer.getUserName());
 
 		if(slotPlayer == null)
-			return;
+			Debug.LogError(this.ToString() + " " + "slotPlayer == null");
+		else
+			Debug.Log(this.ToString() + " slotPlayer = " + slotPlayer.getUserName());
+
+		if(slotNetPlayer == null)
+			Debug.Log(this.ToString() + " slotNetPlayer == null ");
+		else
+			Debug.Log(this.ToString() + " slotNetPlayer = " + slotNetPlayer.ToString());
+
+		if(this.player == null)
+			Debug.LogError(this.ToString() + " " + "this.player == null");
+		else
+			Debug.Log(this.ToString() + " player = " + player.getUserName());
+
+		if(this.netPlayer == null)
+			Debug.Log(this.ToString() + " netPlayer == null ");
+		else
+			Debug.Log(this.ToString() + " netPlayer = " + netPlayer.ToString());
+
 
 		this.player = slotPlayer;		// Zuordnung
-
-		if(this.player != null)
-			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + this.player.GetHashCode());
-		else
-			Debug.LogError(this.ToString() + " NACH ZUORDNUNG " + "this.player == null");
-
 		this.netPlayer = slotNetPlayer;
 
 		if(slotAvatar == null)
 		{
-			Debug.LogError("slotAvatar not Set, Start() needs to run first!");
+			Debug.LogError("slotAvatar not Set, Start() needs to run first!" + " "  + slotPlayer.getUserName());
 		}
 		slotAvatar.sprite = player.characterScriptableObject.charIdleSprites[0];
-		slotName.text = player.getNetworkPlayer().ipAddress;
+		slotName.text = slotPlayer.getUserName() + " " + player.getNetworkPlayer().ipAddress;
+
+		this.slotKills.text = "Kills: " + player.getKills() ;
+		this.slotLifes.text = "Lifes: " + player.GetLifes() ;
+		this.slotPoints.text = "Points: " + player.getPoints() ;
 
 		if(Network.isClient)
 		{
@@ -110,7 +145,6 @@ public class PlayerStatsSlotScript : MonoBehaviour {
 				slotWho.text = "Client";
 			}
 		}
-
 	}
 
 	public void SlotClicked()

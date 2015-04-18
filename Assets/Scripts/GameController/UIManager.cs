@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 
+[RequireComponent (typeof(UnityNetworkManager))]
+[RequireComponent (typeof(UnityNetworkGameLevelManager))]
 public class UIManager : MonoBehaviour {
 
 	NetworkView myNetworkView;
@@ -37,40 +39,20 @@ public class UIManager : MonoBehaviour {
 
 	void Start()
 	{
-		if(Network.peerType == NetworkPeerType.Server)
-		{
-			if(Application.loadedLevelName == Scenes.unityNetworkCharacterSelection)
-			{
-				// in CharacterSelection Scene 
-				Server();
-			}
-			else
-			{
-				//TODO GENERIC
-//				// in allen anderen Scenen in dem der UIManager sitzt
-//				if(Network.isServer)
-//				{
-//					if(PlayerDictionaryManager.serverHasPlayer)
-//					{
-//						Player serverPlayer;
-//						if( PlayerDictionaryManager._instance.TryGetPlayer(Network.player, out serverPlayer) )
-//						{
-//							AddNewPlayerStatsSlot(Network.player, serverPlayer);
-//						}
-//						else
-//						{
-//							Debug.LogError("Server Has Player set, but no player in dictionary found!");
-//						}
-//					}
-//				}
-			}
-		}
+
 	}
 
-	void OnServerInitialized()
+
+	void onNetworkLevelCharacterSelectionLoaded()
 	{
-		Debug.Log("OnServerInitialized");
-		Server ();
+		if (Network.isServer)
+		{
+			Server();
+		}
+		else
+		{
+			// Client Code...
+		}
 	}
 
 	/// <summary>
@@ -85,38 +67,58 @@ public class UIManager : MonoBehaviour {
 			btnStart.gameObject.SetActive(true);
 		}
 
-		if(!PlayerDictionaryManager.serverHasPlayer)
+		if(!PlayerDictionaryManager._instance.serverHasPlayer)
 		{
 			// Server hat noch keinen Spieler
 			// Auswhl zum Joinen anzeigen
 			serverSelectorSlot = (GameObject) Instantiate(ServerSelectorSlotPrefab, Vector3.zero, Quaternion.identity);
-			serverSelectorSlot.GetComponent<SelectorSlotScript>().next.gameObject.SetActive(false);
+			serverSelectorSlot.GetComponent<SelectorSlotScript>().btnNextCharacter.gameObject.SetActive(false);
+			serverSelectorSlot.GetComponent<SelectorSlotScript>().btnSwitchTeams.gameObject.SetActive(false);
 			serverSelectorSlot.transform.SetParent(SelectorSlotPanel.transform,false);
 		}
 	}
 
 	void OnEnable()
 	{
+		// Server Join Button
+		UnityNetworkManager.onNetworkLevelCharacterSelectionLoaded += onNetworkLevelCharacterSelectionLoaded;
 
+		// Selector Slot
 		UnityNetworkManager.onNewPlayerConnected += AddNewPlayerSelectorSlot;
+		UnityNetworkManager.onPlayerChangedSelection += UpdateSelectorSlot;
 		UnityNetworkManager.onPlayerDisconnected += PlayerDisconnected;
 
+		// Stats Slot
 		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete += AddNewPlayerStatsSlot;		// player has no properties set!!!
+		PlatformCharacter.onLateJoinerInstantiateNetworkCharacter += AddNewPlayerStatsSlot;										// player gets properties from Character GO
 		PlatformCharacter.onRegistered += UpdateStatesSlot;										// player gets properties from Character GO
+
+		// Server UI
 		ButtonServerJoinGameScript.OnClicked += ServerJoins_Button;
 
+		// Other
 		StatsManager.onPvPKill += OnPvPKill;
 	}
 	
 	void OnDisable()
 	{
+		// Server Join Button
+		UnityNetworkManager.onNetworkLevelCharacterSelectionLoaded -= onNetworkLevelCharacterSelectionLoaded;
+		
+		// Selector Slot
 		UnityNetworkManager.onNewPlayerConnected -= AddNewPlayerSelectorSlot;
+		UnityNetworkManager.onPlayerChangedSelection -= UpdateSelectorSlot;
 		UnityNetworkManager.onPlayerDisconnected -= PlayerDisconnected;
 
+		// Selector Slot
 		UnityNetworkGameLevelManager.onPlayerLevelLoadComplete -= AddNewPlayerStatsSlot;		// player has no properties set!!!
+		PlatformCharacter.onLateJoinerInstantiateNetworkCharacter -= AddNewPlayerStatsSlot;										// player gets properties from Character GO
 		PlatformCharacter.onRegistered -= UpdateStatesSlot;										// player gets properties from Character GO
+
+		// Server UI
 		ButtonServerJoinGameScript.OnClicked -= ServerJoins_Button;
 
+		// Other
 		StatsManager.onPvPKill -= OnPvPKill;
 	}
 
@@ -139,6 +141,13 @@ public class UIManager : MonoBehaviour {
 		Destroy(serverSelectorSlot);
 	}
 
+	static public bool IsCurrentlyInGameScene()
+	{
+		if (Application.loadedLevelName == Scenes.unityNetworkGame)
+			return true;
+		return false;
+	}
+
 	/// <summary>
 	/// Adds the new player slot.
 	/// </summary>
@@ -146,6 +155,10 @@ public class UIManager : MonoBehaviour {
 	/// <param name="newPlayer">New player.</param>
 	void AddNewPlayerSelectorSlot(NetworkPlayer netPlayer, Player newPlayer)
 	{
+
+		if (IsCurrentlyInGameScene())
+			return;
+
 		// create UI Element for player
 		GameObject newNetPlayerUiSlot = (GameObject) Instantiate(SelectorUiSlotPrefab,Vector3.zero, Quaternion.identity);
 		
@@ -153,7 +166,8 @@ public class UIManager : MonoBehaviour {
 		if(netPlayer != Network.player)
 		{
 			//newNetPlayerUiSlot.GetComponent<UiSlotScript>().next.enabled = false;
-			newNetPlayerUiSlot.GetComponent<SelectorSlotScript>().next.gameObject.SetActive(false);
+			newNetPlayerUiSlot.GetComponent<SelectorSlotScript>().btnNextCharacter.gameObject.SetActive(false);
+			newNetPlayerUiSlot.GetComponent<SelectorSlotScript>().btnSwitchTeams.gameObject.SetActive(false);
 		}
 		
 		// add it to GridLayout
@@ -163,16 +177,53 @@ public class UIManager : MonoBehaviour {
 		newPlayer.UISelectorSlotScript = newNetPlayerUiSlot.GetComponent<SelectorSlotScript>();
 
 		// Update Slot with correct Player and Character Information
-		newPlayer.UISelectorSlotScript.UpdateSlot(newPlayer);
+		UpdateSelectorSlot(netPlayer, newPlayer);
 	}
 
-	void AddNewPlayerStatsSlot(NetworkPlayer netPlayer, Player player)
+	void UpdateSelectorSlot(NetworkPlayer netPlayer, Player player)
 	{
+		// Update Slot with correct Player and Character Information
+		player.UISelectorSlotScript.UpdateSlot(player);
+    }
+
+	void AddNewPlayerStatsSlot(NetworkPlayer netPlayer, Player player, int teamId)
+	{
+
+		/**
+		 * Warum zwei mal AdNewPlayerStatsSlot ?
+		 * 
+		 * man könnte die StatsSlots bereits anzeigen lassen bevor die SpielCharacter Instantiert wurden!
+		 * 
+		 * waiting for other player -> isReady [x]
+		 * 
+		 **/
+
+		if (player.UIStatsSlotScript != null)
+		{
+			Debug.LogWarning(this.ToString() + " Player " + player.getUserName()+ " Id:" + netPlayer.ToString() + " hat bereits ein UI Stats Slots..."); 
+			UpdateStatesSlot (netPlayer, player);
+			return;
+		}
+		Debug.LogWarning(this.ToString() + " Player " + player.getUserName() + " hat noch kein UIStatsSlot, Instantierte und update Slot informationen!");
 		//random Rand
-		int randomColor = Random.Range(0,playerStatsSlotPrefabs.Length);
+//		int randomColor = Random.Range(0,playerStatsSlotPrefabs.Length);
+		if(teamId >= 0 && teamId < playerStatsSlotPrefabs.Length)
+		{
+
+		}
+		else
+		{
+			Debug.LogError ("TeamId " + teamId + " stimmt nicht mit playerStatsSlotPrefabs.Length = " + playerStatsSlotPrefabs.Length + " überein!");
+			if (playerStatsSlotPrefabs.Length > 0)
+				teamId = playerStatsSlotPrefabs.Length -1;
+			else
+			{
+				return;
+			}
+		}
 
 		// erzeuge UI Slot Element
-		GameObject statsSlot = Instantiate(playerStatsSlotPrefabs[randomColor].gameObject, Vector3.zero, Quaternion.identity) as GameObject;
+		GameObject statsSlot = Instantiate(playerStatsSlotPrefabs[teamId].gameObject, Vector3.zero, Quaternion.identity) as GameObject;
 
 		// füge es GridLayout hinzu
 		statsSlot.transform.SetParent(PlayerStatsSlotPanel.transform, false);
@@ -183,7 +234,7 @@ public class UIManager : MonoBehaviour {
 		// greife auf Referenz zu und Update Slot
 		//TODO alternative suchen Start() muss vorher einmal ausgeführt werden (initialisierung)
 		//player.UIStatsSlotScript.Awake();															// wird implizit mit Instantiate ausgeführt!
-		Debug.LogError(this.ToString() + " " + player.GetHashCode());
+//		Debug.LogError(this.ToString() + " " + player.GetHashCode());
 		player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
 	}
 
@@ -222,7 +273,23 @@ public class UIManager : MonoBehaviour {
 
 	void OnPvPKill(Player killer, Player victim)
 	{
-		killer.UIStatsSlotScript.slotKills.text = "Kills: " + killer.getPoints();
+		if (killer.UIStatsSlotScript != null)
+		{
+//			killer.UIStatsSlotScript.slotKills.text = "Kills: " + killer.getKills();
+//			killer.UIStatsSlotScript.slotPoints.text = "Points: " + killer.getPoints();
+			killer.UIStatsSlotScript.AddKill();
+			killer.UIStatsSlotScript.AddPoint();
+		}
+		else
+			Debug.LogError("killer.UIStatsSlotScript == NULL!");
+
+		if (victim.UIStatsSlotScript != null)
+		{
+//			victim.UIStatsSlotScript.slotLifes.text = "Lifes: " + victim.GetLifes();
+			victim.UIStatsSlotScript.LostLife();
+		}
+		else
+			Debug.LogError("killer.UIStatsSlotScript == NULL!");
 	}
 
 	void AddPoints(Player killer, Player victim)
@@ -232,7 +299,20 @@ public class UIManager : MonoBehaviour {
 
 	void UpdateStatesSlot(NetworkPlayer netPlayer, Player player)
 	{
-		player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
+		if(player == null)
+		{
+			Debug.LogError("player == null");
+			return;
+		}
+		else
+		{
+			if(player.UIStatsSlotScript == null)
+			{
+				Debug.LogError("player.UIStatsSlotScript == null " + player.getUserName());
+//				AddNewPlayerStatsSlot(netPlayer, player);
+			}
+			player.UIStatsSlotScript.UpdateSlot(netPlayer, player);
+		}
 	}
 
 }

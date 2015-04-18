@@ -15,6 +15,10 @@ public class Tags : MonoBehaviour {
 	public const string tag_cloneLeft = "Clone Left";
 	public const string name_cloneRight = "Clone Right";
 	public const string tag_cloneRight = "Clone Right";
+	public const string name_CloneTop = "Clone Top";
+	//public const string tag_CloneTop = "Clone Top";
+	public const string name_CloneBottom = "Clone Bottom";
+	//public const string tag_CloneBottom = "Clone Bottom";
 	public const string name_head = "Head";
 	public const string tag_head = "Head";
 	public const string name_body = "Body";
@@ -64,6 +68,7 @@ public class Tags : MonoBehaviour {
 	/**
 	 * Character Selection
 	 **/
+	public const string tag_CharacterPreview = "ChararacterPreview";
 	public const string character = "Character";
 	public const string ai = "AI";
 	public const string death = "Death";

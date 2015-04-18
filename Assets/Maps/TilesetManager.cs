@@ -11,6 +11,8 @@ public class TilesetManager : ScriptableObject {
 	// bei Programmstart lade alle Tilesets
 	[SerializeField]
 	List<Tileset> tilesetList;
+	Tileset tClassicTileset;
+	short iClassicTilesetIndex;
 
 	public void OnEnable()
 	{
@@ -47,5 +49,25 @@ public class TilesetManager : ScriptableObject {
 	{
 		return tilesetList[index];
 	}
+
+	public Tileset GetClassicTileset()
+	{
+		return tClassicTileset;
+	}
+
+	public short GetClassicTilesetIndex()
+	{
+		return iClassicTilesetIndex;
+	}
+
+//	public int GetClassicTilesetIndex()
+//	{
+//		//TODO
+//	}
+//
+//	public void GetClassicTileset()
+//	{
+//		//TODO
+//	}
 	
 }
