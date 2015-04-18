@@ -44,6 +44,9 @@ public class MapPreviewWindow : EditorWindow {
 		}
 	}
 
+	public GUISkin guiSkin;
+//	public GUIStyle textFieldStlye;
+
 	void OnGUI()
 	{
 		//EditorGUILayout.Space(10);
@@ -54,6 +57,11 @@ public class MapPreviewWindow : EditorWindow {
 		GUILayout.Label("SMW Map Properties", EditorStyles.boldLabel);
 
 		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
+
+		guiSkin = (GUISkin) EditorGUILayout.ObjectField("guiSkin", guiSkin, typeof(GUISkin), false, GUILayout.ExpandWidth(true));
+		if(guiSkin != null)
+			GUI.skin = guiSkin;
+//		textFieldStlye = (GUIStyle) EditorGUILayout.ObjectField("GUIStyle", textFieldStlye, typeof(GUIStyle), false, GUILayout.ExpandWidth(true));
 
 		g_TilesetManager = (TilesetManager) EditorGUILayout.ObjectField("TilesetManager", g_TilesetManager, typeof(TilesetManager), false, GUILayout.ExpandWidth(true));
 		if(g_TilesetManager == null)
@@ -77,7 +85,7 @@ public class MapPreviewWindow : EditorWindow {
 				// Asset - ScripableObject // TODO savepath+name Create(path);
 				m_CurrentMap = Create();
 				m_CurrentMap.SetTiletsetManager(g_TilesetManager);
-				m_CurrentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_preview);
+				m_CurrentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_full);
 				EditorUtility.SetDirty(m_CurrentMap);
 //				EditorApplication.SaveAssets();
 				AssetDatabase.SaveAssets();

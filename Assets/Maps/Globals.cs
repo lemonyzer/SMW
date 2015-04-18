@@ -30,6 +30,21 @@ static class Globals {
 
 	public const int NUM_POWERUPS = 26;
 	public const int NUM_BLOCK_SETTINGS = NUM_POWERUPS;
+
+
+	public const int NUMEYECANDY = 3;
+	public const int NUMMAPHAZARDPARAMS = 5;
+
+	public const int MAXWARPS=32;
+	public const int MAXMAPITEMS=32;
+	public const int MAXMAPHAZARDS=30;
+	
+	public const int NUMSPAWNAREATYPES=6;
+	public const int MAXSPAWNAREAS=128;
+	public const int MAXDRAWAREAS=128;
+
+	public const int MAXRACEGOALS = 8;
+	public const int MAXFLAGBASES = 4;
 }
 
 public enum TileType {

@@ -1,4 +1,4 @@
-﻿
+
 //#define NUM_AUTO_FILTERS	12
 //#define MAPWIDTH			20			//width of the map
 //#define MAPHEIGHT			15			//height of the map
@@ -94,6 +94,72 @@ public class TilesetTranslation
 };
 
 [Serializable]
+public class MapItem
+{
+	public short itype;
+	public short ix;
+	public short iy;
+};
+
+[Serializable]
+public class MapHazard
+{
+	public short itype;
+	public short ix;
+	public short iy;
+	
+	public short[] iparam = new short[Globals.NUMMAPHAZARDPARAMS];
+	public float[] dparam = new float[Globals.NUMMAPHAZARDPARAMS];
+};
+
+[Serializable]
+public class Warp
+{
+	public short direction;
+	public short connection;
+	public short id;
+};
+
+[Serializable]
+public class WarpExit
+{
+	public short direction;
+	public short connection;
+	public short id;
+	
+	public short x; //Player location where player warps out of
+	public short y; 
+	
+	public short lockx;  //Location to display lock icon
+	public short locky;  
+	
+	public short warpx;  //map grid location for first block in warp
+	public short warpy;
+	public short numblocks;  //number of warp blocks for this warp
+	
+	public short locktimer;  //If > 0, then warp is locked and has this many frames left until unlock
+};
+
+[Serializable]
+public class SpawnArea
+{
+	public short left;
+	public short top;
+	public short width;
+	public short height;
+	public short size;
+};
+
+[Serializable]
+public class SDL_Rect
+{
+	public short x;
+	public short y;
+	public ushort w;
+	public ushort h;
+};
+
+[Serializable]
 public class Map : ScriptableObject {
 
 	public void OnEnable()
@@ -152,9 +218,65 @@ public class Map : ScriptableObject {
 	MapTile[,] mapdatatop;		// Oberste Kayer der eingelesenen Map
 	[SerializeField]
 	MapBlock[,] objectdata;		// ka.
-//	IO_Block[,] blockdata;
+
+	[SerializeField]
+	TilesetTile[,] platformTiles;
+	[SerializeField]
+	MapTile[,] platformTileTypes;
+
+	[SerializeField]
+	int iNumMapItems;
+	[SerializeField]
+	MapItem[] mapItems;
+
+	[SerializeField]
+	int iNumMapHazards;
+	[SerializeField]
+	MapHazard[] mapHazards;
+
+	[SerializeField]
+	short[] eyecandy; //= new short[Globals.NUMEYECANDY];
+	[SerializeField]
+	int musicCategoryID;
+
+	[SerializeField]
+	Warp[,] warpdata;//[MAPWIDTH][MAPHEIGHT];
 	[SerializeField]
 	bool[,,] nospawn;
+
+	[SerializeField]
+	int maxConnection;
+	[SerializeField]
+	int numwarpexits;
+	[SerializeField]
+	WarpExit[] warpexits;//[MAXWARPS];
+
+	[SerializeField]
+	short[] totalspawnsize;//[NUMSPAWNAREATYPES];
+	[SerializeField]
+	short[]	numspawnareas;//[NUMSPAWNAREATYPES];
+	[SerializeField]
+	SpawnArea[,] spawnareas;//[NUMSPAWNAREATYPES][MAXSPAWNAREAS];
+
+	[SerializeField]
+	int numdrawareas;
+
+	[SerializeField]
+	SDL_Rect[] drawareas;
+
+	[SerializeField]
+	int iNumRaceGoals;
+	[SerializeField]
+	Vector2[] racegoallocations;
+
+	[SerializeField]
+	int iNumFlagBases;
+	[SerializeField]
+	Vector2[] flagbaselocations;
+
+
+	
+//	IO_Block[,] blockdata;
 	[SerializeField]
 	bool[] fAutoFilter = new bool[Globals.NUM_AUTO_FILTERS];
 
@@ -467,12 +589,288 @@ public class Map : ScriptableObject {
 		else
 			fPreview = false;
 
+
 		loadPlatforms(binReader, fPreview, version, translationid, tilesetwidths, tilesetheights, iMaxTilesetID);
 
+		loadingRest(binReader, iReadType);
+
+	}
+
+	void loadingRest(BinaryReader binReader, ReadType iReadType)
+	{
+		//All tiles have been loaded so the translation is no longer needed
+//		delete [] translationid;
+//		delete [] tilesetwidths;
+//		delete [] tilesetheights;
+
+		Debug.LogWarning("reading more MapData");
+
+		//Load map items (like carryable spikes and springs)
+		Debug.Log("reading MapItems");
+		iNumMapItems = ReadInt(binReader);
+		Debug.Log("iNumMapItems = " + iNumMapItems);
+		mapItems = new MapItem[iNumMapItems];
+		for(int j = 0; j < iNumMapItems; j++)
+		{
+			mapItems[j] = new MapItem();
+			mapItems[j].itype = (short) ReadInt(binReader);
+			mapItems[j].ix = (short) ReadInt(binReader);
+			mapItems[j].iy = (short) ReadInt(binReader);
+		}
+		
+		//Load map hazards (like fireball strings, rotodiscs, pirhana plants)
+		Debug.Log("reading MapHazards");
+		iNumMapHazards = ReadInt(binReader);
+		Debug.Log("iNumMapHazards = " + iNumMapHazards);
+		mapHazards = new MapHazard[iNumMapHazards];
+		for(short iMapHazard = 0; iMapHazard < iNumMapHazards; iMapHazard++)
+		{
+			mapHazards[iMapHazard].itype = (short) ReadInt(binReader);
+			mapHazards[iMapHazard].ix = (short) ReadInt(binReader);
+			mapHazards[iMapHazard].iy = (short) ReadInt(binReader);
+			
+			for(short iParam = 0; iParam < Globals.NUMMAPHAZARDPARAMS; iParam++)
+				mapHazards[iMapHazard].iparam[iParam] = (short) ReadInt(binReader);
+			
+			for(short iParam = 0; iParam < Globals.NUMMAPHAZARDPARAMS; iParam++)
+				mapHazards[iMapHazard].dparam[iParam] = ReadFloat(binReader);
+		}
+
+		eyecandy = new short[Globals.NUMEYECANDY];
+
+		//For all layers if the map format supports it
+		if(VersionIsEqualOrAfter(m_Version, 1, 8, 0, 2))
+		{
+			eyecandy[0] = (short)ReadInt(binReader);
+			eyecandy[1] = (short)ReadInt(binReader);
+		}
+		
+		//Read in eyecandy to use
+		eyecandy[2] = (short)ReadInt(binReader);
+		
+		musicCategoryID = ReadInt(binReader);
+
+		if(mapdatatop == null)
+			mapdatatop = new MapTile[Globals.MAPWIDTH, Globals.MAPHEIGHT];	// wenn keine Platform in der map gefunden wurde ist Array nicht angelegt
+
+		warpdata = new Warp[Globals.MAPWIDTH, Globals.MAPHEIGHT];
+		nospawn = new bool[Globals.NUMSPAWNAREATYPES, Globals.MAPWIDTH, Globals.MAPHEIGHT];
+
+		for(int j = 0; j < Globals.MAPHEIGHT; j++)
+		{
+			for(int i = 0; i < Globals.MAPWIDTH; i++)
+			{
+				TileType iType = (TileType)ReadInt(binReader);
+
+				mapdatatop[i,j] = new MapTile();
+				MapTile tile = mapdatatop[i,j];
+
+				if(iType >= 0 && (int) iType < Globals.NUMTILETYPES)
+				{
+//					mapdatatop[i][j].iType = iType;
+//					mapdatatop[i][j].iFlags = g_iTileTypeConversion[iType];
+					tile.iType = iType;
+					tile.iFlags = g_iTileTypeConversion[(int)iType];
+				}
+				else
+				{
+//					mapdatatop[i][j].iType = tile_nonsolid;
+//					mapdatatop[i][j].iFlags = tile_flag_nonsolid;
+					tile.iType = TileType.tile_nonsolid;
+					tile.iFlags = (int)TileTypeFlag.tile_flag_nonsolid;
+				}
+
+				warpdata[i,j] = new Warp(); 
+				warpdata[i,j].direction = (short)ReadInt(binReader);
+				warpdata[i,j].connection = (short)ReadInt(binReader);
+				warpdata[i,j].id = (short)ReadInt(binReader);
+				
+				for(short z = 0; z < Globals.NUMSPAWNAREATYPES; z++)
+					nospawn[z,i,j] = ReadBool(binReader);
+			}
+		}
+		
+		//Read switch block state data
+		int iNumSwitchBlockData = ReadInt(binReader);
+		for(short iBlock = 0; iBlock < iNumSwitchBlockData; iBlock++)
+		{
+			short iCol = ReadByteAsShort(binReader);
+			short iRow = ReadByteAsShort(binReader);
+			
+			objectdata[iCol,iRow].iSettings[0] = ReadByteAsShort(binReader);
+		}
+		
+		if(iReadType == ReadType.read_type_preview)
+		{
+			Debug.LogWarning("ReadType.read_type_preview");
+			return;
+		}
+		
+		maxConnection = 0;
+
+		numwarpexits = (short)ReadInt(binReader);
+		warpexits = new WarpExit[Globals.MAXWARPS];
+		for(int i = 0; i < numwarpexits && i < Globals.MAXWARPS; i++)
+		{
+			warpexits[i].direction = (short)ReadInt(binReader);
+			warpexits[i].connection = (short)ReadInt(binReader);
+			warpexits[i].id = (short)ReadInt(binReader);
+			warpexits[i].x = (short)ReadInt(binReader);
+			warpexits[i].y = (short)ReadInt(binReader);
+			
+			warpexits[i].lockx = (short)ReadInt(binReader);
+			warpexits[i].locky = (short)ReadInt(binReader);
+			
+			warpexits[i].warpx = (short)ReadInt(binReader);
+			warpexits[i].warpy = (short)ReadInt(binReader);
+			warpexits[i].numblocks = (short)ReadInt(binReader);
+			
+			if(warpexits[i].connection > maxConnection)
+				maxConnection = warpexits[i].connection;
+		}
+		
+		//Ignore any more warps than the max
+		for(int i = 0; i < numwarpexits - Globals.MAXWARPS; i++)
+		{
+			for(int j = 0; j < 10; j++)
+			{
+				ReadInt(binReader);
+				Debug.Log("i="+i+", j="+j+"... Ignore any more warps than the max");
+			}
+		}
+		
+		if(numwarpexits > Globals.MAXWARPS)
+			numwarpexits = Globals.MAXWARPS;
+
+		Debug.Log("numwarpexits = " + numwarpexits);
+		
+
+		//Read spawn areas
+		Debug.Log("Read spawn areas");
+		numspawnareas = new short[Globals.NUMSPAWNAREATYPES];
+		totalspawnsize = new short[Globals.NUMSPAWNAREATYPES];
+		spawnareas = new SpawnArea[Globals.NUMSPAWNAREATYPES, Globals.MAXSPAWNAREAS];
+		for(int i = 0; i < Globals.NUMSPAWNAREATYPES; i++)
+		{
+			totalspawnsize[i] = 0;
+			numspawnareas[i] = (short)ReadInt(binReader);
+			Debug.Log("numspawnareas["+i+"] = " + numspawnareas[i]);
+			
+			if(numspawnareas[i] > Globals.MAXSPAWNAREAS)
+			{
+				Debug.LogError(" ERROR: Number of spawn areas (" + numspawnareas[i] + ") was greater than max allowed (" + Globals.MAXSPAWNAREAS + ")");
+//				cout << endl << " ERROR: Number of spawn areas (" << numspawnareas[i]
+//				<< ") was greater than max allowed (" << MAXSPAWNAREAS << ')'
+//					<< endl;
+				return;
+			}
+			
+			for(int m = 0; m < numspawnareas[i]; m++)
+			{
+				spawnareas[i,m] = new SpawnArea();
+				spawnareas[i,m].left = (short)ReadInt(binReader);
+				spawnareas[i,m].top = (short)ReadInt(binReader);
+				spawnareas[i,m].width = (short)ReadInt(binReader);
+				spawnareas[i,m].height = (short)ReadInt(binReader);
+				spawnareas[i,m].size = (short)ReadInt(binReader);
+				
+				totalspawnsize[i] += spawnareas[i,m].size;
+			}
+			
+			//If no spawn areas were identified, then create one big spawn area
+			if(totalspawnsize[i] == 0)
+			{
+				numspawnareas[i] = 1;
+				spawnareas[i,0] = new SpawnArea();
+				spawnareas[i,0].left = 0;
+				spawnareas[i,0].width = 20;
+				spawnareas[i,0].top = 1;
+				spawnareas[i,0].height = 12;
+				spawnareas[i,0].size = 220;
+				totalspawnsize[i] = 220;
+			}
+		}
+
+		Debug.Log("reading DrawAreas");
+
+		//Read draw areas (foreground tiles drawing optimization)
+		numdrawareas = (short)ReadInt(binReader);
+		Debug.Log("numdrawareas = " + numdrawareas);
+		
+		if(numdrawareas > Globals.MAXDRAWAREAS)
+		{
+			Debug.LogError(" ERROR: Number of spawn areas (" + numdrawareas + ") was greater than max allowed (" + Globals.MAXDRAWAREAS + ")");
+//			cout << endl << " ERROR: Number of draw areas (" << numdrawareas
+//				<< ") was greater than max allowed (" << MAXDRAWAREAS << ')'
+//					<< endl;
+			return;
+		}
+
+//		Rect[] test = new Rect[23];
+//		test[0].x;
+//		test[0].y;
+//		test[0].width;
+//		test[0].height;
+
+		//Load rects to help optimize drawing the foreground
+		drawareas = new SDL_Rect[Globals.MAXDRAWAREAS];
+		for(int m = 0; m < numdrawareas; m++)
+		{
+			drawareas[m].x = (short)ReadInt(binReader);
+			drawareas[m].y = (short)ReadInt(binReader);
+			drawareas[m].w = (ushort)ReadInt(binReader);
+			drawareas[m].h = (ushort)ReadInt(binReader);
+//			drawareas[m].x = (Sint16)ReadInt(binReader);
+//			drawareas[m].y = (Sint16)ReadInt(binReader);
+//			drawareas[m].w = (Uint16)ReadInt(binReader);
+//			drawareas[m].h = (Uint16)ReadInt(binReader);
+		}
+
+		Debug.Log("reading ExtendedDataBlocks");
+
+		int iNumExtendedDataBlocks = ReadInt(binReader);
+		Debug.Log("iNumExtendedDataBlocks = " + iNumExtendedDataBlocks);
+		for(short iBlock = 0; iBlock < iNumExtendedDataBlocks; iBlock++)
+		{
+			short iCol = ReadByteAsShort(binReader);
+			short iRow = ReadByteAsShort(binReader);
+			
+			short iNumSettings = ReadByteAsShort(binReader);
+			Debug.Log("ExtendedDataBlocks ("+iNumSettings+") : x=" + iCol + ", y=" + iRow);
+			for(short iSetting = 0; iSetting < iNumSettings; iSetting++)
+				objectdata[iCol,iRow].iSettings[iSetting] = ReadByteAsShort(binReader);
+		}
+
+		Debug.Log("reading RaceGoals");
+
+		//read mode item locations like flags and race goals
+		iNumRaceGoals = (short)ReadInt(binReader);
+		Debug.Log("iNumRaceGoals = " + iNumRaceGoals);
+		
+		racegoallocations = new Vector2[Globals.MAXRACEGOALS];
+		for(int j = 0; j < iNumRaceGoals; j++)
+		{
+			racegoallocations[j].x = (short)ReadInt(binReader);
+			racegoallocations[j].y = (short)ReadInt(binReader);
+		}
+
+		Debug.Log("reading FlagBases");
+
+		iNumFlagBases = (short)ReadInt(binReader);
+		Debug.Log("iNumFlagBases = " + iNumFlagBases);
+		
+		flagbaselocations = new Vector2[Globals.MAXFLAGBASES];
+		for(int j = 0; j < iNumFlagBases; j++)
+		{
+			flagbaselocations[j].x = (short)ReadInt(binReader);
+			flagbaselocations[j].y = (short)ReadInt(binReader);
+		}
 	}
 
 	void loadPlatforms(BinaryReader binReader, bool fPreview, int[] version, int[] translationid, int[] tilesetwidths, int[] tilesetheights, short iMaxTilesetID)
 	{
+		Debug.LogWarning("reading and loading Platforms"); 
+
 		clearPlatforms();
 
 		// Load moving platforms
@@ -501,24 +899,27 @@ public class Map : ScriptableObject {
 //					//TilesetTile * tile = &tiles[iCol][iRow];
 //					TilesetTile tile = tiles[iCol][iRow];
 
-			TilesetTile[][] tiles = new TilesetTile[iWidth][];
-			MapTile[][] types = new MapTile[iWidth][];
+			platformTiles = new TilesetTile[iWidth, iHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
+			platformTileTypes = new MapTile[iWidth, iHeight];
 
 			mapdatatop = new MapTile[iWidth, iHeight];
 
 			for(short iCol = 0; iCol < iWidth; iCol++)
 			{
 				Debug.Log("Platform iCol = " + iCol);
-				tiles[iCol] = new TilesetTile[iHeight];
-				types[iCol] = new MapTile[iHeight];
+//				tiles[iCol] = new TilesetTile[iHeight];
+//				types[iCol] = new MapTile[iHeight];
 
 				for(short iRow = 0; iRow < iHeight; iRow++)
 				{
 					Debug.Log("Platform iRow = " + iRow);
 					
 					//TilesetTile * tile = &tiles[iCol][iRow];
-					TilesetTile tile = tiles[iCol][iRow];
+					platformTiles[iCol,iRow] = new TilesetTile();
+					TilesetTile tile = platformTiles[iCol,iRow];
 					tile = new TilesetTile();
+					platformTileTypes[iCol,iRow] = new MapTile();
+					mapdatatop[iCol,iRow] = new MapTile();
 //			TilesetTile[][] tiles = new TilesetTile[iWidth][];
 //			MapTile[][] types = new MapTile[iWidth][];
 
@@ -563,14 +964,14 @@ public class Map : ScriptableObject {
 //						if(iType >= 0 && (iType) < Globals.NUMTILETYPES)
 						if(iType >= 0 && ((int)iType) < Globals.NUMTILETYPES)
 						{
-							types[iCol][iRow].iType = iType;
+							platformTileTypes[iCol,iRow].iType = iType;
 //							types[iCol][iRow].iFlags = g_iTileTypeConversion[iType];
-							types[iCol][iRow].iFlags = g_iTileTypeConversion[(int)iType];
+							platformTileTypes[iCol,iRow].iFlags = g_iTileTypeConversion[(int)iType];
 						}
 						else
 						{
-							types[iCol][iRow].iType = (int) TileType.tile_nonsolid;
-							types[iCol][iRow].iFlags = (int) TileTypeFlag.tile_flag_nonsolid;
+							platformTileTypes[iCol,iRow].iType = (int) TileType.tile_nonsolid;
+							platformTileTypes[iCol,iRow].iFlags = (int) TileTypeFlag.tile_flag_nonsolid;
 						}
 					}
 					else
@@ -598,8 +999,8 @@ public class Map : ScriptableObject {
 						
 						if(type >= 0 && (int)type < Globals.NUMTILETYPES)
 						{
-							types[iCol][iRow].iType = type;
-							types[iCol][iRow].iFlags = g_iTileTypeConversion[(int)type];
+							platformTileTypes[iCol,iRow].iType = type;
+							platformTileTypes[iCol,iRow].iFlags = g_iTileTypeConversion[(int)type];
 						}
 						else
 						{
@@ -723,6 +1124,9 @@ public class Map : ScriptableObject {
 
 	public void OnGUI_Preview()
 	{
+
+		OnGUI_Preview_PlatformTiles();
+
 //		previewSliderPosition = EditorGUILayout.BeginScrollView(previewSliderPosition);
 		OnGUI_Preview_Mapdata();
 //		EditorGUILayout.EndScrollView();
@@ -732,11 +1136,74 @@ public class Map : ScriptableObject {
 //		EditorGUILayout.EndScrollView();
 	}
 
+	Vector2 previewPlatformTilesSliderPosition = Vector2.zero;
+	
+	public void OnGUI_Preview_PlatformTiles()
+	{
+		if(platformTiles != null)
+		{
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.BeginVertical();
+			previewPlatformTilesSliderPosition = EditorGUILayout.BeginScrollView(previewPlatformTilesSliderPosition);
+			for(int y = 0; y < Globals.MAPHEIGHT; y++)
+			{
+				EditorGUILayout.BeginHorizontal();
+				for(int x = 0; x < Globals.MAPWIDTH; x++)
+				{
+					
+					string tileString = "";
+					
+					TilesetTile platformTile = platformTiles[x,y];
+
+
+					if( platformTile == null)
+					{
+						GUILayout.Label("null");
+					}
+					else
+					{
+						//							if(tile.iCol == 0 && tile.iRow == 0)
+						//							{
+						//								tileString +="<color=red>";
+						//							}
+						
+						if(platformTile.iCol == 0 && platformTile.iRow == 0)
+						{
+							GUI.skin.textArea.fixedWidth = 12;
+							GUI.skin.textArea.stretchWidth = false;
+							tileString += platformTile.iID.ToString("D2");
+						}
+						else
+						{
+							tileString += platformTile.iID.ToString("D2")+","+platformTile.iCol.ToString("D2")+","+platformTile.iRow.ToString("D2")+"\n";
+						}
+
+					}
+					
+					EditorGUILayout.TextArea(tileString);
+					
+				}
+				EditorGUILayout.EndHorizontal();
+			}
+			EditorGUILayout.EndScrollView();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndVertical();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndHorizontal();
+		}
+		else
+		{
+			EditorGUILayout.LabelField("platformTiles empty");
+		}
+	}
+
 	Vector2 previewObjectDataSliderPosition = Vector2.zero;
 
 	public void OnGUI_Preview_Objectdata()
 	{
-		if(mapdata != null)
+		if(objectdata != null)
 		{
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical();
@@ -759,7 +1226,15 @@ public class Map : ScriptableObject {
 					{
 //						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iSettings.ToString()+","+mapBlock.iType.ToString("D2");
 //						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iType.ToString("D2");
-						mapBlockString += mapBlock.fHidden ? "1" : "0"+","+mapBlock.iType.ToString("D4");
+						mapBlockString += mapBlock.fHidden ? "1" : "0"+"\n" + 
+							mapBlock.iType.ToString("D3") + "\n";
+
+						for(int i=0; i<mapBlock.iSettings.Length; i++)
+						{
+							if(mapBlock.iSettings[i] != 0)
+								mapBlockString += mapBlock.iSettings[i].ToString("D2") + ",";
+						}
+								
 					}
 					
 					EditorGUILayout.TextArea(mapBlockString);
@@ -783,8 +1258,15 @@ public class Map : ScriptableObject {
 
 	Vector2 previewSliderPosition = Vector2.zero;
 
+//	public GUIStyle textFieldStlye = new GUIStyle();
+
 	public void OnGUI_Preview_Mapdata()
 	{
+//		textFieldStlye = new GUIStyle();
+//		textFieldStlye.richText = false;
+//		textFieldStlye.fixedWidth = 16+4+16+4+16;
+//		//textFieldStlye.stretchWidth = true;
+
 		if(mapdata != null)
 		{
 			previewSliderPosition = EditorGUILayout.BeginScrollView(previewSliderPosition);
@@ -813,7 +1295,26 @@ public class Map : ScriptableObject {
 						}
 						else
 						{
-							tileString += tile.iID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
+//							if(tile.iCol == 0 && tile.iRow == 0)
+//							{
+//								tileString +="<color=red>";
+//							}
+
+							if(tile.iCol == 0 && tile.iRow == 0)
+							{
+								GUI.skin.textArea.fixedWidth = 12;
+								GUI.skin.textArea.stretchWidth = false;
+								tileString += tile.iID.ToString("D2");
+							}
+							else
+							{
+								tileString += tile.iID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
+							}
+
+//							if(tile.iCol == 0 && tile.iRow == 0)
+//							{
+//								tileString +="</color>";
+//							}
 
 							if(l == Globals.MAPLAYERS -1)
 							{
@@ -841,6 +1342,7 @@ public class Map : ScriptableObject {
 					}
 
 					EditorGUILayout.TextArea(tileString);
+//					EditorGUILayout.TextArea(tileString, textFieldStlye);
 
 				}
 				EditorGUILayout.EndHorizontal();
