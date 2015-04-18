@@ -109,6 +109,11 @@ public class Map : ScriptableObject {
 		}
 	}
 
+	public TilesetTile[,,] GetMapData()
+	{
+		return mapdata;
+	}
+
 	//Converts the tile type into the flags that this tile carries (solid + ice + death, etc)
 //	short[] g_iTileTypeConversion = new short[Globals.NUMTILETYPES] = {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
 	[SerializeField]
@@ -405,6 +410,7 @@ public class Map : ScriptableObject {
 		objectdata = new MapBlock[Globals.MAPWIDTH, Globals.MAPHEIGHT];
 
 		//2. load map data
+		Debug.LogWarning("reading and filling mapdata array BEGINN");
 		for(int y = 0; y < Globals.MAPHEIGHT; y++)
 		{
 			for(int x = 0; x < Globals.MAPWIDTH; x++)
@@ -412,8 +418,8 @@ public class Map : ScriptableObject {
 				for(int l = 0; l < Globals.MAPLAYERS; l++)
 				{
 //					TilesetTile * tile = &mapdata[i][j][k];	// zeigt auf aktuelles Element in mapdata
+					mapdata[x, y, l] = new TilesetTile();
 					TilesetTile tile = mapdata[x, y, l];
-					tile = new TilesetTile();
 					tile.iID = ReadByteAsShort(binReader);
 					tile.iCol = ReadByteAsShort(binReader);
 					tile.iRow = ReadByteAsShort(binReader);
@@ -440,7 +446,8 @@ public class Map : ScriptableObject {
 //				Debug.LogWarning("objectdata["+x+", "+y+"].fHidden = " + objectdata[x,y].fHidden.ToString()); 
 			}
 		}
-
+		Debug.LogWarning("reading and filling mapdata array DONE");
+		
 		//Read in background to use
 		szBackgroundFile = ReadString(Globals.BACKGROUND_CSTRING_SIZE, binReader);
 		Debug.Log("BackgroundFile = " + szBackgroundFile);
@@ -712,6 +719,145 @@ public class Map : ScriptableObject {
 
 	public void OnGUI()
 	{
+	}
+
+	public void OnGUI_Preview()
+	{
+//		previewSliderPosition = EditorGUILayout.BeginScrollView(previewSliderPosition);
+		OnGUI_Preview_Mapdata();
+//		EditorGUILayout.EndScrollView();
+
+//		previewObjectDataSliderPosition = EditorGUILayout.BeginScrollView(previewObjectDataSliderPosition);	
+		OnGUI_Preview_Objectdata();
+//		EditorGUILayout.EndScrollView();
+	}
+
+	Vector2 previewObjectDataSliderPosition = Vector2.zero;
+
+	public void OnGUI_Preview_Objectdata()
+	{
+		if(mapdata != null)
+		{
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.BeginVertical();
+			previewObjectDataSliderPosition = EditorGUILayout.BeginScrollView(previewObjectDataSliderPosition);
+			for(int y = 0; y < Globals.MAPHEIGHT; y++)
+			{
+				EditorGUILayout.BeginHorizontal();
+				for(int x = 0; x < Globals.MAPWIDTH; x++)
+				{
+					
+					string mapBlockString = "";
+					
+					MapBlock mapBlock = objectdata[x,y];
+						
+					if( mapBlock == null)
+					{
+						GUILayout.Label("null");
+					}
+					else
+					{
+//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iSettings.ToString()+","+mapBlock.iType.ToString("D2");
+//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iType.ToString("D2");
+						mapBlockString += mapBlock.fHidden ? "1" : "0"+","+mapBlock.iType.ToString("D4");
+					}
+					
+					EditorGUILayout.TextArea(mapBlockString);
+					
+				}
+				EditorGUILayout.EndHorizontal();
+			}
+			EditorGUILayout.EndScrollView();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndVertical();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndHorizontal();
+		}
+		else
+		{
+			EditorGUILayout.LabelField("objectdata empty");
+		}
+	}
+
+	Vector2 previewSliderPosition = Vector2.zero;
+
+	public void OnGUI_Preview_Mapdata()
+	{
+		if(mapdata != null)
+		{
+			previewSliderPosition = EditorGUILayout.BeginScrollView(previewSliderPosition);
+			EditorGUILayout.BeginHorizontal();
+//			GUILayout.Space(10);
+//			EditorGUILayout.Space();
+			EditorGUILayout.BeginVertical();
+			for(int y = 0; y < Globals.MAPHEIGHT; y++)
+			{
+				EditorGUILayout.BeginHorizontal();
+				for(int x = 0; x < Globals.MAPWIDTH; x++)
+				{
+
+					string tileString = "";
+
+					for(int l = 0; l < Globals.MAPLAYERS; l++)
+					{
+//						EditorGUILayout.BeginVertical();
+//						GUILayout.BeginVertical();
+
+						TilesetTile tile = mapdata[x,y,l];
+
+						if( tile == null)
+						{
+							GUILayout.Label("null");
+						}
+						else
+						{
+							tileString += tile.iID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
+
+							if(l == Globals.MAPLAYERS -1)
+							{
+								// no line end
+							}
+							else
+							{
+								tileString += "\n";
+							}
+
+//							GUILayout.Label(tile.iID+","+tile.iCol+","+tile.iRow);
+//							GUILayout.Label(tile.iCol + "");
+//							GUILayout.Label(tile.iRow + "");
+						}
+//						GUILayout.Label(mapdata[x,y,l].iID.ToString());
+//						EditorGUILayout.LabelField(x+" "+y+" "+l, GUILayout.ExpandWidth(false));
+//						string mapDataField = "iID = " + mapdata[x,y,l].iID;
+//						EditorGUILayout.LabelField(mapDataField);
+						//mapdata[x,y,l] = EditorGUILayout.IntField();
+
+
+
+//						GUILayout.EndVertical();
+//						EditorGUILayout.EndVertical();
+					}
+
+					EditorGUILayout.TextArea(tileString);
+
+				}
+				EditorGUILayout.EndHorizontal();
+			}
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndVertical();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndHorizontal();
+			EditorGUILayout.EndScrollView();
+
+		}
+		else
+		{
+			EditorGUILayout.LabelField("mapdata empty");
+		}
 	}
 
 	void saveMap(string filePath)

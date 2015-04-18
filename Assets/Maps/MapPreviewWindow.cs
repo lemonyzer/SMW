@@ -6,36 +6,36 @@ using System;
 using System.IO;
 using UnityEditor;
 
-public class MapWindow : EditorWindow {
+public class MapPreviewWindow : EditorWindow {
 
 	#region Variables
-	static MapWindow currWindow;
+	static MapPreviewWindow currWindow;
 	TilesetManager g_TilesetManager;
+	Map m_CurrentMap;
 	#endregion
 
 	#region Main Methods
 
-	[MenuItem("SMW/Map/Create")]
 	public static Map Create()
 	{
 		Map newTilesetAsset = ScriptableObject.CreateInstance<Map>();
 		
-		AssetDatabase.CreateAsset(newTilesetAsset, "Assets/Maps/newMapSO.asset");
+		AssetDatabase.CreateAsset(newTilesetAsset, "Assets/Maps/previewNewMapSO.asset");
 		AssetDatabase.SaveAssets();
 		
 		EditorUtility.FocusProjectWindow();
 		Selection.activeObject = newTilesetAsset;
-
+		
 		return newTilesetAsset;
 	}
 
-	[MenuItem("SMW/Map Window")]
+	[MenuItem("SMW/Map/Preview Window")]
 	public static void Init()
 	{
 		if(currWindow == null)
 		{
-			currWindow = (MapWindow) EditorWindow.GetWindow(typeof(MapWindow));
-			currWindow.title = "SMW Map";
+			currWindow = (MapPreviewWindow) EditorWindow.GetWindow(typeof(MapPreviewWindow));
+			currWindow.title = "SMW Map Preview";
 //			currWindow.minSize = new Vector2(256,512);
 		}
 		else
@@ -56,33 +56,31 @@ public class MapWindow : EditorWindow {
 		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
 
 		g_TilesetManager = (TilesetManager) EditorGUILayout.ObjectField("TilesetManager", g_TilesetManager, typeof(TilesetManager), false, GUILayout.ExpandWidth(true));
-
-//		if (GUILayout.Button("Select TileManager", GUILayout.ExpandWidth(false)))
-//		{
-//		}
-
 		if(g_TilesetManager == null)
 			GUI.enabled = false;
 		else
 			GUI.enabled = true;
 
-		if (GUILayout.Button("Open File", GUILayout.ExpandWidth(false)))
+		if (GUILayout.Button("Open Map to Import", GUILayout.ExpandWidth(false)))
 		{
 			if(OnGUI_OpenFile(out m_LastMapPath))
 			{
 				m_FileOpened = true;
 				// Class
-//				currentMap = new Map(g_TilesetManager);		// on time (on button clicked)
-
+				//				currentMap = new Map(g_TilesetManager);		// on time (on button clicked)
+				
 				// ScriptableObject
-//				currentMap = ScriptableObject.CreateInstance<Map>();
-//				currentMap.SetTiletsetManager(g_TilesetManager);
-//				currentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_preview);
-
+				//				currentMap = ScriptableObject.CreateInstance<Map>();
+				//				currentMap.SetTiletsetManager(g_TilesetManager);
+				//				currentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_preview);
+				
 				// Asset - ScripableObject // TODO savepath+name Create(path);
-				currentMap = Create();
-				currentMap.SetTiletsetManager(g_TilesetManager);
-				currentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_preview);
+				m_CurrentMap = Create();
+				m_CurrentMap.SetTiletsetManager(g_TilesetManager);
+				m_CurrentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_preview);
+				EditorUtility.SetDirty(m_CurrentMap);
+//				EditorApplication.SaveAssets();
+				AssetDatabase.SaveAssets();
 			}
 			else
 			{
@@ -93,13 +91,34 @@ public class MapWindow : EditorWindow {
 		{
 			GUILayout.Label ("Path = " + m_LastWorkingMapImportPath, GUILayout.ExpandWidth(false));
 			GUILayout.Label ("Path = " + @m_LastWorkingMapImportPath, GUILayout.ExpandWidth(false));
-			if(currentMap != null)
-				currentMap.OnGUI();
+			if(m_CurrentMap != null)
+				m_CurrentMap.OnGUI();
 		}
 		else
 		{
 			GUILayout.Label ("Path = " + "nothing selected", GUILayout.ExpandWidth(false));
 		}
+
+		m_CurrentMap = (Map) EditorGUILayout.ObjectField("Map", m_CurrentMap, typeof(Map), false, GUILayout.ExpandWidth(true));
+
+		if(m_CurrentMap == null)
+		{
+			EditorGUILayout.LabelField("no Map selected");
+			GUI.enabled = false;
+		}
+		else
+		{
+			GUI.enabled = true;
+			if (GUILayout.Button("Create Unity Map", GUILayout.ExpandWidth(false)))
+			{
+				CreateUnityMap(m_CurrentMap);
+			}
+			m_CurrentMap.OnGUI_Preview();
+		}
+
+//		if (GUILayout.Button("Select TileManager", GUILayout.ExpandWidth(false)))
+//		{
+//		}
 
 		GUILayout.EndVertical();
 		GUILayout.BeginHorizontal();
@@ -107,13 +126,44 @@ public class MapWindow : EditorWindow {
 
 		Repaint();
 	}
+
+	void CreateUnityMap(Map mapSO)
+	{
+		if(mapSO == null)
+		{
+			Debug.LogError("mapSO == NULL");
+			return;
+		}
+
+		TilesetTile[,,] mapData = mapSO.GetMapData();
+		if(mapData == null)
+		{
+			Debug.LogError("mapSO.GetMapData() == NULL");
+			return;
+		}
+
+		GameObject mapRoot = new GameObject("TestMap");
+		for(int l=0; l<Globals.MAPLAYERS; l++)
+		{
+			GameObject currentMapLayer = new GameObject("Layer " + l);
+			currentMapLayer.transform.SetParent(mapRoot.transform);
+
+			for(int y=0; y<Globals.MAPHEIGHT; y++)
+			{
+				for(int x=0; x<Globals.MAPWIDTH; x++)
+				{
+					SpriteRenderer currentSpriteRenderer = currentMapLayer.AddComponent<SpriteRenderer>();
+					//currentSpriteRenderer.sprite
+				}
+			}
+		}
+	}
 	#endregion
 
 	string EP_LastWorkingMapImportPath = "EP_LastWorkingMapImportPath";
 	string m_LastWorkingMapImportPath = "";
 	string m_LastMapPath = "";
 	bool m_FileOpened = false;
-	Map currentMap;
 
 	bool OnGUI_OpenFile(out string absPath)
 	{
@@ -133,45 +183,4 @@ public class MapWindow : EditorWindow {
 			
 		}
 	}
-
-
-//	FileInfo[] GetFileList (string absPath)
-//	{
-//		if (!string.IsNullOrEmpty(absPath))
-//		{
-//			DirectoryInfo dir = new DirectoryInfo(absPath);
-//			FileInfo[] info = dir.GetFiles("*.png");
-//			
-//			
-//			// Einmalige ausgabe auf Console
-//			foreach (FileInfo f in info)
-//			{
-//				//				Debug.Log("Found " + f.Name);
-//				//				Debug.Log("f.DirectoryName=" + f.DirectoryName);
-//				//				Debug.Log("f.FullName=" + f.FullName);
-//				//				Debug.Log("modified=" + f.FullName.Substring(Application.dataPath.Length - "Assets".Length));
-//				// relative pfad angabe
-//				string currentSpritePath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
-//				Debug.Log("currentSpritePath=" + currentSpritePath);
-//				
-////				string charName = GetCharNameFromFileName(f.Name);
-//				string charName = f.Name;
-//				if(charName != null)
-//				{
-//					Debug.Log(charName);
-//				}
-//				else
-//				{
-//					Debug.LogError(f.Name + " konnte Character Name nicht extrahieren");
-//				}
-//			}
-//			return info;
-//		}
-//		else
-//		{
-//			Debug.LogError("absPath == \"\" or NULL ");
-//			return null;
-//		}
-//	}
-
 }
