@@ -33,6 +33,66 @@ public class Tileset : ScriptableObject {
 	short iTileTypeSize;
 	TileType[] tiletypes;
 
+	public Sprite GetNewCreatetTileSprite(int x, int y)
+	{
+		if(tileset == null)
+		{
+			Debug.LogError ("Tiletset has no tileset Sprite!");
+			return null;
+		}
+		Texture2D tilesetTexture = tileset.texture;
+
+		float tilesetWidth = tilesetTexture.width;
+		float tilesetHeight = tilesetTexture.height;
+		float tileWidth = 32;
+		float tileHeight = 32;
+
+		// check if x, y out of Texture Bounds
+
+		int xMax = Mathf.FloorToInt(tilesetWidth/tileWidth) -1 ;
+		Debug.Log("xMax = " + xMax);
+		if(x < 0 || x > xMax)
+		{
+			Debug.LogError("x = " + x + " out of bounds, xMin=0 & xMax=" + xMax);
+			return null;
+		}
+
+		int yMax = Mathf.FloorToInt(tilesetHeight/tileHeight) -1 ;
+		Debug.Log("yMax = " + yMax);
+		if(y < 0 || y > yMax)
+		{
+			Debug.LogError("y = " + y + " out of bounds, yMin=0 & yMax=" + yMax);
+			return null;
+		}
+
+		// transform texture bottom, left to top, left
+//		textureX = tilesetWidth - x*tileWidth;
+		float textureX = x * tileWidth;
+		float textureY = tilesetHeight - y*tileHeight;
+//		int textureY = tilesetHeight/tileHeight - y;
+
+//		int tileTextureX = textureX * tileWidth;
+//		int tileTextureY = textureY * tileHeight;
+
+		Rect subSpriteRect = new Rect(textureX,
+		                              textureY,
+		                              tileWidth,
+		                              -tileHeight);
+
+		Vector2 pivot = new Vector2(0.5f,0.5f);
+
+		float pixelPerUnit = tileset.pixelsPerUnit;
+
+		Sprite subSprite = Sprite.Create(tilesetTexture, subSpriteRect, pivot, pixelPerUnit);		// erzeugt neues Sprite (ohne Verbindung zu spliced Asset)
+
+		return subSprite;
+	}
+
+	public Sprite GetTileSprite(int x, int y)
+	{
+		return null;
+	}
+
 	public void OnEnable()
 	{
 		Debug.Log(this.ToString() + " OnEnable()");

@@ -10,6 +10,7 @@ public class TilesetWindow : EditorWindow {
 
 	#region Variables
 	static TilesetWindow currWindow;
+	Tileset currentTileset;
 	#endregion
 
 	#region Main Methods
@@ -41,6 +42,12 @@ public class TilesetWindow : EditorWindow {
 		}
 	}
 
+	int w_TilesetPixelToUnit = 32;
+	int w_SubTilePosX = 0;
+	int w_SubTilePosY = 0;
+
+	Sprite w_subTile = null;
+
 	void OnGUI()
 	{
 		//EditorGUILayout.Space(10);
@@ -48,13 +55,26 @@ public class TilesetWindow : EditorWindow {
 		GUILayout.Space(10);
 		GUILayout.BeginVertical();
 		GUILayout.Space(10);
+		currentTileset = EditorGUILayout.ObjectField("Tileset ", currentTileset, typeof(Tileset) ,false) as Tileset;
 		GUILayout.Label("SMW Tileset Properties", EditorStyles.boldLabel);
 
-		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
-
-		if (GUILayout.Button("Create Tileset", GUILayout.ExpandWidth(false)))
+		if (GUILayout.Button("Create Tileset SO", GUILayout.ExpandWidth(false)))
 		{
 			Create();
+		}
+
+		w_TilesetPixelToUnit = EditorGUILayout.IntField("Tileset Pixel to Unit", w_TilesetPixelToUnit);
+
+		w_SubTilePosX = EditorGUILayout.IntField("iCol x", w_SubTilePosX);
+		w_SubTilePosY = EditorGUILayout.IntField("iRow y", w_SubTilePosY);
+
+		if (GUILayout.Button("Show Tile (SubSprite)", GUILayout.ExpandWidth(false)))
+		{
+			CreateGameObjectWithSubSprite(w_SubTilePosX, w_SubTilePosY);
+		}
+		if (GUILayout.Button("Show Tile (NewSprite)", GUILayout.ExpandWidth(false)))
+		{
+			CreateGameObjectWithNewSprite(w_SubTilePosX, w_SubTilePosY);
 		}
 
 		GUILayout.EndVertical();
@@ -63,13 +83,28 @@ public class TilesetWindow : EditorWindow {
 
 		Repaint();
 	}
+
+	void CreateGameObjectWithSubSprite(int x, int y)
+	{
+		GameObject spriteGO = new GameObject("Tile SubSprite x=" + x + " y= " + y);
+		SpriteRenderer spriteRenderer = spriteGO.AddComponent<SpriteRenderer>();
+		spriteRenderer.sprite = currentTileset.GetTileSprite(x, y);
+		Selection.activeGameObject = spriteGO;
+	}
+
+	void CreateGameObjectWithNewSprite(int x, int y)
+	{
+		GameObject spriteGO = new GameObject("Tile NewSprite x=" + x + " y= " + y);
+		SpriteRenderer spriteRenderer = spriteGO.AddComponent<SpriteRenderer>();
+		spriteRenderer.sprite = currentTileset.GetNewCreatetTileSprite(x, y);
+		Selection.activeGameObject = spriteGO;
+	}
 	#endregion
 
 	string EP_LastWorkingMapImportPath = "EP_LastWorkingMapImportPath";
 	string m_LastWorkingMapImportPath = "";
 	string m_LastMapPath = "";
 	bool m_FileOpened = false;
-	Map currentMap;
 
 	bool OnGUI_OpenFile(out string absPath)
 	{

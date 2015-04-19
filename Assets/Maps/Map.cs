@@ -47,7 +47,7 @@ public class MapBlock
 public class TilesetTile
 {
 	[SerializeField]
-	public short iID;
+	public short iTilesetID;
 	[SerializeField]
 	public short iCol;
 	[SerializeField]
@@ -158,19 +158,24 @@ public class Map : ScriptableObject {
 	public void OnEnable()
 	{
 		Debug.LogWarning(this.ToString() + " OnEnable()");
-		if(m_TilesetManager == null)
+		if(m_Tileset == null)
 		{
-			Debug.LogWarning("m_TilesetManager == NULL");
+			Debug.LogWarning("m_Tileset == NULL");
 		}
 		else
 		{
-			Debug.Log("m_TilesetManager is set");
+			Debug.Log("m_Tileset is set");
 		}
 	}
 
 	public TilesetTile[,,] GetMapData()
 	{
 		return mapdata;
+	}
+
+	public bool[,,] GetCustomMapData()
+	{
+		return mapdataCustom;
 	}
 
 	//Converts the tile type into the flags that this tile carries (solid + ice + death, etc)
@@ -187,7 +192,8 @@ public class Map : ScriptableObject {
 	int[] m_Version = new int[] {0, 0, 0, 0};
 //	int[] g_iVersion = new int[] {0, 0, 0, 0};
 	[SerializeField]
-	TilesetManager m_TilesetManager;
+//	TilesetManager m_TilesetManager;
+	public List<Tileset> m_Tileset;
 
 	[SerializeField]
 	int iNumPlatforms = 0;
@@ -279,14 +285,14 @@ public class Map : ScriptableObject {
 	string szBackgroundFile;
 
 	[SerializeField]
-	TilesetTranslation[] translations;
+	public TilesetTranslation[] translations;
 
 	[SerializeField]
-	int[] translationid;
+	public int[] translationid;
 	[SerializeField]
-	int[] tilesetwidths;
+	public int[] tilesetwidths;
 	[SerializeField]
-	int[] tilesetheights;
+	public int[] tilesetheights;
 
 	[SerializeField]
 	short[] iSwitches;
@@ -306,19 +312,19 @@ public class Map : ScriptableObject {
 	[SerializeField]
 	List<MovingPlatform> platformdrawlayerList = new List<MovingPlatform>();
 
-	public void SetTiletsetManager(TilesetManager tilesetManager)
-	{
-		this.m_TilesetManager = tilesetManager;
-		if(m_TilesetManager != null)
-			Debug.Log("<color=green>m_TilesetManager is set</color>");
-		else
-			Debug.LogWarning("m_TilesetManager == NULL");
-	}
-
-	public TilesetManager GetTilesetManager()
-	{
-		return this.m_TilesetManager;
-	}
+//	public void SetTiletsetManager(TilesetManager tilesetManager)
+//	{
+//		this.m_TilesetManager = tilesetManager;
+//		if(m_TilesetManager != null)
+//			Debug.Log("<color=green>m_TilesetManager is set</color>");
+//		else
+//			Debug.LogWarning("m_TilesetManager == NULL");
+//	}
+//
+//	public TilesetManager GetTilesetManager()
+//	{
+//		return this.m_TilesetManager;
+//	}
 
 	void initSwitches()
 	{
@@ -327,7 +333,7 @@ public class Map : ScriptableObject {
 			iSwitches[iSwitch] = 0;
 	}
 
-	public void loadMap(string filePath, ReadType iReadType)
+	public void loadMap(string filePath, ReadType iReadType, TilesetManager f_TilesetManager)
 	{
 		FileStream fs = new FileStream(filePath, FileMode.Open);
 		BinaryReader binReader = new BinaryReader(fs);
@@ -364,7 +370,7 @@ public class Map : ScriptableObject {
 
 			try
 			{
-				loadMapVersionEqualOrAfter1800(binReader, iReadType, m_Version);
+				loadMapVersionEqualOrAfter1800(binReader, iReadType, m_Version, f_TilesetManager);
 			}
 			// Catch the EndOfStreamException and write an error message.
 			catch (EndOfStreamException e)
@@ -421,7 +427,7 @@ public class Map : ScriptableObject {
 		return false;
 	}
 
-	void loadMapVersionEqualOrAfter1800(BinaryReader binReader, ReadType iReadType, int[] version)
+	void loadMapVersionEqualOrAfter1800(BinaryReader binReader, ReadType iReadType, int[] version, TilesetManager f_TilesetManager)
 	{
 		Debug.Log("loading map ");	//TODO mapname
 		
@@ -432,12 +438,15 @@ public class Map : ScriptableObject {
 		
 		int[] iAutoFilterValues = new int[Globals.NUM_AUTO_FILTERS + 1];
 		ReadIntChunk(iAutoFilterValues, Globals.NUM_AUTO_FILTERS + 1, binReader);
-		
+		string autoFilterString = "";
+//		string flagAutoFilterString = "";
 		for(short iFilter = 0; iFilter < Globals.NUM_AUTO_FILTERS; iFilter++)
 		{
-			Debug.Log("fAutoFilter["+iFilter+"] = " + iAutoFilterValues[iFilter] + " von " + fAutoFilter.Length);
+//			Debug.Log("fAutoFilter["+iFilter+"] = " + iAutoFilterValues[iFilter] + " von " + fAutoFilter.Length);
 			fAutoFilter[iFilter] = iAutoFilterValues[iFilter] > 0;
+			autoFilterString += "["+iFilter+"]="+iAutoFilterValues[iFilter]+" ("+(fAutoFilter[iFilter] ? "1" : "0") + ")\t";
 		}
+		Debug.Log(autoFilterString);
 		
 		if(iReadType == ReadType.read_type_summary)
 		{
@@ -460,22 +469,21 @@ public class Map : ScriptableObject {
 			Debug.LogWarning("Tileset Translation: " + iTileset+1 + " von " + iNumTilesets);
 			
 			short iTilesetID = (short) ReadInt(binReader);
-			Debug.Log("iTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", iMaxTilesetID = " + iMaxTilesetID);
+			Debug.Log("\tiTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", iMaxTilesetID = " + iMaxTilesetID);
 
 			translations[iTilesetID] = new TilesetTranslation();
 
-			if(translations == null)
-				Debug.LogError("translation == null");
-			else
-				Debug.Log("translation != null");
-
-			if(translations[iTilesetID] == null)
-				Debug.LogError("translation["+iTilesetID+"] == null");
-			else
-				Debug.Log("translation["+iTilesetID+"] != null");
-				
-
-			Debug.Log("translation[iTileset].iID = " + translations[iTileset].iID);
+//			if(translations == null)
+//				Debug.LogError("translation == null");
+//			else
+//				Debug.Log("translation != null");
+//
+//			if(translations[iTilesetID] == null)
+//				Debug.LogError("translation["+iTilesetID+"] == null");
+//			else
+//				Debug.Log("translation["+iTilesetID+"] != null");
+//
+//			Debug.Log("translation[iTileset].iID = " + translations[iTileset].iID);
 			translations[iTileset].iID = iTilesetID;
 			
 			if(iTilesetID > iMaxTilesetID)
@@ -494,10 +502,11 @@ public class Map : ScriptableObject {
 			//TODO NOTE: char array in struct kann nicht direkt adressiert werden, kein Ahnung warum. ersetzt durch string.
 
 			translations[iTileset].Name = ReadString(Globals.TILESET_TRANSLATION_CSTRING_SIZE, binReader);
-			Debug.Log("TilesetName in struct object: " + translations[iTileset].Name);
-			Debug.Log("iTileset = " + iTileset + ", iID = " + iTilesetID + ", Name = " + translations[iTileset].Name + ", iMaxTilesetID = " + iMaxTilesetID); 
+			Debug.Log("\tTilesetName in struct object: " + translations[iTileset].Name);
+			Debug.Log("\tiTileset = " + iTileset + ", iID = " + iTilesetID + ", Name = " + translations[iTileset].Name + ", iMaxTilesetID = " + iMaxTilesetID); 
 		}
 
+		m_Tileset = new List<Tileset>();
 		
 		translationid = new int[iMaxTilesetID + 1];
 		tilesetwidths = new int[iMaxTilesetID + 1];
@@ -507,8 +516,8 @@ public class Map : ScriptableObject {
 		{
 			short iID = translations[iTileset].iID;
 //			translationid[iID] = g_tilesetmanager.GetIndexFromName(translation[iTileset].szName);
-			translationid[iID] = m_TilesetManager.GetIndexFromName(translations[iTileset].Name);
-			
+			translationid[iID] = f_TilesetManager.GetIndexFromName(translations[iTileset].Name);
+
 			if(translationid[iID] == (int) Globals.TILESETUNKNOWN)	//TODO achtung int cast
 			{
 				tilesetwidths[iID] = 1;
@@ -516,10 +525,10 @@ public class Map : ScriptableObject {
 			}
 			else
 			{
-				tilesetwidths[iID] = m_TilesetManager.GetTileset(translationid[iID]).width;
-				tilesetheights[iID] = m_TilesetManager.GetTileset(translationid[iID]).height;
+				tilesetwidths[iID] = f_TilesetManager.GetTileset(translationid[iID]).width;
+				tilesetheights[iID] = f_TilesetManager.GetTileset(translationid[iID]).height;
 			}
-			Debug.Log("Tileset width = " + tilesetwidths[iID] + ", height = " + tilesetheights[iID]);
+			Debug.Log("Tileset " + translations[iTileset].Name + " width = " + tilesetwidths[iID] + ", height = " + tilesetheights[iID]);
 		}
 
 		mapdataCustom = new bool[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];
@@ -543,15 +552,15 @@ public class Map : ScriptableObject {
 
 					mapdata[x, y, l] = new TilesetTile();
 					TilesetTile tile = mapdata[x, y, l];
-					tile.iID = ReadByteAsShort(binReader);
+					tile.iTilesetID = ReadByteAsShort(binReader);
 					tile.iCol = ReadByteAsShort(binReader);
 					tile.iRow = ReadByteAsShort(binReader);
 					
-					if(tile.iID >= 0)
+					if(tile.iTilesetID >= 0)
 					{
-						if(tile.iID > iMaxTilesetID)
+						if(tile.iTilesetID > iMaxTilesetID)
 						{
-							if(tile.iID == 254)
+							if(tile.iTilesetID == 254)
 							{
 								mapdataCustom[x,y,l] = false;		// wenn tile.iID == 254 dann enthält tile in aktueller layer kein Sprite!
 							}
@@ -561,7 +570,7 @@ public class Map : ScriptableObject {
 							}
 							iTilesetIDChanges++;
 //							Debug.LogWarning("tile.iID = " + tile.iID + " > iMaxTilesetID = " + iMaxTilesetID + " => tile.iID = 0");
-							tile.iID = 0; //TODO
+							tile.iTilesetID = 0; //TODO
 						}
 						else
 						{
@@ -570,20 +579,20 @@ public class Map : ScriptableObject {
 						}
 						
 						//Make sure the column and row we read in is within the bounds of the tileset
-						if(tile.iCol < 0 || tile.iCol >= tilesetwidths[tile.iID])
+						if(tile.iCol < 0 || tile.iCol >= tilesetwidths[tile.iTilesetID])
 						{
 							iColChanges++;
 							tile.iCol = 0;
 						}
 						
-						if(tile.iRow < 0 || tile.iRow >= tilesetheights[tile.iID])
+						if(tile.iRow < 0 || tile.iRow >= tilesetheights[tile.iTilesetID])
 						{
 							iRowChanges++;
 							tile.iRow = 0;
 						}
 						
 						//Convert tileset ids into the current game's tileset's ids
-						tile.iID = (short) translationid[tile.iID];
+						tile.iTilesetID = (short) translationid[tile.iTilesetID];
 					}
 					else
 					{
@@ -610,11 +619,15 @@ public class Map : ScriptableObject {
 		initSwitches();
 
 		//Read on/off switches
+		string switchesString ="";
 		for(short iSwitch = 0; iSwitch < iSwitches.Length; iSwitch++)
 		{
 			iSwitches[iSwitch] = (short)ReadInt(binReader);
-			Debug.Log("readed iSwitches["+iSwitch+"] = " + iSwitches[iSwitch]);
+			switchesString += "Switch["+iSwitch+"]="+iSwitches[iSwitch]+"\t";
+//			Debug.Log("readed iSwitches["+iSwitch+"] = " + iSwitches[iSwitch]);
 		}
+		Debug.Log(switchesString);
+		
 
 		bool fPreview;
 		if(iReadType == ReadType.read_type_preview)
@@ -623,7 +636,7 @@ public class Map : ScriptableObject {
 			fPreview = false;
 
 
-		loadPlatforms(binReader, fPreview, version, translationid, tilesetwidths, tilesetheights, iMaxTilesetID);
+		loadPlatforms(binReader, fPreview, version, f_TilesetManager, translationid, tilesetwidths, tilesetheights, iMaxTilesetID);
 
 		loadingRest(binReader, iReadType);
 
@@ -783,11 +796,13 @@ public class Map : ScriptableObject {
 		numspawnareas = new short[Globals.NUMSPAWNAREATYPES];
 		totalspawnsize = new short[Globals.NUMSPAWNAREATYPES];
 		spawnareas = new SpawnArea[Globals.NUMSPAWNAREATYPES, Globals.MAXSPAWNAREAS];
+		string numSpawnAreasString = "";
 		for(int i = 0; i < Globals.NUMSPAWNAREATYPES; i++)
 		{
 			totalspawnsize[i] = 0;
 			numspawnareas[i] = (short)ReadInt(binReader);
-			Debug.Log("numspawnareas["+i+"] = " + numspawnareas[i]);
+			numSpawnAreasString += "[" + i + "]=" + numspawnareas[i] + "\n";
+//			Debug.Log("numspawnareas["+i+"] = " + numspawnareas[i]);
 			
 			if(numspawnareas[i] > Globals.MAXSPAWNAREAS)
 			{
@@ -797,7 +812,8 @@ public class Map : ScriptableObject {
 //					<< endl;
 				return;
 			}
-			
+
+			string spawnAreaString = "";
 			for(int m = 0; m < numspawnareas[i]; m++)
 			{
 				spawnareas[i,m] = new SpawnArea();
@@ -806,13 +822,19 @@ public class Map : ScriptableObject {
 				spawnareas[i,m].width = (short)ReadInt(binReader);
 				spawnareas[i,m].height = (short)ReadInt(binReader);
 				spawnareas[i,m].size = (short)ReadInt(binReader);
-				
+				spawnAreaString += 	"["+i+"," + m + "]" + "left=" + spawnareas[i,m].left + "\n" +
+					"["+i+"," + m + "]" + "top=" + spawnareas[i,m].top + "\n" +
+						"["+i+"," + m + "]" + "width=" + spawnareas[i,m].width + "\n" +
+						"["+i+"," + m + "]" + "height=" + spawnareas[i,m].height + "\n" +
+						"["+i+"," + m + "]" + "size=" + spawnareas[i,m].size + "\n";
 				totalspawnsize[i] += spawnareas[i,m].size;
 			}
+			Debug.Log(spawnAreaString + "\n");
 			
 			//If no spawn areas were identified, then create one big spawn area
 			if(totalspawnsize[i] == 0)
 			{
+				Debug.LogError("//If no spawn areas were identified, then create one big spawn area");
 				numspawnareas[i] = 1;
 				spawnareas[i,0] = new SpawnArea();
 				spawnareas[i,0].left = 0;
@@ -823,7 +845,8 @@ public class Map : ScriptableObject {
 				totalspawnsize[i] = 220;
 			}
 		}
-
+		Debug.Log(numSpawnAreasString);
+		
 		Debug.Log("reading DrawAreas");
 
 		//Read draw areas (foreground tiles drawing optimization)
@@ -900,7 +923,7 @@ public class Map : ScriptableObject {
 		}
 	}
 
-	void loadPlatforms(BinaryReader binReader, bool fPreview, int[] version, int[] translationid, int[] tilesetwidths, int[] tilesetheights, short iMaxTilesetID)
+	void loadPlatforms(BinaryReader binReader, bool fPreview, int[] version, TilesetManager f_TilesetManager, int[] translationid, int[] tilesetwidths, int[] tilesetheights, short iMaxTilesetID)
 	{
 		Debug.LogWarning("reading and loading Platforms"); 
 
@@ -969,27 +992,27 @@ public class Map : ScriptableObject {
 					if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
 					{
 						Debug.LogWarning("VersionIsEqualOrAfter = 1, 8, 0, 0");
-						tile.iID = ReadByteAsShort(binReader);
+						tile.iTilesetID = ReadByteAsShort(binReader);
 						tile.iCol = ReadByteAsShort(binReader);
 						tile.iRow = ReadByteAsShort(binReader);
 						
-						if(tile.iID >= 0)
+						if(tile.iTilesetID >= 0)
 						{
-							if(iMaxTilesetID != -1 && tile.iID > iMaxTilesetID)
-								tile.iID = 0;
+							if(iMaxTilesetID != -1 && tile.iTilesetID > iMaxTilesetID)
+								tile.iTilesetID = 0;
 							
 							//Make sure the column and row we read in is within the bounds of the tileset
 //							if(tile.iCol < 0 || (tilesetwidths && tile.iCol >= tilesetwidths[tile.iID]))
-							if(tile.iCol < 0 || (tilesetwidths != null && tile.iCol >= tilesetwidths[tile.iID]))
+							if(tile.iCol < 0 || (tilesetwidths != null && tile.iCol >= tilesetwidths[tile.iTilesetID]))
 								tile.iCol = 0;
 							
 //							if(tile.iRow < 0 || (tilesetheights && tile.iRow >= tilesetheights[tile.iID]))
-							if(tile.iRow < 0 || (tilesetheights != null && tile.iRow >= tilesetheights[tile.iID]))
+							if(tile.iRow < 0 || (tilesetheights != null && tile.iRow >= tilesetheights[tile.iTilesetID]))
 								tile.iRow = 0;
 							
 							//Convert tileset ids into the current game's tileset's ids
 							if(translationid != null)
-								tile.iID = (short) translationid[tile.iID];
+								tile.iTilesetID = (short) translationid[tile.iTilesetID];
 						}
 						
 						TileType iType = (TileType)ReadInt(binReader);
@@ -1015,7 +1038,7 @@ public class Map : ScriptableObject {
 						
 						if(iTile == Globals.TILESETSIZE)
 						{
-							tile.iID = Globals.TILESETNONE;
+							tile.iTilesetID = Globals.TILESETNONE;
 							tile.iCol = 0;
 							tile.iRow = 0;
 							
@@ -1023,11 +1046,11 @@ public class Map : ScriptableObject {
 						}
 						else
 						{
-							tile.iID = m_TilesetManager.GetClassicTilesetIndex();
+							tile.iTilesetID = f_TilesetManager.GetClassicTilesetIndex();
 							tile.iCol = (short)(iTile % Globals.TILESETWIDTH);
 							tile.iRow = (short)(iTile / Globals.TILESETWIDTH);
 							
-							type = m_TilesetManager.GetClassicTileset().GetTileType(tile.iCol, tile.iRow);
+							type = f_TilesetManager.GetClassicTileset().GetTileType(tile.iCol, tile.iRow);
 						}
 						
 						if(type >= 0 && (int)type < Globals.NUMTILETYPES)
@@ -1204,11 +1227,11 @@ public class Map : ScriptableObject {
 						{
 //							GUI.skin.textArea.fixedWidth = 12;
 //							GUI.skin.textArea.stretchWidth = false;
-							tileString += platformTile.iID.ToString("D2");
+							tileString += platformTile.iTilesetID.ToString("D2");
 						}
 						else
 						{
-							tileString += platformTile.iID.ToString("D2")+","+platformTile.iCol.ToString("D2")+","+platformTile.iRow.ToString("D2")+"\n";
+							tileString += platformTile.iTilesetID.ToString("D2")+","+platformTile.iCol.ToString("D2")+","+platformTile.iRow.ToString("D2")+"\n";
 						}
 
 					}
@@ -1336,11 +1359,11 @@ public class Map : ScriptableObject {
 
 							if(mapdataCustom[x,y,l])
 							{
-								tileString += tile.iID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
+								tileString += tile.iTilesetID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
 							}
 							else
 							{
-								tileString += tile.iID.ToString("D2")+",--,--";
+								tileString += tile.iTilesetID.ToString("D2")+",--,--";
 							}
 
 							//TODO
@@ -1551,7 +1574,7 @@ public class Map : ScriptableObject {
 		// string länge auslesen
 		//		int iLen = ReadInt(inFile);
 		int iLen = ReadInt(binReader);
-		Debug.Log("iLen = " + iLen + " = cstring länge mit NULL Terminator");
+//		Debug.Log("iLen = " + iLen + " --> char[] cstring = new char["+iLen+"]; --> arraylänge mit NULL Terminator");
 
 		if(iLen < 0)
 		{
@@ -1582,7 +1605,7 @@ public class Map : ScriptableObject {
 		
 		string readString = new string(szReadString);
 		
-		Debug.Log("readString = " + readString);
+//		Debug.Log("readString = " + readString);
 		
 		return readString;
 	}

@@ -81,8 +81,8 @@ public class MapWindowCreation : EditorWindow {
 
 				// Asset - ScripableObject // TODO savepath+name Create(path);
 				currentMap = Create();
-				currentMap.SetTiletsetManager(g_TilesetManager);
-				currentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_preview);
+//				currentMap.SetTiletsetManager(g_TilesetManager);
+				currentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_preview, g_TilesetManager);
 			}
 			else
 			{

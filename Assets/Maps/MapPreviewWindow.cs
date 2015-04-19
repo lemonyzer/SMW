@@ -84,8 +84,8 @@ public class MapPreviewWindow : EditorWindow {
 				
 				// Asset - ScripableObject // TODO savepath+name Create(path);
 				m_CurrentMap = Create();
-				m_CurrentMap.SetTiletsetManager(g_TilesetManager);
-				m_CurrentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_full);
+//				m_CurrentMap.SetTiletsetManager(g_TilesetManager);
+				m_CurrentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_full, g_TilesetManager);
 				EditorUtility.SetDirty(m_CurrentMap);
 //				EditorApplication.SaveAssets();
 				AssetDatabase.SaveAssets();
@@ -116,6 +116,7 @@ public class MapPreviewWindow : EditorWindow {
 		}
 		else
 		{
+//			m_CurrentMap.m_Tileset = (List<Tileset>) EditorGUILayout.ObjectField("Map", m_CurrentMap.m_Tileset, typeof(List<Tileset>), false, GUILayout.ExpandWidth(true));
 			GUI.enabled = true;
 			if (GUILayout.Button("Create Unity Map", GUILayout.ExpandWidth(false)))
 			{
@@ -146,22 +147,58 @@ public class MapPreviewWindow : EditorWindow {
 		TilesetTile[,,] mapData = mapSO.GetMapData();
 		if(mapData == null)
 		{
-			Debug.LogError("mapSO.GetMapData() == NULL");
+			Debug.LogError("mapSO.GetMapData() == NULL -> keine Informationen über Tile<->SubSprite vorhanden");
 			return;
 		}
 
-		GameObject mapRoot = new GameObject("TestMap");
+		bool[,,] customMapData = mapSO.GetCustomMapData();
+		if(customMapData == null)
+		{
+			Debug.LogError("mapSO.GetCustomMapData() == NULL -> keine Informationen welches Tile ein Sprite enthält");
+			return;
+		}
+
+		GameObject mapRootGO = new GameObject("TestMap");
+		mapRootGO.transform.position = Vector3.zero;
 		for(int l=0; l<Globals.MAPLAYERS; l++)
 		{
-			GameObject currentMapLayer = new GameObject("Layer " + l);
-			currentMapLayer.transform.SetParent(mapRoot.transform);
-
+			GameObject currentMapLayerGO = new GameObject("Layer " + l);
+			currentMapLayerGO.transform.SetParent(mapRootGO.transform);
+			currentMapLayerGO.transform.localPosition = new Vector3(0f,0f,-l);
 			for(int y=0; y<Globals.MAPHEIGHT; y++)
 			{
 				for(int x=0; x<Globals.MAPWIDTH; x++)
 				{
-					SpriteRenderer currentSpriteRenderer = currentMapLayer.AddComponent<SpriteRenderer>();
-					//currentSpriteRenderer.sprite
+//					GameObject currentTileGO = new GameObject("Tile_" + x.ToString("D2") + " " + y.ToString("D2"));
+//					Transform currentTileTransform = currentTileGO.transform;
+//					currentTileTransform.SetParent(currentMapLayerGO.transform);
+//					//currentTileTransform.position
+//					Vector3 tilePos = new Vector3(-Globals.MAPWIDTH*0.5f +x,
+//					                              Globals.MAPHEIGHT*0.5f -y,
+//					                              0f);
+//					currentTileTransform.localPosition = tilePos;
+					if(customMapData[x,y,l] == true)
+					{
+						GameObject currentTileGO = new GameObject("Tile " + x.ToString("D2") + " " + y.ToString("D2"));
+						Transform currentTileTransform = currentTileGO.transform;
+						currentTileTransform.SetParent(currentMapLayerGO.transform);
+						//currentTileTransform.position
+						Vector3 tilePos = new Vector3(-Globals.MAPWIDTH*0.5f +x,
+						                              Globals.MAPHEIGHT*0.5f -y,
+						                              0f);
+						currentTileTransform.localPosition = tilePos;
+						SpriteRenderer currentSpriteRenderer = currentTileGO.AddComponent<SpriteRenderer>();
+						int iTileSetId = mapData[x,y,l].iTilesetID;
+						int tilePosX = mapData[x,y,l].iCol;
+						int tilePosY = mapData[x,y,l].iRow;
+						Tileset tileSet = g_TilesetManager.GetTileset(iTileSetId);
+						Sprite tileSprite = tileSet.GetNewCreatetTileSprite(tilePosX,tilePosY);
+						currentSpriteRenderer.sprite = tileSprite;
+					}
+					else
+					{
+//						DestroyImmediate(currentTileGO);
+					}
 				}
 			}
 		}
