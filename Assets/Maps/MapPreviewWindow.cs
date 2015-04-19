@@ -44,7 +44,7 @@ public class MapPreviewWindow : EditorWindow {
 		}
 	}
 
-	public GUISkin guiSkin;
+//	public GUISkin guiSkin;
 //	public GUIStyle textFieldStlye;
 
 	void OnGUI()
@@ -58,9 +58,9 @@ public class MapPreviewWindow : EditorWindow {
 
 		GUILayout.Label ("Auto Import", EditorStyles.boldLabel);
 
-		guiSkin = (GUISkin) EditorGUILayout.ObjectField("guiSkin", guiSkin, typeof(GUISkin), false, GUILayout.ExpandWidth(true));
-		if(guiSkin != null)
-			GUI.skin = guiSkin;
+//		guiSkin = (GUISkin) EditorGUILayout.ObjectField("guiSkin", guiSkin, typeof(GUISkin), false, GUILayout.ExpandWidth(true));
+//		if(guiSkin != null)
+//			GUI.skin = guiSkin;
 //		textFieldStlye = (GUIStyle) EditorGUILayout.ObjectField("GUIStyle", textFieldStlye, typeof(GUIStyle), false, GUILayout.ExpandWidth(true));
 
 		g_TilesetManager = (TilesetManager) EditorGUILayout.ObjectField("TilesetManager", g_TilesetManager, typeof(TilesetManager), false, GUILayout.ExpandWidth(true));

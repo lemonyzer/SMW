@@ -41,13 +41,6 @@ public class MapBlock
 	{
 		iSettings = new short[Globals.NUM_BLOCK_SETTINGS];
 	}
-
-	public MapBlock(short iType)
-	{
-		this.iType = iType;
-		iSettings = new short[Globals.NUM_BLOCK_SETTINGS];
-		fHidden = false;
-	}
 };
 
 [Serializable]
@@ -182,8 +175,8 @@ public class Map : ScriptableObject {
 
 	//Converts the tile type into the flags that this tile carries (solid + ice + death, etc)
 //	short[] g_iTileTypeConversion = new short[Globals.NUMTILETYPES] = {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
-	[SerializeField]
-	short[] g_iTileTypeConversion = new short[] {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
+//	[SerializeField]
+//	short[] g_iTileTypeConversion = new short[] {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
 
 //	public Map(TilesetManager tilesetManager)
 //	{
@@ -211,7 +204,8 @@ public class Map : ScriptableObject {
 	//	IO_Block*   blockdata[MAPWIDTH][MAPHEIGHT];
 	//	bool		nospawn[NUMSPAWNAREATYPES][MAPWIDTH][MAPHEIGHT];
 	//	bool[] 		fAutoFilter = new bool[NUM_AUTO_FILTERS];
-
+	[SerializeField]
+	bool[,,] mapdataCustom;
 	[SerializeField]
 	TilesetTile[,,] mapdata;	// komplett eingelesene Tiles der Map
 	[SerializeField]
@@ -528,10 +522,16 @@ public class Map : ScriptableObject {
 			Debug.Log("Tileset width = " + tilesetwidths[iID] + ", height = " + tilesetheights[iID]);
 		}
 
+		mapdataCustom = new bool[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];
 		mapdata = new TilesetTile[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];	// mapdata, hier werden die eingelesenen Daten gespeichert
 		objectdata = new MapBlock[Globals.MAPWIDTH, Globals.MAPHEIGHT];
 
 		//2. load map data
+		int iColChanges = 0;
+		int iRowChanges = 0;
+		int iTilesetIDChanges = 0;
+		int iTilesetIDOkCount = 0;
+		int iTilesetNegativCount = 0;
 		Debug.LogWarning("reading and filling mapdata array BEGINN");
 		for(int y = 0; y < Globals.MAPHEIGHT; y++)
 		{
@@ -540,6 +540,7 @@ public class Map : ScriptableObject {
 				for(int l = 0; l < Globals.MAPLAYERS; l++)
 				{
 //					TilesetTile * tile = &mapdata[i][j][k];	// zeigt auf aktuelles Element in mapdata
+
 					mapdata[x, y, l] = new TilesetTile();
 					TilesetTile tile = mapdata[x, y, l];
 					tile.iID = ReadByteAsShort(binReader);
@@ -549,25 +550,57 @@ public class Map : ScriptableObject {
 					if(tile.iID >= 0)
 					{
 						if(tile.iID > iMaxTilesetID)
-							tile.iID = 0;
+						{
+							if(tile.iID == 254)
+							{
+								mapdataCustom[x,y,l] = false;		// wenn tile.iID == 254 dann enthält tile in aktueller layer kein Sprite!
+							}
+							else
+							{
+								mapdataCustom[x,y,l] = true;
+							}
+							iTilesetIDChanges++;
+//							Debug.LogWarning("tile.iID = " + tile.iID + " > iMaxTilesetID = " + iMaxTilesetID + " => tile.iID = 0");
+							tile.iID = 0; //TODO
+						}
+						else
+						{
+							mapdataCustom[x,y,l] = true;
+							iTilesetIDOkCount++;
+						}
 						
 						//Make sure the column and row we read in is within the bounds of the tileset
 						if(tile.iCol < 0 || tile.iCol >= tilesetwidths[tile.iID])
+						{
+							iColChanges++;
 							tile.iCol = 0;
+						}
 						
 						if(tile.iRow < 0 || tile.iRow >= tilesetheights[tile.iID])
+						{
+							iRowChanges++;
 							tile.iRow = 0;
+						}
 						
 						//Convert tileset ids into the current game's tileset's ids
 						tile.iID = (short) translationid[tile.iID];
 					}
+					else
+					{
+						iTilesetNegativCount++;
+					}
 				}
 				objectdata[x,y] = new MapBlock();
 				objectdata[x,y].iType = ReadByteAsShort(binReader);
+//				objectdata[x,y].iType = (short) ReadInt(binReader);
 				objectdata[x,y].fHidden = ReadBool(binReader);
 //				Debug.LogWarning("objectdata["+x+", "+y+"].fHidden = " + objectdata[x,y].fHidden.ToString()); 
 			}
 		}
+		Debug.Log("<color=green> iTilesetIDOkCount : " + iTilesetIDOkCount + "</color>");
+		Debug.LogError("iTilesetIDChanges : " + iTilesetIDChanges + ", iColChanges:" + iColChanges +" iRowChanges: " + iRowChanges );
+		Debug.LogError("iTilesetNegativCount : " + iTilesetNegativCount);
+
 		Debug.LogWarning("reading and filling mapdata array DONE");
 		
 		//Read in background to use
@@ -670,7 +703,7 @@ public class Map : ScriptableObject {
 //					mapdatatop[i][j].iType = iType;
 //					mapdatatop[i][j].iFlags = g_iTileTypeConversion[iType];
 					tile.iType = iType;
-					tile.iFlags = g_iTileTypeConversion[(int)iType];
+					tile.iFlags = Globals.g_iTileTypeConversion[(int)iType];
 				}
 				else
 				{
@@ -966,7 +999,7 @@ public class Map : ScriptableObject {
 						{
 							platformTileTypes[iCol,iRow].iType = iType;
 //							types[iCol][iRow].iFlags = g_iTileTypeConversion[iType];
-							platformTileTypes[iCol,iRow].iFlags = g_iTileTypeConversion[(int)iType];
+							platformTileTypes[iCol,iRow].iFlags = Globals.g_iTileTypeConversion[(int)iType];
 						}
 						else
 						{
@@ -1000,7 +1033,7 @@ public class Map : ScriptableObject {
 						if(type >= 0 && (int)type < Globals.NUMTILETYPES)
 						{
 							platformTileTypes[iCol,iRow].iType = type;
-							platformTileTypes[iCol,iRow].iFlags = g_iTileTypeConversion[(int)type];
+							platformTileTypes[iCol,iRow].iFlags = Globals.g_iTileTypeConversion[(int)type];
 						}
 						else
 						{
@@ -1125,7 +1158,7 @@ public class Map : ScriptableObject {
 	public void OnGUI_Preview()
 	{
 
-		OnGUI_Preview_PlatformTiles();
+//		OnGUI_Preview_PlatformTiles();
 
 //		previewSliderPosition = EditorGUILayout.BeginScrollView(previewSliderPosition);
 		OnGUI_Preview_Mapdata();
@@ -1169,8 +1202,8 @@ public class Map : ScriptableObject {
 						
 						if(platformTile.iCol == 0 && platformTile.iRow == 0)
 						{
-							GUI.skin.textArea.fixedWidth = 12;
-							GUI.skin.textArea.stretchWidth = false;
+//							GUI.skin.textArea.fixedWidth = 12;
+//							GUI.skin.textArea.stretchWidth = false;
 							tileString += platformTile.iID.ToString("D2");
 						}
 						else
@@ -1258,16 +1291,17 @@ public class Map : ScriptableObject {
 
 	Vector2 previewSliderPosition = Vector2.zero;
 
-//	public GUIStyle textFieldStlye = new GUIStyle();
+	public GUIStyle textAreaStyle;
 
 	public void OnGUI_Preview_Mapdata()
 	{
-//		textFieldStlye = new GUIStyle();
-//		textFieldStlye.richText = false;
-//		textFieldStlye.fixedWidth = 16+4+16+4+16;
-//		//textFieldStlye.stretchWidth = true;
+		textAreaStyle = new GUIStyle(GUI.skin.textArea);		// SMART
+		textAreaStyle.richText = true;
+		textAreaStyle.stretchWidth = true;
+		textAreaStyle.fixedWidth = 16+4+16+4+16;
+//		//textAreaStyle.stretchWidth = true;
 
-		if(mapdata != null)
+		if(mapdata != null && mapdataCustom != null)
 		{
 			previewSliderPosition = EditorGUILayout.BeginScrollView(previewSliderPosition);
 			EditorGUILayout.BeginHorizontal();
@@ -1300,16 +1334,28 @@ public class Map : ScriptableObject {
 //								tileString +="<color=red>";
 //							}
 
-							if(tile.iCol == 0 && tile.iRow == 0)
-							{
-								GUI.skin.textArea.fixedWidth = 12;
-								GUI.skin.textArea.stretchWidth = false;
-								tileString += tile.iID.ToString("D2");
-							}
-							else
+							if(mapdataCustom[x,y,l])
 							{
 								tileString += tile.iID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
 							}
+							else
+							{
+								tileString += tile.iID.ToString("D2")+",--,--";
+							}
+
+							//TODO
+//							if(tile.iCol == 0 && tile.iRow == 0)
+//							{
+////								GUI.skin.textArea.fixedWidth = 12;
+////								GUI.skin.textArea.stretchWidth = false;
+//								tileString += tile.iID.ToString("D2")+",--,--";
+//							}
+//							else
+//							{
+//								tileString += tile.iID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
+//							}
+							//TODO
+
 
 //							if(tile.iCol == 0 && tile.iRow == 0)
 //							{
@@ -1341,8 +1387,8 @@ public class Map : ScriptableObject {
 //						EditorGUILayout.EndVertical();
 					}
 
-					EditorGUILayout.TextArea(tileString);
-//					EditorGUILayout.TextArea(tileString, textFieldStlye);
+//					EditorGUILayout.TextArea(tileString);
+					EditorGUILayout.TextArea(tileString, textAreaStyle);
 
 				}
 				EditorGUILayout.EndHorizontal();
@@ -1358,7 +1404,7 @@ public class Map : ScriptableObject {
 		}
 		else
 		{
-			EditorGUILayout.LabelField("mapdata empty");
+			EditorGUILayout.LabelField("<color=red>mapdata && mapdataCustom empty</color>");
 		}
 	}
 
@@ -1413,10 +1459,11 @@ public class Map : ScriptableObject {
 	short ReadByteAsShort(BinaryReader binReader)
 	{
 		byte b;
+//		char b;
 
 //		fread(&b, sizeof(Uint8), 1, inFile);
 		b = binReader.ReadByte();
-		
+//		Debug.LogWarning(b.ToString());
 		return (short)b;
 	}
 
