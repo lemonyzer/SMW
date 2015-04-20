@@ -37,8 +37,7 @@ public class TilesetManager : ScriptableObject {
 		
 		for(int i = 0; i < iLength; i++)
 		{
-
-			if(!tilesetList[i].tilesetName.Equals(Name))
+			if(!tilesetList[i].tilesetName.ToLower().Equals(Name.ToLower()))
 				return i;
 		}
 		

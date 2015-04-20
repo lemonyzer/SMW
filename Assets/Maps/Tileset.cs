@@ -22,12 +22,51 @@ public class Tileset : ScriptableObject {
 	[SerializeField]
 	public string tilesetName;
 	[SerializeField]
-	public Sprite tileset;
+	private Sprite tileset;
 	[SerializeField]
-	public int width;
+	private int width;
 	[SerializeField]
-	public int height;
+	private int height;
+	[SerializeField]
+	public Vector2 tilePivot;
 
+	public Sprite TilesetSprite {
+		get {
+			return this.tileset;
+		}
+		set {
+			tileset = value;
+			width = tileset.texture.width;
+			height = tileset.texture.height;
+		}
+	}
+
+	public int Width {
+		get {
+			return this.width;
+		}
+		private set {
+			width = value;
+		}
+	}
+
+	public int Height {
+		get {
+			return this.height;
+		}
+		private set {
+			height = value;
+		}
+	}
+
+	public Vector2 TilePivot {
+		get {
+			return this.tilePivot;
+		}
+		set {
+			tilePivot = value;
+		}
+	}
 
 	short iWidth, iHeight;
 	short iTileTypeSize;
@@ -50,7 +89,7 @@ public class Tileset : ScriptableObject {
 		// check if x, y out of Texture Bounds
 
 		int xMax = Mathf.FloorToInt(tilesetWidth/tileWidth) -1 ;
-		Debug.Log("xMax = " + xMax);
+//		Debug.Log("xMax = " + xMax);
 		if(x < 0 || x > xMax)
 		{
 			Debug.LogError("x = " + x + " out of bounds, xMin=0 & xMax=" + xMax);
@@ -58,7 +97,7 @@ public class Tileset : ScriptableObject {
 		}
 
 		int yMax = Mathf.FloorToInt(tilesetHeight/tileHeight) -1 ;
-		Debug.Log("yMax = " + yMax);
+//		Debug.Log("yMax = " + yMax);
 		if(y < 0 || y > yMax)
 		{
 			Debug.LogError("y = " + y + " out of bounds, yMin=0 & yMax=" + yMax);
@@ -79,11 +118,9 @@ public class Tileset : ScriptableObject {
 		                              tileWidth,
 		                              -tileHeight);
 
-		Vector2 pivot = new Vector2(0.5f,0.5f);
-
 		float pixelPerUnit = tileset.pixelsPerUnit;
 
-		Sprite subSprite = Sprite.Create(tilesetTexture, subSpriteRect, pivot, pixelPerUnit);		// erzeugt neues Sprite (ohne Verbindung zu spliced Asset)
+		Sprite subSprite = Sprite.Create(tilesetTexture, subSpriteRect, tilePivot, pixelPerUnit);		// erzeugt neues Sprite (ohne Verbindung zu spliced Asset)
 
 		return subSprite;
 	}
@@ -96,6 +133,12 @@ public class Tileset : ScriptableObject {
 	public void OnEnable()
 	{
 		Debug.Log(this.ToString() + " OnEnable()");
+		if(tilePivot == null)
+		{
+			Debug.LogWarning("tilePivot not set, set default Value!");
+			tilePivot = new Vector2 (0f,0f);
+		}
+
 	}
 
 	public TileType GetTileType(short iTileCol, short iTileRow)

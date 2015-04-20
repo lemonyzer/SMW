@@ -155,17 +155,20 @@ public class SDL_Rect
 [Serializable]
 public class Map : ScriptableObject {
 
+	[SerializeField]
+	public string mapName = ""; 
+
 	public void OnEnable()
 	{
 		Debug.LogWarning(this.ToString() + " OnEnable()");
-		if(m_Tileset == null)
-		{
-			Debug.LogWarning("m_Tileset == NULL");
-		}
-		else
-		{
-			Debug.Log("m_Tileset is set");
-		}
+//		if(m_Tileset == null)
+//		{
+//			Debug.LogWarning("m_Tileset == NULL");
+//		}
+//		else
+//		{
+//			Debug.Log("m_Tileset is set");
+//		}
 	}
 
 	public TilesetTile[,,] GetMapData()
@@ -191,9 +194,9 @@ public class Map : ScriptableObject {
 	[SerializeField]
 	int[] m_Version = new int[] {0, 0, 0, 0};
 //	int[] g_iVersion = new int[] {0, 0, 0, 0};
-	[SerializeField]
+//	[SerializeField]
 //	TilesetManager m_TilesetManager;
-	public List<Tileset> m_Tileset;
+//	public List<Tileset> m_Tileset;
 
 	[SerializeField]
 	int iNumPlatforms = 0;
@@ -471,19 +474,7 @@ public class Map : ScriptableObject {
 			short iTilesetID = (short) ReadInt(binReader);
 			Debug.Log("\tiTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", iMaxTilesetID = " + iMaxTilesetID);
 
-			translations[iTilesetID] = new TilesetTranslation();
-
-//			if(translations == null)
-//				Debug.LogError("translation == null");
-//			else
-//				Debug.Log("translation != null");
-//
-//			if(translations[iTilesetID] == null)
-//				Debug.LogError("translation["+iTilesetID+"] == null");
-//			else
-//				Debug.Log("translation["+iTilesetID+"] != null");
-//
-//			Debug.Log("translation[iTileset].iID = " + translations[iTileset].iID);
+			translations[iTileset] = new TilesetTranslation();
 			translations[iTileset].iID = iTilesetID;
 			
 			if(iTilesetID > iMaxTilesetID)
@@ -502,11 +493,9 @@ public class Map : ScriptableObject {
 			//TODO NOTE: char array in struct kann nicht direkt adressiert werden, kein Ahnung warum. ersetzt durch string.
 
 			translations[iTileset].Name = ReadString(Globals.TILESET_TRANSLATION_CSTRING_SIZE, binReader);
-			Debug.Log("\tTilesetName in struct object: " + translations[iTileset].Name);
-			Debug.Log("\tiTileset = " + iTileset + ", iID = " + iTilesetID + ", Name = " + translations[iTileset].Name + ", iMaxTilesetID = " + iMaxTilesetID); 
+			Debug.Log("\tTilesetName in struct object: " + translations[iTileset].Name + " TEEETSETETEST");
+			Debug.Log("\tiTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", Name = " + translations[iTileset].Name + ", iMaxTilesetID = " + iMaxTilesetID); 
 		}
-
-		m_Tileset = new List<Tileset>();
 		
 		translationid = new int[iMaxTilesetID + 1];
 		tilesetwidths = new int[iMaxTilesetID + 1];
@@ -525,8 +514,8 @@ public class Map : ScriptableObject {
 			}
 			else
 			{
-				tilesetwidths[iID] = f_TilesetManager.GetTileset(translationid[iID]).width;
-				tilesetheights[iID] = f_TilesetManager.GetTileset(translationid[iID]).height;
+				tilesetwidths[iID] = f_TilesetManager.GetTileset(translationid[iID]).Width;
+				tilesetheights[iID] = f_TilesetManager.GetTileset(translationid[iID]).Height;
 			}
 			Debug.Log("Tileset " + translations[iTileset].Name + " width = " + tilesetwidths[iID] + ", height = " + tilesetheights[iID]);
 		}

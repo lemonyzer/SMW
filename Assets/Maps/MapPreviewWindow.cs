@@ -16,17 +16,17 @@ public class MapPreviewWindow : EditorWindow {
 
 	#region Main Methods
 
-	public static Map Create()
+	public static Map Create(string mapName)
 	{
-		Map newTilesetAsset = ScriptableObject.CreateInstance<Map>();
-		
-		AssetDatabase.CreateAsset(newTilesetAsset, "Assets/Maps/previewNewMapSO.asset");
+		Map newMapAsset = ScriptableObject.CreateInstance<Map>();
+		newMapAsset.mapName = mapName;
+		AssetDatabase.CreateAsset(newMapAsset, "Assets/Maps/map_" + mapName + ".asset");
 		AssetDatabase.SaveAssets();
 		
 		EditorUtility.FocusProjectWindow();
-		Selection.activeObject = newTilesetAsset;
+		Selection.activeObject = newMapAsset;
 		
-		return newTilesetAsset;
+		return newMapAsset;
 	}
 
 	[MenuItem("SMW/Map/Preview Window")]
@@ -83,7 +83,11 @@ public class MapPreviewWindow : EditorWindow {
 				//				currentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_preview);
 				
 				// Asset - ScripableObject // TODO savepath+name Create(path);
-				m_CurrentMap = Create();
+				string mapName = Path.GetFileNameWithoutExtension(m_LastMapPath);
+				if(string.IsNullOrEmpty(mapName))
+					mapName = "noMapName";
+				m_CurrentMap = Create(mapName);
+				m_CurrentMap.mapName = mapName;
 //				m_CurrentMap.SetTiletsetManager(g_TilesetManager);
 				m_CurrentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_full, g_TilesetManager);
 				EditorUtility.SetDirty(m_CurrentMap);
@@ -117,6 +121,8 @@ public class MapPreviewWindow : EditorWindow {
 		else
 		{
 //			m_CurrentMap.m_Tileset = (List<Tileset>) EditorGUILayout.ObjectField("Map", m_CurrentMap.m_Tileset, typeof(List<Tileset>), false, GUILayout.ExpandWidth(true));
+			EditorGUILayout.LabelField(m_CurrentMap.mapName);
+			
 			GUI.enabled = true;
 			if (GUILayout.Button("Create Unity Map", GUILayout.ExpandWidth(false)))
 			{
@@ -130,10 +136,10 @@ public class MapPreviewWindow : EditorWindow {
 //		}
 
 		GUILayout.EndVertical();
-		GUILayout.BeginHorizontal();
+		GUILayout.EndHorizontal();
 
 
-		Repaint();
+//		Repaint();
 	}
 
 	void CreateUnityMap(Map mapSO)
@@ -158,13 +164,13 @@ public class MapPreviewWindow : EditorWindow {
 			return;
 		}
 
-		GameObject mapRootGO = new GameObject("TestMap");
+		GameObject mapRootGO = new GameObject(mapSO.mapName);
 		mapRootGO.transform.position = Vector3.zero;
 		for(int l=0; l<Globals.MAPLAYERS; l++)
 		{
 			GameObject currentMapLayerGO = new GameObject("Layer " + l);
 			currentMapLayerGO.transform.SetParent(mapRootGO.transform);
-			currentMapLayerGO.transform.localPosition = new Vector3(0f,0f,-l);
+			currentMapLayerGO.transform.localPosition = new Vector3(0f,0f,l*-2f);
 			for(int y=0; y<Globals.MAPHEIGHT; y++)
 			{
 				for(int x=0; x<Globals.MAPWIDTH; x++)
