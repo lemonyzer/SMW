@@ -110,7 +110,14 @@ public class MapPreviewWindow : EditorWindow {
 				m_CurrentMap = Create(mapName);
 				m_CurrentMap.mapName = mapName;
 //				m_CurrentMap.SetTiletsetManager(g_TilesetManager);
-				m_CurrentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_full, g_TilesetManager);
+				bool loadWithoutError = m_CurrentMap.loadMap(m_LastWorkingMapImportPath, ReadType.read_type_full, g_TilesetManager);
+				if(!loadWithoutError)
+				{
+					// import mit Fehler
+					string currentAssetPath = AssetDatabase.GetAssetPath(m_CurrentMap);
+					string newAssetName = "_import_error_"+mapName;
+					AssetDatabase.RenameAsset(currentAssetPath, newAssetName);
+				}
 				EditorUtility.SetDirty(m_CurrentMap);
 //				EditorApplication.SaveAssets();
 				AssetDatabase.SaveAssets();

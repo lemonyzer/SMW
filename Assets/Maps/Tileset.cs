@@ -72,9 +72,21 @@ public class Tileset : ScriptableObject {
 		}
 	}
 
-	short iWidth, iHeight;
-	short iTileTypeSize;
+//	short iWidth, iHeight;
+//	short iTileTypeSize;
+	[SerializeField]
 	TileType[] tiletypes;
+	//	List<TileType> tiletypesList;
+
+	public TileType[] TileTypes {
+		get {
+			return this.tiletypes;
+		}
+		set {
+			tiletypes = value;
+		}
+	}
+
 
 	public Sprite GetNewCreatetTileSprite(int x, int y)
 	{
@@ -165,17 +177,17 @@ public class Tileset : ScriptableObject {
 
 	public TileType GetTileType(short iTileCol, short iTileRow)
 	{
-		return tiletypes[iTileCol + iTileRow * iWidth];
+		return tiletypes[iTileCol + iTileRow * width];
 	}
 
 	void SetTileType(short iTileCol, short iTileRow, TileType type)
 	{
-		tiletypes[iTileCol + iTileRow * iWidth] = type;
+		tiletypes[iTileCol + iTileRow * width] = type;
 	}
 
 	public TileType IncrementTileType(short iTileCol, short iTileRow)
 	{
-		short iTile =((short)((int) iTileCol + (int) iTileRow * (int) iWidth));
+		short iTile =((short)((int) iTileCol + (int) iTileRow * (int) width));
 		tiletypes[iTile] = GetIncrementedTileType(tiletypes[iTile]);
 		
 		return tiletypes[iTile];

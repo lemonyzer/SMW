@@ -11,6 +11,8 @@ public class TilesetWindow : EditorWindow {
 	#region Variables
 	static TilesetWindow currWindow;
 	Tileset currentTileset;
+	string w_TilesetTileTypeFilePath;
+	List<TileType> w_TilesetTileTypesList;
 	#endregion
 
 	#region Main Methods
@@ -28,11 +30,12 @@ public class TilesetWindow : EditorWindow {
 		return newTilesetAsset;
 	}
 
-	public Tileset Create(Sprite tilesetSprite, Vector2 tilePivot)
+	public Tileset Create(Sprite tilesetSprite, List<TileType> tileTypesList, Vector2 tilePivot)
 	{
 		Tileset newTilesetAsset = ScriptableObject.CreateInstance<Tileset>();
 		newTilesetAsset.tilesetName = tilesetSprite.name;
 		newTilesetAsset.TilesetSprite = tilesetSprite;
+		newTilesetAsset.TileTypes = tileTypesList.ToArray();
 		newTilesetAsset.tilePivot = tilePivot;
 		AssetDatabase.CreateAsset(newTilesetAsset, "Assets/Maps/tileset_" + tilesetSprite.name + ".asset"); //TODO dateiname nur gültige zeichen
 		AssetDatabase.SaveAssets();
@@ -85,7 +88,41 @@ public class TilesetWindow : EditorWindow {
 					{
 						GUILayout.Label("Tileset from Sprite", EditorStyles.boldLabel);
 //						EditorGUILayout.LabelField("Sprite");
+						EditorGUI.BeginChangeCheck();
 						w_TilesetSprite = EditorGUILayout.ObjectField("Sprite", w_TilesetSprite, typeof(Sprite), false,  GUILayout.ExpandWidth(true)) as Sprite;
+						if(EditorGUI.EndChangeCheck())
+						{
+							if(w_TilesetTileTypesList != null)
+							{
+								w_TilesetTileTypesList.Clear();
+								w_TilesetTileTypesList = null;
+							}
+
+						}
+						if(GUILayout.Button("Select Tileset's TileTypeFile"))
+						{
+							if(OnGUI_OpenFile(out m_LastFilePath, "tls"))
+							{
+								// file slected and openeed
+								w_TilesetTileTypeFilePath = m_LastFilePath;
+								m_FileOpened = true;
+								w_TilesetTileTypesList = ReadTileTypes(w_TilesetTileTypeFilePath);
+								for(int i=0; i< w_TilesetTileTypesList.Count; i++)
+								{
+									//TODO check why string is not completly shown!
+									Debug.Log( i+": " + w_TilesetTileTypesList[i] + " AAAA" + w_TilesetTileTypesList[i].ToString());// + " " + w_TilesetTileTypes[i]);
+								}
+							}
+							else
+							{
+								// file open dialouge cancled
+								w_TilesetTileTypesList.Clear();
+								w_TilesetTileTypesList = null;
+								w_TilesetTileTypeFilePath = "";
+								m_FileOpened = false;
+							}
+						}
+						EditorGUILayout.LabelField("Tileset's Tile Type File Path = " + w_TilesetTileTypeFilePath, GUILayout.ExpandWidth(true));
 
 						bool current = GUI.enabled;
 						w_TileSpriteAlignment = (SpriteAlignment) EditorGUILayout.EnumPopup("Pivot", w_TileSpriteAlignment);
@@ -129,9 +166,25 @@ public class TilesetWindow : EditorWindow {
 							GUILayout.Label("no Sprite selected", EditorStyles.boldLabel);
 							GUI.enabled = false;
 						}
-						if (GUILayout.Button("Create Tileset from Sprite", GUILayout.ExpandWidth(false)))
+						if(!m_FileOpened)
 						{
-							currentTileset = Create(w_TilesetSprite, GetPivotValue(w_TileSpriteAlignment, w_customTilePivotOffset));
+							if(GUI.enabled)
+							{
+								GUILayout.Label("no Tileset TileTypeFile selected", EditorStyles.boldLabel);
+								GUI.enabled = false;
+							}
+						}
+						if(w_TilesetTileTypesList == null)
+						{
+							if(GUI.enabled)
+							{
+								GUILayout.Label("no Tileset TileTypeFile in List", EditorStyles.boldLabel);
+								GUI.enabled = false;
+							}
+						}
+						if (GUILayout.Button("Create Tileset from Sprite & TLS File", GUILayout.ExpandWidth(false)))
+						{
+							currentTileset = Create(w_TilesetSprite, w_TilesetTileTypesList, GetPivotValue(w_TileSpriteAlignment, w_customTilePivotOffset));
 //							EditorUtility.FocusProjectWindow();							<-- Satck Overflow
 //							Selection.activeObject = currentTileset;
 						}
@@ -191,20 +244,73 @@ public class TilesetWindow : EditorWindow {
 	}
 	#endregion
 
-	string EP_LastWorkingMapImportPath = "EP_LastWorkingMapImportPath";
-	string m_LastWorkingMapImportPath = "";
-	string m_LastMapPath = "";
+	List<TileType> ReadTileTypes(string filePath)
+	{
+		if(File.Exists(filePath))
+		{
+			FileStream fs = new FileStream(filePath, FileMode.Open);
+			BinaryReader binReader = new BinaryReader(fs);
+
+			try {
+
+				// lese Anzhal der TileTypes aus
+				int iTileTypeSize = FileIO.ReadInt(binReader);
+				Debug.Log("iTileTypeSize = " + iTileTypeSize);
+
+				if(iTileTypeSize <= 0 || iTileTypeSize > 1024)
+				{
+					Debug.Log("iTileTypeSize ("+iTileTypeSize+") < 0 ||  iTileTypeSize ("+iTileTypeSize+") > 1024");
+					binReader.Close();
+					fs.Close();
+					return null;
+				}
+
+//				tiletypes = new TileType[iTileTypeSize];
+				List<TileType> tilesetTileTypesList = new List<TileType>();
+				
+				for(short i = 0; i < iTileTypeSize; i++)
+				{
+//					tiletypes[i] = (TileType)ReadInt(tsf);
+					TileType value = (TileType) FileIO.ReadInt(binReader);
+					tilesetTileTypesList.Add(value);
+				}
+
+				return tilesetTileTypesList;
+			}
+			catch (Exception exception)
+			{
+				Debug.LogError("Tileset's TileType reading Error: \n" + exception);
+			}
+			finally
+			{
+				binReader.Close();
+				fs.Close();
+			}
+		}
+		else
+		{
+			Debug.LogError("File Path: " +filePath + " doesn't exists!");
+			return null;
+		}
+
+		return null;
+	}
+
+
+	string EP_LastWorkingTileSetTileTypeFilePath = "EP_LastWorkingTileSetTileTypeFilePath";
+	string m_LastWorkingTileSetTileTypeFilePath = "";
+	string m_LastFilePath = "";
 	bool m_FileOpened = false;
 
-	bool OnGUI_OpenFile(out string absPath)
+	bool OnGUI_OpenFile(out string absPath, string fileExtension)
 	{
 		// open folder dialog
-		absPath = EditorUtility.OpenFilePanel ("Select SMW Map", m_LastWorkingMapImportPath, "map");
+		absPath = EditorUtility.OpenFilePanel ("Select Tilesets TileTypeFile", m_LastWorkingTileSetTileTypeFilePath, fileExtension);
 		if(!string.IsNullOrEmpty(absPath))
 		{
-			m_LastWorkingMapImportPath = absPath;
+			m_LastWorkingTileSetTileTypeFilePath = absPath;
 			//absolutenPath in EditorPrefs speichern 
-			EditorPrefs.SetString(EP_LastWorkingMapImportPath, m_LastWorkingMapImportPath);
+			EditorPrefs.SetString(EP_LastWorkingTileSetTileTypeFilePath, m_LastWorkingTileSetTileTypeFilePath);
 
 			return true;
 		}

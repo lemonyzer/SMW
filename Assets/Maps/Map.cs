@@ -73,7 +73,7 @@ public class MovingPlatform {
 public class TilesetTranslation
 {
 	[SerializeField]
-	public short iID;
+	public short iTilesetID;
 //	public char[] szName;	// TODO 128 -> TILESET_TRANSLATION_CSTRING_SIZE
 	// szName ersetzt durch string!!!
 	[SerializeField]
@@ -81,7 +81,7 @@ public class TilesetTranslation
 
 	public TilesetTranslation()
 	{
-		iID = 0;
+		iTilesetID = 0;
 		Name = null;
 	}
 };
@@ -154,6 +154,9 @@ public class SDL_Rect
 
 [Serializable]
 public class Map : ScriptableObject {
+
+	[SerializeField]
+	public bool isImportSuccessful = false;
 
 	[SerializeField]
 	public string mapName = ""; 
@@ -336,8 +339,9 @@ public class Map : ScriptableObject {
 			iSwitches[iSwitch] = 0;
 	}
 
-	public void loadMap(string filePath, ReadType iReadType, TilesetManager f_TilesetManager)
+	public bool loadMap(string filePath, ReadType iReadType, TilesetManager f_TilesetManager)
 	{
+		isImportSuccessful = false;
 		FileStream fs = new FileStream(filePath, FileMode.Open);
 		BinaryReader binReader = new BinaryReader(fs);
 
@@ -349,7 +353,8 @@ public class Map : ScriptableObject {
 			Debug.LogError("FileStream.Length <= 0");
 			binReader.Close();
 			fs.Close();
-			return;
+			isImportSuccessful = false;
+			return isImportSuccessful;
 		}
 
 		//Load version number
@@ -374,6 +379,7 @@ public class Map : ScriptableObject {
 			try
 			{
 				loadMapVersionEqualOrAfter1800(binReader, iReadType, m_Version, f_TilesetManager);
+				isImportSuccessful = true;
 			}
 			// Catch the EndOfStreamException and write an error message.
 			catch (EndOfStreamException e)
@@ -403,6 +409,7 @@ public class Map : ScriptableObject {
 		// close stream and file
 		binReader.Close();
 		fs.Close();
+		return isImportSuccessful;
 	}
 
 	bool VersionIsEqualOrAfter(int[] iVersion, short iMajor, short iMinor, short iMicro, short iBuild)
@@ -475,7 +482,7 @@ public class Map : ScriptableObject {
 			Debug.Log("\tiTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", iMaxTilesetID = " + iMaxTilesetID);
 
 			translations[iTileset] = new TilesetTranslation();
-			translations[iTileset].iID = iTilesetID;
+			translations[iTileset].iTilesetID = iTilesetID;
 			
 			if(iTilesetID > iMaxTilesetID)
 				iMaxTilesetID = iTilesetID;
@@ -504,25 +511,28 @@ public class Map : ScriptableObject {
 		translationid = new int[iMaxTilesetID + 1];
 		tilesetwidths = new int[iMaxTilesetID + 1];
 		tilesetheights = new int[iMaxTilesetID + 1];
-
+		string tilesetIDs = "";
 		for(short iTileset = 0; iTileset < iNumTilesets; iTileset++)
 		{
-			short iID = translations[iTileset].iID;
+			short currentiTilesetID = translations[iTileset].iTilesetID;
+			tilesetIDs += "translation["+iTileset+"] -> TilesetID:" + currentiTilesetID + "\n"; 
 //			translationid[iID] = g_tilesetmanager.GetIndexFromName(translation[iTileset].szName);
-			translationid[iID] = f_TilesetManager.GetIndexFromName(translations[iTileset].Name);
+			translationid[currentiTilesetID] = f_TilesetManager.GetIndexFromName(translations[iTileset].Name);
 
-			if(translationid[iID] == (int) Globals.TILESETUNKNOWN)	//TODO achtung int cast
+			if(translationid[currentiTilesetID] == (int) Globals.TILESETUNKNOWN)	//TODO achtung int cast
 			{
-				tilesetwidths[iID] = 1;
-				tilesetheights[iID] = 1;
+				Debug.LogWarning("TILESETUNKNOWN found");
+				tilesetwidths[currentiTilesetID] = 1;
+				tilesetheights[currentiTilesetID] = 1;
 			}
 			else
 			{
-				tilesetwidths[iID] = f_TilesetManager.GetTileset(translationid[iID]).Width;
-				tilesetheights[iID] = f_TilesetManager.GetTileset(translationid[iID]).Height;
+				tilesetwidths[currentiTilesetID] = f_TilesetManager.GetTileset(translationid[currentiTilesetID]).Width;
+				tilesetheights[currentiTilesetID] = f_TilesetManager.GetTileset(translationid[currentiTilesetID]).Height;
 			}
-			Debug.Log("Tileset " + translations[iTileset].Name + " width = " + tilesetwidths[iID] + ", height = " + tilesetheights[iID]);
+			Debug.Log("Tileset " + translations[iTileset].Name + " width = " + tilesetwidths[currentiTilesetID] + ", height = " + tilesetheights[currentiTilesetID]);
 		}
+		Debug.Log(tilesetIDs);
 
 		mapdataCustom = new bool[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];
 		mapdata = new TilesetTile[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];	// mapdata, hier werden die eingelesenen Daten gespeichert
@@ -632,6 +642,22 @@ public class Map : ScriptableObject {
 		loadPlatforms(binReader, fPreview, version, f_TilesetManager, translationid, tilesetwidths, tilesetheights, iMaxTilesetID);
 
 		loadingRest(binReader, iReadType);
+		/*
+		readingMapItems(binReader, iReadType);
+		readingMapHazards(binReader, iReadType);
+		readingEyeCandys(binReader, iReadType);
+		readingMusicCategorie(binReader, iReadType);
+		readingWarpAndNoSpawnData(binReader, iReadType);
+		readingSwitchBlockStateData(binReader, iReadType);
+		readingWarpExitData(binReader, iReadType);
+		readingSpawnAreaData(binReader, iReadType);
+		readingDrawAreaData(binReader, iReadType);
+		readingExtendedDataBlocks(binReader, iReadType);
+		readingRaceGoalsData(binReader, iReadType);
+		readingFlagBasesData(binReader, iReadType);
+		*/
+
+		loadingRest(binReader, iReadType);
 
 	}
 
@@ -646,33 +672,39 @@ public class Map : ScriptableObject {
 
 		//Load map items (like carryable spikes and springs)
 		Debug.Log("reading MapItems");
-		iNumMapItems = ReadInt(binReader);
-		Debug.Log("iNumMapItems = " + iNumMapItems);
-		mapItems = new MapItem[iNumMapItems];
-		for(int j = 0; j < iNumMapItems; j++)
+		iNumMapItems = (short) ReadInt(binReader);				 // begrenzen
+		Debug.Log("<color=blue>iNumMapItems = " + iNumMapItems + "</color>");
+		if(iNumMapItems > 0)
 		{
-			mapItems[j] = new MapItem();
-			mapItems[j].itype = (short) ReadInt(binReader);
-			mapItems[j].ix = (short) ReadInt(binReader);
-			mapItems[j].iy = (short) ReadInt(binReader);
+			mapItems = new MapItem[iNumMapItems];
+			for(int j = 0; j < iNumMapItems; j++)
+			{
+				mapItems[j] = new MapItem();
+				mapItems[j].itype = (short) ReadInt(binReader);
+				mapItems[j].ix = (short) ReadInt(binReader);
+				mapItems[j].iy = (short) ReadInt(binReader);
+			}
 		}
 		
 		//Load map hazards (like fireball strings, rotodiscs, pirhana plants)
 		Debug.Log("reading MapHazards");
-		iNumMapHazards = ReadInt(binReader);
-		Debug.Log("iNumMapHazards = " + iNumMapHazards);
-		mapHazards = new MapHazard[iNumMapHazards];
-		for(short iMapHazard = 0; iMapHazard < iNumMapHazards; iMapHazard++)
+		iNumMapHazards = (short) ReadInt(binReader);			// begrenzen
+		Debug.Log("<color=blue>iNumMapHazards = " + iNumMapHazards + "</color>");
+		if(iNumMapHazards >0)
 		{
-			mapHazards[iMapHazard].itype = (short) ReadInt(binReader);
-			mapHazards[iMapHazard].ix = (short) ReadInt(binReader);
-			mapHazards[iMapHazard].iy = (short) ReadInt(binReader);
-			
-			for(short iParam = 0; iParam < Globals.NUMMAPHAZARDPARAMS; iParam++)
-				mapHazards[iMapHazard].iparam[iParam] = (short) ReadInt(binReader);
-			
-			for(short iParam = 0; iParam < Globals.NUMMAPHAZARDPARAMS; iParam++)
-				mapHazards[iMapHazard].dparam[iParam] = ReadFloat(binReader);
+			mapHazards = new MapHazard[iNumMapHazards];
+			for(short iMapHazard = 0; iMapHazard < iNumMapHazards; iMapHazard++)
+			{
+				mapHazards[iMapHazard].itype = (short) ReadInt(binReader);
+				mapHazards[iMapHazard].ix = (short) ReadInt(binReader);
+				mapHazards[iMapHazard].iy = (short) ReadInt(binReader);
+				
+				for(short iParam = 0; iParam < Globals.NUMMAPHAZARDPARAMS; iParam++)
+					mapHazards[iMapHazard].iparam[iParam] = (short) ReadInt(binReader);
+				
+				for(short iParam = 0; iParam < Globals.NUMMAPHAZARDPARAMS; iParam++)
+					mapHazards[iMapHazard].dparam[iParam] = ReadFloat(binReader);
+			}
 		}
 
 		eyecandy = new short[Globals.NUMEYECANDY];
@@ -731,12 +763,15 @@ public class Map : ScriptableObject {
 		
 		//Read switch block state data
 		int iNumSwitchBlockData = ReadInt(binReader);
-		for(short iBlock = 0; iBlock < iNumSwitchBlockData; iBlock++)
+		if (iNumSwitchBlockData > 0)
 		{
-			short iCol = ReadByteAsShort(binReader);
-			short iRow = ReadByteAsShort(binReader);
-			
-			objectdata[iCol,iRow].iSettings[0] = ReadByteAsShort(binReader);
+			for(short iBlock = 0; iBlock < iNumSwitchBlockData; iBlock++)
+			{
+				short iCol = ReadByteAsShort(binReader);
+				short iRow = ReadByteAsShort(binReader);
+				
+				objectdata[iCol,iRow].iSettings[0] = ReadByteAsShort(binReader);
+			}
 		}
 		
 		if(iReadType == ReadType.read_type_preview)
@@ -751,6 +786,7 @@ public class Map : ScriptableObject {
 		warpexits = new WarpExit[Globals.MAXWARPS];
 		for(int i = 0; i < numwarpexits && i < Globals.MAXWARPS; i++)
 		{
+			warpexits[i] = new WarpExit();
 			warpexits[i].direction = (short)ReadInt(binReader);
 			warpexits[i].connection = (short)ReadInt(binReader);
 			warpexits[i].id = (short)ReadInt(binReader);
@@ -865,6 +901,7 @@ public class Map : ScriptableObject {
 		drawareas = new SDL_Rect[Globals.MAXDRAWAREAS];
 		for(int m = 0; m < numdrawareas; m++)
 		{
+			drawareas[m] = new SDL_Rect();
 			drawareas[m].x = (short)ReadInt(binReader);
 			drawareas[m].y = (short)ReadInt(binReader);
 			drawareas[m].w = (ushort)ReadInt(binReader);
@@ -877,7 +914,7 @@ public class Map : ScriptableObject {
 
 		Debug.Log("reading ExtendedDataBlocks");
 
-		int iNumExtendedDataBlocks = ReadInt(binReader);
+		int iNumExtendedDataBlocks = (short) ReadInt(binReader);
 		Debug.Log("iNumExtendedDataBlocks = " + iNumExtendedDataBlocks);
 		for(short iBlock = 0; iBlock < iNumExtendedDataBlocks; iBlock++)
 		{
@@ -887,7 +924,10 @@ public class Map : ScriptableObject {
 			short iNumSettings = ReadByteAsShort(binReader);
 			Debug.Log("ExtendedDataBlocks ("+iNumSettings+") : x=" + iCol + ", y=" + iRow);
 			for(short iSetting = 0; iSetting < iNumSettings; iSetting++)
+			{
+//				objectdata[iCol,iRow] = new MapBlock();
 				objectdata[iCol,iRow].iSettings[iSetting] = ReadByteAsShort(binReader);
+			}
 		}
 
 		Debug.Log("reading RaceGoals");
@@ -895,24 +935,30 @@ public class Map : ScriptableObject {
 		//read mode item locations like flags and race goals
 		iNumRaceGoals = (short)ReadInt(binReader);
 		Debug.Log("iNumRaceGoals = " + iNumRaceGoals);
-		
-		racegoallocations = new Vector2[Globals.MAXRACEGOALS];
-		for(int j = 0; j < iNumRaceGoals; j++)
+		if(iNumRaceGoals >0)
 		{
-			racegoallocations[j].x = (short)ReadInt(binReader);
-			racegoallocations[j].y = (short)ReadInt(binReader);
+			racegoallocations = new Vector2[Globals.MAXRACEGOALS];
+			for(int j = 0; j < iNumRaceGoals; j++)
+			{
+				racegoallocations[j] = new Vector2();
+				racegoallocations[j].x = (short)ReadInt(binReader);
+				racegoallocations[j].y = (short)ReadInt(binReader);
+			}
 		}
 
 		Debug.Log("reading FlagBases");
 
 		iNumFlagBases = (short)ReadInt(binReader);
 		Debug.Log("iNumFlagBases = " + iNumFlagBases);
-		
-		flagbaselocations = new Vector2[Globals.MAXFLAGBASES];
-		for(int j = 0; j < iNumFlagBases; j++)
+		if(iNumFlagBases > 0)
 		{
-			flagbaselocations[j].x = (short)ReadInt(binReader);
-			flagbaselocations[j].y = (short)ReadInt(binReader);
+			flagbaselocations = new Vector2[Globals.MAXFLAGBASES];
+			for(int j = 0; j < iNumFlagBases; j++)
+			{
+				flagbaselocations[j] = new Vector2();
+				flagbaselocations[j].x = (short)ReadInt(binReader);
+				flagbaselocations[j].y = (short)ReadInt(binReader);
+			}
 		}
 	}
 
@@ -924,7 +970,7 @@ public class Map : ScriptableObject {
 
 		// Load moving platforms
 		iNumPlatforms = (short) ReadInt(binReader);
-		Debug.Log("iNumPlatforms = " + iNumPlatforms);
+		Debug.Log("<color=blue>iNumPlatforms = " + iNumPlatforms + "</color>");
 		platforms = new MovingPlatform[iNumPlatforms];
 
 		for(short iPlatform = 0; iPlatform < iNumPlatforms; iPlatform++)

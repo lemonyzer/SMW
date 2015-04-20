@@ -10,9 +10,10 @@ public class TilesetManager : ScriptableObject {
 
 	// bei Programmstart lade alle Tilesets
 	[SerializeField]
+	short iClassicTilesetIndex = 0;
+	[SerializeField]
 	List<Tileset> tilesetList;
-	Tileset tClassicTileset;
-	short iClassicTilesetIndex;
+//	Tileset tClassicTileset;
 
 	public void OnEnable()
 	{
@@ -37,10 +38,10 @@ public class TilesetManager : ScriptableObject {
 		
 		for(int i = 0; i < iLength; i++)
 		{
-			Debug.Log("Check:");
-			Debug.Log(tilesetList[i].tilesetName.ToLower()+"|");
-			Debug.Log(Name.ToLower()+"|");
-			Debug.Log(tilesetList[i].tilesetName.ToLower().Equals(Name.ToLower()) ? "<color=green>true</color>" : "<color=red>false</color>" );
+			Debug.Log((tilesetList[i].tilesetName.ToLower().Equals(Name.ToLower()) ? "<color=green>Check</color>" : "<color=red>Check</color>")+"\n"+
+			          tilesetList[i].tilesetName.ToLower()+"|"+"\n"+
+			          Name.ToLower()+"|"+"\n"+
+			          (tilesetList[i].tilesetName.ToLower().Equals(Name.ToLower()) ? "<color=green>true</color>" : "<color=red>false</color>") );
 			if(tilesetList[i].tilesetName.ToLower().Equals(Name.ToLower()))
 				return i;
 		}
@@ -50,12 +51,18 @@ public class TilesetManager : ScriptableObject {
 
 	public Tileset GetTileset(int index)
 	{
+		if(index < 0 || index > tilesetList.Count)
+		{
+			Debug.LogError(this.ToString() + " Index " + index + " > tilesetList.Count " + tilesetList.Count);
+			return null;
+//			return (int) Globals.TILESETUNKNOWN;
+		}
 		return tilesetList[index];
 	}
 
 	public Tileset GetClassicTileset()
 	{
-		return tClassicTileset;
+		return GetTileset(iClassicTilesetIndex);
 	}
 
 	public short GetClassicTilesetIndex()
