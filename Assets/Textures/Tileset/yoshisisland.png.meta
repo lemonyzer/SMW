@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 22573de7572a0ef4b8624e5e26b41e4d
-timeCreated: 1429497453
+timeCreated: 1429503789
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -238,7 +238,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_1
@@ -248,7 +248,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_2
@@ -258,7 +258,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_3
@@ -268,7 +268,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_4
@@ -278,7 +278,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_5
@@ -288,7 +288,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_6
@@ -298,7 +298,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_7
@@ -308,7 +308,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_8
@@ -318,7 +318,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_9
@@ -328,7 +328,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_10
@@ -338,7 +338,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_11
@@ -348,7 +348,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_12
@@ -358,7 +358,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_13
@@ -368,7 +368,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_14
@@ -378,7 +378,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_15
@@ -388,7 +388,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_16
@@ -398,7 +398,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_17
@@ -408,7 +408,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_18
@@ -418,7 +418,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_19
@@ -428,7 +428,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_20
@@ -438,7 +438,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_21
@@ -448,7 +448,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_22
@@ -458,7 +458,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_23
@@ -468,7 +468,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_24
@@ -478,7 +478,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_25
@@ -488,7 +488,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_26
@@ -498,7 +498,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_27
@@ -508,7 +508,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_28
@@ -518,7 +518,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_29
@@ -528,7 +528,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_30
@@ -538,7 +538,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_31
@@ -548,7 +548,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_32
@@ -558,7 +558,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_33
@@ -568,7 +568,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_34
@@ -578,7 +578,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_35
@@ -588,7 +588,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_36
@@ -598,7 +598,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_37
@@ -608,7 +608,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_38
@@ -618,7 +618,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_39
@@ -628,7 +628,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_40
@@ -638,7 +638,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_41
@@ -648,7 +648,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_42
@@ -658,7 +658,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_43
@@ -668,7 +668,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_44
@@ -678,7 +678,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_45
@@ -688,7 +688,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_46
@@ -698,7 +698,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_47
@@ -708,7 +708,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_48
@@ -718,7 +718,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_49
@@ -728,7 +728,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_50
@@ -738,7 +738,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_51
@@ -748,7 +748,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_52
@@ -758,7 +758,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_53
@@ -768,7 +768,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_54
@@ -778,7 +778,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_55
@@ -788,7 +788,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_56
@@ -798,7 +798,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_57
@@ -808,7 +808,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_58
@@ -818,7 +818,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_59
@@ -828,7 +828,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_60
@@ -838,7 +838,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_61
@@ -848,7 +848,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_62
@@ -858,7 +858,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_63
@@ -868,7 +868,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_64
@@ -878,7 +878,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_65
@@ -888,7 +888,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_66
@@ -898,7 +898,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_67
@@ -908,7 +908,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_68
@@ -918,7 +918,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_69
@@ -928,7 +928,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_70
@@ -938,7 +938,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_71
@@ -948,7 +948,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_72
@@ -958,7 +958,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_73
@@ -968,7 +968,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_74
@@ -978,7 +978,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_75
@@ -988,7 +988,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_76
@@ -998,7 +998,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_77
@@ -1008,7 +1008,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_78
@@ -1018,7 +1018,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_79
@@ -1028,7 +1028,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_80
@@ -1038,7 +1038,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_81
@@ -1048,7 +1048,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_82
@@ -1058,7 +1058,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_83
@@ -1068,7 +1068,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_84
@@ -1078,7 +1078,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_85
@@ -1088,7 +1088,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_86
@@ -1098,7 +1098,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_87
@@ -1108,7 +1108,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_88
@@ -1118,7 +1118,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_89
@@ -1128,7 +1128,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_90
@@ -1138,7 +1138,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_91
@@ -1148,7 +1148,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_92
@@ -1158,7 +1158,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_93
@@ -1168,7 +1168,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_94
@@ -1178,7 +1178,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_95
@@ -1188,7 +1188,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_96
@@ -1198,7 +1198,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_97
@@ -1208,7 +1208,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_98
@@ -1218,7 +1218,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_99
@@ -1228,7 +1228,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_100
@@ -1238,7 +1238,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_101
@@ -1248,7 +1248,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_102
@@ -1258,7 +1258,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_103
@@ -1268,7 +1268,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_104
@@ -1278,7 +1278,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_105
@@ -1288,7 +1288,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_106
@@ -1298,7 +1298,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_107
@@ -1308,7 +1308,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_108
@@ -1318,7 +1318,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_109
@@ -1328,7 +1328,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_110
@@ -1338,7 +1338,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_111
@@ -1348,7 +1348,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_112
@@ -1358,7 +1358,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_113
@@ -1368,7 +1368,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_114
@@ -1378,7 +1378,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_115
@@ -1388,7 +1388,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_116
@@ -1398,7 +1398,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_117
@@ -1408,7 +1408,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_118
@@ -1418,7 +1418,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_119
@@ -1428,7 +1428,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_120
@@ -1438,7 +1438,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_121
@@ -1448,7 +1448,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_122
@@ -1458,7 +1458,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_123
@@ -1468,7 +1468,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_124
@@ -1478,7 +1478,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_125
@@ -1488,7 +1488,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_126
@@ -1498,7 +1498,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_127
@@ -1508,7 +1508,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_128
@@ -1518,7 +1518,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_129
@@ -1528,7 +1528,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_130
@@ -1538,7 +1538,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_131
@@ -1548,7 +1548,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_132
@@ -1558,7 +1558,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_133
@@ -1568,7 +1568,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_134
@@ -1578,7 +1578,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_135
@@ -1588,7 +1588,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_136
@@ -1598,7 +1598,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_137
@@ -1608,7 +1608,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_138
@@ -1618,7 +1618,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_139
@@ -1628,7 +1628,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_140
@@ -1638,7 +1638,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_141
@@ -1648,7 +1648,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_142
@@ -1658,7 +1658,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_143
@@ -1668,7 +1668,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_144
@@ -1678,7 +1678,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_145
@@ -1688,7 +1688,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_146
@@ -1698,7 +1698,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_147
@@ -1708,7 +1708,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_148
@@ -1718,7 +1718,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_149
@@ -1728,7 +1728,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_150
@@ -1738,7 +1738,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_151
@@ -1748,7 +1748,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_152
@@ -1758,7 +1758,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_153
@@ -1768,7 +1768,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_154
@@ -1778,7 +1778,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_155
@@ -1788,7 +1788,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_156
@@ -1798,7 +1798,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_157
@@ -1808,7 +1808,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_158
@@ -1818,7 +1818,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_159
@@ -1828,7 +1828,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_160
@@ -1838,7 +1838,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_161
@@ -1848,7 +1848,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_162
@@ -1858,7 +1858,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_163
@@ -1868,7 +1868,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_164
@@ -1878,7 +1878,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_165
@@ -1888,7 +1888,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_166
@@ -1898,7 +1898,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_167
@@ -1908,7 +1908,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_168
@@ -1918,7 +1918,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_169
@@ -1928,7 +1928,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_170
@@ -1938,7 +1938,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_171
@@ -1948,7 +1948,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_172
@@ -1958,7 +1958,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_173
@@ -1968,7 +1968,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_174
@@ -1978,7 +1978,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_175
@@ -1988,7 +1988,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_176
@@ -1998,7 +1998,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_177
@@ -2008,7 +2008,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_178
@@ -2018,7 +2018,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_179
@@ -2028,7 +2028,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_180
@@ -2038,7 +2038,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: yoshisisland_181
@@ -2048,7 +2048,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 

@@ -37,7 +37,11 @@ public class TilesetManager : ScriptableObject {
 		
 		for(int i = 0; i < iLength; i++)
 		{
-			if(!tilesetList[i].tilesetName.ToLower().Equals(Name.ToLower()))
+			Debug.Log("Check:");
+			Debug.Log(tilesetList[i].tilesetName.ToLower()+"|");
+			Debug.Log(Name.ToLower()+"|");
+			Debug.Log(tilesetList[i].tilesetName.ToLower().Equals(Name.ToLower()) ? "<color=green>true</color>" : "<color=red>false</color>" );
+			if(tilesetList[i].tilesetName.ToLower().Equals(Name.ToLower()))
 				return i;
 		}
 		

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: f454e1e9560cbf34d88a5d7cf3a0ac94
-timeCreated: 1429497509
+timeCreated: 1429503826
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -542,7 +542,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_1
@@ -552,7 +552,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_2
@@ -562,7 +562,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_3
@@ -572,7 +572,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_4
@@ -582,7 +582,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_5
@@ -592,7 +592,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_6
@@ -602,7 +602,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_7
@@ -612,7 +612,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_8
@@ -622,7 +622,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_9
@@ -632,7 +632,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_10
@@ -642,7 +642,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_11
@@ -652,7 +652,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_12
@@ -662,7 +662,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_13
@@ -672,7 +672,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_14
@@ -682,7 +682,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_15
@@ -692,7 +692,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_16
@@ -702,7 +702,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_17
@@ -712,7 +712,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_18
@@ -722,7 +722,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_19
@@ -732,7 +732,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_20
@@ -742,7 +742,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_21
@@ -752,7 +752,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_22
@@ -762,7 +762,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_23
@@ -772,7 +772,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_24
@@ -782,7 +782,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_25
@@ -792,7 +792,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_26
@@ -802,7 +802,7 @@ TextureImporter:
         y: 544
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_27
@@ -812,7 +812,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_28
@@ -822,7 +822,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_29
@@ -832,7 +832,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_30
@@ -842,7 +842,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_31
@@ -852,7 +852,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_32
@@ -862,7 +862,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_33
@@ -872,7 +872,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_34
@@ -882,7 +882,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_35
@@ -892,7 +892,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_36
@@ -902,7 +902,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_37
@@ -912,7 +912,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_38
@@ -922,7 +922,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_39
@@ -932,7 +932,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_40
@@ -942,7 +942,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_41
@@ -952,7 +952,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_42
@@ -962,7 +962,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_43
@@ -972,7 +972,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_44
@@ -982,7 +982,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_45
@@ -992,7 +992,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_46
@@ -1002,7 +1002,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_47
@@ -1012,7 +1012,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_48
@@ -1022,7 +1022,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_49
@@ -1032,7 +1032,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_50
@@ -1042,7 +1042,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_51
@@ -1052,7 +1052,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_52
@@ -1062,7 +1062,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_53
@@ -1072,7 +1072,7 @@ TextureImporter:
         y: 512
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_54
@@ -1082,7 +1082,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_55
@@ -1092,7 +1092,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_56
@@ -1102,7 +1102,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_57
@@ -1112,7 +1112,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_58
@@ -1122,7 +1122,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_59
@@ -1132,7 +1132,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_60
@@ -1142,7 +1142,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_61
@@ -1152,7 +1152,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_62
@@ -1162,7 +1162,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_63
@@ -1172,7 +1172,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_64
@@ -1182,7 +1182,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_65
@@ -1192,7 +1192,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_66
@@ -1202,7 +1202,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_67
@@ -1212,7 +1212,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_68
@@ -1222,7 +1222,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_69
@@ -1232,7 +1232,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_70
@@ -1242,7 +1242,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_71
@@ -1252,7 +1252,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_72
@@ -1262,7 +1262,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_73
@@ -1272,7 +1272,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_74
@@ -1282,7 +1282,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_75
@@ -1292,7 +1292,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_76
@@ -1302,7 +1302,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_77
@@ -1312,7 +1312,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_78
@@ -1322,7 +1322,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_79
@@ -1332,7 +1332,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_80
@@ -1342,7 +1342,7 @@ TextureImporter:
         y: 480
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_81
@@ -1352,7 +1352,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_82
@@ -1362,7 +1362,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_83
@@ -1372,7 +1372,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_84
@@ -1382,7 +1382,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_85
@@ -1392,7 +1392,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_86
@@ -1402,7 +1402,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_87
@@ -1412,7 +1412,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_88
@@ -1422,7 +1422,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_89
@@ -1432,7 +1432,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_90
@@ -1442,7 +1442,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_91
@@ -1452,7 +1452,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_92
@@ -1462,7 +1462,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_93
@@ -1472,7 +1472,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_94
@@ -1482,7 +1482,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_95
@@ -1492,7 +1492,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_96
@@ -1502,7 +1502,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_97
@@ -1512,7 +1512,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_98
@@ -1522,7 +1522,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_99
@@ -1532,7 +1532,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_100
@@ -1542,7 +1542,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_101
@@ -1552,7 +1552,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_102
@@ -1562,7 +1562,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_103
@@ -1572,7 +1572,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_104
@@ -1582,7 +1582,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_105
@@ -1592,7 +1592,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_106
@@ -1602,7 +1602,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_107
@@ -1612,7 +1612,7 @@ TextureImporter:
         y: 448
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_108
@@ -1622,7 +1622,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_109
@@ -1632,7 +1632,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_110
@@ -1642,7 +1642,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_111
@@ -1652,7 +1652,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_112
@@ -1662,7 +1662,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_113
@@ -1672,7 +1672,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_114
@@ -1682,7 +1682,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_115
@@ -1692,7 +1692,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_116
@@ -1702,7 +1702,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_117
@@ -1712,7 +1712,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_118
@@ -1722,7 +1722,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_119
@@ -1732,7 +1732,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_120
@@ -1742,7 +1742,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_121
@@ -1752,7 +1752,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_122
@@ -1762,7 +1762,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_123
@@ -1772,7 +1772,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_124
@@ -1782,7 +1782,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_125
@@ -1792,7 +1792,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_126
@@ -1802,7 +1802,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_127
@@ -1812,7 +1812,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_128
@@ -1822,7 +1822,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_129
@@ -1832,7 +1832,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_130
@@ -1842,7 +1842,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_131
@@ -1852,7 +1852,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_132
@@ -1862,7 +1862,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_133
@@ -1872,7 +1872,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_134
@@ -1882,7 +1882,7 @@ TextureImporter:
         y: 416
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_135
@@ -1892,7 +1892,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_136
@@ -1902,7 +1902,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_137
@@ -1912,7 +1912,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_138
@@ -1922,7 +1922,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_139
@@ -1932,7 +1932,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_140
@@ -1942,7 +1942,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_141
@@ -1952,7 +1952,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_142
@@ -1962,7 +1962,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_143
@@ -1972,7 +1972,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_144
@@ -1982,7 +1982,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_145
@@ -1992,7 +1992,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_146
@@ -2002,7 +2002,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_147
@@ -2012,7 +2012,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_148
@@ -2022,7 +2022,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_149
@@ -2032,7 +2032,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_150
@@ -2042,7 +2042,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_151
@@ -2052,7 +2052,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_152
@@ -2062,7 +2062,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_153
@@ -2072,7 +2072,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_154
@@ -2082,7 +2082,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_155
@@ -2092,7 +2092,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_156
@@ -2102,7 +2102,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_157
@@ -2112,7 +2112,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_158
@@ -2122,7 +2122,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_159
@@ -2132,7 +2132,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_160
@@ -2142,7 +2142,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_161
@@ -2152,7 +2152,7 @@ TextureImporter:
         y: 384
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_162
@@ -2162,7 +2162,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_163
@@ -2172,7 +2172,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_164
@@ -2182,7 +2182,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_165
@@ -2192,7 +2192,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_166
@@ -2202,7 +2202,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_167
@@ -2212,7 +2212,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_168
@@ -2222,7 +2222,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_169
@@ -2232,7 +2232,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_170
@@ -2242,7 +2242,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_171
@@ -2252,7 +2252,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_172
@@ -2262,7 +2262,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_173
@@ -2272,7 +2272,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_174
@@ -2282,7 +2282,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_175
@@ -2292,7 +2292,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_176
@@ -2302,7 +2302,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_177
@@ -2312,7 +2312,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_178
@@ -2322,7 +2322,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_179
@@ -2332,7 +2332,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_180
@@ -2342,7 +2342,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_181
@@ -2352,7 +2352,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_182
@@ -2362,7 +2362,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_183
@@ -2372,7 +2372,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_184
@@ -2382,7 +2382,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_185
@@ -2392,7 +2392,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_186
@@ -2402,7 +2402,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_187
@@ -2412,7 +2412,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_188
@@ -2422,7 +2422,7 @@ TextureImporter:
         y: 352
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_189
@@ -2432,7 +2432,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_190
@@ -2442,7 +2442,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_191
@@ -2452,7 +2452,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_192
@@ -2462,7 +2462,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_193
@@ -2472,7 +2472,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_194
@@ -2482,7 +2482,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_195
@@ -2492,7 +2492,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_196
@@ -2502,7 +2502,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_197
@@ -2512,7 +2512,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_198
@@ -2522,7 +2522,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_199
@@ -2532,7 +2532,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_200
@@ -2542,7 +2542,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_201
@@ -2552,7 +2552,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_202
@@ -2562,7 +2562,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_203
@@ -2572,7 +2572,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_204
@@ -2582,7 +2582,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_205
@@ -2592,7 +2592,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_206
@@ -2602,7 +2602,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_207
@@ -2612,7 +2612,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_208
@@ -2622,7 +2622,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_209
@@ -2632,7 +2632,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_210
@@ -2642,7 +2642,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_211
@@ -2652,7 +2652,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_212
@@ -2662,7 +2662,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_213
@@ -2672,7 +2672,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_214
@@ -2682,7 +2682,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_215
@@ -2692,7 +2692,7 @@ TextureImporter:
         y: 320
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_216
@@ -2702,7 +2702,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_217
@@ -2712,7 +2712,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_218
@@ -2722,7 +2722,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_219
@@ -2732,7 +2732,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_220
@@ -2742,7 +2742,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_221
@@ -2752,7 +2752,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_222
@@ -2762,7 +2762,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_223
@@ -2772,7 +2772,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_224
@@ -2782,7 +2782,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_225
@@ -2792,7 +2792,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_226
@@ -2802,7 +2802,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_227
@@ -2812,7 +2812,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_228
@@ -2822,7 +2822,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_229
@@ -2832,7 +2832,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_230
@@ -2842,7 +2842,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_231
@@ -2852,7 +2852,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_232
@@ -2862,7 +2862,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_233
@@ -2872,7 +2872,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_234
@@ -2882,7 +2882,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_235
@@ -2892,7 +2892,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_236
@@ -2902,7 +2902,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_237
@@ -2912,7 +2912,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_238
@@ -2922,7 +2922,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_239
@@ -2932,7 +2932,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_240
@@ -2942,7 +2942,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_241
@@ -2952,7 +2952,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_242
@@ -2962,7 +2962,7 @@ TextureImporter:
         y: 288
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_243
@@ -2972,7 +2972,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_244
@@ -2982,7 +2982,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_245
@@ -2992,7 +2992,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_246
@@ -3002,7 +3002,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_247
@@ -3012,7 +3012,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_248
@@ -3022,7 +3022,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_249
@@ -3032,7 +3032,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_250
@@ -3042,7 +3042,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_251
@@ -3052,7 +3052,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_252
@@ -3062,7 +3062,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_253
@@ -3072,7 +3072,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_254
@@ -3082,7 +3082,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_255
@@ -3092,7 +3092,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_256
@@ -3102,7 +3102,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_257
@@ -3112,7 +3112,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_258
@@ -3122,7 +3122,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_259
@@ -3132,7 +3132,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_260
@@ -3142,7 +3142,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_261
@@ -3152,7 +3152,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_262
@@ -3162,7 +3162,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_263
@@ -3172,7 +3172,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_264
@@ -3182,7 +3182,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_265
@@ -3192,7 +3192,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_266
@@ -3202,7 +3202,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_267
@@ -3212,7 +3212,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_268
@@ -3222,7 +3222,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_269
@@ -3232,7 +3232,7 @@ TextureImporter:
         y: 256
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_270
@@ -3242,7 +3242,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_271
@@ -3252,7 +3252,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_272
@@ -3262,7 +3262,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_273
@@ -3272,7 +3272,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_274
@@ -3282,7 +3282,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_275
@@ -3292,7 +3292,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_276
@@ -3302,7 +3302,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_277
@@ -3312,7 +3312,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_278
@@ -3322,7 +3322,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_279
@@ -3332,7 +3332,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_280
@@ -3342,7 +3342,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_281
@@ -3352,7 +3352,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_282
@@ -3362,7 +3362,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_283
@@ -3372,7 +3372,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_284
@@ -3382,7 +3382,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_285
@@ -3392,7 +3392,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_286
@@ -3402,7 +3402,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_287
@@ -3412,7 +3412,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_288
@@ -3422,7 +3422,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_289
@@ -3432,7 +3432,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_290
@@ -3442,7 +3442,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_291
@@ -3452,7 +3452,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_292
@@ -3462,7 +3462,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_293
@@ -3472,7 +3472,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_294
@@ -3482,7 +3482,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_295
@@ -3492,7 +3492,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_296
@@ -3502,7 +3502,7 @@ TextureImporter:
         y: 224
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_297
@@ -3512,7 +3512,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_298
@@ -3522,7 +3522,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_299
@@ -3532,7 +3532,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_300
@@ -3542,7 +3542,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_301
@@ -3552,7 +3552,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_302
@@ -3562,7 +3562,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_303
@@ -3572,7 +3572,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_304
@@ -3582,7 +3582,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_305
@@ -3592,7 +3592,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_306
@@ -3602,7 +3602,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_307
@@ -3612,7 +3612,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_308
@@ -3622,7 +3622,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_309
@@ -3632,7 +3632,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_310
@@ -3642,7 +3642,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_311
@@ -3652,7 +3652,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_312
@@ -3662,7 +3662,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_313
@@ -3672,7 +3672,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_314
@@ -3682,7 +3682,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_315
@@ -3692,7 +3692,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_316
@@ -3702,7 +3702,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_317
@@ -3712,7 +3712,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_318
@@ -3722,7 +3722,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_319
@@ -3732,7 +3732,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_320
@@ -3742,7 +3742,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_321
@@ -3752,7 +3752,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_322
@@ -3762,7 +3762,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_323
@@ -3772,7 +3772,7 @@ TextureImporter:
         y: 192
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_324
@@ -3782,7 +3782,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_325
@@ -3792,7 +3792,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_326
@@ -3802,7 +3802,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_327
@@ -3812,7 +3812,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_328
@@ -3822,7 +3822,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_329
@@ -3832,7 +3832,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_330
@@ -3842,7 +3842,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_331
@@ -3852,7 +3852,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_332
@@ -3862,7 +3862,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_333
@@ -3872,7 +3872,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_334
@@ -3882,7 +3882,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_335
@@ -3892,7 +3892,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_336
@@ -3902,7 +3902,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_337
@@ -3912,7 +3912,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_338
@@ -3922,7 +3922,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_339
@@ -3932,7 +3932,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_340
@@ -3942,7 +3942,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_341
@@ -3952,7 +3952,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_342
@@ -3962,7 +3962,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_343
@@ -3972,7 +3972,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_344
@@ -3982,7 +3982,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_345
@@ -3992,7 +3992,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_346
@@ -4002,7 +4002,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_347
@@ -4012,7 +4012,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_348
@@ -4022,7 +4022,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_349
@@ -4032,7 +4032,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_350
@@ -4042,7 +4042,7 @@ TextureImporter:
         y: 160
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_351
@@ -4052,7 +4052,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_352
@@ -4062,7 +4062,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_353
@@ -4072,7 +4072,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_354
@@ -4082,7 +4082,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_355
@@ -4092,7 +4092,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_356
@@ -4102,7 +4102,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_357
@@ -4112,7 +4112,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_358
@@ -4122,7 +4122,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_359
@@ -4132,7 +4132,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_360
@@ -4142,7 +4142,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_361
@@ -4152,7 +4152,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_362
@@ -4162,7 +4162,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_363
@@ -4172,7 +4172,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_364
@@ -4182,7 +4182,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_365
@@ -4192,7 +4192,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_366
@@ -4202,7 +4202,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_367
@@ -4212,7 +4212,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_368
@@ -4222,7 +4222,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_369
@@ -4232,7 +4232,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_370
@@ -4242,7 +4242,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_371
@@ -4252,7 +4252,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_372
@@ -4262,7 +4262,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_373
@@ -4272,7 +4272,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_374
@@ -4282,7 +4282,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_375
@@ -4292,7 +4292,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_376
@@ -4302,7 +4302,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_377
@@ -4312,7 +4312,7 @@ TextureImporter:
         y: 128
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_378
@@ -4322,7 +4322,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_379
@@ -4332,7 +4332,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_380
@@ -4342,7 +4342,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_381
@@ -4352,7 +4352,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_382
@@ -4362,7 +4362,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_383
@@ -4372,7 +4372,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_384
@@ -4382,7 +4382,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_385
@@ -4392,7 +4392,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_386
@@ -4402,7 +4402,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_387
@@ -4412,7 +4412,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_388
@@ -4422,7 +4422,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_389
@@ -4432,7 +4432,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_390
@@ -4442,7 +4442,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_391
@@ -4452,7 +4452,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_392
@@ -4462,7 +4462,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_393
@@ -4472,7 +4472,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_394
@@ -4482,7 +4482,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_395
@@ -4492,7 +4492,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_396
@@ -4502,7 +4502,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_397
@@ -4512,7 +4512,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_398
@@ -4522,7 +4522,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_399
@@ -4532,7 +4532,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_400
@@ -4542,7 +4542,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_401
@@ -4552,7 +4552,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_402
@@ -4562,7 +4562,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_403
@@ -4572,7 +4572,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_404
@@ -4582,7 +4582,7 @@ TextureImporter:
         y: 96
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_405
@@ -4592,7 +4592,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_406
@@ -4602,7 +4602,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_407
@@ -4612,7 +4612,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_408
@@ -4622,7 +4622,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_409
@@ -4632,7 +4632,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_410
@@ -4642,7 +4642,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_411
@@ -4652,7 +4652,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_412
@@ -4662,7 +4662,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_413
@@ -4672,7 +4672,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_414
@@ -4682,7 +4682,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_415
@@ -4692,7 +4692,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_416
@@ -4702,7 +4702,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_417
@@ -4712,7 +4712,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_418
@@ -4722,7 +4722,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_419
@@ -4732,7 +4732,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_420
@@ -4742,7 +4742,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_421
@@ -4752,7 +4752,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_422
@@ -4762,7 +4762,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_423
@@ -4772,7 +4772,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_424
@@ -4782,7 +4782,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_425
@@ -4792,7 +4792,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_426
@@ -4802,7 +4802,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_427
@@ -4812,7 +4812,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_428
@@ -4822,7 +4822,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_429
@@ -4832,7 +4832,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_430
@@ -4842,7 +4842,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_431
@@ -4852,7 +4852,7 @@ TextureImporter:
         y: 64
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_432
@@ -4862,7 +4862,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_433
@@ -4872,7 +4872,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_434
@@ -4882,7 +4882,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_435
@@ -4892,7 +4892,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_436
@@ -4902,7 +4902,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_437
@@ -4912,7 +4912,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_438
@@ -4922,7 +4922,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_439
@@ -4932,7 +4932,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_440
@@ -4942,7 +4942,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_441
@@ -4952,7 +4952,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_442
@@ -4962,7 +4962,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_443
@@ -4972,7 +4972,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_444
@@ -4982,7 +4982,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_445
@@ -4992,7 +4992,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_446
@@ -5002,7 +5002,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_447
@@ -5012,7 +5012,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_448
@@ -5022,7 +5022,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_449
@@ -5032,7 +5032,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_450
@@ -5042,7 +5042,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_451
@@ -5052,7 +5052,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_452
@@ -5062,7 +5062,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_453
@@ -5072,7 +5072,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_454
@@ -5082,7 +5082,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_455
@@ -5092,7 +5092,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_456
@@ -5102,7 +5102,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_457
@@ -5112,7 +5112,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_458
@@ -5122,7 +5122,7 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_459
@@ -5132,7 +5132,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_460
@@ -5142,7 +5142,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_461
@@ -5152,7 +5152,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_462
@@ -5162,7 +5162,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_463
@@ -5172,7 +5172,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_464
@@ -5182,7 +5182,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_465
@@ -5192,7 +5192,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_466
@@ -5202,7 +5202,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_467
@@ -5212,7 +5212,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_468
@@ -5222,7 +5222,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_469
@@ -5232,7 +5232,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_470
@@ -5242,7 +5242,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_471
@@ -5252,7 +5252,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_472
@@ -5262,7 +5262,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_473
@@ -5272,7 +5272,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_474
@@ -5282,7 +5282,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_475
@@ -5292,7 +5292,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_476
@@ -5302,7 +5302,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_477
@@ -5312,7 +5312,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_478
@@ -5322,7 +5322,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_479
@@ -5332,7 +5332,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_480
@@ -5342,7 +5342,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_481
@@ -5352,7 +5352,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_482
@@ -5362,7 +5362,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_483
@@ -5372,7 +5372,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_484
@@ -5382,7 +5382,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: smb2_485
@@ -5392,7 +5392,7 @@ TextureImporter:
         y: 0
         width: 32
         height: 32
-      alignment: 1
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 

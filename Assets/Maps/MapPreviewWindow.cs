@@ -12,7 +12,7 @@ public class MapPreviewWindow : EditorWindow {
 	static MapPreviewWindow currWindow;
 	TilesetManager g_TilesetManager;
 	Map m_CurrentMap;
-	bool w_UseAssetSubSpritesToggle = false;
+	bool w_UseAssetSubSpritesToggle = true;
 	string EP_TilesetManagerKey = "EP_tilesetManagerKey";
 //	string lastUsedTilesetManagerPath = "";
 	#endregion
@@ -185,7 +185,7 @@ public class MapPreviewWindow : EditorWindow {
 			return;
 		}
 
-		GameObject mapRootGO = new GameObject(mapSO.mapName);
+		GameObject mapRootGO = new GameObject(mapSO.mapName + (w_UseAssetSubSpritesToggle ? "_AssetSubSprites" : "_no"));
 		mapRootGO.transform.position = Vector3.zero;
 		for(int l=0; l<Globals.MAPLAYERS; l++)
 		{
@@ -210,8 +210,8 @@ public class MapPreviewWindow : EditorWindow {
 						Transform currentTileTransform = currentTileGO.transform;
 						currentTileTransform.SetParent(currentMapLayerGO.transform);
 						//currentTileTransform.position
-						Vector3 tilePos = new Vector3(-Globals.MAPWIDTH*0.5f +x,
-						                              Globals.MAPHEIGHT*0.5f -y,
+						Vector3 tilePos = new Vector3(-Globals.MAPWIDTH*0.5f +x,		// x+1: pivot Right , x+0.5f: pivor Center, x: pivot Left
+						                              Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
 						                              0f);
 						currentTileTransform.localPosition = tilePos;
 						SpriteRenderer currentSpriteRenderer = currentTileGO.AddComponent<SpriteRenderer>();

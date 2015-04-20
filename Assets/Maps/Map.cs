@@ -493,7 +493,11 @@ public class Map : ScriptableObject {
 			//TODO NOTE: char array in struct kann nicht direkt adressiert werden, kein Ahnung warum. ersetzt durch string.
 
 			translations[iTileset].Name = ReadString(Globals.TILESET_TRANSLATION_CSTRING_SIZE, binReader);
-			Debug.Log("\tTilesetName in struct object: " + translations[iTileset].Name + " TEEETSETETEST");
+			Debug.Log("\tTilesetName länge =" + translations[iTileset].Name.Length);
+			Debug.Log("\tTilesetName in class object: " + translations[iTileset].Name + " TEST ungeschnitten");
+			Debug.Log("\tTilesetName in class object: " + translations[iTileset].Name.Substring(0,translations[iTileset].Name.Length-1) + " TEST -1");
+			Debug.Log("\tTilesetName in class object: " + translations[iTileset].Name.Substring(0,translations[iTileset].Name.Length-2) + " TEST -2 ");
+			Debug.Log("\tTilesetName in class object: " + translations[iTileset].Name.Substring(0,translations[iTileset].Name.Length-3) + " TEST -3");
 			Debug.Log("\tiTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", Name = " + translations[iTileset].Name + ", iMaxTilesetID = " + iMaxTilesetID); 
 		}
 		
@@ -1577,13 +1581,26 @@ public class Map : ScriptableObject {
 		}
 		
 		//		char * szReadString = new char[iLen];
-		char[] szReadString = new char[iLen];
+		char[] szReadCString = new char[iLen];
 		
 		//		fread(szReadString, sizeof(Uint8), iLen, inFile);
-		szReadString = binReader.ReadChars(iLen);
+		szReadCString = binReader.ReadChars(iLen);
+
+		//		szReadString[iLen - 1] = 0;
+//		szReadCString[iLen - 1] = '\0';	 //cstring NULL Terminated ACHTUNG  BUG -> string wird dann null terminiert!!
+
+		string[] debugString = new string[2];
+		for(int i=0; i<iLen; i++)
+		{
+			debugString[0] += i +" ";
+			debugString[1] += szReadCString[i] +" ";
+		}
+		debugString[0] += "|";
+		debugString[1] += "|";
+		Debug.LogError(iLen + "\n" + debugString[0] + "\n" + debugString[1]);
 		
 		//		szReadString[iLen - 1] = 0;
-		szReadString[iLen - 1] = '\0';	// cstrin NULL Terminated 
+//		szReadString[iLen - 1] = '\0';	 cstrin NULL Terminated ACHTUNG  BUG -> string wird dann null terminiert!!
 		
 		//Prevent buffer overflow  5253784 5253928
 		//		strncpy(szString, szReadString, size - 1);		// -> size = TILESET_TRANSLATION_CSTRING_SIZE
@@ -1592,7 +1609,7 @@ public class Map : ScriptableObject {
 		/* copy to sized buffer (overflow safe): */ 
 		//strncpy ( str2, str1, sizeof(str2) );
 		
-		string readString = new string(szReadString);
+		string readString = new string(szReadCString).Trim('\0');		// WICHTIG entferne NULL Terminierung
 		
 //		Debug.Log("readString = " + readString);
 		

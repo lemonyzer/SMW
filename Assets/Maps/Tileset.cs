@@ -142,7 +142,7 @@ public class Tileset : ScriptableObject {
 		}
 		else
 		{
-			Debug.Log("Sub Sprite Pos " + subSpritePos + ", Tileset Array Length" + assets.Length);
+//			Debug.Log("Sub Sprite Pos " + subSpritePos + ", Tileset Array Length" + assets.Length);
 			Sprite sprite = new Sprite();
 			sprite = assets[subSpritePos] as Sprite;
 			return sprite;

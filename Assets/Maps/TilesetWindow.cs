@@ -63,9 +63,9 @@ public class TilesetWindow : EditorWindow {
 
 //	Sprite w_subTile = null;
 
-	SpriteAlignment w_TileSpriteAlignment = SpriteAlignment.TopLeft;
+	SpriteAlignment w_TileSpriteAlignment = SpriteAlignment.BottomLeft;
 	Sprite w_TilesetSprite = null;
-	Vector2 w_TilePivot = Vector2.zero;
+	Vector2 w_customTilePivotOffset = Vector2.zero;
 	int w_TilePixelWidth = 32;
 	int w_TilePixelHeight = 32;
 
@@ -86,8 +86,18 @@ public class TilesetWindow : EditorWindow {
 						GUILayout.Label("Tileset from Sprite", EditorStyles.boldLabel);
 //						EditorGUILayout.LabelField("Sprite");
 						w_TilesetSprite = EditorGUILayout.ObjectField("Sprite", w_TilesetSprite, typeof(Sprite), false,  GUILayout.ExpandWidth(true)) as Sprite;
+
+						bool current = GUI.enabled;
 						w_TileSpriteAlignment = (SpriteAlignment) EditorGUILayout.EnumPopup("Pivot", w_TileSpriteAlignment);
-						w_TilePivot = EditorGUILayout.Vector2Field("Tile Pivot", w_TilePivot);
+
+						if (w_TileSpriteAlignment != SpriteAlignment.Custom) {
+							// deaktiviere custom Offset
+							GUI.enabled = false;
+						}
+						// GUI: Custom Pivot
+						w_customTilePivotOffset = EditorGUILayout.Vector2Field("Custom Offset", w_customTilePivotOffset);
+						GUI.enabled = current;
+
 						w_TilePixelWidth = EditorGUILayout.IntField("Tile Width (px)", w_TilePixelWidth);
 						w_TilePixelHeight = EditorGUILayout.IntField("Tile Height (px)", w_TilePixelHeight);
 						if(w_TilesetSprite != null)
@@ -97,7 +107,7 @@ public class TilesetWindow : EditorWindow {
 							if (GUILayout.Button("Slice & Prepare Tileset Sprite", GUILayout.ExpandWidth(false)))
 							{
 								TextureImporter textureImporter = (TextureImporter) UnityEditor.TextureImporter.GetAtPath(AssetDatabase.GetAssetPath(w_TilesetSprite));
-								PerformMetaSlice(w_TilesetSprite.texture, textureImporter, w_TileSpriteAlignment, w_TilePivot, w_TilePixelWidth, w_TilePixelHeight, w_TilesetPixelPerUnit);
+								PerformMetaSlice(w_TilesetSprite.texture, textureImporter, w_TileSpriteAlignment, w_customTilePivotOffset, w_TilePixelWidth, w_TilePixelHeight, w_TilesetPixelPerUnit);
 							}
 							Color temp = GUI.color;
 							if(w_TilesetSprite.pixelsPerUnit == 32)
@@ -121,7 +131,7 @@ public class TilesetWindow : EditorWindow {
 						}
 						if (GUILayout.Button("Create Tileset from Sprite", GUILayout.ExpandWidth(false)))
 						{
-							currentTileset = Create(w_TilesetSprite, w_TilePivot);
+							currentTileset = Create(w_TilesetSprite, GetPivotValue(w_TileSpriteAlignment, w_customTilePivotOffset));
 //							EditorUtility.FocusProjectWindow();							<-- Satck Overflow
 //							Selection.activeObject = currentTileset;
 						}
@@ -206,6 +216,122 @@ public class TilesetWindow : EditorWindow {
 	}
 
 
+
+
+
+	private void PerformMetaSlice(Texture2D texture, TextureImporter spriteImporter, SpriteAlignment tileAlignment, Vector2 customTilePivot, int tilePixelWidth, int tilePixelHeight, int pixelPerUnity)
+	{
+		if(spriteImporter != null)
+		{
+			Debug.Log("PerformMetaSlice: " + spriteImporter.assetPath);
+			//			TextureImporter myImporter = null;
+			//			myImporter = TextureImporter.GetAtPath (AssetDatabase.GetAssetPath(sprite)) as TextureImporter ;
+			
+			bool failed = false;
+			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
+			
+			// falls multiple 
+			int numTilesX = Mathf.FloorToInt(texture.width / tilePixelWidth);
+			int numTilesY = Mathf.FloorToInt(texture.height / tilePixelHeight);
+
+			Debug.Log("Tileset width " + texture.width + " sliced in " + numTilesX + " Tiles");
+			Debug.Log("Tileset height " + texture.height + " sliced in " + numTilesY + " Tiles");
+
+			int i=0;	// subsprite name
+			for (int y=0; y<numTilesY; y++)
+			{
+				for (int x=0; x<numTilesX; x++)
+				{
+					try {
+						
+						SpriteMetaData spriteMetaData = new SpriteMetaData
+						{
+							alignment = (int)tileAlignment,
+							border = new Vector4(),
+							name = System.IO.Path.GetFileNameWithoutExtension(spriteImporter.assetPath) + "_" + i++,
+							pivot = GetPivotValue(tileAlignment, customTilePivot),
+							rect = new Rect(x*tilePixelWidth, texture.height-(y+1)*tilePixelHeight, tilePixelWidth, tilePixelHeight)
+						};
+						
+						// erhalte sliced Texture
+						//					slicedSprite[i] = Sprite.Create(unslicedSprite.texture, spriteMetaData.rect, spriteMetaData.pivot, pixelPerUnit);
+						
+						metaDataList.Add(spriteMetaData);
+						
+					}
+					catch (Exception exception) {
+						failed = true;
+						Debug.LogException(exception);
+					}
+				}
+//				if(y == 1)
+//					break;
+			}
+			
+			if (!failed) {
+				spriteImporter.spritePixelsPerUnit = pixelPerUnity;					// setze PixelPerUnit
+				spriteImporter.spriteImportMode = SpriteImportMode.Multiple; 		// setze MultipleMode
+				spriteImporter.spritesheet = metaDataList.ToArray();				// weiße metaDaten zu
+				
+				EditorUtility.SetDirty (spriteImporter);
+				
+				try
+				{
+					AssetDatabase.StartAssetEditing();
+					AssetDatabase.ImportAsset(spriteImporter.assetPath);
+				}
+				catch (Exception e)
+				{
+					Debug.LogError("wtf " + e.ToString());
+				}
+				finally
+				{
+					AssetDatabase.StopAssetEditing();
+					//					myImporter.SaveAndReimport();
+					//Close();
+				}
+			}
+			else
+			{
+				Debug.LogError( spriteImporter.assetPath + " failed");
+//				SpriteAssetInfo(spriteImporter);
+			}
+		}
+		else
+		{
+			Debug.LogError( " sprite == null");
+		}
+	}
+
+	public static Vector2 GetPivotValue(SpriteAlignment alignment, Vector2 customOffset)
+	{
+		switch (alignment)
+		{
+		case SpriteAlignment.Center:
+			return new Vector2(0.5f, 0.5f);
+		case SpriteAlignment.TopLeft:
+			return new Vector2(0.0f, 1f);
+		case SpriteAlignment.TopCenter:
+			return new Vector2(0.5f, 1f);
+		case SpriteAlignment.TopRight:
+			return new Vector2(1f, 1f);
+		case SpriteAlignment.LeftCenter:
+			return new Vector2(0.0f, 0.5f);
+		case SpriteAlignment.RightCenter:
+			return new Vector2(1f, 0.5f);
+		case SpriteAlignment.BottomLeft:
+			return new Vector2(0.0f, 0.0f);
+		case SpriteAlignment.BottomCenter:
+			return new Vector2(0.5f, 0.0f);
+		case SpriteAlignment.BottomRight:
+			return new Vector2(1f, 0.0f);
+		case SpriteAlignment.Custom:
+			return customOffset;
+		default:
+			return Vector2.zero;
+		}
+	}
+
 	private void PerformMetaSliceFromDownToTop(Texture2D texture, TextureImporter spriteImporter, SpriteAlignment tileAlignment, Vector2 tilePivot, int tilePixelWidth, int tilePixelHeight, int pixelPerUnity)
 	{
 		if(spriteImporter != null)
@@ -282,91 +408,6 @@ public class TilesetWindow : EditorWindow {
 			{
 				Debug.LogError( spriteImporter.assetPath + " failed");
 				//				SpriteAssetInfo(spriteImporter);
-			}
-		}
-		else
-		{
-			Debug.LogError( " sprite == null");
-		}
-	}
-
-
-	private void PerformMetaSlice(Texture2D texture, TextureImporter spriteImporter, SpriteAlignment tileAlignment, Vector2 tilePivot, int tilePixelWidth, int tilePixelHeight, int pixelPerUnity)
-	{
-		if(spriteImporter != null)
-		{
-			Debug.Log("PerformMetaSlice: " + spriteImporter.assetPath);
-			//			TextureImporter myImporter = null;
-			//			myImporter = TextureImporter.GetAtPath (AssetDatabase.GetAssetPath(sprite)) as TextureImporter ;
-			
-			bool failed = false;
-			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
-			
-			// falls multiple 
-			int numTilesX = Mathf.FloorToInt(texture.width / tilePixelWidth);
-			int numTilesY = Mathf.FloorToInt(texture.height / tilePixelHeight);
-
-			Debug.Log("Tileset width " + texture.width + " sliced in " + numTilesX + " Tiles");
-			Debug.Log("Tileset height " + texture.height + " sliced in " + numTilesY + " Tiles");
-
-			int i=0;	// subsprite name
-			for (int y=0; y<numTilesY; y++)
-			{
-				for (int x=0; x<numTilesX; x++)
-				{
-					try {
-						
-						SpriteMetaData spriteMetaData = new SpriteMetaData
-						{
-							alignment = (int)tileAlignment,
-							border = new Vector4(),
-							name = System.IO.Path.GetFileNameWithoutExtension(spriteImporter.assetPath) + "_" + i++,
-							pivot = tilePivot,
-							rect = new Rect(x*tilePixelWidth, texture.height-(y+1)*tilePixelHeight, tilePixelWidth, tilePixelHeight)
-						};
-						
-						// erhalte sliced Texture
-						//					slicedSprite[i] = Sprite.Create(unslicedSprite.texture, spriteMetaData.rect, spriteMetaData.pivot, pixelPerUnit);
-						
-						metaDataList.Add(spriteMetaData);
-						
-					}
-					catch (Exception exception) {
-						failed = true;
-						Debug.LogException(exception);
-					}
-				}
-//				if(y == 1)
-//					break;
-			}
-			
-			if (!failed) {
-				spriteImporter.spritePixelsPerUnit = pixelPerUnity;					// setze PixelPerUnit
-				spriteImporter.spriteImportMode = SpriteImportMode.Multiple; 		// setze MultipleMode
-				spriteImporter.spritesheet = metaDataList.ToArray();				// weiße metaDaten zu
-				
-				EditorUtility.SetDirty (spriteImporter);
-				
-				try
-				{
-					AssetDatabase.StartAssetEditing();
-					AssetDatabase.ImportAsset(spriteImporter.assetPath);
-				}
-				catch (Exception e)
-				{
-					Debug.LogError("wtf " + e.ToString());
-				}
-				finally
-				{
-					AssetDatabase.StopAssetEditing();
-					//					myImporter.SaveAndReimport();
-					//Close();
-				}
-			}
-			else
-			{
-				Debug.LogError( spriteImporter.assetPath + " failed");
-//				SpriteAssetInfo(spriteImporter);
 			}
 		}
 		else
