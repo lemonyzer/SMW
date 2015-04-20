@@ -153,10 +153,39 @@ public class SDL_Rect
 };
 
 [Serializable]
+public enum ImportErrorType {
+	version,
+	ReadingAutoFilterValues,
+	BuildingAutoFilter,
+	ReadingMapNumOfTilesets,
+	ReadingMapTilesetsInformations,
+	BuildTranlations,
+	ReadingMapDataAndObjectData,
+	ReadingBackgroundFileName,
+	ReadingSwitches,
+	ReadingPlatforms,
+	ReadingMapItems,
+	ReadingMapHazards,
+	ReadingEyeCandys,
+	ReadingMusicCategory,
+	ReadingWarpAndNoSpawnData,
+	ReadingSwitchBlockStateData,
+	ReadingWarpExitData,
+	ReadingSpawnAreaData,
+	ReadingDrawAreaData,
+	ReadingExtendedDataBlocks,
+	ReadingRaceGoalsData,
+	ReadingFlagBasesData,
+	NoError
+};
+
+[Serializable]
 public class Map : ScriptableObject {
 
 	[SerializeField]
 	public bool isImportSuccessful = false;
+	[SerializeField]
+	public ImportErrorType importError;
 
 	[SerializeField]
 	public string mapName = ""; 
@@ -243,7 +272,7 @@ public class Map : ScriptableObject {
 	[SerializeField]
 	short[] eyecandy; //= new short[Globals.NUMEYECANDY];
 	[SerializeField]
-	int musicCategoryID;
+	short musicCategoryID;
 
 	[SerializeField]
 	Warp[,] warpdata;//[MAPWIDTH][MAPHEIGHT];
@@ -357,19 +386,7 @@ public class Map : ScriptableObject {
 			return isImportSuccessful;
 		}
 
-		//Load version number
-		m_Version = new int[Globals.VERSIONLENGTH];
-		Debug.Log("version.length = " + m_Version.Length);
-		ReadIntChunk(m_Version, (uint)m_Version.Length, binReader);
-		string sversion = "";
-		for(int i=0; i<m_Version.Length; i++)
-		{
-			if(i != m_Version.Length -1)
-				sversion += m_Version[i] + ", ";  
-			else
-				sversion += m_Version[i];  
-		}
-		Debug.Log("Map Version = " + sversion);
+		m_Version = ReadingMapVersion(binReader, iReadType);
 
 		if(VersionIsEqualOrAfter(m_Version, 1, 8, 0, 0))
 		{
@@ -384,17 +401,17 @@ public class Map : ScriptableObject {
 			// Catch the EndOfStreamException and write an error message.
 			catch (EndOfStreamException e)
 			{
-				Debug.LogError("Error writing the data.\n" + e.GetType().Name);
+				Debug.LogError("Error reading the data.\n" + e.GetType().Name);
 			}
 			// Catch the EndOfStreamException and write an error message.
 			catch (ObjectDisposedException e)
 			{
-				Debug.LogError("Error writing the data.\n" + e.GetType().Name);
+				Debug.LogError("Error reading the data.\n" + e.GetType().Name);
 			}
 			// Catch the EndOfStreamException and write an error message.
 			catch (IOException e)
 			{
-				Debug.LogError("Error writing the data.\n" + e.GetType().Name);
+				Debug.LogError("Error reading the data.\n" + e.GetType().Name);
 			}
 			catch (Exception ex)
 			{
@@ -402,7 +419,10 @@ public class Map : ScriptableObject {
 			}
 			finally
 			{
-
+				if(importError != ImportErrorType.NoError)
+					Debug.LogError("ImportError = " + importError);
+				else
+					Debug.Log("ImportError = " + importError);
 			}
 		}
 
@@ -445,18 +465,9 @@ public class Map : ScriptableObject {
 			Debug.LogWarning("(preview)");
 
 		//Read summary information here
-		
-		int[] iAutoFilterValues = new int[Globals.NUM_AUTO_FILTERS + 1];
-		ReadIntChunk(iAutoFilterValues, Globals.NUM_AUTO_FILTERS + 1, binReader);
-		string autoFilterString = "";
-//		string flagAutoFilterString = "";
-		for(short iFilter = 0; iFilter < Globals.NUM_AUTO_FILTERS; iFilter++)
-		{
-//			Debug.Log("fAutoFilter["+iFilter+"] = " + iAutoFilterValues[iFilter] + " von " + fAutoFilter.Length);
-			fAutoFilter[iFilter] = iAutoFilterValues[iFilter] > 0;
-			autoFilterString += "["+iFilter+"]="+iAutoFilterValues[iFilter]+" ("+(fAutoFilter[iFilter] ? "1" : "0") + ")\t";
-		}
-		Debug.Log(autoFilterString);
+		importError = ImportErrorType.ReadingAutoFilterValues;
+		int[] iAutoFilterValues = ReadingAutoFilterValues(binReader, iReadType);
+		BuildingAutoFilter(binReader, iReadType, iAutoFilterValues);
 		
 		if(iReadType == ReadType.read_type_summary)
 		{
@@ -464,15 +475,126 @@ public class Map : ScriptableObject {
 //			binReader.Close();
 			return;
 		}
-
 		//clearPlatforms();
 
-		//Load tileset information
-		short iNumTilesets = (short) ReadInt(binReader);
+		importError = ImportErrorType.ReadingMapNumOfTilesets;
+		short iNumOfTilesets = ReadingMapNumOfTilesets(binReader, iReadType);
+		importError = ImportErrorType.ReadingMapTilesetsInformations;
+		short iMaxTilesetID = ReadingMapTilesetsInformations(binReader, iReadType, iNumOfTilesets);
+		
+		importError = ImportErrorType.BuildTranlations;
+		BuildTranlations(iNumOfTilesets, iMaxTilesetID, f_TilesetManager);
+		importError = ImportErrorType.ReadingMapDataAndObjectData;
+		ReadingMapDataAndObjectData(binReader, iReadType, iMaxTilesetID);
+		importError = ImportErrorType.ReadingBackgroundFileName;
+		ReadingBackgroundFileName(binReader, iReadType);
 
+		initSwitches();
+		importError = ImportErrorType.ReadingSwitches;
+		ReadingSwitches(binReader, iReadType);
+
+		bool fPreview;
+		if(iReadType == ReadType.read_type_preview)
+			fPreview = true;
+		else
+			fPreview = false;
+
+		importError = ImportErrorType.ReadingPlatforms;
+		loadPlatforms(binReader, fPreview, version, f_TilesetManager, translationid, tilesetwidths, tilesetheights, iMaxTilesetID);
+
+		//All tiles have been loaded so the translation is no longer needed
+		//		delete [] translationid;
+		//		delete [] tilesetwidths;
+		//		delete [] tilesetheights;
+		Debug.LogWarning("reading more MapData");
+		
+//		loadingRest(binReader, iReadType);
+		importError = ImportErrorType.ReadingMapItems;
+		ReadingMapItems(binReader, iReadType);
+		importError = ImportErrorType.ReadingMapHazards;
+		ReadingMapHazards(binReader, iReadType);
+		importError = ImportErrorType.ReadingEyeCandys;
+		ReadingEyeCandys(binReader, iReadType);
+		importError = ImportErrorType.ReadingMusicCategory;
+		ReadingMusicCategory(binReader, iReadType);
+		importError = ImportErrorType.ReadingWarpAndNoSpawnData;
+		ReadingWarpAndNoSpawnData(binReader, iReadType);
+		importError = ImportErrorType.ReadingSwitchBlockStateData;
+		ReadingSwitchBlockStateData(binReader, iReadType);
+		
+		if(iReadType == ReadType.read_type_preview)
+		{
+			Debug.LogWarning("ReadType.read_type_preview");
+			return;
+		}
+
+		importError = ImportErrorType.ReadingWarpExitData;
+		ReadingWarpExitData(binReader, iReadType);
+		importError = ImportErrorType.ReadingSpawnAreaData;
+		ReadingSpawnAreaData(binReader, iReadType);
+		importError = ImportErrorType.ReadingDrawAreaData;
+		ReadingDrawAreaData(binReader, iReadType);
+		importError = ImportErrorType.ReadingExtendedDataBlocks;
+		ReadingExtendedDataBlocks(binReader, iReadType);
+		importError = ImportErrorType.ReadingRaceGoalsData;
+		ReadingRaceGoalsData(binReader, iReadType);
+		importError = ImportErrorType.ReadingFlagBasesData;
+		ReadingFlagBasesData(binReader, iReadType);
+		importError = ImportErrorType.NoError;
+	}
+
+	int[] ReadingMapVersion(BinaryReader binReader, ReadType iReadType)
+	{
+		//Load version number
+		int[] f_Version = new int[Globals.VERSIONLENGTH];
+		Debug.Log("version.length = " + f_Version.Length);
+		ReadIntChunk(f_Version, (uint)f_Version.Length, binReader);
+		string sversion = "";
+		for(int i=0; i<f_Version.Length; i++)
+		{
+			if(i != f_Version.Length -1)
+				sversion += f_Version[i] + ", ";  
+			else
+				sversion += f_Version[i];  
+		}
+		Debug.Log("Map Version = " + sversion);
+		return f_Version;
+	}
+
+	int[] ReadingAutoFilterValues(BinaryReader binReader, ReadType iReadType)
+	{
+		int[] iAutoFilterValues = new int[Globals.NUM_AUTO_FILTERS + 1];
+		ReadIntChunk(iAutoFilterValues, Globals.NUM_AUTO_FILTERS + 1, binReader);
+		return iAutoFilterValues;
+	}
+
+	void BuildingAutoFilter(BinaryReader binReader, ReadType iReadType, int[] iAutoFilterValues)
+	{
+		string autoFilterString = "";
+		//		string flagAutoFilterString = "";
+		for(short iFilter = 0; iFilter < Globals.NUM_AUTO_FILTERS; iFilter++)
+		{
+			//			Debug.Log("fAutoFilter["+iFilter+"] = " + iAutoFilterValues[iFilter] + " von " + fAutoFilter.Length);
+			fAutoFilter[iFilter] = iAutoFilterValues[iFilter] > 0;
+			autoFilterString += "["+iFilter+"]="+iAutoFilterValues[iFilter]+" ("+(fAutoFilter[iFilter] ? "1" : "0") + ")\t";
+		}
+		Debug.Log(autoFilterString);
+	}
+
+	short ReadingMapNumOfTilesets(BinaryReader binReader, ReadType iReadType)
+	{
+		short iNumTilesets = (short) ReadInt(binReader);
+		return iNumTilesets;
+	}
+
+	short ReadingMapTilesetsInformations(BinaryReader binReader, ReadType iReadType, short iNumTilesets)
+	{
+		//Load tileset information
+//		short iNumTilesets = (short) ReadInt(binReader);
+		
 		Debug.Log("iNumTilesets = " + iNumTilesets + " Anzahl an Tileset Translations");
 		translations = new TilesetTranslation[iNumTilesets];
-
+		
 		short iMaxTilesetID = 0; //Figure out how big the translation array needs to be
 		for(short iTileset = 0; iTileset < iNumTilesets; iTileset++)
 		{
@@ -480,25 +602,25 @@ public class Map : ScriptableObject {
 			
 			short iTilesetID = (short) ReadInt(binReader);
 			Debug.Log("\tiTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", iMaxTilesetID = " + iMaxTilesetID);
-
+			
 			translations[iTileset] = new TilesetTranslation();
 			translations[iTileset].iTilesetID = iTilesetID;
 			
 			if(iTilesetID > iMaxTilesetID)
 				iMaxTilesetID = iTilesetID;
-
+			
 			// Funktioniert, erste Zeichen fehlt jedoch
 			// ReadString erwartet einen 7-Bit langen int-Wert der die länge des zu lesenden Strings angibt
-//			string tilesetName = ReadString(TILESET_TRANSLATION_CSTRING_SIZE,binReader);
-//			Debug.Log(tilesetName);
-
+			//			string tilesetName = ReadString(TILESET_TRANSLATION_CSTRING_SIZE,binReader);
+			//			Debug.Log(tilesetName);
+			
 			//TODO NOTE: char array in struct kann nicht direkt adressiert werden, kein Ahnung warum. ersetzt durch string.
-//			translation[iTileset].szName = new char[TILESET_TRANSLATION_CSTRING_SIZE];
-//			ReadString(translation[iTileset].szName, TILESET_TRANSLATION_CSTRING_SIZE, binReader);
-//			Debug.Log(new string(translation[iTileset].szName));
-//			Debug.Log("iTileset = " + iTileset + ", iID = " + iTilesetID + ", szName = " + new string(translation[iTileset].szName) + ", iMaxTilesetID = " + iMaxTilesetID); 
+			//			translation[iTileset].szName = new char[TILESET_TRANSLATION_CSTRING_SIZE];
+			//			ReadString(translation[iTileset].szName, TILESET_TRANSLATION_CSTRING_SIZE, binReader);
+			//			Debug.Log(new string(translation[iTileset].szName));
+			//			Debug.Log("iTileset = " + iTileset + ", iID = " + iTilesetID + ", szName = " + new string(translation[iTileset].szName) + ", iMaxTilesetID = " + iMaxTilesetID); 
 			//TODO NOTE: char array in struct kann nicht direkt adressiert werden, kein Ahnung warum. ersetzt durch string.
-
+			
 			translations[iTileset].Name = ReadString(Globals.TILESET_TRANSLATION_CSTRING_SIZE, binReader);
 			Debug.Log("\tTilesetName länge =" + translations[iTileset].Name.Length);
 			Debug.Log("\tTilesetName in class object: " + translations[iTileset].Name + " TEST ungeschnitten");
@@ -507,7 +629,10 @@ public class Map : ScriptableObject {
 			Debug.Log("\tTilesetName in class object: " + translations[iTileset].Name.Substring(0,translations[iTileset].Name.Length-3) + " TEST -3");
 			Debug.Log("\tiTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", Name = " + translations[iTileset].Name + ", iMaxTilesetID = " + iMaxTilesetID); 
 		}
-		
+		return iMaxTilesetID;
+	}
+	void BuildTranlations(int iNumTilesets, int iMaxTilesetID, TilesetManager f_TilesetManager)
+	{
 		translationid = new int[iMaxTilesetID + 1];
 		tilesetwidths = new int[iMaxTilesetID + 1];
 		tilesetheights = new int[iMaxTilesetID + 1];
@@ -516,9 +641,9 @@ public class Map : ScriptableObject {
 		{
 			short currentiTilesetID = translations[iTileset].iTilesetID;
 			tilesetIDs += "translation["+iTileset+"] -> TilesetID:" + currentiTilesetID + "\n"; 
-//			translationid[iID] = g_tilesetmanager.GetIndexFromName(translation[iTileset].szName);
+			//			translationid[iID] = g_tilesetmanager.GetIndexFromName(translation[iTileset].szName);
 			translationid[currentiTilesetID] = f_TilesetManager.GetIndexFromName(translations[iTileset].Name);
-
+			
 			if(translationid[currentiTilesetID] == (int) Globals.TILESETUNKNOWN)	//TODO achtung int cast
 			{
 				Debug.LogWarning("TILESETUNKNOWN found");
@@ -533,12 +658,13 @@ public class Map : ScriptableObject {
 			Debug.Log("Tileset " + translations[iTileset].Name + " width = " + tilesetwidths[currentiTilesetID] + ", height = " + tilesetheights[currentiTilesetID]);
 		}
 		Debug.Log(tilesetIDs);
-
+	}
+	void ReadingMapDataAndObjectData(BinaryReader binReader, ReadType iReadType, int iMaxTilesetID)
+	{
+		//2. load map data
 		mapdataCustom = new bool[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];
 		mapdata = new TilesetTile[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];	// mapdata, hier werden die eingelesenen Daten gespeichert
 		objectdata = new MapBlock[Globals.MAPWIDTH, Globals.MAPHEIGHT];
-
-		//2. load map data
 		int iColChanges = 0;
 		int iRowChanges = 0;
 		int iTilesetIDChanges = 0;
@@ -551,8 +677,8 @@ public class Map : ScriptableObject {
 			{
 				for(int l = 0; l < Globals.MAPLAYERS; l++)
 				{
-//					TilesetTile * tile = &mapdata[i][j][k];	// zeigt auf aktuelles Element in mapdata
-
+					//					TilesetTile * tile = &mapdata[i][j][k];	// zeigt auf aktuelles Element in mapdata
+					
 					mapdata[x, y, l] = new TilesetTile();
 					TilesetTile tile = mapdata[x, y, l];
 					tile.iTilesetID = ReadByteAsShort(binReader);
@@ -572,7 +698,7 @@ public class Map : ScriptableObject {
 								mapdataCustom[x,y,l] = true;
 							}
 							iTilesetIDChanges++;
-//							Debug.LogWarning("tile.iID = " + tile.iID + " > iMaxTilesetID = " + iMaxTilesetID + " => tile.iID = 0");
+							//							Debug.LogWarning("tile.iID = " + tile.iID + " > iMaxTilesetID = " + iMaxTilesetID + " => tile.iID = 0");
 							tile.iTilesetID = 0; //TODO
 						}
 						else
@@ -604,72 +730,41 @@ public class Map : ScriptableObject {
 				}
 				objectdata[x,y] = new MapBlock();
 				objectdata[x,y].iType = ReadByteAsShort(binReader);
-//				objectdata[x,y].iType = (short) ReadInt(binReader);
+				//				objectdata[x,y].iType = (short) ReadInt(binReader);
 				objectdata[x,y].fHidden = ReadBool(binReader);
-//				Debug.LogWarning("objectdata["+x+", "+y+"].fHidden = " + objectdata[x,y].fHidden.ToString()); 
+				//				Debug.LogWarning("objectdata["+x+", "+y+"].fHidden = " + objectdata[x,y].fHidden.ToString()); 
 			}
 		}
 		Debug.Log("<color=green> iTilesetIDOkCount : " + iTilesetIDOkCount + "</color>");
 		Debug.LogError("iTilesetIDChanges : " + iTilesetIDChanges + ", iColChanges:" + iColChanges +" iRowChanges: " + iRowChanges );
 		Debug.LogError("iTilesetNegativCount : " + iTilesetNegativCount);
-
-		Debug.LogWarning("reading and filling mapdata array DONE");
 		
+		Debug.LogWarning("reading and filling mapdata array DONE");
+	}
+	void ReadingBackgroundFileName(BinaryReader binReader, ReadType iReadType)
+	{
 		//Read in background to use
 		szBackgroundFile = ReadString(Globals.BACKGROUND_CSTRING_SIZE, binReader);
 		Debug.Log("BackgroundFile = " + szBackgroundFile);
-
-		initSwitches();
-
+	}
+	void ReadingSwitches(BinaryReader binReader, ReadType iReadType)
+	{
 		//Read on/off switches
 		string switchesString ="";
 		for(short iSwitch = 0; iSwitch < iSwitches.Length; iSwitch++)
 		{
 			iSwitches[iSwitch] = (short)ReadInt(binReader);
 			switchesString += "Switch["+iSwitch+"]="+iSwitches[iSwitch]+"\t";
-//			Debug.Log("readed iSwitches["+iSwitch+"] = " + iSwitches[iSwitch]);
+			//			Debug.Log("readed iSwitches["+iSwitch+"] = " + iSwitches[iSwitch]);
 		}
 		Debug.Log(switchesString);
-		
-
-		bool fPreview;
-		if(iReadType == ReadType.read_type_preview)
-			fPreview = true;
-		else
-			fPreview = false;
-
-
-		loadPlatforms(binReader, fPreview, version, f_TilesetManager, translationid, tilesetwidths, tilesetheights, iMaxTilesetID);
-
-		loadingRest(binReader, iReadType);
-		/*
-		readingMapItems(binReader, iReadType);
-		readingMapHazards(binReader, iReadType);
-		readingEyeCandys(binReader, iReadType);
-		readingMusicCategorie(binReader, iReadType);
-		readingWarpAndNoSpawnData(binReader, iReadType);
-		readingSwitchBlockStateData(binReader, iReadType);
-		readingWarpExitData(binReader, iReadType);
-		readingSpawnAreaData(binReader, iReadType);
-		readingDrawAreaData(binReader, iReadType);
-		readingExtendedDataBlocks(binReader, iReadType);
-		readingRaceGoalsData(binReader, iReadType);
-		readingFlagBasesData(binReader, iReadType);
-		*/
-
-		loadingRest(binReader, iReadType);
-
+	}
+	void ReadingPlatforms(BinaryReader binReader, ReadType iReadType)
+	{
 	}
 
-	void loadingRest(BinaryReader binReader, ReadType iReadType)
+	void ReadingMapItems(BinaryReader binReader, ReadType iReadType)
 	{
-		//All tiles have been loaded so the translation is no longer needed
-//		delete [] translationid;
-//		delete [] tilesetwidths;
-//		delete [] tilesetheights;
-
-		Debug.LogWarning("reading more MapData");
-
 		//Load map items (like carryable spikes and springs)
 		Debug.Log("reading MapItems");
 		iNumMapItems = (short) ReadInt(binReader);				 // begrenzen
@@ -685,7 +780,9 @@ public class Map : ScriptableObject {
 				mapItems[j].iy = (short) ReadInt(binReader);
 			}
 		}
-		
+	}
+	void ReadingMapHazards(BinaryReader binReader, ReadType iReadType)
+	{
 		//Load map hazards (like fireball strings, rotodiscs, pirhana plants)
 		Debug.Log("reading MapHazards");
 		iNumMapHazards = (short) ReadInt(binReader);			// begrenzen
@@ -706,9 +803,11 @@ public class Map : ScriptableObject {
 					mapHazards[iMapHazard].dparam[iParam] = ReadFloat(binReader);
 			}
 		}
-
+	}
+	void ReadingEyeCandys(BinaryReader binReader, ReadType iReadType)
+	{
 		eyecandy = new short[Globals.NUMEYECANDY];
-
+		
 		//For all layers if the map format supports it
 		if(VersionIsEqualOrAfter(m_Version, 1, 8, 0, 2))
 		{
@@ -718,39 +817,43 @@ public class Map : ScriptableObject {
 		
 		//Read in eyecandy to use
 		eyecandy[2] = (short)ReadInt(binReader);
-		
-		musicCategoryID = ReadInt(binReader);
-
+	}
+	void ReadingMusicCategory(BinaryReader binReader, ReadType iReadType)
+	{
+		musicCategoryID = (short) ReadInt(binReader);
+	}
+	void ReadingWarpAndNoSpawnData(BinaryReader binReader, ReadType iReadType)
+	{
 		if(mapdatatop == null)
 			mapdatatop = new MapTile[Globals.MAPWIDTH, Globals.MAPHEIGHT];	// wenn keine Platform in der map gefunden wurde ist Array nicht angelegt
-
+		
 		warpdata = new Warp[Globals.MAPWIDTH, Globals.MAPHEIGHT];
 		nospawn = new bool[Globals.NUMSPAWNAREATYPES, Globals.MAPWIDTH, Globals.MAPHEIGHT];
-
+		
 		for(int j = 0; j < Globals.MAPHEIGHT; j++)
 		{
 			for(int i = 0; i < Globals.MAPWIDTH; i++)
 			{
 				TileType iType = (TileType)ReadInt(binReader);
-
+				
 				mapdatatop[i,j] = new MapTile();
 				MapTile tile = mapdatatop[i,j];
-
+				
 				if(iType >= 0 && (int) iType < Globals.NUMTILETYPES)
 				{
-//					mapdatatop[i][j].iType = iType;
-//					mapdatatop[i][j].iFlags = g_iTileTypeConversion[iType];
+					//					mapdatatop[i][j].iType = iType;
+					//					mapdatatop[i][j].iFlags = g_iTileTypeConversion[iType];
 					tile.iType = iType;
 					tile.iFlags = Globals.g_iTileTypeConversion[(int)iType];
 				}
 				else
 				{
-//					mapdatatop[i][j].iType = tile_nonsolid;
-//					mapdatatop[i][j].iFlags = tile_flag_nonsolid;
+					//					mapdatatop[i][j].iType = tile_nonsolid;
+					//					mapdatatop[i][j].iFlags = tile_flag_nonsolid;
 					tile.iType = TileType.tile_nonsolid;
 					tile.iFlags = (int)TileTypeFlag.tile_flag_nonsolid;
 				}
-
+				
 				warpdata[i,j] = new Warp(); 
 				warpdata[i,j].direction = (short)ReadInt(binReader);
 				warpdata[i,j].connection = (short)ReadInt(binReader);
@@ -760,7 +863,9 @@ public class Map : ScriptableObject {
 					nospawn[z,i,j] = ReadBool(binReader);
 			}
 		}
-		
+	}
+	void ReadingSwitchBlockStateData(BinaryReader binReader, ReadType iReadType)
+	{
 		//Read switch block state data
 		int iNumSwitchBlockData = ReadInt(binReader);
 		if (iNumSwitchBlockData > 0)
@@ -773,15 +878,11 @@ public class Map : ScriptableObject {
 				objectdata[iCol,iRow].iSettings[0] = ReadByteAsShort(binReader);
 			}
 		}
-		
-		if(iReadType == ReadType.read_type_preview)
-		{
-			Debug.LogWarning("ReadType.read_type_preview");
-			return;
-		}
-		
+	}
+	void ReadingWarpExitData(BinaryReader binReader, ReadType iReadType)
+	{
 		maxConnection = 0;
-
+		
 		numwarpexits = (short)ReadInt(binReader);
 		warpexits = new WarpExit[Globals.MAXWARPS];
 		for(int i = 0; i < numwarpexits && i < Globals.MAXWARPS; i++)
@@ -816,10 +917,11 @@ public class Map : ScriptableObject {
 		
 		if(numwarpexits > Globals.MAXWARPS)
 			numwarpexits = Globals.MAXWARPS;
-
-		Debug.Log("numwarpexits = " + numwarpexits);
 		
-
+		Debug.Log("numwarpexits = " + numwarpexits);
+	}
+	void ReadingSpawnAreaData(BinaryReader binReader, ReadType iReadType)
+	{
 		//Read spawn areas
 		Debug.Log("Read spawn areas");
 		numspawnareas = new short[Globals.NUMSPAWNAREATYPES];
@@ -831,17 +933,17 @@ public class Map : ScriptableObject {
 			totalspawnsize[i] = 0;
 			numspawnareas[i] = (short)ReadInt(binReader);
 			numSpawnAreasString += "[" + i + "]=" + numspawnareas[i] + "\n";
-//			Debug.Log("numspawnareas["+i+"] = " + numspawnareas[i]);
+			//			Debug.Log("numspawnareas["+i+"] = " + numspawnareas[i]);
 			
 			if(numspawnareas[i] > Globals.MAXSPAWNAREAS)
 			{
 				Debug.LogError(" ERROR: Number of spawn areas (" + numspawnareas[i] + ") was greater than max allowed (" + Globals.MAXSPAWNAREAS + ")");
-//				cout << endl << " ERROR: Number of spawn areas (" << numspawnareas[i]
-//				<< ") was greater than max allowed (" << MAXSPAWNAREAS << ')'
-//					<< endl;
+				//				cout << endl << " ERROR: Number of spawn areas (" << numspawnareas[i]
+				//				<< ") was greater than max allowed (" << MAXSPAWNAREAS << ')'
+				//					<< endl;
 				return;
 			}
-
+			
 			string spawnAreaString = "";
 			for(int m = 0; m < numspawnareas[i]; m++)
 			{
@@ -875,9 +977,11 @@ public class Map : ScriptableObject {
 			}
 		}
 		Debug.Log(numSpawnAreasString);
-		
+	}
+	void ReadingDrawAreaData(BinaryReader binReader, ReadType iReadType)
+	{
 		Debug.Log("reading DrawAreas");
-
+		
 		//Read draw areas (foreground tiles drawing optimization)
 		numdrawareas = (short)ReadInt(binReader);
 		Debug.Log("numdrawareas = " + numdrawareas);
@@ -885,18 +989,18 @@ public class Map : ScriptableObject {
 		if(numdrawareas > Globals.MAXDRAWAREAS)
 		{
 			Debug.LogError(" ERROR: Number of spawn areas (" + numdrawareas + ") was greater than max allowed (" + Globals.MAXDRAWAREAS + ")");
-//			cout << endl << " ERROR: Number of draw areas (" << numdrawareas
-//				<< ") was greater than max allowed (" << MAXDRAWAREAS << ')'
-//					<< endl;
+			//			cout << endl << " ERROR: Number of draw areas (" << numdrawareas
+			//				<< ") was greater than max allowed (" << MAXDRAWAREAS << ')'
+			//					<< endl;
 			return;
 		}
-
-//		Rect[] test = new Rect[23];
-//		test[0].x;
-//		test[0].y;
-//		test[0].width;
-//		test[0].height;
-
+		
+		//		Rect[] test = new Rect[23];
+		//		test[0].x;
+		//		test[0].y;
+		//		test[0].width;
+		//		test[0].height;
+		
 		//Load rects to help optimize drawing the foreground
 		drawareas = new SDL_Rect[Globals.MAXDRAWAREAS];
 		for(int m = 0; m < numdrawareas; m++)
@@ -906,14 +1010,16 @@ public class Map : ScriptableObject {
 			drawareas[m].y = (short)ReadInt(binReader);
 			drawareas[m].w = (ushort)ReadInt(binReader);
 			drawareas[m].h = (ushort)ReadInt(binReader);
-//			drawareas[m].x = (Sint16)ReadInt(binReader);
-//			drawareas[m].y = (Sint16)ReadInt(binReader);
-//			drawareas[m].w = (Uint16)ReadInt(binReader);
-//			drawareas[m].h = (Uint16)ReadInt(binReader);
+			//			drawareas[m].x = (Sint16)ReadInt(binReader);
+			//			drawareas[m].y = (Sint16)ReadInt(binReader);
+			//			drawareas[m].w = (Uint16)ReadInt(binReader);
+			//			drawareas[m].h = (Uint16)ReadInt(binReader);
 		}
-
+	}
+	void ReadingExtendedDataBlocks(BinaryReader binReader, ReadType iReadType)
+	{
 		Debug.Log("reading ExtendedDataBlocks");
-
+		
 		int iNumExtendedDataBlocks = (short) ReadInt(binReader);
 		Debug.Log("iNumExtendedDataBlocks = " + iNumExtendedDataBlocks);
 		for(short iBlock = 0; iBlock < iNumExtendedDataBlocks; iBlock++)
@@ -925,13 +1031,15 @@ public class Map : ScriptableObject {
 			Debug.Log("ExtendedDataBlocks ("+iNumSettings+") : x=" + iCol + ", y=" + iRow);
 			for(short iSetting = 0; iSetting < iNumSettings; iSetting++)
 			{
-//				objectdata[iCol,iRow] = new MapBlock();
+				//				objectdata[iCol,iRow] = new MapBlock();
 				objectdata[iCol,iRow].iSettings[iSetting] = ReadByteAsShort(binReader);
 			}
 		}
-
+	}
+	void ReadingRaceGoalsData(BinaryReader binReader, ReadType iReadType)
+	{
 		Debug.Log("reading RaceGoals");
-
+		
 		//read mode item locations like flags and race goals
 		iNumRaceGoals = (short)ReadInt(binReader);
 		Debug.Log("iNumRaceGoals = " + iNumRaceGoals);
@@ -945,9 +1053,11 @@ public class Map : ScriptableObject {
 				racegoallocations[j].y = (short)ReadInt(binReader);
 			}
 		}
-
+	}
+	void ReadingFlagBasesData(BinaryReader binReader, ReadType iReadType)
+	{
 		Debug.Log("reading FlagBases");
-
+		
 		iNumFlagBases = (short)ReadInt(binReader);
 		Debug.Log("iNumFlagBases = " + iNumFlagBases);
 		if(iNumFlagBases > 0)
@@ -980,20 +1090,6 @@ public class Map : ScriptableObject {
 			Debug.Log("iPlatform = " + iPlatform + ", iWidth = " + iWidth);
 			Debug.Log("iPlatform = " + iPlatform + ", iHeight = " + iHeight);
 
-//			TilesetTile[,] tiles = new TilesetTile[iWidth, iHeight];
-//			MapTile[,] types = new MapTile[iWidth, iHeight];
-//
-//
-//			for(short iCol = 0; iCol < iWidth; iCol++)
-//			{
-//				tiles[iCol] = new TilesetTile[iHeight];
-//				types[iCol] = new MapTile[iHeight];
-//				
-//				for(short iRow = 0; iRow < iHeight; iRow++)
-//				{
-//					//TilesetTile * tile = &tiles[iCol][iRow];
-//					TilesetTile tile = tiles[iCol][iRow];
-
 			platformTiles = new TilesetTile[iWidth, iHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
 			platformTileTypes = new MapTile[iWidth, iHeight];
 
@@ -1002,8 +1098,6 @@ public class Map : ScriptableObject {
 			for(short iCol = 0; iCol < iWidth; iCol++)
 			{
 				Debug.Log("Platform iCol = " + iCol);
-//				tiles[iCol] = new TilesetTile[iHeight];
-//				types[iCol] = new MapTile[iHeight];
 
 				for(short iRow = 0; iRow < iHeight; iRow++)
 				{
@@ -1015,18 +1109,6 @@ public class Map : ScriptableObject {
 					tile = new TilesetTile();
 					platformTileTypes[iCol,iRow] = new MapTile();
 					mapdatatop[iCol,iRow] = new MapTile();
-//			TilesetTile[][] tiles = new TilesetTile[iWidth][];
-//			MapTile[][] types = new MapTile[iWidth][];
-
-//			for(short iCol = 0; iCol < iWidth; iCol++)
-//			{
-//				tiles[iCol] = new TilesetTile[iHeight];
-//				types[iCol] = new MapTile[iHeight];
-//
-//				for(short iRow = 0; iRow < iHeight; iRow++)
-//				{
-//					//TilesetTile * tile = &tiles[iCol][iRow];
-//					TilesetTile tile = tiles[iCol][iRow];
 
 					if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
 					{
