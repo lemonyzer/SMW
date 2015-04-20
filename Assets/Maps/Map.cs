@@ -61,10 +61,32 @@ public class MovingPlatform {
 	public int iTileWidth;
 	[SerializeField]
 	public int iTileHeight;
+	[SerializeField]
+	public MovingPlatformPath path;
+	[SerializeField]
+	public TilesetTile[,] platformTiles;
+	[SerializeField]
+	public MapTile[,] platformTileTypes;
+//	[SerializeField]
+//	public short iWidth;
+//	[SerializeField]
+//	public short iHeight;
+	[SerializeField]
+	public short iDrawLayer;
+	[SerializeField]
+	public bool fPreview;
 	
-	public MovingPlatform()
+	public MovingPlatform(TilesetTile[,] platformTiles, MapTile[,] platformTileTypes, short iWidth, short iHeight, short iDrawLayer, MovingPlatformPath path, bool fPreview)
 	{
-		
+		this.platformTiles = platformTiles;
+		this.platformTileTypes = platformTileTypes;
+		this.iTileWidth = iWidth;
+		this.iTileHeight = iHeight;
+//		this.iWidth = iWidth;
+//		this.iHeight = iHeight;
+		this.iDrawLayer = iDrawLayer;
+		this.path = path;
+		this.fPreview = fPreview;
 	}
 	
 }
@@ -84,6 +106,20 @@ public class MovingPlatformPath {
 	public float endY;
 	[SerializeField]
 	public bool preview;
+
+	[SerializeField]
+	public float angle;
+
+	[SerializeField]
+	public float dAngle;
+	[SerializeField]
+	public float dRadiusX;
+	[SerializeField]
+	public float dRadiusY;
+	[SerializeField]
+	public float dCenterX;
+	[SerializeField]
+	public float dCenterY;
 	
 	public MovingPlatformPath(float vel, float startX, float startY, float endX, float endY, bool preview)
 	{
@@ -94,31 +130,68 @@ public class MovingPlatformPath {
 		this.endY = endY;
 		this.preview = preview;
 	}
+
+	public MovingPlatformPath(float vel, float startX, float startY, float angle, bool preview)
+	{
+		this.velocity = vel;
+		this.startX = startX;
+		this.startY = startY;
+		this.angle = angle;
+		this.preview = preview;
+	}
+
+	public MovingPlatformPath (float vel, float dAngle, float dRadiusX, float dRadiusY, float dCenterX, float dCenterY, bool preview)
+	{
+		this.velocity = vel;
+		this.dAngle = dAngle;
+		this.dRadiusX = dRadiusX;
+		this.dRadiusY = dRadiusY;
+		this.dCenterX = dCenterX;
+		this.dCenterY = dCenterY;
+		this.preview = preview;
+	}
+
+	public MovingPlatformPath (float startX, float startY)
+	{
+		this.startX = startX;
+		this.startY = startY;
+	}
 }
 
 [Serializable]
 public class StraightPath : MovingPlatformPath {
 	
-	[SerializeField]
-	public float velocity;
-	[SerializeField]
-	public float startX;
-	[SerializeField]
-	public float startY;
-	[SerializeField]
-	public float endX;
-	[SerializeField]
-	public float endY;
-	[SerializeField]
-	public bool preview;
+//	[SerializeField]
+//	public float velocity;
+//	[SerializeField]
+//	public float startX;
+//	[SerializeField]
+//	public float startY;
+//	[SerializeField]
+//	public float endX;
+//	[SerializeField]
+//	public float endY;
+//	[SerializeField]
+//	public bool preview;
 	
-	public StraightPath(float vel, float startX, float startY, float endX, float endY, bool preview)
+	public StraightPath(float vel, float startX, float startY, float endX, float endY, bool preview) : 
+		base (vel, startX, startY, endX, endY, preview)
 	{
 		this.velocity = vel;
 		this.startX = startX;
 		this.startY = startY;
 		this.endX = endX;
 		this.endY = endY;
+		this.preview = preview;
+	}
+
+	public StraightPath(float vel, float startX, float startY, float angle, bool preview) : 
+		base (vel, startX, startY, angle, preview)
+	{
+		this.velocity = vel;
+		this.startX = startX;
+		this.startY = startY;
+		this.angle = angle;
 		this.preview = preview;
 	}
 }
@@ -126,26 +199,26 @@ public class StraightPath : MovingPlatformPath {
 [Serializable]
 public class StraightPathContinuous : StraightPath {
 	
-	[SerializeField]
-	public float velocity;
-	[SerializeField]
-	public float startX;
-	[SerializeField]
-	public float startY;
-	[SerializeField]
-	public float endX;
-	[SerializeField]
-	public float endY;
-	[SerializeField]
-	public bool preview;
+//	[SerializeField]
+//	public float velocity;
+//	[SerializeField]
+//	public float startX;
+//	[SerializeField]
+//	public float startY;
+//	[SerializeField]
+//	public float endX;
+//	[SerializeField]
+//	public float endY;
+//	[SerializeField]
+//	public bool preview;
 	
-	public StraightPathContinuous(float vel, float startX, float startY, float angle, bool preview)
+	public StraightPathContinuous(float vel, float startX, float startY, float angle, bool preview) : 
+		base (vel, startX, startY, angle, preview)
 	{
 		this.velocity = vel;
 		this.startX = startX;
 		this.startY = startY;
-		this.endX = endX;
-		this.endY = endY;
+		this.angle = angle;
 		this.preview = preview;
 	}
 }
@@ -153,26 +226,39 @@ public class StraightPathContinuous : StraightPath {
 [Serializable]
 public class EllipsePath : MovingPlatformPath {
 	
-	[SerializeField]
-	public float velocity;
-	[SerializeField]
-	public float startX;
-	[SerializeField]
-	public float startY;
-	[SerializeField]
-	public float endX;
-	[SerializeField]
-	public float endY;
-	[SerializeField]
-	public bool preview;
+//	[SerializeField]
+//	public float velocity;
+//	[SerializeField]
+//	public float startX;
+//	[SerializeField]
+//	public float startY;
+//	[SerializeField]
+//	public float endX;
+//	[SerializeField]
+//	public float endY;
+//	[SerializeField]
+//	public bool preview;
+
+//	[SerializeField]
+//	float dAngle;
+//	[SerializeField]
+//	float dRadiusX;
+//	[SerializeField]
+//	float dRadiusY;
+//	[SerializeField]
+//	float dCenterX;
+//	[SerializeField]
+//	float dCenterY;
 	
-	public EllipsePath (float vel, float dAngle, float dRadiusX, float dRadiusY, float dCenterX, float dCenterY, bool preview)
+	public EllipsePath (float vel, float dAngle, float dRadiusX, float dRadiusY, float dCenterX, float dCenterY, bool preview) : 
+		base (vel, dAngle, dRadiusX, dRadiusY, dCenterX, dCenterY, preview)
 	{
 		this.velocity = vel;
-		this.startX = startX;
-		this.startY = startY;
-		this.endX = endX;
-		this.endY = endY;
+		this.dAngle = dAngle;
+		this.dRadiusX = dRadiusX;
+		this.dRadiusY = dRadiusY;
+		this.dCenterX = dCenterX;
+		this.dCenterY = dCenterY;
 		this.preview = preview;
 	}
 }
@@ -185,7 +271,7 @@ public class FallingPath : MovingPlatformPath {
 	[SerializeField]
 	public float startY;
 	
-	public FallingPath (float startX, float startY)
+	public FallingPath (float startX, float startY) : base (startX, startY)
 	{
 		this.startX = startX;
 		this.startY = startY;
@@ -348,19 +434,34 @@ public class Map : ScriptableObject {
 
 	[SerializeField]
 	int[] m_Version = new int[] {0, 0, 0, 0};
+
+	[SerializeField]
+	bool[] fAutoFilter = new bool[Globals.NUM_AUTO_FILTERS];
+
+	[SerializeField]
+	public TilesetTranslation[] translations;
+	
+	[SerializeField]
+	public int[] translationid;
+	[SerializeField]
+	public int[] tilesetwidths;
+	[SerializeField]
+	public int[] tilesetheights;
+	
+	[SerializeField]
+	short[] iSwitches;
+
 //	int[] g_iVersion = new int[] {0, 0, 0, 0};
 //	[SerializeField]
 //	TilesetManager m_TilesetManager;
 //	public List<Tileset> m_Tileset;
-
-	[SerializeField]
-	int iNumPlatforms = 0;
-	[SerializeField]
-	int iPlatformCount = 0;
-	[SerializeField]
-	int iHazardCount = 0;
-	[SerializeField]
-	int iIceCount = 0;
+	
+//	[SerializeField]
+//	int iPlatformCount = 0;
+//	[SerializeField]
+//	int iHazardCount = 0;
+//	[SerializeField]
+//	int iIceCount = 0;
 
 	//	TilesetTile	mapdata[MAPWIDTH][MAPHEIGHT][MAPLAYERS];
 	//	MapTile		mapdatatop[MAPWIDTH][MAPHEIGHT];
@@ -378,24 +479,32 @@ public class Map : ScriptableObject {
 	MapBlock[,] objectdata;		// ka.
 
 	[SerializeField]
+	string szBackgroundFile;
+
+	[SerializeField]
+	int iNumPlatforms = 0;
+	[SerializeField]
+	MovingPlatform[] platforms;
+
+	[SerializeField]
 	TilesetTile[,] platformTiles;
 	[SerializeField]
 	MapTile[,] platformTileTypes;
 
 	[SerializeField]
-	int iNumMapItems;
+	int iNumMapItems = 0;
 	[SerializeField]
 	MapItem[] mapItems;
 
 	[SerializeField]
-	int iNumMapHazards;
+	int iNumMapHazards = 0;
 	[SerializeField]
 	MapHazard[] mapHazards;
 
 	[SerializeField]
 	short[] eyecandy; //= new short[Globals.NUMEYECANDY];
 	[SerializeField]
-	short musicCategoryID;
+	short musicCategoryID = 0;
 
 	[SerializeField]
 	Warp[,] warpdata;//[MAPWIDTH][MAPHEIGHT];
@@ -435,28 +544,11 @@ public class Map : ScriptableObject {
 
 	
 //	IO_Block[,] blockdata;
-	[SerializeField]
-	bool[] fAutoFilter = new bool[Globals.NUM_AUTO_FILTERS];
+
 
 //	char szBackgroundFile[128];	// BACKGROUND_CSTRING_SIZE
-	[SerializeField]
-	string szBackgroundFile;
 
-	[SerializeField]
-	public TilesetTranslation[] translations;
 
-	[SerializeField]
-	public int[] translationid;
-	[SerializeField]
-	public int[] tilesetwidths;
-	[SerializeField]
-	public int[] tilesetheights;
-
-	[SerializeField]
-	short[] iSwitches;
-	
-	[SerializeField]
-	MovingPlatform[] platforms;
 	[SerializeField]
 	List<MovingPlatform> platformsList = new List<MovingPlatform>();
 
@@ -1681,38 +1773,38 @@ public class Map : ScriptableObject {
 		}
 	}
 
-	void saveMap(string filePath)
-	{
-		FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate);
-		BinaryWriter binWriter = new BinaryWriter(fs);
-
-		//First write the map compatibility version number 
-		//(this will allow the map loader to identify if the map needs conversion)
-		WriteInt(Globals.version[0], binWriter); //Major
-		WriteInt(Globals.version[1], binWriter); //Minor
-		WriteInt(Globals.version[2], binWriter); //Micro
-		WriteInt(Globals.version[3], binWriter); //Build
-		
-		bool[,] usedtile = new bool[Globals.MAPWIDTH, Globals.MAPHEIGHT];
-
-		for(int iPlatform = 0; iPlatform < iNumPlatforms; iPlatform++)
-		{
-			for(short iCol = 0; iCol < platforms[iPlatform].iTileWidth; iCol++)
-			{
-				for(short iRow = 0; iRow < platforms[iPlatform].iTileHeight; iRow++)	
-				{
-					
-				}
-			}
-		}
-				
-		iPlatformCount++;
-		iHazardCount++;
-		iIceCount++;
-
-		binWriter.Close();
-		fs.Close();
-    }
+//	void saveMap(string filePath)
+//	{
+//		FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate);
+//		BinaryWriter binWriter = new BinaryWriter(fs);
+//
+//		//First write the map compatibility version number 
+//		//(this will allow the map loader to identify if the map needs conversion)
+//		WriteInt(Globals.version[0], binWriter); //Major
+//		WriteInt(Globals.version[1], binWriter); //Minor
+//		WriteInt(Globals.version[2], binWriter); //Micro
+//		WriteInt(Globals.version[3], binWriter); //Build
+//		
+//		bool[,] usedtile = new bool[Globals.MAPWIDTH, Globals.MAPHEIGHT];
+//
+//		for(int iPlatform = 0; iPlatform < iNumPlatforms; iPlatform++)
+//		{
+//			for(short iCol = 0; iCol < platforms[iPlatform].iTileWidth; iCol++)
+//			{
+//				for(short iRow = 0; iRow < platforms[iPlatform].iTileHeight; iRow++)	
+//				{
+//					
+//				}
+//			}
+//		}
+//				
+////		iPlatformCount++;
+////		iHazardCount++;
+////		iIceCount++;
+//
+//		binWriter.Close();
+//		fs.Close();
+//    }
 
 	void WriteInt(int value, BinaryWriter binWriter)
     {
