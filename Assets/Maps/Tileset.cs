@@ -28,6 +28,10 @@ public class Tileset : ScriptableObject {
 	[SerializeField]
 	private int height;
 	[SerializeField]
+	float tileWidth = 32;
+	[SerializeField]
+	float tileHeight = 32;
+	[SerializeField]
 	public Vector2 tilePivot;
 
 	public Sprite TilesetSprite {
@@ -83,8 +87,7 @@ public class Tileset : ScriptableObject {
 
 		float tilesetWidth = tilesetTexture.width;
 		float tilesetHeight = tilesetTexture.height;
-		float tileWidth = 32;
-		float tileHeight = 32;
+
 
 		// check if x, y out of Texture Bounds
 
@@ -107,7 +110,7 @@ public class Tileset : ScriptableObject {
 		// transform texture bottom, left to top, left
 //		textureX = tilesetWidth - x*tileWidth;
 		float textureX = x * tileWidth;
-		float textureY = tilesetHeight - y*tileHeight;
+		float textureY = tilesetHeight - (y+1)*tileHeight;			// Tile TileBottomLeft Position + Rect
 //		int textureY = tilesetHeight/tileHeight - y;
 
 //		int tileTextureX = textureX * tileWidth;
@@ -116,7 +119,7 @@ public class Tileset : ScriptableObject {
 		Rect subSpriteRect = new Rect(textureX,
 		                              textureY,
 		                              tileWidth,
-		                              -tileHeight);
+		                              tileHeight);
 
 		float pixelPerUnit = tileset.pixelsPerUnit;
 
@@ -125,11 +128,30 @@ public class Tileset : ScriptableObject {
 		return subSprite;
 	}
 
+#if UNITY_EDITOR
 	public Sprite GetTileSprite(int x, int y)
 	{
+		string assetRelativPath = UnityEditor.AssetDatabase.GetAssetPath(tileset);
+		UnityEngine.Object[] assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(assetRelativPath);			// TODO store this array in ScriptableObject, doesnt need to load it for every Tile of the map
+
+		int subSpritePos = x + y*Mathf.FloorToInt(width/tileWidth);
+		subSpritePos++;	// root Asset is no SubSprite (sliced Sprite)
+		if(subSpritePos > assets.Length)
+		{
+			Debug.LogError("Sub Sprite Pos " + subSpritePos + " > " + assets.Length + " Tileset Array Length");
+		}
+		else
+		{
+			Debug.Log("Sub Sprite Pos " + subSpritePos + ", Tileset Array Length" + assets.Length);
+			Sprite sprite = new Sprite();
+			sprite = assets[subSpritePos] as Sprite;
+			return sprite;
+//			return (Sprite) assets[subSpritePos];
+//			return assets[subSpritePos] as Sprite;
+		}
 		return null;
 	}
-
+#endif
 	public void OnEnable()
 	{
 		Debug.Log(this.ToString() + " OnEnable()");

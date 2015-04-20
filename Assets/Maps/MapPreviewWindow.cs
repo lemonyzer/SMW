@@ -12,6 +12,9 @@ public class MapPreviewWindow : EditorWindow {
 	static MapPreviewWindow currWindow;
 	TilesetManager g_TilesetManager;
 	Map m_CurrentMap;
+	bool w_UseAssetSubSpritesToggle = false;
+	string EP_TilesetManagerKey = "EP_tilesetManagerKey";
+//	string lastUsedTilesetManagerPath = "";
 	#endregion
 
 	#region Main Methods
@@ -23,7 +26,7 @@ public class MapPreviewWindow : EditorWindow {
 		AssetDatabase.CreateAsset(newMapAsset, "Assets/Maps/map_" + mapName + ".asset");
 		AssetDatabase.SaveAssets();
 		
-		EditorUtility.FocusProjectWindow();
+//		EditorUtility.FocusProjectWindow();
 		Selection.activeObject = newMapAsset;
 		
 		return newMapAsset;
@@ -41,6 +44,16 @@ public class MapPreviewWindow : EditorWindow {
 		else
 		{
 			currWindow.Show();
+		}
+	}
+
+	void OnEnable()
+	{
+		// load last used List
+		if(EditorPrefs.HasKey(EP_TilesetManagerKey))
+		{
+			string objectPath = EditorPrefs.GetString(EP_TilesetManagerKey);
+			g_TilesetManager = AssetDatabase.LoadAssetAtPath(objectPath, typeof(TilesetManager)) as TilesetManager;
 		}
 	}
 
@@ -62,8 +75,16 @@ public class MapPreviewWindow : EditorWindow {
 //		if(guiSkin != null)
 //			GUI.skin = guiSkin;
 //		textFieldStlye = (GUIStyle) EditorGUILayout.ObjectField("GUIStyle", textFieldStlye, typeof(GUIStyle), false, GUILayout.ExpandWidth(true));
-
+		EditorGUI.BeginChangeCheck();
 		g_TilesetManager = (TilesetManager) EditorGUILayout.ObjectField("TilesetManager", g_TilesetManager, typeof(TilesetManager), false, GUILayout.ExpandWidth(true));
+		if(EditorGUI.EndChangeCheck())
+		{
+			if(g_TilesetManager != null)
+			{
+				EditorPrefs.SetString(EP_TilesetManagerKey, AssetDatabase.GetAssetPath(g_TilesetManager));
+				Debug.Log("Path " + AssetDatabase.GetAssetPath(g_TilesetManager)+ " saved in EditorPrefs("+EP_TilesetManagerKey+")");
+			}
+		}
 		if(g_TilesetManager == null)
 			GUI.enabled = false;
 		else
@@ -122,8 +143,8 @@ public class MapPreviewWindow : EditorWindow {
 		{
 //			m_CurrentMap.m_Tileset = (List<Tileset>) EditorGUILayout.ObjectField("Map", m_CurrentMap.m_Tileset, typeof(List<Tileset>), false, GUILayout.ExpandWidth(true));
 			EditorGUILayout.LabelField(m_CurrentMap.mapName);
-			
 			GUI.enabled = true;
+			w_UseAssetSubSpritesToggle = GUILayout.Toggle(w_UseAssetSubSpritesToggle, "Use Sprite from Asset, if false Sprites get sliced from Tileset-Sprite");
 			if (GUILayout.Button("Create Unity Map", GUILayout.ExpandWidth(false)))
 			{
 				CreateUnityMap(m_CurrentMap);
@@ -198,7 +219,11 @@ public class MapPreviewWindow : EditorWindow {
 						int tilePosX = mapData[x,y,l].iCol;
 						int tilePosY = mapData[x,y,l].iRow;
 						Tileset tileSet = g_TilesetManager.GetTileset(iTileSetId);
-						Sprite tileSprite = tileSet.GetNewCreatetTileSprite(tilePosX,tilePosY);
+						Sprite tileSprite;
+						if(w_UseAssetSubSpritesToggle)
+							tileSprite = tileSet.GetTileSprite(tilePosX, tilePosY);
+						else
+							tileSprite = tileSet.GetNewCreatetTileSprite(tilePosX, tilePosY);	
 						currentSpriteRenderer.sprite = tileSprite;
 					}
 					else

@@ -57,14 +57,17 @@ public class TilesetWindow : EditorWindow {
 		}
 	}
 
-	int w_TilesetPixelToUnit = 32;
+	int w_TilesetPixelPerUnit = 32;
 	int w_SubTilePosX = 0;
 	int w_SubTilePosY = 0;
 
 //	Sprite w_subTile = null;
 
+	SpriteAlignment w_TileSpriteAlignment = SpriteAlignment.TopLeft;
 	Sprite w_TilesetSprite = null;
 	Vector2 w_TilePivot = Vector2.zero;
+	int w_TilePixelWidth = 32;
+	int w_TilePixelHeight = 32;
 
 	void OnGUI()
 	{
@@ -83,11 +86,19 @@ public class TilesetWindow : EditorWindow {
 						GUILayout.Label("Tileset from Sprite", EditorStyles.boldLabel);
 //						EditorGUILayout.LabelField("Sprite");
 						w_TilesetSprite = EditorGUILayout.ObjectField("Sprite", w_TilesetSprite, typeof(Sprite), false,  GUILayout.ExpandWidth(true)) as Sprite;
+						w_TileSpriteAlignment = (SpriteAlignment) EditorGUILayout.EnumPopup("Pivot", w_TileSpriteAlignment);
 						w_TilePivot = EditorGUILayout.Vector2Field("Tile Pivot", w_TilePivot);
+						w_TilePixelWidth = EditorGUILayout.IntField("Tile Width (px)", w_TilePixelWidth);
+						w_TilePixelHeight = EditorGUILayout.IntField("Tile Height (px)", w_TilePixelHeight);
 						if(w_TilesetSprite != null)
 						{
 							GUI.enabled = true;
 							GUILayout.Label("Spritename = " + w_TilesetSprite.name);
+							if (GUILayout.Button("Slice & Prepare Tileset Sprite", GUILayout.ExpandWidth(false)))
+							{
+								TextureImporter textureImporter = (TextureImporter) UnityEditor.TextureImporter.GetAtPath(AssetDatabase.GetAssetPath(w_TilesetSprite));
+								PerformMetaSlice(w_TilesetSprite.texture, textureImporter, w_TileSpriteAlignment, w_TilePivot, w_TilePixelWidth, w_TilePixelHeight, w_TilesetPixelPerUnit);
+							}
 							Color temp = GUI.color;
 							if(w_TilesetSprite.pixelsPerUnit == 32)
 							{
@@ -129,10 +140,10 @@ public class TilesetWindow : EditorWindow {
 				GUILayout.Space(10);
 				GUILayout.Label("Tileset Tile Preview", EditorStyles.boldLabel);
 
-				w_TilesetPixelToUnit = EditorGUILayout.IntField("Tileset Pixel to Unit", w_TilesetPixelToUnit);
+				w_TilesetPixelPerUnit = EditorGUILayout.IntField("Tileset Pixel per Unit", w_TilesetPixelPerUnit);
 
-				w_SubTilePosX = EditorGUILayout.IntField("iCol x", w_SubTilePosX);
-				w_SubTilePosY = EditorGUILayout.IntField("iRow y", w_SubTilePosY);
+				w_SubTilePosX = EditorGUILayout.IntField("X (iCol)", w_SubTilePosX);
+				w_SubTilePosY = EditorGUILayout.IntField("Y (iRow)", w_SubTilePosY);
 
 //				if (GUILayout.Button("Show Tile (SubSprite)", GUILayout.ExpandWidth(false)))
 //				{
@@ -142,6 +153,10 @@ public class TilesetWindow : EditorWindow {
 				{
 					CreateGameObjectWithNewSprite(w_SubTilePosX, w_SubTilePosY);
 				}
+				if (GUILayout.Button("Show Tile (AssetSlicedSprite)", GUILayout.ExpandWidth(false)))
+				{
+					CreateGameObjectWithAssetSprite(w_SubTilePosX, w_SubTilePosY);
+				}
 			}
 			GUILayout.EndVertical();
 		}
@@ -149,7 +164,7 @@ public class TilesetWindow : EditorWindow {
 //		Repaint();
 	}
 
-	void CreateGameObjectWithSubSprite(int x, int y)
+	void CreateGameObjectWithAssetSprite(int x, int y)
 	{
 		GameObject spriteGO = new GameObject("Tile SubSprite x=" + x + " y= " + y);
 		SpriteRenderer spriteRenderer = spriteGO.AddComponent<SpriteRenderer>();
@@ -187,6 +202,176 @@ public class TilesetWindow : EditorWindow {
 		{
 			return false;
 			
+		}
+	}
+
+
+	private void PerformMetaSliceFromDownToTop(Texture2D texture, TextureImporter spriteImporter, SpriteAlignment tileAlignment, Vector2 tilePivot, int tilePixelWidth, int tilePixelHeight, int pixelPerUnity)
+	{
+		if(spriteImporter != null)
+		{
+			Debug.Log("PerformMetaSlice: " + spriteImporter.assetPath);
+			//			TextureImporter myImporter = null;
+			//			myImporter = TextureImporter.GetAtPath (AssetDatabase.GetAssetPath(sprite)) as TextureImporter ;
+			
+			bool failed = false;
+			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
+			
+			// falls multiple 
+			int numTilesX = Mathf.FloorToInt(texture.width / tilePixelWidth);
+			int numTilesY = Mathf.FloorToInt(texture.height / tilePixelHeight);
+			
+			Debug.Log("Tileset width " + texture.width + " sliced in " + numTilesX + " Tiles");
+			Debug.Log("Tileset height " + texture.height + " sliced in " + numTilesY + " Tiles");
+			
+			int i=0;	// subsprite name
+			for (int y=0; y<numTilesY; y++)
+			{
+				for (int x=0; x<numTilesX; x++)
+				{
+					try {
+						
+						SpriteMetaData spriteMetaData = new SpriteMetaData
+						{
+							alignment = (int)tileAlignment,
+							border = new Vector4(),
+							name = System.IO.Path.GetFileNameWithoutExtension(spriteImporter.assetPath) + "_" + i++,
+							pivot = tilePivot,
+							rect = new Rect(x*tilePixelWidth, y*tilePixelHeight, tilePixelWidth, tilePixelHeight)
+						};
+						
+						// erhalte sliced Texture
+						//					slicedSprite[i] = Sprite.Create(unslicedSprite.texture, spriteMetaData.rect, spriteMetaData.pivot, pixelPerUnit);
+						
+						metaDataList.Add(spriteMetaData);
+						
+					}
+					catch (Exception exception) {
+						failed = true;
+						Debug.LogException(exception);
+					}
+				}
+				if(y == 1)
+					break;
+			}
+			
+			if (!failed) {
+				spriteImporter.spritePixelsPerUnit = pixelPerUnity;					// setze PixelPerUnit
+				spriteImporter.spriteImportMode = SpriteImportMode.Multiple; 		// setze MultipleMode
+				spriteImporter.spritesheet = metaDataList.ToArray();				// weiße metaDaten zu
+				
+				EditorUtility.SetDirty (spriteImporter);
+				
+				try
+				{
+					AssetDatabase.StartAssetEditing();
+					AssetDatabase.ImportAsset(spriteImporter.assetPath);
+				}
+				catch (Exception e)
+				{
+					Debug.LogError("wtf " + e.ToString());
+				}
+				finally
+				{
+					AssetDatabase.StopAssetEditing();
+					//					myImporter.SaveAndReimport();
+					//Close();
+				}
+			}
+			else
+			{
+				Debug.LogError( spriteImporter.assetPath + " failed");
+				//				SpriteAssetInfo(spriteImporter);
+			}
+		}
+		else
+		{
+			Debug.LogError( " sprite == null");
+		}
+	}
+
+
+	private void PerformMetaSlice(Texture2D texture, TextureImporter spriteImporter, SpriteAlignment tileAlignment, Vector2 tilePivot, int tilePixelWidth, int tilePixelHeight, int pixelPerUnity)
+	{
+		if(spriteImporter != null)
+		{
+			Debug.Log("PerformMetaSlice: " + spriteImporter.assetPath);
+			//			TextureImporter myImporter = null;
+			//			myImporter = TextureImporter.GetAtPath (AssetDatabase.GetAssetPath(sprite)) as TextureImporter ;
+			
+			bool failed = false;
+			List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
+			
+			// falls multiple 
+			int numTilesX = Mathf.FloorToInt(texture.width / tilePixelWidth);
+			int numTilesY = Mathf.FloorToInt(texture.height / tilePixelHeight);
+
+			Debug.Log("Tileset width " + texture.width + " sliced in " + numTilesX + " Tiles");
+			Debug.Log("Tileset height " + texture.height + " sliced in " + numTilesY + " Tiles");
+
+			int i=0;	// subsprite name
+			for (int y=0; y<numTilesY; y++)
+			{
+				for (int x=0; x<numTilesX; x++)
+				{
+					try {
+						
+						SpriteMetaData spriteMetaData = new SpriteMetaData
+						{
+							alignment = (int)tileAlignment,
+							border = new Vector4(),
+							name = System.IO.Path.GetFileNameWithoutExtension(spriteImporter.assetPath) + "_" + i++,
+							pivot = tilePivot,
+							rect = new Rect(x*tilePixelWidth, texture.height-(y+1)*tilePixelHeight, tilePixelWidth, tilePixelHeight)
+						};
+						
+						// erhalte sliced Texture
+						//					slicedSprite[i] = Sprite.Create(unslicedSprite.texture, spriteMetaData.rect, spriteMetaData.pivot, pixelPerUnit);
+						
+						metaDataList.Add(spriteMetaData);
+						
+					}
+					catch (Exception exception) {
+						failed = true;
+						Debug.LogException(exception);
+					}
+				}
+//				if(y == 1)
+//					break;
+			}
+			
+			if (!failed) {
+				spriteImporter.spritePixelsPerUnit = pixelPerUnity;					// setze PixelPerUnit
+				spriteImporter.spriteImportMode = SpriteImportMode.Multiple; 		// setze MultipleMode
+				spriteImporter.spritesheet = metaDataList.ToArray();				// weiße metaDaten zu
+				
+				EditorUtility.SetDirty (spriteImporter);
+				
+				try
+				{
+					AssetDatabase.StartAssetEditing();
+					AssetDatabase.ImportAsset(spriteImporter.assetPath);
+				}
+				catch (Exception e)
+				{
+					Debug.LogError("wtf " + e.ToString());
+				}
+				finally
+				{
+					AssetDatabase.StopAssetEditing();
+					//					myImporter.SaveAndReimport();
+					//Close();
+				}
+			}
+			else
+			{
+				Debug.LogError( spriteImporter.assetPath + " failed");
+//				SpriteAssetInfo(spriteImporter);
+			}
+		}
+		else
+		{
+			Debug.LogError( " sprite == null");
 		}
 	}
 
