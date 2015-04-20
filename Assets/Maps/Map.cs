@@ -56,21 +56,144 @@ public class TilesetTile
 
 [Serializable]
 public class MovingPlatform {
-
+	
 	[SerializeField]
 	public int iTileWidth;
 	[SerializeField]
 	public int iTileHeight;
-
+	
 	public MovingPlatform()
 	{
-
+		
 	}
-
+	
 }
 
 [Serializable]
-public class TilesetTranslation
+public class MovingPlatformPath {
+	
+	[SerializeField]
+	public float velocity;
+	[SerializeField]
+	public float startX;
+	[SerializeField]
+	public float startY;
+	[SerializeField]
+	public float endX;
+	[SerializeField]
+	public float endY;
+	[SerializeField]
+	public bool preview;
+	
+	public MovingPlatformPath(float vel, float startX, float startY, float endX, float endY, bool preview)
+	{
+		this.velocity = vel;
+		this.startX = startX;
+		this.startY = startY;
+		this.endX = endX;
+		this.endY = endY;
+		this.preview = preview;
+	}
+}
+
+[Serializable]
+public class StraightPath : MovingPlatformPath {
+	
+	[SerializeField]
+	public float velocity;
+	[SerializeField]
+	public float startX;
+	[SerializeField]
+	public float startY;
+	[SerializeField]
+	public float endX;
+	[SerializeField]
+	public float endY;
+	[SerializeField]
+	public bool preview;
+	
+	public StraightPath(float vel, float startX, float startY, float endX, float endY, bool preview)
+	{
+		this.velocity = vel;
+		this.startX = startX;
+		this.startY = startY;
+		this.endX = endX;
+		this.endY = endY;
+		this.preview = preview;
+	}
+}
+
+[Serializable]
+public class StraightPathContinuous : StraightPath {
+	
+	[SerializeField]
+	public float velocity;
+	[SerializeField]
+	public float startX;
+	[SerializeField]
+	public float startY;
+	[SerializeField]
+	public float endX;
+	[SerializeField]
+	public float endY;
+	[SerializeField]
+	public bool preview;
+	
+	public StraightPathContinuous(float vel, float startX, float startY, float angle, bool preview)
+	{
+		this.velocity = vel;
+		this.startX = startX;
+		this.startY = startY;
+		this.endX = endX;
+		this.endY = endY;
+		this.preview = preview;
+	}
+}
+
+[Serializable]
+public class EllipsePath : MovingPlatformPath {
+	
+	[SerializeField]
+	public float velocity;
+	[SerializeField]
+	public float startX;
+	[SerializeField]
+	public float startY;
+	[SerializeField]
+	public float endX;
+	[SerializeField]
+	public float endY;
+	[SerializeField]
+	public bool preview;
+	
+	public EllipsePath (float vel, float dAngle, float dRadiusX, float dRadiusY, float dCenterX, float dCenterY, bool preview)
+	{
+		this.velocity = vel;
+		this.startX = startX;
+		this.startY = startY;
+		this.endX = endX;
+		this.endY = endY;
+		this.preview = preview;
+	}
+}
+
+[Serializable]
+public class FallingPath : MovingPlatformPath {
+	
+	[SerializeField]
+	public float startX;
+	[SerializeField]
+	public float startY;
+	
+	public FallingPath (float startX, float startY)
+	{
+		this.startX = startX;
+		this.startY = startY;
+	}
+}
+
+[Serializable]
+public class TilesetTranslation 
 {
 	[SerializeField]
 	public short iTilesetID;
@@ -1081,171 +1204,177 @@ public class Map : ScriptableObject {
 		// Load moving platforms
 		iNumPlatforms = (short) ReadInt(binReader);
 		Debug.Log("<color=blue>iNumPlatforms = " + iNumPlatforms + "</color>");
-		platforms = new MovingPlatform[iNumPlatforms];
 
-		for(short iPlatform = 0; iPlatform < iNumPlatforms; iPlatform++)
+		if(iNumPlatforms > 0)
 		{
-			short iWidth = (short) ReadInt(binReader);
-			short iHeight = (short) ReadInt(binReader);
-			Debug.Log("iPlatform = " + iPlatform + ", iWidth = " + iWidth);
-			Debug.Log("iPlatform = " + iPlatform + ", iHeight = " + iHeight);
-
-			platformTiles = new TilesetTile[iWidth, iHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
-			platformTileTypes = new MapTile[iWidth, iHeight];
-
-			mapdatatop = new MapTile[iWidth, iHeight];
-
-			for(short iCol = 0; iCol < iWidth; iCol++)
+			platforms = new MovingPlatform[iNumPlatforms];
+			
+			for(short iPlatform = 0; iPlatform < iNumPlatforms; iPlatform++)
 			{
-				Debug.Log("Platform iCol = " + iCol);
-
-				for(short iRow = 0; iRow < iHeight; iRow++)
+				short iWidth = (short) ReadInt(binReader);
+				short iHeight = (short) ReadInt(binReader);
+				Debug.Log("iPlatform = " + iPlatform + ", iWidth = " + iWidth);
+				Debug.Log("iPlatform = " + iPlatform + ", iHeight = " + iHeight);
+				
+				platformTiles = new TilesetTile[iWidth, iHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
+				platformTileTypes = new MapTile[iWidth, iHeight];
+				
+				mapdatatop = new MapTile[iWidth, iHeight];
+				
+				for(short iCol = 0; iCol < iWidth; iCol++)
 				{
-					Debug.Log("Platform iRow = " + iRow);
+					Debug.Log("\tPlatform iCol = " + iCol);
 					
-					//TilesetTile * tile = &tiles[iCol][iRow];
-					platformTiles[iCol,iRow] = new TilesetTile();
-					TilesetTile tile = platformTiles[iCol,iRow];
-					tile = new TilesetTile();
-					platformTileTypes[iCol,iRow] = new MapTile();
-					mapdatatop[iCol,iRow] = new MapTile();
+					for(short iRow = 0; iRow < iHeight; iRow++)
+					{
+						Debug.Log("\tPlatform iRow = " + iRow);
+						
+						//TilesetTile * tile = &tiles[iCol][iRow];
+						platformTiles[iCol,iRow] = new TilesetTile();
+						TilesetTile platformTile = platformTiles[iCol,iRow];
 
-					if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
-					{
-						Debug.LogWarning("VersionIsEqualOrAfter = 1, 8, 0, 0");
-						tile.iTilesetID = ReadByteAsShort(binReader);
-						tile.iCol = ReadByteAsShort(binReader);
-						tile.iRow = ReadByteAsShort(binReader);
+						platformTileTypes[iCol,iRow] = new MapTile();
+						MapTile platformTileType = platformTileTypes[iCol,iRow];
+
+						mapdatatop[iCol,iRow] = new MapTile();
 						
-						if(tile.iTilesetID >= 0)
+						if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
 						{
-							if(iMaxTilesetID != -1 && tile.iTilesetID > iMaxTilesetID)
-								tile.iTilesetID = 0;
+							Debug.LogWarning("\tVersionIsEqualOrAfter = 1, 8, 0, 0");
+							platformTile.iTilesetID = ReadByteAsShort(binReader);
+							platformTile.iCol = ReadByteAsShort(binReader);
+							platformTile.iRow = ReadByteAsShort(binReader);
 							
-							//Make sure the column and row we read in is within the bounds of the tileset
-//							if(tile.iCol < 0 || (tilesetwidths && tile.iCol >= tilesetwidths[tile.iID]))
-							if(tile.iCol < 0 || (tilesetwidths != null && tile.iCol >= tilesetwidths[tile.iTilesetID]))
-								tile.iCol = 0;
+							if(platformTile.iTilesetID >= 0)
+							{
+								if(iMaxTilesetID != -1 && platformTile.iTilesetID > iMaxTilesetID)
+									platformTile.iTilesetID = 0;
+								
+								//Make sure the column and row we read in is within the bounds of the tileset
+								//							if(tile.iCol < 0 || (tilesetwidths && tile.iCol >= tilesetwidths[tile.iID]))
+								if(platformTile.iCol < 0 || (tilesetwidths != null && platformTile.iCol >= tilesetwidths[platformTile.iTilesetID]))
+									platformTile.iCol = 0;
+								
+								//							if(tile.iRow < 0 || (tilesetheights && tile.iRow >= tilesetheights[tile.iID]))
+								if(platformTile.iRow < 0 || (tilesetheights != null && platformTile.iRow >= tilesetheights[platformTile.iTilesetID]))
+									platformTile.iRow = 0;
+								
+								//Convert tileset ids into the current game's tileset's ids
+								if(translationid != null)
+									platformTile.iTilesetID = (short) translationid[platformTile.iTilesetID];
+							}
 							
-//							if(tile.iRow < 0 || (tilesetheights && tile.iRow >= tilesetheights[tile.iID]))
-							if(tile.iRow < 0 || (tilesetheights != null && tile.iRow >= tilesetheights[tile.iTilesetID]))
-								tile.iRow = 0;
+							TileType iType = (TileType)ReadInt(binReader);
 							
-							//Convert tileset ids into the current game's tileset's ids
-							if(translationid != null)
-								tile.iTilesetID = (short) translationid[tile.iTilesetID];
-						}
-						
-						TileType iType = (TileType)ReadInt(binReader);
-						
-//						if(iType >= 0 && (iType) < Globals.NUMTILETYPES)
-						if(iType >= 0 && ((int)iType) < Globals.NUMTILETYPES)
-						{
-							platformTileTypes[iCol,iRow].iType = iType;
-//							types[iCol][iRow].iFlags = g_iTileTypeConversion[iType];
-							platformTileTypes[iCol,iRow].iFlags = Globals.g_iTileTypeConversion[(int)iType];
+							//						if(iType >= 0 && (iType) < Globals.NUMTILETYPES)
+							if(iType >= 0 && ((int)iType) < Globals.NUMTILETYPES)
+							{
+								platformTileType.iType = iType;
+								//							types[iCol][iRow].iFlags = g_iTileTypeConversion[iType];
+								platformTileType.iFlags = Globals.g_iTileTypeConversion[(int)iType];
+							}
+							else
+							{
+								platformTileType.iType = (int) TileType.tile_nonsolid;
+								platformTileType.iFlags = (int) TileTypeFlag.tile_flag_nonsolid;
+							}
 						}
 						else
 						{
-							platformTileTypes[iCol,iRow].iType = (int) TileType.tile_nonsolid;
-							platformTileTypes[iCol,iRow].iFlags = (int) TileTypeFlag.tile_flag_nonsolid;
-						}
-					}
-					else
-					{
-						Debug.LogWarning("VersionIsBefore < 1, 8, 0, 0");
-						short iTile = (short) ReadInt(binReader);
-						TileType type;
-						
-						if(iTile == Globals.TILESETSIZE)
-						{
-							tile.iTilesetID = Globals.TILESETNONE;
-							tile.iCol = 0;
-							tile.iRow = 0;
+							Debug.LogWarning("\tVersionIsBefore < 1, 8, 0, 0");
+							short iTile = (short) ReadInt(binReader);
+							TileType type;
 							
-							type = TileType.tile_nonsolid;
-						}
-						else
-						{
-							tile.iTilesetID = f_TilesetManager.GetClassicTilesetIndex();
-							tile.iCol = (short)(iTile % Globals.TILESETWIDTH);
-							tile.iRow = (short)(iTile / Globals.TILESETWIDTH);
+							if(iTile == Globals.TILESETSIZE)
+							{
+								platformTile.iTilesetID = Globals.TILESETNONE;
+								platformTile.iCol = 0;
+								platformTile.iRow = 0;
+								
+								type = TileType.tile_nonsolid;
+							}
+							else
+							{
+								platformTile.iTilesetID = f_TilesetManager.GetClassicTilesetIndex();
+								platformTile.iCol = (short)(iTile % Globals.TILESETWIDTH);
+								platformTile.iRow = (short)(iTile / Globals.TILESETWIDTH);
+								
+								type = f_TilesetManager.GetClassicTileset().GetTileType(platformTile.iCol, platformTile.iRow);
+							}
 							
-							type = f_TilesetManager.GetClassicTileset().GetTileType(tile.iCol, tile.iRow);
-						}
-						
-						if(type >= 0 && (int)type < Globals.NUMTILETYPES)
-						{
-							platformTileTypes[iCol,iRow].iType = type;
-							platformTileTypes[iCol,iRow].iFlags = Globals.g_iTileTypeConversion[(int)type];
-						}
-						else
-						{
-							mapdatatop[iCol,iRow].iType = TileType.tile_nonsolid;
-							mapdatatop[iCol,iRow].iFlags = (int) TileTypeFlag.tile_flag_nonsolid;
+							if(type >= 0 && (int)type < Globals.NUMTILETYPES)
+							{
+								platformTileType.iType = type;
+								platformTileType.iFlags = Globals.g_iTileTypeConversion[(int)type];
+							}
+							else
+							{
+								mapdatatop[iCol,iRow].iType = TileType.tile_nonsolid;
+								mapdatatop[iCol,iRow].iFlags = (int) TileTypeFlag.tile_flag_nonsolid;
+							}
 						}
 					}
 				}
+
+				
+				short iDrawLayer = 2;
+				if(VersionIsEqualOrAfter(version, 1, 8, 0, 1))
+					iDrawLayer = (short) ReadInt(binReader);
+				
+				//printf("Layer: %d\n", iDrawLayer);
+				
+				short iPathType = 0;
+				
+				if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
+					iPathType = (short) ReadInt(binReader);
+				
+				//printf("PathType: %d\n", iPathType);
+				
+				MovingPlatformPath path = null;
+				if(iPathType == 0) //segment path
+				{
+					float fStartX = ReadFloat(binReader);
+					float fStartY = ReadFloat(binReader);
+					float fEndX = ReadFloat(binReader);
+					float fEndY = ReadFloat(binReader);
+					float fVelocity = ReadFloat(binReader);
+					
+					path = new StraightPath(fVelocity, fStartX, fStartY, fEndX, fEndY, fPreview);
+					
+					//printf("Read segment path\n");
+					//printf("StartX: %.2f StartY:%.2f EndX:%.2f EndY:%.2f Velocity:%.2f\n", fStartX, fStartY, fEndX, fEndY, fVelocity);
+				}
+				else if(iPathType == 1) //continuous path
+				{
+					float fStartX = ReadFloat(binReader);
+					float fStartY = ReadFloat(binReader);
+					float fAngle = ReadFloat(binReader);
+					float fVelocity = ReadFloat(binReader);
+					
+					path = new StraightPathContinuous(fVelocity, fStartX, fStartY, fAngle, fPreview);
+					
+					//printf("Read continuous path\n");
+					//printf("StartX: %.2f StartY:%.2f Angle:%.2f Velocity:%.2f\n", fStartX, fStartY, fAngle, fVelocity);
+				}
+				else if(iPathType == 2) //elliptical path
+				{
+					float fRadiusX = ReadFloat(binReader);
+					float fRadiusY = ReadFloat(binReader);
+					float fCenterX = ReadFloat(binReader);
+					float fCenterY = ReadFloat(binReader);
+					float fAngle = ReadFloat(binReader);
+					float fVelocity = ReadFloat(binReader);
+					
+					path = new EllipsePath(fVelocity, fAngle, fRadiusX, fRadiusY, fCenterX, fCenterY, fPreview);
+					
+					//printf("Read elliptical path\n");
+					//printf("CenterX: %.2f CenterY:%.2f Angle:%.2f RadiusX: %.2f RadiusY: %.2f Velocity:%.2f\n", fCenterX, fCenterY, fAngle, fRadiusX, fRadiusY, fVelocity);
+				}
+				
+				MovingPlatform platform = new MovingPlatform(platformTiles, platformTileTypes, iWidth, iHeight, iDrawLayer, path, fPreview);
+				platforms[iPlatform] = platform;
+//				platformdrawlayer[iDrawLayer].push_back(platform);
 			}
-
-//			short iDrawLayer = 2;
-//			if(VersionIsEqualOrAfter(version, 1, 8, 0, 1))
-//				iDrawLayer = (short)ReadInt(binReader);
-//			
-//			//printf("Layer: %d\n", iDrawLayer);
-//			
-//			short iPathType = 0;
-//			
-//			if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
-//				iPathType = ReadInt(binReader);
-//			
-//			//printf("PathType: %d\n", iPathType);
-//			
-//			MovingPlatformPath * path = NULL;
-//			if(iPathType == 0) //segment path
-//			{
-//				float fStartX = ReadFloat(binReader);
-//				float fStartY = ReadFloat(binReader);
-//				float fEndX = ReadFloat(binReader);
-//				float fEndY = ReadFloat(binReader);
-//				float fVelocity = ReadFloat(binReader);
-//				
-//				path = new StraightPath(fVelocity, fStartX, fStartY, fEndX, fEndY, fPreview);
-//				
-//				//printf("Read segment path\n");
-//				//printf("StartX: %.2f StartY:%.2f EndX:%.2f EndY:%.2f Velocity:%.2f\n", fStartX, fStartY, fEndX, fEndY, fVelocity);
-//			}
-//			else if(iPathType == 1) //continuous path
-//			{
-//				float fStartX = ReadFloat(binReader);
-//				float fStartY = ReadFloat(binReader);
-//				float fAngle = ReadFloat(binReader);
-//				float fVelocity = ReadFloat(binReader);
-//				
-//				path = new StraightPathContinuous(fVelocity, fStartX, fStartY, fAngle, fPreview);
-//				
-//				//printf("Read continuous path\n");
-//				//printf("StartX: %.2f StartY:%.2f Angle:%.2f Velocity:%.2f\n", fStartX, fStartY, fAngle, fVelocity);
-//			}
-//			else if(iPathType == 2) //elliptical path
-//			{
-//				float fRadiusX = ReadFloat(binReader);
-//				float fRadiusY = ReadFloat(binReader);
-//				float fCenterX = ReadFloat(binReader);
-//				float fCenterY = ReadFloat(binReader);
-//				float fAngle = ReadFloat(binReader);
-//				float fVelocity = ReadFloat(binReader);
-//				
-//				path = new EllipsePath(fVelocity, fAngle, fRadiusX, fRadiusY, fCenterX, fCenterY, fPreview);
-//				
-//				//printf("Read elliptical path\n");
-//				//printf("CenterX: %.2f CenterY:%.2f Angle:%.2f RadiusX: %.2f RadiusY: %.2f Velocity:%.2f\n", fCenterX, fCenterY, fAngle, fRadiusX, fRadiusY, fVelocity);
-//			}
-//			
-//			MovingPlatform * platform = new MovingPlatform(tiles, types, iWidth, iHeight, iDrawLayer, path, fPreview);
-//			platforms[iPlatform] = platform;
-//			platformdrawlayer[iDrawLayer].push_back(platform);
-
 		}
 
 	}
