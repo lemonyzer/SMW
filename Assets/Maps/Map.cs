@@ -58,9 +58,9 @@ public class TilesetTile
 public class MovingPlatform {
 	
 	[SerializeField]
-	public int iTileWidth;
+	public int iPlatformWidth;
 	[SerializeField]
-	public int iTileHeight;
+	public int iPlatformHeight;
 	[SerializeField]
 	public MovingPlatformPath path;
 	[SerializeField]
@@ -80,8 +80,8 @@ public class MovingPlatform {
 	{
 		this.platformTiles = platformTiles;
 		this.platformTileTypes = platformTileTypes;
-		this.iTileWidth = iWidth;
-		this.iTileHeight = iHeight;
+		this.iPlatformWidth = iWidth;
+		this.iPlatformHeight = iHeight;
 //		this.iWidth = iWidth;
 //		this.iHeight = iHeight;
 		this.iDrawLayer = iDrawLayer;
@@ -412,6 +412,21 @@ public class Map : ScriptableObject {
 //		}
 	}
 
+	public MovingPlatform[] GetPlatforms()
+	{
+		return platforms;
+	}
+
+	public MapBlock[,] GetObjectData()
+	{
+		return objectdata;
+	}
+
+	public MapTile[,] GetMapDataTop()
+	{
+		return mapdatatop;
+	}
+
 	public TilesetTile[,,] GetMapData()
 	{
 		return mapdata;
@@ -420,6 +435,11 @@ public class Map : ScriptableObject {
 	public bool[,,] GetCustomMapData()
 	{
 		return mapdataCustom;
+	}
+
+	public string GetBackgroundFilename()
+	{
+		return szBackgroundFile;
 	}
 
 	//Converts the tile type into the flags that this tile carries (solid + ice + death, etc)
@@ -1303,21 +1323,22 @@ public class Map : ScriptableObject {
 			
 			for(short iPlatform = 0; iPlatform < iNumPlatforms; iPlatform++)
 			{
-				short iWidth = (short) ReadInt(binReader);
-				short iHeight = (short) ReadInt(binReader);
-				Debug.Log("iPlatform = " + iPlatform + ", iWidth = " + iWidth);
-				Debug.Log("iPlatform = " + iPlatform + ", iHeight = " + iHeight);
+				short iPlatformWidth = (short) ReadInt(binReader);
+				short iPlatformHeight = (short) ReadInt(binReader);
+				Debug.Log("iPlatform = " + iPlatform + ", iWidth = " + iPlatformWidth);
+				Debug.Log("iPlatform = " + iPlatform + ", iHeight = " + iPlatformHeight);
 				
-				platformTiles = new TilesetTile[iWidth, iHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
-				platformTileTypes = new MapTile[iWidth, iHeight];
+				platformTiles = new TilesetTile[iPlatformWidth, iPlatformHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
+				platformTileTypes = new MapTile[iPlatformWidth, iPlatformHeight];
+
+				if(mapdatatop == null)
+					mapdatatop = new MapTile[Globals.MAPWIDTH, Globals.MAPHEIGHT];
 				
-				mapdatatop = new MapTile[iWidth, iHeight];
-				
-				for(short iCol = 0; iCol < iWidth; iCol++)
+				for(short iCol = 0; iCol < iPlatformWidth; iCol++)
 				{
 					Debug.Log("\tPlatform iCol = " + iCol);
 					
-					for(short iRow = 0; iRow < iHeight; iRow++)
+					for(short iRow = 0; iRow < iPlatformHeight; iRow++)
 					{
 						Debug.Log("\tPlatform iRow = " + iRow);
 						
@@ -1463,7 +1484,7 @@ public class Map : ScriptableObject {
 					//printf("CenterX: %.2f CenterY:%.2f Angle:%.2f RadiusX: %.2f RadiusY: %.2f Velocity:%.2f\n", fCenterX, fCenterY, fAngle, fRadiusX, fRadiusY, fVelocity);
 				}
 				
-				MovingPlatform platform = new MovingPlatform(platformTiles, platformTileTypes, iWidth, iHeight, iDrawLayer, path, fPreview);
+				MovingPlatform platform = new MovingPlatform(platformTiles, platformTileTypes, iPlatformWidth, iPlatformHeight, iDrawLayer, path, fPreview);
 				platforms[iPlatform] = platform;
 //				platformdrawlayer[iDrawLayer].push_back(platform);
 			}
