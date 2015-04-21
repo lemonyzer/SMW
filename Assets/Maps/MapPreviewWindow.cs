@@ -230,6 +230,7 @@ public class MapPreviewWindow : EditorWindow {
 		mapRootGO.transform.position = Vector3.zero;
 		// Map Background
 		SpriteRenderer backgroundSpriteRenderer = mapRootGO.AddComponent<SpriteRenderer>();
+		backgroundSpriteRenderer.sortingLayerName = "MapBackgroundLayer";
 		Sprite backgroundSprite;
 		string backgroundFilename = mapSO.GetBackgroundFilename();
 		if(string.IsNullOrEmpty(mapSO.GetBackgroundFilename()))
@@ -271,6 +272,7 @@ public class MapPreviewWindow : EditorWindow {
 						                              0f);
 						currentTileTransform.localPosition = tilePos;
 						SpriteRenderer currentSpriteRenderer = currentTileGO.AddComponent<SpriteRenderer>();
+						currentSpriteRenderer.sortingLayerName = "MapTileLayer"+l;
 						int iTileSetId = mapData[x,y,l].iTilesetID;
 						int tilePosX = mapData[x,y,l].iCol;
 						int tilePosY = mapData[x,y,l].iRow;
@@ -286,7 +288,11 @@ public class MapPreviewWindow : EditorWindow {
 
 						TileTypeToUnityTranslation(currentTileType, currentTileGO);
 
-					}
+						TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
+						currenTileScript.tileSet = tileSet;
+						currenTileScript.tileType = currentTileType;
+                        
+                    }
 					else
 					{
 //						DestroyImmediate(currentTileGO);
@@ -319,6 +325,13 @@ public class MapPreviewWindow : EditorWindow {
 						                                   Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
 						                                   0f);
 						currentTileGO.transform.localPosition = tileLocalPos;
+
+						TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
+						currenTileScript.mapBlock = currenObjectDataMapBlock;
+						//currenTileScript.Add(currentMapBlock)
+						//currenTileScript.Add(currentTilesetTile)
+						//currenTileScript.Add(currentMapTile)
+						//currenTileScript.Add(currentMovingPlatform)
 					}
 				}
 			}
@@ -349,6 +362,9 @@ public class MapPreviewWindow : EditorWindow {
 						                                   Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
 						                                   0f);
 						currentTileGO.transform.localPosition = tileLocalPos;
+
+						TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
+						currenTileScript.mapTile = currentMapDataTopTile;
 					}
 				}
 			}
@@ -398,7 +414,8 @@ public class MapPreviewWindow : EditorWindow {
 								currentPlatformTileGO.transform.localPosition = tileLocalPos;
 
 								SpriteRenderer tileRenderer = currentPlatformTileGO.AddComponent<SpriteRenderer>();
-
+								tileRenderer.sortingLayerName = "MapPlatformLayer";
+								
 								int iTileSetId = currentTilesetTile.iTilesetID;
 								int tilePosX = currentTilesetTile.iCol;
 								int tilePosY = currentTilesetTile.iRow;
@@ -422,7 +439,7 @@ public class MapPreviewWindow : EditorWindow {
 			}
 		}
 		else
-			Debug.LogError("Map: " + mapSO.mapName + " Platforms == NULL");
+			Debug.Log("Map: " + mapSO.mapName + " Platforms == NULL -> Map hat keine MovingPlatform");
 	}
 
 	void TileTypeToUnityTranslation(TileType tileType, GameObject tileGO)		// Polymorphy!

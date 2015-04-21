@@ -4,6 +4,7 @@
 //#define MAPHEIGHT			15			//height of the map
 //#define TILESETUNKNOWN	-3
 
+#undef Debug_ReadString
 #define SDL_LITTLE_ENDIAN
 #define SDL_BYTEORDER
 //#define SDL_BIG_ENDIAN
@@ -605,6 +606,8 @@ public class Map : ScriptableObject {
 
 	public bool loadMap(string filePath, ReadType iReadType, TilesetManager f_TilesetManager)
 	{
+		Debug.Log("<b><color=black> Trying to read File <color=black>" + Path.GetFileName(filePath) + "</color>@" + filePath + "</color></b>" );
+		
 		isImportSuccessful = false;
 		FileStream fs = new FileStream(filePath, FileMode.Open);
 		BinaryReader binReader = new BinaryReader(fs);
@@ -655,9 +658,9 @@ public class Map : ScriptableObject {
 			finally
 			{
 				if(importError != ImportErrorType.NoError)
-					Debug.LogError("ImportError = " + importError);
+					Debug.LogError("<color=red>ImportError = " + importError+"</color>");
 				else
-					Debug.Log("ImportError = " + importError);
+					Debug.Log("<color=green>ImportError = " + importError+"</color>");
 			}
 		}
 
@@ -827,13 +830,13 @@ public class Map : ScriptableObject {
 		//Load tileset information
 //		short iNumTilesets = (short) ReadInt(binReader);
 		
-		Debug.Log("iNumTilesets = " + iNumTilesets + " Anzahl an Tileset Translations");
+		Debug.Log("<color=blue>iNumTilesets = <b>" + iNumTilesets + "</b></color> Anzahl an Tileset Translations");
 		translations = new TilesetTranslation[iNumTilesets];
 		
 		short iMaxTilesetID = 0; //Figure out how big the translation array needs to be
 		for(short iTileset = 0; iTileset < iNumTilesets; iTileset++)
 		{
-			Debug.LogWarning("Tileset Translation: " + iTileset+1 + " von " + iNumTilesets);
+			Debug.LogWarning("Tileset Translation: " + (iTileset+1) + " von " + iNumTilesets);
 			
 			short iTilesetID = (short) ReadInt(binReader);
 			Debug.Log("\tiTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", iMaxTilesetID = " + iMaxTilesetID);
@@ -858,10 +861,12 @@ public class Map : ScriptableObject {
 			
 			translations[iTileset].Name = ReadString(Globals.TILESET_TRANSLATION_CSTRING_SIZE, binReader);
 			Debug.Log("\tTilesetName länge =" + translations[iTileset].Name.Length);
-			Debug.Log("\tTilesetName in class object: " + translations[iTileset].Name + " TEST ungeschnitten");
+			Debug.Log("<color=blue>\tTilesetName in class object: <b>" + translations[iTileset].Name + "</b> (string ungeschnitten)</color>");
+#if Debug_ReadString
 			Debug.Log("\tTilesetName in class object: " + translations[iTileset].Name.Substring(0,translations[iTileset].Name.Length-1) + " TEST -1");
 			Debug.Log("\tTilesetName in class object: " + translations[iTileset].Name.Substring(0,translations[iTileset].Name.Length-2) + " TEST -2 ");
 			Debug.Log("\tTilesetName in class object: " + translations[iTileset].Name.Substring(0,translations[iTileset].Name.Length-3) + " TEST -3");
+#endif
 			Debug.Log("\tiTileset = " + iTileset + ", iTilesetID = " + iTilesetID + ", Name = " + translations[iTileset].Name + ", iMaxTilesetID = " + iMaxTilesetID); 
 		}
 		return iMaxTilesetID;
@@ -871,11 +876,11 @@ public class Map : ScriptableObject {
 		translationid = new int[iMaxTilesetID + 1];
 		tilesetwidths = new int[iMaxTilesetID + 1];
 		tilesetheights = new int[iMaxTilesetID + 1];
-		string tilesetIDs = "";
+		string translationsTilesetIDs = "";
 		for(short iTileset = 0; iTileset < iNumTilesets; iTileset++)
 		{
+			short readediTilesetID = translations[iTileset].iTilesetID;
 			short currentiTilesetID = translations[iTileset].iTilesetID;
-			tilesetIDs += "translation["+iTileset+"] -> TilesetID:" + currentiTilesetID + "\n"; 
 			//			translationid[iID] = g_tilesetmanager.GetIndexFromName(translation[iTileset].szName);
 			translationid[currentiTilesetID] = f_TilesetManager.GetIndexFromName(translations[iTileset].Name);
 			
@@ -890,9 +895,10 @@ public class Map : ScriptableObject {
 				tilesetwidths[currentiTilesetID] = f_TilesetManager.GetTileset(translationid[currentiTilesetID]).Width;
 				tilesetheights[currentiTilesetID] = f_TilesetManager.GetTileset(translationid[currentiTilesetID]).Height;
 			}
+			translationsTilesetIDs += "translation["+iTileset+"]: readedTilesetID:" + readediTilesetID + "-> lokaleTilesetID: " + translationid[currentiTilesetID] + "\n"; 
 			Debug.Log("Tileset " + translations[iTileset].Name + " width = " + tilesetwidths[currentiTilesetID] + ", height = " + tilesetheights[currentiTilesetID]);
 		}
-		Debug.Log(tilesetIDs);
+		Debug.Log("<color=red><b>!!!!! Tranlations builded:</b></color>\n"+translationsTilesetIDs);
 	}
 	void ReadingMapDataAndObjectData(BinaryReader binReader, ReadType iReadType, int iMaxTilesetID)
 	{
@@ -971,8 +977,8 @@ public class Map : ScriptableObject {
 			}
 		}
 		Debug.Log("<color=green> iTilesetIDOkCount : " + iTilesetIDOkCount + "</color>");
-		Debug.LogError("iTilesetIDChanges : " + iTilesetIDChanges + ", iColChanges:" + iColChanges +" iRowChanges: " + iRowChanges );
-		Debug.LogError("iTilesetNegativCount : " + iTilesetNegativCount);
+		Debug.Log("<color=red>iTilesetIDChanges : " + iTilesetIDChanges + ", iColChanges:" + iColChanges +" iRowChanges: " + iRowChanges+"</color>");
+		Debug.Log("<color=red>iTilesetNegativCount : " + iTilesetNegativCount+"</color>");
 		
 		Debug.LogWarning("reading and filling mapdata array DONE");
 	}
@@ -980,7 +986,7 @@ public class Map : ScriptableObject {
 	{
 		//Read in background to use
 		szBackgroundFile = ReadString(Globals.BACKGROUND_CSTRING_SIZE, binReader);
-		Debug.Log("BackgroundFile = " + szBackgroundFile);
+		Debug.Log("<color=blue>BackgroundFile = " + szBackgroundFile+"</color>");
 	}
 	void ReadingSwitches(BinaryReader binReader, ReadType iReadType)
 	{
@@ -1027,6 +1033,7 @@ public class Map : ScriptableObject {
 			mapHazards = new MapHazard[iNumMapHazards];
 			for(short iMapHazard = 0; iMapHazard < iNumMapHazards; iMapHazard++)
 			{
+				mapHazards[iMapHazard] = new MapHazard();
 				mapHazards[iMapHazard].itype = (short) ReadInt(binReader);
 				mapHazards[iMapHazard].ix = (short) ReadInt(binReader);
 				mapHazards[iMapHazard].iy = (short) ReadInt(binReader);
@@ -1109,6 +1116,8 @@ public class Map : ScriptableObject {
 			{
 				short iCol = ReadByteAsShort(binReader);
 				short iRow = ReadByteAsShort(binReader);
+
+				Debug.Log("ExtendedDataBlocks ("+ iBlock +") wird in ObjectData [x=" + iCol + ", y=" + iRow + "] mit " + "1er" + " Setting eingelesen");
 				
 				objectdata[iCol,iRow].iSettings[0] = ReadByteAsShort(binReader);
 			}
@@ -1119,6 +1128,7 @@ public class Map : ScriptableObject {
 		maxConnection = 0;
 		
 		numwarpexits = (short)ReadInt(binReader);
+		Debug.Log("<color=blue>numWarpExits= " + numwarpexits +"</color>");
 		warpexits = new WarpExit[Globals.MAXWARPS];
 		for(int i = 0; i < numwarpexits && i < Globals.MAXWARPS; i++)
 		{
@@ -1153,7 +1163,7 @@ public class Map : ScriptableObject {
 		if(numwarpexits > Globals.MAXWARPS)
 			numwarpexits = Globals.MAXWARPS;
 		
-		Debug.Log("numwarpexits = " + numwarpexits);
+		Debug.Log("<color=blue>numwarpexits = " + numwarpexits +"</color> (Ignore any more warps than the max: " + Globals.MAXWARPS +")");
 	}
 	void ReadingSpawnAreaData(BinaryReader binReader, ReadType iReadType)
 	{
@@ -1167,7 +1177,7 @@ public class Map : ScriptableObject {
 		{
 			totalspawnsize[i] = 0;
 			numspawnareas[i] = (short)ReadInt(binReader);
-			numSpawnAreasString += "[" + i + "]=" + numspawnareas[i] + "\n";
+			numSpawnAreasString += "[" + i + "] enthält " + numspawnareas[i] + " SpawnAreas\n";
 			//			Debug.Log("numspawnareas["+i+"] = " + numspawnareas[i]);
 			
 			if(numspawnareas[i] > Globals.MAXSPAWNAREAS)
@@ -1219,7 +1229,7 @@ public class Map : ScriptableObject {
 		
 		//Read draw areas (foreground tiles drawing optimization)
 		numdrawareas = (short)ReadInt(binReader);
-		Debug.Log("numdrawareas = " + numdrawareas);
+		Debug.Log("<color=blue>numdrawareas = " + numdrawareas +"</color>");
 		
 		if(numdrawareas > Globals.MAXDRAWAREAS)
 		{
@@ -1256,14 +1266,14 @@ public class Map : ScriptableObject {
 		Debug.Log("reading ExtendedDataBlocks");
 		
 		int iNumExtendedDataBlocks = (short) ReadInt(binReader);
-		Debug.Log("iNumExtendedDataBlocks = " + iNumExtendedDataBlocks);
+		Debug.Log("<color=blue>iNumExtendedDataBlocks = " + iNumExtendedDataBlocks+"</color>");
 		for(short iBlock = 0; iBlock < iNumExtendedDataBlocks; iBlock++)
 		{
 			short iCol = ReadByteAsShort(binReader);
 			short iRow = ReadByteAsShort(binReader);
 			
 			short iNumSettings = ReadByteAsShort(binReader);
-			Debug.Log("ExtendedDataBlocks ("+iNumSettings+") : x=" + iCol + ", y=" + iRow);
+			Debug.Log("ExtendedDataBlocks ("+ iBlock +") wird in ObjectData [x=" + iCol + ", y=" + iRow + "] mit " + iNumSettings + " Settings eingelesen");
 			for(short iSetting = 0; iSetting < iNumSettings; iSetting++)
 			{
 				//				objectdata[iCol,iRow] = new MapBlock();
@@ -1277,7 +1287,7 @@ public class Map : ScriptableObject {
 		
 		//read mode item locations like flags and race goals
 		iNumRaceGoals = (short)ReadInt(binReader);
-		Debug.Log("iNumRaceGoals = " + iNumRaceGoals);
+		Debug.Log("<color=blue>iNumRaceGoals = " + iNumRaceGoals+"</color>");
 		if(iNumRaceGoals >0)
 		{
 			racegoallocations = new Vector2[Globals.MAXRACEGOALS];
@@ -1294,7 +1304,7 @@ public class Map : ScriptableObject {
 		Debug.Log("reading FlagBases");
 		
 		iNumFlagBases = (short)ReadInt(binReader);
-		Debug.Log("iNumFlagBases = " + iNumFlagBases);
+		Debug.Log("<color=blue>iNumFlagBases = " + iNumFlagBases+"</color>");
 		if(iNumFlagBases > 0)
 		{
 			flagbaselocations = new Vector2[Globals.MAXFLAGBASES];
@@ -1541,18 +1551,36 @@ public class Map : ScriptableObject {
 	{
 	}
 
+
+	bool fShowMapData = false;
+	bool fShowPlatformData = false;
+	bool fShowObjectData = false;
 	public void OnGUI_Preview()
 	{
+		fShowMapData = UnityEditor.EditorGUILayout.Foldout(fShowMapData,"Preview Mapdata");
+		if(fShowMapData)
+		{
+			//		previewSliderPosition = EditorGUILayout.BeginScrollView(previewSliderPosition);
+			OnGUI_Preview_Mapdata();
+			//		EditorGUILayout.EndScrollView();
+		}
+		
+		fShowObjectData = UnityEditor.EditorGUILayout.Foldout(fShowObjectData,"Preview Objectdata");
+		if(fShowObjectData)
+		{
+			//		previewObjectDataSliderPosition = EditorGUILayout.BeginScrollView(previewObjectDataSliderPosition);	
+			OnGUI_Preview_Objectdata();
+			//		EditorGUILayout.EndScrollView();
+		}
 
-//		OnGUI_Preview_PlatformTiles();
+		fShowPlatformData = UnityEditor.EditorGUILayout.Foldout(fShowPlatformData,"Preview Platform Data");
+		if(fShowPlatformData)
+		{
+		//		OnGUI_Preview_PlatformTiles();
+		}
 
-//		previewSliderPosition = EditorGUILayout.BeginScrollView(previewSliderPosition);
-		OnGUI_Preview_Mapdata();
-//		EditorGUILayout.EndScrollView();
 
-//		previewObjectDataSliderPosition = EditorGUILayout.BeginScrollView(previewObjectDataSliderPosition);	
-		OnGUI_Preview_Objectdata();
-//		EditorGUILayout.EndScrollView();
+
 	}
 
 	Vector2 previewPlatformTilesSliderPosition = Vector2.zero;
@@ -1934,6 +1962,55 @@ public class Map : ScriptableObject {
 
 	string ReadString(uint size, BinaryReader binReader)
 	{
+
+		/**
+		 * Zusammenfassung:
+		 * 
+		 * In Datei steht vor der eigentlichen Zeichenkette (string) ein UInt32 (4-Byte = 32 Bit) langer Integer Wert
+ 		 * dieser Integer Wert gibt die länge der nachfolgenden Zeichenkette + NULL Terminierung an.
+ 		 * 
+		 * Adresse:		[00]	[01]	[02]	[03]
+		 * Hex-Wert:	[01]	[00]	[00]	[00]	entspricht Interger = 1	(Little-Endian: hohe Adresse (Endian), kleiner Wert)
+		 * Hex-Wert:	[08]	[00]	[00]	[00]	entspricht Interger = 8	(Little-Endian: hohe Adresse (Endian), kleiner Wert))
+		 * Hex-Wert:	[00]	[00]	[00]	[01]	entspricht Interger = 1	(Big-Endian: hohe Adresse (Endian), hoher Wert))
+		 * Hex-Wert:	[00]	[00]	[00]	[08]	entspricht Interger = 8	(Big-Endian: hohe Adresse (Endian), hoher Wert))
+		 * 
+		 * Little / Big - Endian - Format
+		 * * Bei Lade- und Speichervorgängen in Registern und Speichern gibt es zwei Anordnungssysteme in dem die Bytes eingelesen werden, das Endianness: Das Little-Endian-Format und das Big-Endian-Format.
+		 * * Im Gegensatz zu Big Endian ist Little Endian ein Format für die Übertragung oder Speicherung binärer Daten, in denen das Least Significant Byte (LSB) an erster Stelle kommt und auf der niedrigsten Speicheradresse gespeichert wird. So wird das Byte E3 von der hexadezimalen Zahl 6FE3 im Little-Endian-Format auf dem Speicherplatz mit der niedrigsten Adresse gespeichert. 
+		 * 
+		 * 
+		 * native Stringlese-Methode in C#
+		 * * binaryReader.ReadString();
+		 * * Problem: 	diese liest selbst vor der eigentlichen Zeichenkette eine 7-Bit große Längenangabe ein (damit sie weiß wie viele chars zu dem String gehören)
+		 * *			da im SMW Maps Dateiformat diese Längenangabe vom Typ UInt32 und somit 32-Bit groß ist kann diese native Funktion nicht verwendet werden.
+		 * 
+		 * alternative 
+		 * * binaryReader.ReadChars(iLength);
+		 * 
+		 * * Problem:	char[] cString -> string
+		 * 				string readString = new string(cString);
+		 * 
+		 * * Problem:	in letztem Zeichen steht ein cString Terminierungs Zeichen.
+		 * 				Debug.Log("vorher " + cstring + " nacher"); nacher wird nicht angezeigt
+		 * 				string readString = new string(cString).Trim('\0');		// TODO-> WICHTIG <-TODO entferne NULL Terminierung<
+		 * 				
+		 * * kein Problem mehr:	die längenangabe stimmt eigentlich nicht iLength = string.length + 1    //+1 => Zeichen der NULL Terminierung
+		 * 				
+		 * 
+		 * alternative SCHLECHT iLength könnte 0 sein -> iLength-1 => -1!
+		 * * cString = new char[iLength-1];
+		 * * for(int i=0; i<iLength)
+		 * *	if(i
+		 * * 	cString[i] = binaryReader.ReadChar();
+		 * * Problem:	die längenangabe stimmt eigentlich nicht iLength = string.length + 1    //+1 => Zeichen der NULL Terminierung
+		 * 
+		 **/
+
+
+		//http://www.bogotobogo.com/Embedded/Little_endian_big_endian_htons_htonl.php
+		//http://www.pcreview.co.uk/threads/problem-on-method-readchars.3896989/
+		//https://social.msdn.microsoft.com/Forums/windows/en-US/064287cc-eca9-4e7d-9ac3-3ea1440c96fa/binaryreaderreadstring-and-streams?forum=winforms
 		// string länge auslesen
 		//		int iLen = ReadInt(inFile);
 		int iLen = ReadInt(binReader);
@@ -1943,6 +2020,11 @@ public class Map : ScriptableObject {
 		{
 			Debug.LogError("string länge < 0!");
 			return null;
+		}
+		else if(iLen == 0)
+		{
+			Debug.LogError("string länge == 0!");
+			return "";
 		}
 		else if (iLen > Globals.TILESET_TRANSLATION_CSTRING_SIZE)
 		{
@@ -1956,9 +2038,11 @@ public class Map : ScriptableObject {
 		//		fread(szReadString, sizeof(Uint8), iLen, inFile);
 		szReadCString = binReader.ReadChars(iLen);
 
+		//char lastChar = binReader.ReadChar();			// binReader Pointer um ein Char weiter setzen
 		//		szReadString[iLen - 1] = 0;
-//		szReadCString[iLen - 1] = '\0';	 //cstring NULL Terminated ACHTUNG  BUG -> string wird dann null terminiert!!
+		//szReadCString[iLen - 1] = '\0';	 				//cstring NULL Terminated nicht nötig da wir in string umwandeln
 
+#if Debug_ReadString
 		string[] debugString = new string[2];
 		for(int i=0; i<iLen; i++)
 		{
@@ -1967,7 +2051,8 @@ public class Map : ScriptableObject {
 		}
 		debugString[0] += "|";
 		debugString[1] += "|";
-		Debug.LogError(iLen + "\n" + debugString[0] + "\n" + debugString[1]);
+		Debug.Log("<color=red>cstring länge: "+iLen + "</color>\n" + debugString[0] + "\n" + debugString[1]+"</color>");	// </color> wird nicht mehr ausgegeben da debugString NULL Terminierung enthält
+#endif
 		
 		//		szReadString[iLen - 1] = 0;
 //		szReadString[iLen - 1] = '\0';	 cstrin NULL Terminated ACHTUNG  BUG -> string wird dann null terminiert!!
@@ -1979,9 +2064,11 @@ public class Map : ScriptableObject {
 		/* copy to sized buffer (overflow safe): */ 
 		//strncpy ( str2, str1, sizeof(str2) );
 		
-		string readString = new string(szReadCString).Trim('\0');		// WICHTIG entferne NULL Terminierung
-		
+		string readString = new string(szReadCString).Trim('\0');		// TODO-> WICHTIG <-TODO entferne NULL Terminierung<
+
+		#if Debug_ReadString
 //		Debug.Log("readString = " + readString);
+		#endif
 		
 		return readString;
 	}

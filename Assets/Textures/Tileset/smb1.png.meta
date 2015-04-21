@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: c6069833b2438ba48b5a3103a2d1604c
-timeCreated: 1429503839
+timeCreated: 1429646001
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -621,40 +621,40 @@ TextureImporter:
     correctGamma: 0
     fadeOut: 0
     borderMipMap: 0
-    mipMapFadeDistanceStart: 1
-    mipMapFadeDistanceEnd: 3
+    mipMapFadeDistanceStart: 0
+    mipMapFadeDistanceEnd: 0
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
-    heightScale: .25
+    heightScale: 0
     normalMapFilter: 0
-  isReadable: 0
+  isReadable: 1
   grayScaleToAlpha: 0
   generateCubemap: 0
   cubemapConvolution: 0
-  cubemapConvolutionSteps: 8
-  cubemapConvolutionExponent: 1.5
+  cubemapConvolutionSteps: 0
+  cubemapConvolutionExponent: 0
   seamlessCubemap: 0
-  textureFormat: -3
+  textureFormat: 5
   maxTextureSize: 1024
   textureSettings:
-    filterMode: -1
-    aniso: 16
-    mipBias: -1
+    filterMode: 0
+    aniso: 0
+    mipBias: 0
     wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   rGBM: 0
-  compressionQuality: 50
-  spriteMode: 2
-  spriteExtrude: 1
-  spriteMeshType: 1
+  compressionQuality: 0
+  spriteMode: 1
+  spriteExtrude: 0
+  spriteMeshType: 0
   alignment: 0
-  spritePivot: {x: .5, y: .5}
+  spritePivot: {x: 0, y: 0}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 32
-  alphaIsTransparency: 1
-  textureType: 8
+  alphaIsTransparency: 0
+  textureType: 5
   buildTargetSettings: []
   spriteSheet:
     sprites:
