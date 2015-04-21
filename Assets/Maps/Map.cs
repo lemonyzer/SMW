@@ -609,7 +609,7 @@ public class Map : ScriptableObject {
 		Debug.Log("<b><color=black> Trying to read File <color=black>" + Path.GetFileName(filePath) + "</color>@" + filePath + "</color></b>" );
 		
 		isImportSuccessful = false;
-		FileStream fs = new FileStream(filePath, FileMode.Open);
+		FileStream fs = new FileStream(@filePath, FileMode.Open);
 		BinaryReader binReader = new BinaryReader(fs);
 
 		Debug.Log("FileStream.Length = " + fs.Length);

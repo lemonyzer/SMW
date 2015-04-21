@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-static class Globals {
+public static class Globals {
 
 	public static int[] version = new int[VERSIONLENGTH] {1, 8, 0, 3};
 	public static short[] g_iTileTypeConversion = new short[] {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
