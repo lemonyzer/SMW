@@ -73,7 +73,7 @@ public class TilesetManager : ScriptableObject {
 		}
 		if(index == Globals.TILESETANIMATED)
 		{
-			Debug.LogError("GetTileset() spezial: TILESETANIMATED: " + Globals.TILESETANIMATED);
+			Debug.Log("GetTileset() spezial: TILESETANIMATED: " + Globals.TILESETANIMATED);
 			if(animationTileset == null)
 				Debug.LogError(this.ToString() + " TilesetManager animationTileset missing");
 

@@ -1740,6 +1740,7 @@ public class Map : ScriptableObject {
 	}
 
 	Vector2 previewSliderPosition = Vector2.zero;
+	bool fHideNonTilesetTiles = true;
 
 	public GUIStyle textAreaStyle;
 
@@ -1753,6 +1754,7 @@ public class Map : ScriptableObject {
 		
 		if(tilesData != null)
 		{
+			fHideNonTilesetTiles = EditorGUILayout.Toggle("Hide Non TilesetTiles", fHideNonTilesetTiles);
 			previewSliderPosition = EditorGUILayout.BeginScrollView(previewSliderPosition);
 			EditorGUILayout.BeginHorizontal();
 			//			GUILayout.Space(10);
@@ -1777,13 +1779,21 @@ public class Map : ScriptableObject {
 						}
 						else
 						{
-							if(true)
+							if(!fHideNonTilesetTiles)
 							{
 								tileString += tile.iTilesetID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
 							}
 							else
 							{
-								tileString += tile.iTilesetID.ToString("D2")+",--,--";
+								if(tile.iTilesetID == Globals.TILESETNONE)
+									tileString += "---,--,--";
+								else if(tile.iTilesetID == Globals.TILESETUNKNOWN)
+									tileString += "-U"+",00,00";
+								else if(tile.iTilesetID == Globals.TILESETANIMATED)
+									tileString += "AD"+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
+								else
+									tileString += tile.iTilesetID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
+									
 							}
 							
 							if(l == Globals.MAPLAYERS -1)
@@ -1862,11 +1872,22 @@ public class Map : ScriptableObject {
 							}
 							else
 							{
-//								tileString += tile.iTilesetID.ToString("D2")+",--,--";	// TODO Bug, hides Informations
-								if(tile.iCol == 0 && tile.iRow == 0)
-									tileString += tile.iTilesetID.ToString("D2")+",--,--";
+								if(fHideNonTilesetTiles)
+								{
+									tileString += "---,--,--";
+								}
 								else
+								{
 									tileString += tile.iTilesetID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
+								}
+//								if(tile.iTilesetID == Globals.TILESETNONE)
+//									tileString += "---,--,--";
+//								else if(tile.iTilesetID == Globals.TILESETUNKNOWN)
+//									tileString += "-U"+",00,00";
+//								else if(tile.iTilesetID == Globals.TILESETANIMATED)
+//									tileString += "AD"+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
+//								else
+//									tileString += tile.iTilesetID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
 							}
 
 							//TODO

@@ -18,6 +18,10 @@ public class Tileset : ScriptableObject {
 //	public SpriteMetaData[] spriteMetaData;
 //	[SerializeField]
 //	public Sprite[] tilesetArray;
+	[SerializeField]
+	public bool animatedTileset = false;
+	[SerializeField]
+	public int animatedWidth = 4;
 
 	[SerializeField]
 	public string tilesetName;
@@ -141,12 +145,45 @@ public class Tileset : ScriptableObject {
 	}
 
 #if UNITY_EDITOR
+	public Sprite[] GetAnimationTileSprites(int x, int y)
+	{
+		string assetRelativPath = UnityEditor.AssetDatabase.GetAssetPath(tileset);
+		UnityEngine.Object[] assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(assetRelativPath);			// TODO store this array in ScriptableObject, doesnt need to load it for every Tile of the map
+		
+		int subSpritePos = 0;
+		if(animatedTileset)
+			subSpritePos = x*animatedWidth + y*Mathf.FloorToInt(width/tileWidth);
+		else
+			Debug.LogError(tilesetName + " i'm not the animated Tileset");
+		
+		subSpritePos++;	// root Asset is no SubSprite (sliced Sprite)
+		if(subSpritePos+animatedWidth > assets.Length)
+		{
+			Debug.LogError("Sub Sprite Pos + animationWidth " + subSpritePos+"+"+animatedWidth + " > " + assets.Length + " Tileset Array Length");
+		}
+		else
+		{
+			Sprite[] animationSprites = new Sprite[animatedWidth];
+			for(int i=0;i<animationSprites.Length;i++)
+			{
+				animationSprites[i] = new Sprite(); 
+				animationSprites[i] = assets[subSpritePos+i] as Sprite;
+			}
+			return animationSprites;
+		}
+		return null;
+	}
 	public Sprite GetTileSprite(int x, int y)
 	{
 		string assetRelativPath = UnityEditor.AssetDatabase.GetAssetPath(tileset);
 		UnityEngine.Object[] assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(assetRelativPath);			// TODO store this array in ScriptableObject, doesnt need to load it for every Tile of the map
 
-		int subSpritePos = x + y*Mathf.FloorToInt(width/tileWidth);
+		int subSpritePos = 0;
+		if(animatedTileset)
+			subSpritePos = x*animatedWidth + y*Mathf.FloorToInt(width/tileWidth);
+		else
+			subSpritePos = x + y*Mathf.FloorToInt(width/tileWidth);
+
 		subSpritePos++;	// root Asset is no SubSprite (sliced Sprite)
 		if(subSpritePos > assets.Length)
 		{

@@ -452,8 +452,18 @@ public class MapPreviewWindow : EditorWindow {
 							int tilePosY = translatedTile.iRow;
 							Tileset tileSet = g_TilesetManager.GetTileset(iTileSetId);
 							Sprite tileSprite;
+							Sprite[] animationSprites;
 							if(useAssetSubSprites)
-								tileSprite = tileSet.GetTileSprite(tilePosX, tilePosY);
+							{
+								if(translatedTile.iTilesetID == Globals.TILESETANIMATED)
+								{
+									//Animations Script an Gameobject fügen
+									// mit Sprites füllen
+									//TODO
+								}
+								else
+									tileSprite = tileSet.GetTileSprite(tilePosX, tilePosY);
+							}
 							else
 								tileSprite = tileSet.GetNewCreatetTileSprite(tilePosX, tilePosY);	
 							currentSpriteRenderer.sprite = tileSprite;
