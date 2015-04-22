@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 1cb52cb52d25942409171c96b816951c
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - destroyBlockSound: {fileID: 8300000, guid: 613680aabdf04c24796caa6a61b9ee08, type: 3}
+  - destroyedBlockPrefab: {fileID: 100000, guid: ad0991ddd4383b442b45f81026f79553,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
