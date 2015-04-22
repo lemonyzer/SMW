@@ -6,6 +6,14 @@ public class Tags : MonoBehaviour {
 	public const string guiAnalogStick = "AnalogStick";
 	public const string guiStick = "Stick";
 
+	public const string tag_Map = "Map";
+	public const string tag_MapBackgroundLayer = "MapBackgroundLayer";
+	public const string tag_MapLayer0 = "MapLayer0";
+	public const string tag_MapLayer1 = "MapLayer1";
+	public const string tag_MapLayer2 = "MapLayer2";
+	public const string tag_MapLayer3 = "MapLayer3";
+	
+
 	/**
 	 * Body Parts (Parent and Children)
 	 **/

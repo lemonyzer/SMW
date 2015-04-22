@@ -256,7 +256,14 @@ public class MapPreviewWindow : EditorWindow {
 			return null;
 		}
 
+		/**
+		 * 
+		 * MapRootGO
+		 * 
+		 **/
+
 		GameObject mapRootGO = new GameObject(mapSO.mapName + (w_UseAssetSubSpritesToggle ? "_AssetSubSprites" : "_no"));
+		mapRootGO.tag = Tags.tag_Map;
 		mapRootGO.transform.position = Vector3.zero;
 		// Map Background
 		SpriteRenderer backgroundSpriteRenderer = mapRootGO.AddComponent<SpriteRenderer>();
