@@ -17,8 +17,7 @@ public class TilesetWindow : EditorWindow {
 	#endregion
 	
 	#region Main Methods
-	
-	[MenuItem("SMW/Tileset Create Empty")]
+
 	public static Tileset CreateEmpty()
 	{
 		Tileset newTilesetAsset = ScriptableObject.CreateInstance<Tileset>();
@@ -46,7 +45,7 @@ public class TilesetWindow : EditorWindow {
 		return newTilesetAsset;
 	}
 	
-	[MenuItem("SMW/Tileset Window")]
+	[MenuItem("SMW/Tileset/Tileset Window",false,1)]
 	public static void Init()
 	{
 		if(currWindow == null)

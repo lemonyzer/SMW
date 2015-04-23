@@ -67,6 +67,8 @@ public class MovingPlatform {
 	[SerializeField]
 	public TilesetTile[,] platformTiles;
 	[SerializeField]
+	public TilesetTile[,] platformTilesRaw;
+	[SerializeField]
 	public MapTile[,] platformTileTypes;
 //	[SerializeField]
 //	public short iWidth;
@@ -77,9 +79,10 @@ public class MovingPlatform {
 	[SerializeField]
 	public bool fPreview;
 	
-	public MovingPlatform(TilesetTile[,] platformTiles, MapTile[,] platformTileTypes, short iWidth, short iHeight, short iDrawLayer, MovingPlatformPath path, bool fPreview)
+	public MovingPlatform(TilesetTile[,] platformTiles, TilesetTile[,] platformTilesRaw, MapTile[,] platformTileTypes, short iWidth, short iHeight, short iDrawLayer, MovingPlatformPath path, bool fPreview)
 	{
 		this.platformTiles = platformTiles;
+		this.platformTilesRaw = platformTilesRaw;
 		this.platformTileTypes = platformTileTypes;
 		this.iPlatformWidth = iWidth;
 		this.iPlatformHeight = iHeight;
@@ -529,6 +532,8 @@ public class Map : ScriptableObject {
 	[SerializeField]
 	TilesetTile[,] platformTiles;
 	[SerializeField]
+	TilesetTile[,] platformTilesRaw;
+	[SerializeField]
 	MapTile[,] platformTileTypes;
 
 	[SerializeField]
@@ -681,6 +686,10 @@ public class Map : ScriptableObject {
 				else
 					Debug.Log("<color=green>ImportError = " + importError+"</color>");
 			}
+		}
+		else
+		{
+			Debug.LogError("Map Version < 1.8.0.0 ");
 		}
 
 		// close stream and file
@@ -1367,6 +1376,7 @@ public class Map : ScriptableObject {
 				Debug.Log("iPlatform = " + iPlatform + ", iHeight = " + iPlatformHeight);
 				
 				platformTiles = new TilesetTile[iPlatformWidth, iPlatformHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
+				platformTilesRaw = new TilesetTile[iPlatformWidth, iPlatformHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
 				platformTileTypes = new MapTile[iPlatformWidth, iPlatformHeight];
 
 				if(mapdatatop == null)
@@ -1382,7 +1392,9 @@ public class Map : ScriptableObject {
 						
 						//TilesetTile * tile = &tiles[iCol][iRow];
 						platformTiles[iCol,iRow] = new TilesetTile();
+						platformTilesRaw[iCol,iRow] = new TilesetTile();
 						TilesetTile platformTile = platformTiles[iCol,iRow];
+						TilesetTile platformTileRaw = platformTilesRaw[iCol,iRow];
 
 						platformTileTypes[iCol,iRow] = new MapTile();
 						MapTile platformTileType = platformTileTypes[iCol,iRow];
@@ -1395,6 +1407,10 @@ public class Map : ScriptableObject {
 							platformTile.iTilesetID = ReadByteAsShort(binReader);
 							platformTile.iCol = ReadByteAsShort(binReader);
 							platformTile.iRow = ReadByteAsShort(binReader);
+
+							platformTileRaw.iTilesetID = platformTile.iTilesetID;
+							platformTileRaw.iCol = platformTile.iCol;
+							platformTileRaw.iRow = platformTile.iRow;
 							
 							if(platformTile.iTilesetID >= 0)
 							{
@@ -1522,7 +1538,7 @@ public class Map : ScriptableObject {
 					//printf("CenterX: %.2f CenterY:%.2f Angle:%.2f RadiusX: %.2f RadiusY: %.2f Velocity:%.2f\n", fCenterX, fCenterY, fAngle, fRadiusX, fRadiusY, fVelocity);
 				}
 				
-				MovingPlatform platform = new MovingPlatform(platformTiles, platformTileTypes, iPlatformWidth, iPlatformHeight, iDrawLayer, path, fPreview);
+				MovingPlatform platform = new MovingPlatform(platformTiles, platformTilesRaw, platformTileTypes, iPlatformWidth, iPlatformHeight, iDrawLayer, path, fPreview);
 				platforms[iPlatform] = platform;
 //				platformdrawlayer[iDrawLayer].push_back(platform);
 			}

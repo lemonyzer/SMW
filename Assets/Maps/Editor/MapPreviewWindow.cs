@@ -303,6 +303,9 @@ public class MapPreviewWindow : EditorWindow {
 
 		backgroundSpriteRenderer.sprite = backgroundSprite;
 
+		GameObject animatedLayerGO = new GameObject("Animated Layer");
+		animatedLayerGO.transform.SetParent(mapRootGO.transform);
+		animatedLayerGO.transform.localPosition = new Vector3(0f,0f,-10f);
 		for(int l=0; l<Globals.MAPLAYERS; l++)
 		{
 			GameObject currentMapLayerGO = new GameObject("Layer " + l);
@@ -452,21 +455,43 @@ public class MapPreviewWindow : EditorWindow {
 							int tilePosY = translatedTile.iRow;
 							Tileset tileSet = g_TilesetManager.GetTileset(iTileSetId);
 							Sprite tileSprite;
-							Sprite[] animationSprites;
+
 							if(useAssetSubSprites)
 							{
 								if(translatedTile.iTilesetID == Globals.TILESETANIMATED)
 								{
+									currentTileGO.transform.SetParent(animatedLayerGO.transform, true);
+//									Vector3 animTilePos = currentTileGO.transform.localPosition;
+//									animTilePos.z = -10;
+//									currentTileGO.transform.localPosition = animTilePos;
+
 									//Animations Script an Gameobject fügen
 									// mit Sprites füllen
 									//TODO
+									Sprite[] animationSprites;
+									animationSprites = tileSet.GetAnimationTileSprites(tilePosX, tilePosY);
+									if(animationSprites != null)
+									{
+										AnimatedTile animScript = currentTileGO.AddComponent<AnimatedTile>();
+										animScript.reverseAnim = false;
+										animScript.SetAnimation(animationSprites);
+									}
+									else
+									{
+										Debug.LogError("Animated Tile animationSprites == null: " + tileSet.tilesetName + " iCol" + tilePosX + " iRow" + tilePosY);
+									}
 								}
 								else
+								{
 									tileSprite = tileSet.GetTileSprite(tilePosX, tilePosY);
+									currentSpriteRenderer.sprite = tileSprite;
+								}
 							}
 							else
-								tileSprite = tileSet.GetNewCreatetTileSprite(tilePosX, tilePosY);	
-							currentSpriteRenderer.sprite = tileSprite;
+							{
+								tileSprite = tileSet.GetNewCreatetTileSprite(tilePosX, tilePosY);
+								currentSpriteRenderer.sprite = tileSprite;
+							}
 
 							if (useTileType)
 							{
@@ -622,6 +647,103 @@ public class MapPreviewWindow : EditorWindow {
 								TileTypeToUnityTranslation(currentTileType, currentPlatformTileGO);
 							}
 
+						}
+					}
+				}
+			}
+		}
+		else
+			Debug.Log("Map: " + mapSO.mapName + " Platforms == NULL -> Map hat keine MovingPlatform");
+
+		// Platforms Translated + Raw
+		layer++;
+//		MovingPlatform[] platforms = mapSO.GetPlatforms();
+		if (platforms != null)
+		{
+			// Platforms
+			GameObject mapPlatformsLayerGO = new GameObject("Platforms Raw");
+			mapPlatformsLayerGO.transform.SetParent(mapRootGO.transform);
+			mapPlatformsLayerGO.transform.localPosition = new Vector3(0f,0f,(layer)*-2f);		//(l+1) (trenne layer von background)
+			
+			for(int i=0; i<platforms.Length; i++)
+			{
+				// Single Platform
+				MovingPlatform currentPlatform = platforms[i];
+				if (currentPlatform != null)
+				{
+					GameObject currenPlatformGO = new GameObject("Platform " + i.ToString("D2"));
+					currenPlatformGO.transform.SetParent(mapPlatformsLayerGO.transform, false);		// World Position stays = false.
+					//					currenPlatformGO.transform.localPosition = Vector3.zero;
+					
+					for(int y=0; y<currentPlatform.iPlatformHeight; y++)
+					{
+						for(int x=0; x<currentPlatform.iPlatformWidth; x++)
+						{
+							TilesetTile currentTilesetTileRaw = currentPlatform.platformTilesRaw[x,y];
+							TilesetTile currentTilesetTileTranslated = currentPlatform.platformTiles[x,y];
+							MapTile currentMapTile = currentPlatform.platformTileTypes[x,y];
+							if(currentTilesetTileRaw != null)
+							{
+								bool animated = false;
+								if (currentTilesetTileRaw.iTilesetID == Globals.TILESETNONE)
+									continue;
+								else if (currentTilesetTileRaw.iTilesetID == Globals.TILESETANIMATED)
+								{
+									animated = true;
+									currentTilesetTileTranslated.iTilesetID = Globals.TILESETANIMATED;
+								}
+
+								string tileTypeString = "";
+								if (currentMapTile != null)
+									tileTypeString += currentMapTile.iType;
+								else
+									tileTypeString += "NULL";
+								
+								GameObject currentPlatformTileGO = new GameObject(x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString );
+								currentPlatformTileGO.transform.SetParent(currenPlatformGO.transform);
+								Vector3 tileLocalPos = new Vector3(-Globals.MAPWIDTH*0.5f +x,		// x+1: pivot Right , x+0.5f: pivor Center, x: pivot Left
+								                                   Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
+								                                   0f);
+								currentPlatformTileGO.transform.localPosition = tileLocalPos;
+								
+								SpriteRenderer tileRenderer = currentPlatformTileGO.AddComponent<SpriteRenderer>();
+								tileRenderer.sortingLayerName = "MapPlatformLayer";
+
+								int iTileSetId = currentTilesetTileTranslated.iTilesetID;
+								int tilePosX = currentTilesetTileTranslated.iCol;
+								int tilePosY = currentTilesetTileTranslated.iRow;
+
+								Tileset tileSet = g_TilesetManager.GetTileset(iTileSetId);
+								if(animated)
+								{
+									Sprite[] animationSprites;
+									animationSprites = tileSet.GetAnimationTileSprites(tilePosX, tilePosY);
+									if(animationSprites != null)
+									{
+										AnimatedTile animTileScript = currentPlatformTileGO.AddComponent<AnimatedTile>();
+										animTileScript.reverseAnim = false;
+										animTileScript.SetAnimation(animationSprites);
+									}
+									else
+									{
+										Debug.LogError("Animated Tile animationSprites == null: " + tileSet.tilesetName + " iCol" + tilePosX + " iRow" + tilePosY);
+									}
+								}
+								else
+								{
+									Sprite tileSprite;
+									if(useAssetSubSprites)
+										tileSprite = tileSet.GetTileSprite(tilePosX, tilePosY);
+									else
+										tileSprite = tileSet.GetNewCreatetTileSprite(tilePosX, tilePosY);	
+									tileRenderer.sprite = tileSprite;
+								}
+								
+								TileType currentTileType = tileSet.GetTileType((short)tilePosX, (short)tilePosY);
+								
+								TileTypeToUnityTranslation(currentTileType, currentPlatformTileGO);
+							}
+							
 						}
 					}
 				}
