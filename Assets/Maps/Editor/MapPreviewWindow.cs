@@ -257,21 +257,23 @@ public class MapPreviewWindow : EditorWindow {
 			return null;
 		}
 
-		TilesetTile[,,] mapDataRaw = mapSO.GetMapDataRaw();
+		MapLayer[] mapDataRaw = mapSO.GetMapDataRaw();
 		if(mapDataRaw == null)
 		{
 			Debug.LogError("mapSO.GetMapDataRaw() == NULL -> keine Informationen über Tile<->SubSprite vorhanden");
 			return null;
 		}
 
-		TilesetTile[,,] mapData = mapSO.GetMapData();
+//		TilesetTile[,,] mapData = mapSO.GetMapData();
+		MapLayer[] mapData = mapSO.GetMapData();
 		if(mapData == null)
 		{
 			Debug.LogError("mapSO.GetMapData() == NULL -> keine Informationen über Tile<->SubSprite vorhanden");
 			return null;
 		}
 
-		bool[,,] customMapData = mapSO.GetCustomMapData();
+//		bool[,,] customMapData = mapSO.GetCustomMapData();
+		MapDataFlags[] customMapData = mapSO.GetCustomMapData();
 		if(customMapData == null)
 		{
 			Debug.LogError("mapSO.GetCustomMapData() == NULL -> keine Informationen welches Tile ein Sprite enthält");
@@ -324,7 +326,7 @@ public class MapPreviewWindow : EditorWindow {
 //					                              0f);
 //					currentTileTransform.localPosition = tilePos;
 					//TilesetTile currenTilesetTile = mapData[x,y,l];
-					TilesetTile currentRawTilesetTile = mapDataRaw[x,y,l];
+					TilesetTile currentRawTilesetTile = mapDataRaw[l].GetTile(x,y);
 					if(currentRawTilesetTile != null)
 					{
 						// erzeuge (kopiere) currenTilesetTile neu um RawDaten nicht zu manipulieren!
@@ -518,7 +520,7 @@ public class MapPreviewWindow : EditorWindow {
 		// ObjectData
 		int layer = Globals.MAPLAYERS;			
 		layer++;									// +1 because Background and Layer 0 are two different layers 
-		MapBlock[,] mapObjectData = mapSO.GetObjectData();
+		MapBlockLayer mapObjectData = mapSO.GetObjectData();
 		if (mapObjectData != null)	
 		{
 			GameObject mapObjectDataLayerGO = new GameObject("ObjectData");
@@ -529,7 +531,7 @@ public class MapPreviewWindow : EditorWindow {
 			{
 				for(int x=0; x<Globals.MAPWIDTH; x++)
 				{
-					MapBlock currenObjectDataMapBlock = mapObjectData[x,y];
+					MapBlock currenObjectDataMapBlock = mapObjectData.GetBlock(x,y);
 					if(currenObjectDataMapBlock != null)
 					{
 						string tileTypeString = ""+ ((TileType) currenObjectDataMapBlock.iType);
@@ -542,6 +544,13 @@ public class MapPreviewWindow : EditorWindow {
 
 						TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
 						currenTileScript.mapBlock = currenObjectDataMapBlock;
+
+						if (currenObjectDataMapBlock.iType != 255)
+						{
+							SpriteRenderer currentTileSprite = currentTileGO.AddComponent<SpriteRenderer>();
+							currentTileSprite.sprite = g_TilesetManager.GetBlockSprite (currenObjectDataMapBlock.iType);
+							currentTileSprite.sortingLayerName = "MapObjectDataLayer";
+						}
 						//currenTileScript.Add(currentMapBlock)
 						//currenTileScript.Add(currentTilesetTile)
 						//currenTileScript.Add(currentMapTile)
@@ -554,7 +563,8 @@ public class MapPreviewWindow : EditorWindow {
 			Debug.LogError("Map: " + mapSO.mapName + " GetObjectData == NULL");
 
 		layer++;
-		MapTile[,] mapDataTop = mapSO.GetMapDataTop();
+//		MapTile[,] mapDataTop = mapSO.GetMapDataTop();
+		MapTopLayer mapDataTop = mapSO.GetMapDataTop();
 		if (mapDataTop != null)
 		{
 			// mapDataTop
@@ -566,7 +576,7 @@ public class MapPreviewWindow : EditorWindow {
 			{
 				for(int x=0; x<Globals.MAPWIDTH; x++)
 				{
-					MapTile currentMapDataTopTile = mapDataTop[x,y];
+					MapTile currentMapDataTopTile = mapDataTop.GetTile(x,y);
 					if (currentMapDataTopTile != null)
 					{
 						string tileTypeString = "" + currentMapDataTopTile.iType;
@@ -605,13 +615,15 @@ public class MapPreviewWindow : EditorWindow {
 					GameObject currenPlatformGO = new GameObject("Platform " + i.ToString("D2"));
 					currenPlatformGO.transform.SetParent(mapPlatformsLayerGO.transform, false);		// World Position stays = false.
 //					currenPlatformGO.transform.localPosition = Vector3.zero;
+					MovingPlatformScript currentPlatformScript = currenPlatformGO.AddComponent<MovingPlatformScript>();
+					currentPlatformScript.movingPlatform = currentPlatform;
 					
 					for(int y=0; y<currentPlatform.iPlatformHeight; y++)
 					{
 						for(int x=0; x<currentPlatform.iPlatformWidth; x++)
 						{
-							TilesetTile currentTilesetTile = currentPlatform.platformTiles[x,y];
-							MapTile currentMapTile = currentPlatform.platformTileTypes[x,y];
+							TilesetTile currentTilesetTile = currentPlatform.platformTiles.GetTile(x,y);
+							MapTile currentMapTile = currentPlatform.platformTileTypes.GetTile(x,y);
 							if(currentTilesetTile != null)
 							{
 								string tileTypeString = "";
@@ -674,14 +686,16 @@ public class MapPreviewWindow : EditorWindow {
 					GameObject currenPlatformGO = new GameObject("Platform " + i.ToString("D2"));
 					currenPlatformGO.transform.SetParent(mapPlatformsLayerGO.transform, false);		// World Position stays = false.
 					//					currenPlatformGO.transform.localPosition = Vector3.zero;
+					MovingPlatformScript currentPlatformScript = currenPlatformGO.AddComponent<MovingPlatformScript>();
+					currentPlatformScript.movingPlatform = currentPlatform;
 					
 					for(int y=0; y<currentPlatform.iPlatformHeight; y++)
 					{
 						for(int x=0; x<currentPlatform.iPlatformWidth; x++)
 						{
-							TilesetTile currentTilesetTileRaw = currentPlatform.platformTilesRaw[x,y];
-							TilesetTile currentTilesetTileTranslated = currentPlatform.platformTiles[x,y];
-							MapTile currentMapTile = currentPlatform.platformTileTypes[x,y];
+							TilesetTile currentTilesetTileRaw = currentPlatform.platformTilesRaw.GetTile(x,y);
+							TilesetTile currentTilesetTileTranslated = currentPlatform.platformTiles.GetTile(x,y);
+							MapTile currentMapTile = currentPlatform.platformTileTypes.GetTile(x,y);
 							if(currentTilesetTileRaw != null)
 							{
 								bool animated = false;

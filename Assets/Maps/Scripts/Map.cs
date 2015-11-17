@@ -19,6 +19,78 @@ using System;
 using System.IO;
 
 [Serializable]
+public class MapLayer
+{
+
+	//1D 		TilesetTile[] tiles;
+	//2D 		TilesetTile[,] tiles;
+	//3D 		TilesetTile[,,] tiles;
+	//Jagged	TilesetTile[][] tiles;
+
+	[SerializeField]
+	int height;
+	[SerializeField]
+	int width;
+	[SerializeField]
+	TilesetTile[] tiles;
+
+	public MapLayer (int x, int y)
+	{
+		width = x;
+		height = y;
+		tiles = new TilesetTile[x * y];
+		int length = x * y;
+		for (int i=0; i< length; i++)
+		{
+			tiles[i] = new TilesetTile ();
+		}
+		Debug.Log (this.ToString () + " width = " + width);
+	}
+
+	public TilesetTile GetTile (int x, int y) {
+		return tiles [x + y*width];
+	}
+
+	public void SetTile (int x, int y, TilesetTile tile) {
+		tiles [x + y*width] = tile;
+	}
+
+}
+
+[Serializable]
+public class MapTopLayer
+{
+	[SerializeField]
+	int height;
+	[SerializeField]
+	int width;
+	[SerializeField]
+	MapTile[] mapTiles;
+	
+	public MapTopLayer (int x, int y)
+	{
+		width = x;
+		height = y;
+		mapTiles = new MapTile[x * y];
+		int length = x * y;
+		for (int i=0; i< length; i++)
+		{
+			mapTiles[i] = new MapTile ();
+		}
+		Debug.Log (this.ToString () + " width = " + width);
+	}
+	
+	public MapTile GetTile (int x, int y) {
+		return mapTiles [x + y*width];
+	}
+	
+	public void SetTile (int x, int y, MapTile mapTile) {
+		mapTiles [x + y*width] = mapTile;
+	}
+};
+
+
+[Serializable]
 public class MapTile
 {
 	[SerializeField]
@@ -45,6 +117,70 @@ public class MapBlock
 };
 
 [Serializable]
+public class MapBlockLayer
+{
+	[SerializeField]
+	int height;
+	[SerializeField]
+	int width;
+	[SerializeField]
+	MapBlock[] mapBlocksData;
+	
+	public MapBlockLayer (int x, int y)
+	{
+		width = x;
+		height = y;
+		mapBlocksData = new MapBlock[x * y];
+		int length = x * y;
+		for (int i=0; i< length; i++)
+		{
+			mapBlocksData[i] = new MapBlock ();
+		}
+		Debug.Log (this.ToString () + " width = " + width);
+	}
+	
+	public MapBlock GetBlock (int x, int y) {
+		return mapBlocksData [x + y*width];
+	}
+	
+	public void SetBlock (int x, int y, MapBlock mapBlock) {
+		mapBlocksData [x + y*width] = mapBlock;
+	}
+};
+
+[Serializable]
+public class MapDataFlags
+{
+	[SerializeField]
+	int height;
+	[SerializeField]
+	int width;
+	[SerializeField]
+	bool[] mapData;
+	
+	public MapDataFlags (int x, int y)
+	{
+		width = x;
+		height = y;
+		mapData = new bool[x * y];
+		int length = x * y;
+		for (int i=0; i< length; i++)
+		{
+			mapData[i] = new bool ();
+		}
+		Debug.Log (this.ToString () + " width = " + width);
+	}
+	
+	public bool GetField (int x, int y) {
+		return mapData [x + y*width];
+	}
+	
+	public void SetField (int x, int y, bool field) {
+		mapData [x + y*width] = field;
+	}
+};
+
+[Serializable]
 public class TilesetTile
 {
 	[SerializeField]
@@ -57,6 +193,9 @@ public class TilesetTile
 
 [Serializable]
 public class MovingPlatform {
+
+//	[SerializeField]
+//	public int iPathType;
 	
 	[SerializeField]
 	public int iPlatformWidth;
@@ -65,11 +204,11 @@ public class MovingPlatform {
 	[SerializeField]
 	public MovingPlatformPath path;
 	[SerializeField]
-	public TilesetTile[,] platformTiles;
+	public MapLayer platformTiles;
 	[SerializeField]
-	public TilesetTile[,] platformTilesRaw;
+	public MapLayer platformTilesRaw;
 	[SerializeField]
-	public MapTile[,] platformTileTypes;
+	public MapTopLayer platformTileTypes;
 //	[SerializeField]
 //	public short iWidth;
 //	[SerializeField]
@@ -79,7 +218,7 @@ public class MovingPlatform {
 	[SerializeField]
 	public bool fPreview;
 	
-	public MovingPlatform(TilesetTile[,] platformTiles, TilesetTile[,] platformTilesRaw, MapTile[,] platformTileTypes, short iWidth, short iHeight, short iDrawLayer, MovingPlatformPath path, bool fPreview)
+	public MovingPlatform(MapLayer platformTiles, MapLayer platformTilesRaw, MapTopLayer platformTileTypes, short iWidth, short iHeight, short iDrawLayer, MovingPlatformPath path, bool fPreview)
 	{
 		this.platformTiles = platformTiles;
 		this.platformTilesRaw = platformTilesRaw;
@@ -97,7 +236,10 @@ public class MovingPlatform {
 
 [Serializable]
 public class MovingPlatformPath {
-	
+
+	[SerializeField]
+	public int iPathType;
+
 	[SerializeField]
 	public float velocity;
 	[SerializeField]
@@ -421,22 +563,32 @@ public class Map : ScriptableObject {
 		return platforms;
 	}
 
-	public MapBlock[,] GetObjectData()
+	public MapBlockLayer GetObjectData()
 	{
 		return objectdata;
 	}
 
-	public MapTile[,] GetMapDataTop()
+//	public MapTile[,] GetMapDataTop()
+//	{
+//		return mapdatatop;
+//	}
+
+	public MapTopLayer GetMapDataTop()
 	{
 		return mapdatatop;
 	}
 
-	public TilesetTile[,,] GetMapData()
+//	public TilesetTile[,,] GetMapData()
+//	{
+//		return mapdata;
+//	}
+
+	public MapLayer[] GetMapData()
 	{
-		return mapdata;
+		return mapLayers;
 	}
 
-	public TilesetTile[,,] GetMapDataRaw()
+	public MapLayer[] GetMapDataRaw()
 	{
 		return mapdataRaw;
 	}
@@ -446,7 +598,7 @@ public class Map : ScriptableObject {
 		return m_iMaxTilesetID;
 	}
 
-	public bool[,,] GetCustomMapData()
+	public MapDataFlags[] GetCustomMapData()
 	{
 		return mapdataCustom;
 	}
@@ -511,15 +663,22 @@ public class Map : ScriptableObject {
 	//	bool		nospawn[NUMSPAWNAREATYPES][MAPWIDTH][MAPHEIGHT];
 	//	bool[] 		fAutoFilter = new bool[NUM_AUTO_FILTERS];
 	[SerializeField]
-	bool[,,] mapdataCustom;
+	MapLayer[] mapLayers;
 	[SerializeField]
-	TilesetTile[,,] mapdataRaw;	// komplett eingelesene Tiles der Map
+//	bool[,,] mapdataCustom;
+	MapDataFlags[] mapdataCustom;
 	[SerializeField]
-	TilesetTile[,,] mapdata;	// komplett eingelesene Tiles der Map
+	MapLayer[] mapdataRaw;	// komplett eingelesene Tiles der Map
 	[SerializeField]
-	MapTile[,] mapdatatop;		// Oberste Kayer der eingelesenen Map
+	MapLayer[] mapdata;	// komplett eingelesene Tiles der Map
+//	[SerializeField]
+//	MapTile[,] mapdatatop;		// Oberste Layer der eingelesenen Map
 	[SerializeField]
-	MapBlock[,] objectdata;		// ka.
+	MapTopLayer mapdatatop;		// Oberste Layer der eingelesenen Map
+	
+	[SerializeField]
+//	MapBlock[,] objectdata;		// ka.
+	MapBlockLayer objectdata;		// ka.
 
 	[SerializeField]
 	string szBackgroundFile;
@@ -530,12 +689,14 @@ public class Map : ScriptableObject {
 	MovingPlatform[] platforms;
 
 	[SerializeField]
-	TilesetTile[,] platformTiles;
+//	TilesetTile[,] platformTiles;
+	MapLayer platformTiles;
 	[SerializeField]
-	TilesetTile[,] platformTilesRaw;
+//	TilesetTile[,] platformTilesRaw;
+	MapLayer platformTilesRaw;
 	[SerializeField]
-	MapTile[,] platformTileTypes;
-
+//	MapTile[,] platformTileTypes;
+	MapTopLayer platformTileTypes;
 	[SerializeField]
 	int iNumMapItems = 0;
 	[SerializeField]
@@ -554,7 +715,9 @@ public class Map : ScriptableObject {
 	[SerializeField]
 	Warp[,] warpdata;//[MAPWIDTH][MAPHEIGHT];
 	[SerializeField]
-	bool[,,] nospawn;
+//	bool[,,] nospawn;
+	MapDataFlags[] nospawn;
+
 
 	[SerializeField]
 	int maxConnection;
@@ -750,6 +913,9 @@ public class Map : ScriptableObject {
 		
 		importError = ImportErrorType.BuildTranlations;
 		BuildTranlations(iNumOfTilesets, m_iMaxTilesetID, f_TilesetManager);
+
+		mapdatatop = new MapTopLayer(Globals.MAPWIDTH, Globals.MAPHEIGHT);
+
 		importError = ImportErrorType.ReadingMapDataAndObjectData;
 		ReadingMapDataAndObjectData(binReader, iReadType, m_iMaxTilesetID);
 		importError = ImportErrorType.ReadingBackgroundFileName;
@@ -934,10 +1100,24 @@ public class Map : ScriptableObject {
 	void ReadingMapDataAndObjectData(BinaryReader binReader, ReadType iReadType, int iMaxTilesetID)
 	{
 		//2. load map data
-		mapdataCustom = new bool[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];
-		mapdata = new TilesetTile[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];	// mapdata, hier werden die eingelesenen Daten gespeichert
-		mapdataRaw = new TilesetTile[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];	// mapdata, hier werden die eingelesenen Daten gespeichert
-		objectdata = new MapBlock[Globals.MAPWIDTH, Globals.MAPHEIGHT];
+		mapdataCustom = new MapDataFlags[Globals.MAPLAYERS]; //new bool[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];
+		mapdata = new MapLayer[Globals.MAPLAYERS]; // new TilesetTile[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];	// mapdata, hier werden die eingelesenen Daten gespeichert
+		mapdataRaw = new MapLayer[Globals.MAPLAYERS]; // new TilesetTile[Globals.MAPWIDTH, Globals.MAPHEIGHT, Globals.MAPLAYERS];	// mapdata, hier werden die eingelesenen Daten gespeichert
+
+//		objectdata = new MapBlock[Globals.MAPWIDTH, Globals.MAPHEIGHT];
+		objectdata = new MapBlockLayer (Globals.MAPWIDTH, Globals.MAPHEIGHT);
+		
+
+		// Persistent
+		mapLayers = new MapLayer[Globals.MAPLAYERS];
+		for (int i=0; i< Globals.MAPLAYERS; i++)
+		{
+			mapdataCustom [i] = new MapDataFlags (Globals.MAPWIDTH, Globals.MAPHEIGHT);
+			mapdata [i] = new MapLayer (Globals.MAPWIDTH, Globals.MAPHEIGHT);
+			mapdataRaw [i] = new MapLayer (Globals.MAPWIDTH, Globals.MAPHEIGHT);
+			mapLayers [i] = new MapLayer (Globals.MAPWIDTH, Globals.MAPHEIGHT);
+		}
+
 		int iColChanges = 0;
 		int iRowChanges = 0;
 		int iTilesetIDChanges = 0;
@@ -951,9 +1131,9 @@ public class Map : ScriptableObject {
 				for(int l = 0; l < Globals.MAPLAYERS; l++)
 				{
 					//					TilesetTile * tile = &mapdata[i][j][k];	// zeigt auf aktuelles Element in mapdata
-					mapdataRaw[x,y,l] = new TilesetTile();
-					mapdata[x, y, l] = new TilesetTile();
-					TilesetTile tile = mapdata[x, y, l];
+//					mapdataRaw[x,y,l] = new TilesetTile();
+//					mapdata[x, y, l] = new TilesetTile();
+					TilesetTile tile = mapdata[l].GetTile (x, y);
 					tile.iTilesetID = ReadByteAsShort(binReader);
 					tile.iCol = ReadByteAsShort(binReader);
 					tile.iRow = ReadByteAsShort(binReader);
@@ -961,7 +1141,9 @@ public class Map : ScriptableObject {
 					tileRaw.iTilesetID = tile.iTilesetID;
 					tileRaw.iCol = tile.iCol;
 					tileRaw.iRow = tile.iRow;
-					mapdataRaw[x,y,l] = tileRaw;
+					mapdataRaw[l].SetTile (x, y, tileRaw);
+
+					mapLayers[l].SetTile (x,y, tileRaw);
 
 					if(tile.iTilesetID >= 0)
 					{
@@ -969,11 +1151,13 @@ public class Map : ScriptableObject {
 						{
 							if(tile.iTilesetID == Globals.TILESETNONE)
 							{
-								mapdataCustom[x,y,l] = false;		// wenn tile.iID == 254 dann enthält tile in aktueller layer kein Sprite!
+//								mapdataCustom[x,y,l] = false;
+								mapdataCustom[l].SetField(x,y, false);		// wenn tile.iID == 254 dann enthält tile in aktueller layer kein Sprite!
 							}
 							else
 							{
-								mapdataCustom[x,y,l] = true;
+//								mapdataCustom[x,y,l] = true;
+								mapdataCustom[l].SetField(x,y, true);		// wenn tile.iID == 254 dann enthält tile in aktueller layer kein Sprite!
 							}
 							iTilesetIDChanges++;
 							//							Debug.LogWarning("tile.iID = " + tile.iID + " > iMaxTilesetID = " + iMaxTilesetID + " => tile.iID = 0");
@@ -981,7 +1165,8 @@ public class Map : ScriptableObject {
 						}
 						else
 						{
-							mapdataCustom[x,y,l] = true;
+//							mapdataCustom[x,y,l] = true;
+							mapdataCustom[l].SetField(x,y, true);		// wenn tile.iID == 254 dann enthält tile in aktueller layer kein Sprite!
 							iTilesetIDOkCount++;
 						}
 						
@@ -1006,10 +1191,10 @@ public class Map : ScriptableObject {
 						iTilesetNegativCount++;
 					}
 				}
-				objectdata[x,y] = new MapBlock();
-				objectdata[x,y].iType = ReadByteAsShort(binReader);
+//				objectdata[x,y] = new MapBlock();
+				objectdata.GetBlock(x,y).iType = ReadByteAsShort(binReader);
 				//				objectdata[x,y].iType = (short) ReadInt(binReader);
-				objectdata[x,y].fHidden = ReadBool(binReader);
+				objectdata.GetBlock(x,y).fHidden = ReadBool(binReader);
 				//				Debug.LogWarning("objectdata["+x+", "+y+"].fHidden = " + objectdata[x,y].fHidden.ToString()); 
 			}
 		}
@@ -1103,11 +1288,22 @@ public class Map : ScriptableObject {
 	}
 	void ReadingWarpAndNoSpawnData(BinaryReader binReader, ReadType iReadType)
 	{
-		if(mapdatatop == null)
-			mapdatatop = new MapTile[Globals.MAPWIDTH, Globals.MAPHEIGHT];	// wenn keine Platform in der map gefunden wurde ist Array nicht angelegt
+//		if(mapdatatop == null)
+//		{
+////			mapdatatop = new MapTile[Globals.MAPWIDTH, Globals.MAPHEIGHT];	// wenn keine Platform in der map gefunden wurde ist Array nicht angelegt
+//			mapdatatop = new MapTopLayer (Globals.MAPWIDTH, Globals.MAPHEIGHT); // wenn keine Platform in der map gefunden wurde ist Array nicht angelegt
+//			Debug.Log ("mapdatatop created");
+//		}
+//		else
+//			Debug.Log ("mapdatatop already exists");
+			
 		
 		warpdata = new Warp[Globals.MAPWIDTH, Globals.MAPHEIGHT];
-		nospawn = new bool[Globals.NUMSPAWNAREATYPES, Globals.MAPWIDTH, Globals.MAPHEIGHT];
+//		nospawn = new bool[Globals.NUMSPAWNAREATYPES, Globals.MAPWIDTH, Globals.MAPHEIGHT];
+		nospawn = new MapDataFlags[Globals.NUMSPAWNAREATYPES];
+
+		for(short i = 0; i < Globals.NUMSPAWNAREATYPES; i++)
+			nospawn[i] = new MapDataFlags (Globals.MAPWIDTH, Globals.MAPHEIGHT);
 		
 		for(int j = 0; j < Globals.MAPHEIGHT; j++)
 		{
@@ -1115,8 +1311,12 @@ public class Map : ScriptableObject {
 			{
 				TileType iType = (TileType)ReadInt(binReader);
 				
-				mapdatatop[i,j] = new MapTile();
-				MapTile tile = mapdatatop[i,j];
+//				mapdatatop[i,j] = new MapTile();
+//				MapTile tile = mapdatatop[i,j];
+//				MapTile tile = new MapTile ();
+//				mapdatatop.SetTile (i, j, tile);
+
+				MapTile tile = mapdatatop.GetTile (i, j);
 				
 				if(iType >= 0 && (int) iType < Globals.NUMTILETYPES)
 				{
@@ -1139,7 +1339,7 @@ public class Map : ScriptableObject {
 				warpdata[i,j].id = (short)ReadInt(binReader);
 				
 				for(short z = 0; z < Globals.NUMSPAWNAREATYPES; z++)
-					nospawn[z,i,j] = ReadBool(binReader);
+					nospawn[z].SetField(i,j, ReadBool(binReader));
 			}
 		}
 	}
@@ -1156,7 +1356,7 @@ public class Map : ScriptableObject {
 
 				Debug.Log("ExtendedDataBlocks ("+ iBlock +") wird in ObjectData [x=" + iCol + ", y=" + iRow + "] mit " + "1er" + " Setting eingelesen");
 				
-				objectdata[iCol,iRow].iSettings[0] = ReadByteAsShort(binReader);
+				objectdata.GetBlock(iCol,iRow).iSettings[0] = ReadByteAsShort(binReader);
 			}
 		}
 	}
@@ -1314,7 +1514,7 @@ public class Map : ScriptableObject {
 			for(short iSetting = 0; iSetting < iNumSettings; iSetting++)
 			{
 				//				objectdata[iCol,iRow] = new MapBlock();
-				objectdata[iCol,iRow].iSettings[iSetting] = ReadByteAsShort(binReader);
+				objectdata.GetBlock(iCol,iRow).iSettings[iSetting] = ReadByteAsShort(binReader);
 			}
 		}
 	}
@@ -1375,12 +1575,22 @@ public class Map : ScriptableObject {
 				Debug.Log("iPlatform = " + iPlatform + ", iWidth = " + iPlatformWidth);
 				Debug.Log("iPlatform = " + iPlatform + ", iHeight = " + iPlatformHeight);
 				
-				platformTiles = new TilesetTile[iPlatformWidth, iPlatformHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
-				platformTilesRaw = new TilesetTile[iPlatformWidth, iPlatformHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
-				platformTileTypes = new MapTile[iPlatformWidth, iPlatformHeight];
+//				platformTiles = new TilesetTile[iPlatformWidth, iPlatformHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
+				platformTiles = new MapLayer (iPlatformWidth, iPlatformHeight);				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
+//				platformTilesRaw = new TilesetTile[iPlatformWidth, iPlatformHeight];				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
+				platformTilesRaw = new MapLayer (iPlatformWidth, iPlatformHeight);				// geht nicht wenn Platform unterschiedliche längen und breiten auf seinen ebenen hat
+//				platformTileTypes = new MapTile[iPlatformWidth, iPlatformHeight];
+				platformTileTypes = new MapTopLayer (iPlatformWidth, iPlatformHeight);
 
-				if(mapdatatop == null)
-					mapdatatop = new MapTile[Globals.MAPWIDTH, Globals.MAPHEIGHT];
+//				if(mapdatatop == null)
+//				{
+////					mapdatatop = new MapTile[Globals.MAPWIDTH, Globals.MAPHEIGHT];
+//					mapdatatop = new MapTopLayer(Globals.MAPWIDTH, Globals.MAPHEIGHT);
+//					Debug.Log ("mapdatatop created");
+//				}
+//				else
+//					Debug.Log ("mapdatatop already exists");
+					
 				
 				for(short iCol = 0; iCol < iPlatformWidth; iCol++)
 				{
@@ -1391,15 +1601,16 @@ public class Map : ScriptableObject {
 						Debug.Log("\tPlatform iRow = " + iRow);
 						
 						//TilesetTile * tile = &tiles[iCol][iRow];
-						platformTiles[iCol,iRow] = new TilesetTile();
-						platformTilesRaw[iCol,iRow] = new TilesetTile();
-						TilesetTile platformTile = platformTiles[iCol,iRow];
-						TilesetTile platformTileRaw = platformTilesRaw[iCol,iRow];
+//						platformTiles[iCol,iRow] = new TilesetTile();
+//						platformTilesRaw[iCol,iRow] = new TilesetTile();
+						TilesetTile platformTile = platformTiles.GetTile(iCol,iRow);
+						TilesetTile platformTileRaw = platformTilesRaw.GetTile(iCol,iRow);
 
-						platformTileTypes[iCol,iRow] = new MapTile();
-						MapTile platformTileType = platformTileTypes[iCol,iRow];
+//						platformTileTypes[iCol,iRow] = new MapTile();
+						MapTile platformTileType = platformTileTypes.GetTile(iCol,iRow);
 
-						mapdatatop[iCol,iRow] = new MapTile();
+//						mapdatatop[iCol,iRow] = new MapTile ();
+//						mapdatatop[iCol,iRow] = new MapTile ();
 						
 						if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
 						{
@@ -1476,8 +1687,8 @@ public class Map : ScriptableObject {
 							}
 							else
 							{
-								mapdatatop[iCol,iRow].iType = TileType.tile_nonsolid;
-								mapdatatop[iCol,iRow].iFlags = (int) TileTypeFlag.tile_flag_nonsolid;
+								mapdatatop.GetTile(iCol,iRow).iType = TileType.tile_nonsolid;
+								mapdatatop.GetTile(iCol,iRow).iFlags = (int) TileTypeFlag.tile_flag_nonsolid;
 							}
 						}
 					}
@@ -1541,6 +1752,8 @@ public class Map : ScriptableObject {
 				MovingPlatform platform = new MovingPlatform(platformTiles, platformTilesRaw, platformTileTypes, iPlatformWidth, iPlatformHeight, iDrawLayer, path, fPreview);
 				platforms[iPlatform] = platform;
 //				platformdrawlayer[iDrawLayer].push_back(platform);
+
+				path.iPathType = iPathType;
 			}
 		}
 
@@ -1652,7 +1865,7 @@ public class Map : ScriptableObject {
 					
 					string tileString = "";
 					
-					TilesetTile platformTile = platformTiles[x,y];
+					TilesetTile platformTile = platformTiles.GetTile(x,y);
 
 
 					if( platformTile == null)
@@ -1715,7 +1928,7 @@ public class Map : ScriptableObject {
 					
 					string mapBlockString = "";
 					
-					MapBlock mapBlock = objectdata[x,y];
+					MapBlock mapBlock = objectdata.GetBlock(x,y);
 						
 					if( mapBlock == null)
 					{
@@ -1760,7 +1973,7 @@ public class Map : ScriptableObject {
 
 	public GUIStyle textAreaStyle;
 
-	public void OnGUI_Preview_Mapdata(TilesetTile[,,] tilesData)
+	public void OnGUI_Preview_Mapdata(MapLayer[] tilesData)
 	{
 		textAreaStyle = new GUIStyle(GUI.skin.textArea);		// SMART
 		textAreaStyle.richText = true;
@@ -1787,7 +2000,7 @@ public class Map : ScriptableObject {
 					for(int l = 0; l < Globals.MAPLAYERS; l++)
 					{
 
-						TilesetTile tile = tilesData[x,y,l];
+						TilesetTile tile = tilesData[l].GetTile(x,y);
 						
 						if( tile == null)
 						{
@@ -1869,7 +2082,7 @@ public class Map : ScriptableObject {
 //						EditorGUILayout.BeginVertical();
 //						GUILayout.BeginVertical();
 
-						TilesetTile tile = mapdata[x,y,l];
+						TilesetTile tile = mapdata[l].GetTile(x,y);
 
 						if( tile == null)
 						{
@@ -1882,7 +2095,7 @@ public class Map : ScriptableObject {
 //								tileString +="<color=red>";
 //							}
 
-							if(mapdataCustom[x,y,l])
+							if(mapdataCustom[l].GetField(x,y))
 							{
 								tileString += tile.iTilesetID.ToString("D2")+","+tile.iCol.ToString("D2")+","+tile.iRow.ToString("D2");
 							}

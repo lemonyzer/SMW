@@ -99,6 +99,29 @@ public class TilesetManager : ScriptableObject {
 		return iClassicTilesetIndex;
 	}
 
+	public Tileset GetBlockTileset ()
+	{
+		return blockTileset;
+	}
+
+	int blockTileSetWidth = 16;
+
+	public Sprite GetBlockSprite (int index)
+	{
+		int x = index % blockTileSetWidth;
+		int y = 0;
+		for (int i=0; i<3; i++) 
+		{
+			if (index >= blockTileSetWidth*i && 
+			    index < blockTileSetWidth*(i+1))
+			{
+				y = i;
+				break;
+			}
+		}
+		return blockTileset.GetTileSprite (x, y);
+	}
+
 //	public int GetClassicTilesetIndex()
 //	{
 //		//TODO
