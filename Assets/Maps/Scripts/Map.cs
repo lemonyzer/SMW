@@ -592,6 +592,15 @@ public enum MovingPathType {
 };
 
 [Serializable]
+public enum HazardType {
+	fireball_string = 0,
+	rotodisc = 1,
+	bullet_bill = 2,
+	flame_cannon = 3,
+	pirhana_plants = 4
+};
+
+[Serializable]
 public enum WarpEnterDirection {
 	WARP_DOWN = 0,
 	WARP_LEFT = 1,
@@ -1934,9 +1943,9 @@ public class Map : ScriptableObject {
 
 	bool fShowRawMapData = false;
 	bool fShowMapData = false;
-	bool fShowPlatformData = false;
+//	bool fShowPlatformData = false;
 	bool fShowWarpData = false;
-	bool fShowWarpExits = false;
+//	bool fShowWarpExits = false;
 	bool fShowObjectData = false;
 
 	public void OnGUI_Preview()
@@ -1977,11 +1986,11 @@ public class Map : ScriptableObject {
 			OnGUI_Preview_WarpData ();
 		}
 
-		fShowWarpExits = UnityEditor.EditorGUILayout.Foldout(fShowWarpExits,"Preview Warp Exits");
-		if(fShowWarpExits)
-		{
-			//		OnGUI_Preview_PlatformTiles();
-		}
+//		fShowWarpExits = UnityEditor.EditorGUILayout.Foldout(fShowWarpExits,"Preview Warp Exits");
+//		if(fShowWarpExits)
+//		{
+//			//		OnGUI_Preview_PlatformTiles();
+//		}
 
 	}
 
@@ -2075,8 +2084,8 @@ public class Map : ScriptableObject {
 					{
 						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iSettings.ToString()+","+mapBlock.iType.ToString("D2");
 						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iType.ToString("D2");
-						mapBlockString += mapBlock.fHidden ? "1" : "0"+"\n" + 
-							mapBlock.iType.ToString("D3") + "\n";
+						mapBlockString += mapBlock.fHidden ? "1" : "0";
+						mapBlockString += "\n" + mapBlock.iType.ToString("D3") + "\n";
 						
 						for(int i=0; i<mapBlock.iSettings.Length; i++)
 						{
@@ -2134,8 +2143,18 @@ public class Map : ScriptableObject {
 						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iSettings.ToString()+","+mapBlock.iType.ToString("D2");
 						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iType.ToString("D2");
 						elementString += element.id + ",";
-						elementString += element.connection + ",";
-						elementString += element.direction;
+						if (element.connection == (short)-1)
+							elementString += "x" + ",";
+						else
+							elementString += element.connection + ",";
+
+						if (element.direction == (short)-1)
+							elementString += "x";
+						else
+							elementString += element.direction;
+//						elementString += element.direction;
+
+
 //						elementString += element.fHidden ? "1" : "0"+"\n" + 
 //							element.iType.ToString("D3") + "\n";
 //						
