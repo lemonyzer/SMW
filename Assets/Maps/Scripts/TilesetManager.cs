@@ -20,6 +20,8 @@ public class TilesetManager : ScriptableObject {
 	[SerializeField]
 	Tileset unknownTileset;
 //	Tileset tClassicTileset;
+	[SerializeField]
+	WarpArrow warpArrows;
 
 	public void OnEnable()
 	{
@@ -120,6 +122,11 @@ public class TilesetManager : ScriptableObject {
 			}
 		}
 		return blockTileset.GetTileSprite (x, y);
+	}
+
+	public WarpArrow GetWarpArrow ()
+	{
+		return warpArrows;
 	}
 
 //	public int GetClassicTilesetIndex()

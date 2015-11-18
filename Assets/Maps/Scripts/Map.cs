@@ -149,6 +149,38 @@ public class MapBlockLayer
 };
 
 [Serializable]
+public class WarpMap
+{
+	[SerializeField]
+	int height;
+	[SerializeField]
+	int width;
+	[SerializeField]
+	Warp[] warpMap;
+	
+	public WarpMap (int x, int y)
+	{
+		width = x;
+		height = y;
+		warpMap = new Warp[x * y];
+		int length = x * y;
+		for (int i=0; i< length; i++)
+		{
+			warpMap[i] = new Warp ();
+		}
+		Debug.Log (this.ToString () + " width = " + width);
+	}
+	
+	public Warp GetField (int x, int y) {
+		return warpMap [x + y*width];
+	}
+	
+	public void SetField (int x, int y, Warp warp) {
+		warpMap [x + y*width] = warp;
+	}
+};
+
+[Serializable]
 public class MapDataFlags
 {
 	[SerializeField]
@@ -463,7 +495,7 @@ public class MapHazard
 [Serializable]
 public class Warp
 {
-	public short direction;
+	public short direction;		// Players move direction when reaching Warp
 	public short connection;
 	public short id;
 };
@@ -489,6 +521,51 @@ public class WarpExit
 };
 
 [Serializable]
+public class SpawnAreaMap
+{
+	[SerializeField]
+	//	SpawnArea[] map;
+	List<SpawnAreaList> map;
+	
+	public SpawnAreaMap (int x)
+	{
+		map = new List<SpawnAreaList>();
+
+		for (int i=0; i< x; i++)
+		{
+			map.Add (new SpawnAreaList ());
+//			map[i] = new SpawnArea ();
+		}
+//		Debug.Log (this.ToString () + " width = " + width);
+	}
+	
+	public SpawnArea GetElement (int x, int y) {
+		return map [x].spawnAreaList[y];
+	}
+	
+	public void SetElement (int x, int y, SpawnArea element) {
+		map[x].spawnAreaList[y] = element;
+	}
+
+	public void AddElement (int x, SpawnArea element) {
+		map[x].spawnAreaList.Add (element);
+	}
+
+};
+
+[Serializable]
+public class SpawnAreaList
+{
+	[SerializeField]
+	public List<SpawnArea> spawnAreaList;
+
+	public SpawnAreaList ()
+	{
+		spawnAreaList = new List<SpawnArea> ();
+	}
+};
+
+[Serializable]
 public class SpawnArea
 {
 	public short left;
@@ -505,6 +582,31 @@ public class SDL_Rect
 	public short y;
 	public ushort w;
 	public ushort h;
+};
+
+[Serializable]
+public enum MovingPathType {
+	StraightPath = 0,
+	StraightPathContinuous = 1,
+	EllipsePath = 2
+};
+
+[Serializable]
+public enum WarpEnterDirection {
+	WARP_DOWN = 0,
+	WARP_LEFT = 1,
+	WARP_UP = 2,
+	WARP_RIGHT = 3,
+	WARP_UNDEFINED = -1
+};
+
+[Serializable]
+public enum WarpExitDirection {
+	WARP_EXIT_UP = 0,
+	WARP_EXIT_RIGHT = 1,
+	WARP_EXIT_DOWN = 2,
+	WARP_EXIT_LEFT = 3,
+	WARP_EXIT_UNDEFINED = -1
 };
 
 [Serializable]
@@ -585,7 +687,7 @@ public class Map : ScriptableObject {
 
 	public MapLayer[] GetMapData()
 	{
-		return mapLayers;
+		return mapdata;
 	}
 
 	public MapLayer[] GetMapDataRaw()
@@ -607,6 +709,17 @@ public class Map : ScriptableObject {
 	{
 		return szBackgroundFile;
 	}
+
+	public WarpMap GetWarpMap ()
+	{
+		return warpdata;
+	}
+
+	public List<WarpExit> GetWarpExits ()
+	{
+		return warpexits;
+	}
+
 
 	//Converts the tile type into the flags that this tile carries (solid + ice + death, etc)
 //	short[] g_iTileTypeConversion = new short[Globals.NUMTILETYPES] = {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
@@ -662,8 +775,8 @@ public class Map : ScriptableObject {
 	//	IO_Block*   blockdata[MAPWIDTH][MAPHEIGHT];
 	//	bool		nospawn[NUMSPAWNAREATYPES][MAPWIDTH][MAPHEIGHT];
 	//	bool[] 		fAutoFilter = new bool[NUM_AUTO_FILTERS];
-	[SerializeField]
-	MapLayer[] mapLayers;
+//	[SerializeField]
+//	MapLayer[] mapLayers;
 	[SerializeField]
 //	bool[,,] mapdataCustom;
 	MapDataFlags[] mapdataCustom;
@@ -713,31 +826,33 @@ public class Map : ScriptableObject {
 	short musicCategoryID = 0;
 
 	[SerializeField]
-	Warp[,] warpdata;//[MAPWIDTH][MAPHEIGHT];
+	WarpMap warpdata;//[MAPWIDTH][MAPHEIGHT];
 	[SerializeField]
 //	bool[,,] nospawn;
 	MapDataFlags[] nospawn;
 
+	[SerializeField]
+	int iNumSwitchBlockData;
 
 	[SerializeField]
 	int maxConnection;
 	[SerializeField]
 	int numwarpexits;
 	[SerializeField]
-	WarpExit[] warpexits;//[MAXWARPS];
+	List<WarpExit> warpexits;//[MAXWARPS];
 
 	[SerializeField]
 	short[] totalspawnsize;//[NUMSPAWNAREATYPES];
 	[SerializeField]
 	short[]	numspawnareas;//[NUMSPAWNAREATYPES];
 	[SerializeField]
-	SpawnArea[,] spawnareas;//[NUMSPAWNAREATYPES][MAXSPAWNAREAS];
+	SpawnAreaMap spawnareas;//[NUMSPAWNAREATYPES][MAXSPAWNAREAS];
 
 	[SerializeField]
 	int numdrawareas;
 
 	[SerializeField]
-	SDL_Rect[] drawareas;
+	List<SDL_Rect> drawareas;
 
 	[SerializeField]
 	int iNumRaceGoals;
@@ -1109,13 +1224,13 @@ public class Map : ScriptableObject {
 		
 
 		// Persistent
-		mapLayers = new MapLayer[Globals.MAPLAYERS];
+//		mapLayers = new MapLayer[Globals.MAPLAYERS];
 		for (int i=0; i< Globals.MAPLAYERS; i++)
 		{
 			mapdataCustom [i] = new MapDataFlags (Globals.MAPWIDTH, Globals.MAPHEIGHT);
 			mapdata [i] = new MapLayer (Globals.MAPWIDTH, Globals.MAPHEIGHT);
 			mapdataRaw [i] = new MapLayer (Globals.MAPWIDTH, Globals.MAPHEIGHT);
-			mapLayers [i] = new MapLayer (Globals.MAPWIDTH, Globals.MAPHEIGHT);
+//			mapLayers [i] = new MapLayer (Globals.MAPWIDTH, Globals.MAPHEIGHT);
 		}
 
 		int iColChanges = 0;
@@ -1143,7 +1258,7 @@ public class Map : ScriptableObject {
 					tileRaw.iRow = tile.iRow;
 					mapdataRaw[l].SetTile (x, y, tileRaw);
 
-					mapLayers[l].SetTile (x,y, tileRaw);
+//					mapLayers[l].SetTile (x,y, tileRaw);
 
 					if(tile.iTilesetID >= 0)
 					{
@@ -1298,7 +1413,7 @@ public class Map : ScriptableObject {
 //			Debug.Log ("mapdatatop already exists");
 			
 		
-		warpdata = new Warp[Globals.MAPWIDTH, Globals.MAPHEIGHT];
+		warpdata = new WarpMap (Globals.MAPWIDTH, Globals.MAPHEIGHT); //new Warp[Globals.MAPWIDTH, Globals.MAPHEIGHT];
 //		nospawn = new bool[Globals.NUMSPAWNAREATYPES, Globals.MAPWIDTH, Globals.MAPHEIGHT];
 		nospawn = new MapDataFlags[Globals.NUMSPAWNAREATYPES];
 
@@ -1333,10 +1448,10 @@ public class Map : ScriptableObject {
 					tile.iFlags = (int)TileTypeFlag.tile_flag_nonsolid;
 				}
 				
-				warpdata[i,j] = new Warp(); 
-				warpdata[i,j].direction = (short)ReadInt(binReader);
-				warpdata[i,j].connection = (short)ReadInt(binReader);
-				warpdata[i,j].id = (short)ReadInt(binReader);
+//				warpdata[i,j] = new Warp(); 
+				warpdata.GetField(i,j).direction = (short)ReadInt(binReader);
+				warpdata.GetField(i,j).connection = (short)ReadInt(binReader);
+				warpdata.GetField(i,j).id = (short)ReadInt(binReader);
 				
 				for(short z = 0; z < Globals.NUMSPAWNAREATYPES; z++)
 					nospawn[z].SetField(i,j, ReadBool(binReader));
@@ -1346,7 +1461,7 @@ public class Map : ScriptableObject {
 	void ReadingSwitchBlockStateData(BinaryReader binReader, ReadType iReadType)
 	{
 		//Read switch block state data
-		int iNumSwitchBlockData = ReadInt(binReader);
+		iNumSwitchBlockData = ReadInt(binReader);
 		if (iNumSwitchBlockData > 0)
 		{
 			for(short iBlock = 0; iBlock < iNumSwitchBlockData; iBlock++)
@@ -1366,10 +1481,12 @@ public class Map : ScriptableObject {
 		
 		numwarpexits = (short)ReadInt(binReader);
 		Debug.Log("<color=blue>numWarpExits= " + numwarpexits +"</color>");
-		warpexits = new WarpExit[Globals.MAXWARPS];
+//		warpexits = new WarpExit[Globals.MAXWARPS];
+		warpexits = new List<WarpExit> ();
 		for(int i = 0; i < numwarpexits && i < Globals.MAXWARPS; i++)
 		{
-			warpexits[i] = new WarpExit();
+//			warpexits[i] = new WarpExit();
+			warpexits.Add (new WarpExit());
 			warpexits[i].direction = (short)ReadInt(binReader);
 			warpexits[i].connection = (short)ReadInt(binReader);
 			warpexits[i].id = (short)ReadInt(binReader);
@@ -1408,7 +1525,10 @@ public class Map : ScriptableObject {
 		Debug.Log("Read spawn areas");
 		numspawnareas = new short[Globals.NUMSPAWNAREATYPES];
 		totalspawnsize = new short[Globals.NUMSPAWNAREATYPES];
-		spawnareas = new SpawnArea[Globals.NUMSPAWNAREATYPES, Globals.MAXSPAWNAREAS];
+//		spawnareas = new SpawnArea[Globals.NUMSPAWNAREATYPES, Globals.MAXSPAWNAREAS];
+//		spawnareas = new SpawnAreaMap (Globals.NUMSPAWNAREATYPES, Globals.MAXSPAWNAREAS);
+		spawnareas = new SpawnAreaMap (Globals.NUMSPAWNAREATYPES);
+
 		string numSpawnAreasString = "";
 		for(int i = 0; i < Globals.NUMSPAWNAREATYPES; i++)
 		{
@@ -1429,18 +1549,20 @@ public class Map : ScriptableObject {
 			string spawnAreaString = "";
 			for(int m = 0; m < numspawnareas[i]; m++)
 			{
-				spawnareas[i,m] = new SpawnArea();
-				spawnareas[i,m].left = (short)ReadInt(binReader);
-				spawnareas[i,m].top = (short)ReadInt(binReader);
-				spawnareas[i,m].width = (short)ReadInt(binReader);
-				spawnareas[i,m].height = (short)ReadInt(binReader);
-				spawnareas[i,m].size = (short)ReadInt(binReader);
-				spawnAreaString += 	"["+i+"," + m + "]" + "left=" + spawnareas[i,m].left + "\n" +
-					"["+i+"," + m + "]" + "top=" + spawnareas[i,m].top + "\n" +
-						"["+i+"," + m + "]" + "width=" + spawnareas[i,m].width + "\n" +
-						"["+i+"," + m + "]" + "height=" + spawnareas[i,m].height + "\n" +
-						"["+i+"," + m + "]" + "size=" + spawnareas[i,m].size + "\n";
-				totalspawnsize[i] += spawnareas[i,m].size;
+//				spawnareas[i,m] = new SpawnArea();
+//				spawnareas.SetElement(i,m, new SpawnArea());
+				spawnareas.AddElement(i, new SpawnArea());
+				spawnareas.GetElement(i,m).left = (short)ReadInt(binReader);
+				spawnareas.GetElement(i,m).top = (short)ReadInt(binReader);
+				spawnareas.GetElement(i,m).width = (short)ReadInt(binReader);
+				spawnareas.GetElement(i,m).height = (short)ReadInt(binReader);
+				spawnareas.GetElement(i,m).size = (short)ReadInt(binReader);
+				spawnAreaString += 	"["+i+"," + m + "]" + "left=" + spawnareas.GetElement(i,m).left + "\n" +
+					"["+i+"," + m + "]" + "top=" + spawnareas.GetElement(i,m).top + "\n" +
+						"["+i+"," + m + "]" + "width=" + spawnareas.GetElement(i,m).width + "\n" +
+						"["+i+"," + m + "]" + "height=" + spawnareas.GetElement(i,m).height + "\n" +
+						"["+i+"," + m + "]" + "size=" + spawnareas.GetElement(i,m).size + "\n";
+				totalspawnsize[i] += spawnareas.GetElement(i,m).size;
 			}
 			Debug.Log(spawnAreaString + "\n");
 			
@@ -1449,12 +1571,13 @@ public class Map : ScriptableObject {
 			{
 				Debug.LogError("//If no spawn areas were identified, then create one big spawn area");
 				numspawnareas[i] = 1;
-				spawnareas[i,0] = new SpawnArea();
-				spawnareas[i,0].left = 0;
-				spawnareas[i,0].width = 20;
-				spawnareas[i,0].top = 1;
-				spawnareas[i,0].height = 12;
-				spawnareas[i,0].size = 220;
+//				spawnareas[i,0] = new SpawnArea();
+				spawnareas.AddElement(i, new SpawnArea());
+				spawnareas.GetElement(i,0).left = 0;
+				spawnareas.GetElement(i,0).width = 20;
+				spawnareas.GetElement(i,0).top = 1;
+				spawnareas.GetElement(i,0).height = 12;
+				spawnareas.GetElement(i,0).size = 220;
 				totalspawnsize[i] = 220;
 			}
 		}
@@ -1484,10 +1607,11 @@ public class Map : ScriptableObject {
 		//		test[0].height;
 		
 		//Load rects to help optimize drawing the foreground
-		drawareas = new SDL_Rect[Globals.MAXDRAWAREAS];
+//		drawareas = new SDL_Rect[Globals.MAXDRAWAREAS];
+		drawareas = new List<SDL_Rect> ();
 		for(int m = 0; m < numdrawareas; m++)
 		{
-			drawareas[m] = new SDL_Rect();
+			drawareas.Add (new SDL_Rect());
 			drawareas[m].x = (short)ReadInt(binReader);
 			drawareas[m].y = (short)ReadInt(binReader);
 			drawareas[m].w = (ushort)ReadInt(binReader);
@@ -1811,7 +1935,10 @@ public class Map : ScriptableObject {
 	bool fShowRawMapData = false;
 	bool fShowMapData = false;
 	bool fShowPlatformData = false;
+	bool fShowWarpData = false;
+	bool fShowWarpExits = false;
 	bool fShowObjectData = false;
+
 	public void OnGUI_Preview()
 	{
 		fShowMapData = UnityEditor.EditorGUILayout.Foldout(fShowMapData,"Preview Mapdata");
@@ -1838,13 +1965,23 @@ public class Map : ScriptableObject {
 			//		EditorGUILayout.EndScrollView();
 		}
 
-		fShowPlatformData = UnityEditor.EditorGUILayout.Foldout(fShowPlatformData,"Preview Platform Data");
-		if(fShowPlatformData)
+//		fShowPlatformData = UnityEditor.EditorGUILayout.Foldout(fShowPlatformData,"Preview Platform Data");
+//		if(fShowPlatformData)
+//		{
+//			//		OnGUI_Preview_PlatformTiles();
+//		}
+
+		fShowWarpData = UnityEditor.EditorGUILayout.Foldout(fShowWarpData,"Preview Warp Data");
+		if(fShowWarpData)
 		{
-		//		OnGUI_Preview_PlatformTiles();
+			OnGUI_Preview_WarpData ();
 		}
 
-
+		fShowWarpExits = UnityEditor.EditorGUILayout.Foldout(fShowWarpExits,"Preview Warp Exits");
+		if(fShowWarpExits)
+		{
+			//		OnGUI_Preview_PlatformTiles();
+		}
 
 	}
 
@@ -1912,7 +2049,7 @@ public class Map : ScriptableObject {
 	}
 
 	Vector2 previewObjectDataSliderPosition = Vector2.zero;
-
+	
 	public void OnGUI_Preview_Objectdata()
 	{
 		if(objectdata != null)
@@ -1929,24 +2066,24 @@ public class Map : ScriptableObject {
 					string mapBlockString = "";
 					
 					MapBlock mapBlock = objectdata.GetBlock(x,y);
-						
+					
 					if( mapBlock == null)
 					{
 						GUILayout.Label("null");
 					}
 					else
 					{
-//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iSettings.ToString()+","+mapBlock.iType.ToString("D2");
-//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iType.ToString("D2");
+						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iSettings.ToString()+","+mapBlock.iType.ToString("D2");
+						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iType.ToString("D2");
 						mapBlockString += mapBlock.fHidden ? "1" : "0"+"\n" + 
 							mapBlock.iType.ToString("D3") + "\n";
-
+						
 						for(int i=0; i<mapBlock.iSettings.Length; i++)
 						{
 							if(mapBlock.iSettings[i] != 0)
 								mapBlockString += mapBlock.iSettings[i].ToString("D2") + ",";
 						}
-								
+						
 					}
 					
 					EditorGUILayout.TextArea(mapBlockString);
@@ -1965,6 +2102,134 @@ public class Map : ScriptableObject {
 		else
 		{
 			EditorGUILayout.LabelField("objectdata empty");
+		}
+	}
+
+	Vector2 previewWarpDataSliderPosition = Vector2.zero;
+	
+	public void OnGUI_Preview_WarpData()
+	{
+		if(warpdata != null)
+		{
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.BeginVertical();
+			previewWarpDataSliderPosition = EditorGUILayout.BeginScrollView(previewWarpDataSliderPosition);
+			for(int y = 0; y < Globals.MAPHEIGHT; y++)
+			{
+				EditorGUILayout.BeginHorizontal();
+				for(int x = 0; x < Globals.MAPWIDTH; x++)
+				{
+					
+					string elementString = "";
+
+					Warp element = warpdata.GetField(x,y);
+//					MapBlock mapBlock = objectdata.GetBlock(x,y);
+					
+					if( element == null)
+					{
+						GUILayout.Label("null");
+					}
+					else
+					{
+						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iSettings.ToString()+","+mapBlock.iType.ToString("D2");
+						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iType.ToString("D2");
+						elementString += element.id + ",";
+						elementString += element.connection + ",";
+						elementString += element.direction;
+//						elementString += element.fHidden ? "1" : "0"+"\n" + 
+//							element.iType.ToString("D3") + "\n";
+//						
+//						for(int i=0; i<element.iSettings.Length; i++)
+//						{
+//							if(element.iSettings[i] != 0)
+//								elementString += element.iSettings[i].ToString("D2") + ",";
+//						}
+						
+					}
+					
+					EditorGUILayout.TextArea(elementString);
+					
+				}
+				EditorGUILayout.EndHorizontal();
+			}
+			EditorGUILayout.EndScrollView();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndVertical();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndHorizontal();
+		}
+		else
+		{
+			EditorGUILayout.LabelField("warpdata empty");
+		}
+	}
+
+	Vector2 previewWarpExitsSliderPosition = Vector2.zero;
+
+//	Texture2D warpExitsTexture;
+//	int textureWidth = 640;
+//	int textureHeight = 480;
+
+	public void OnGUI_Preview_WarpExits()
+	{
+		if(warpexits != null)
+		{
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.BeginVertical();
+			previewWarpDataSliderPosition = EditorGUILayout.BeginScrollView(previewWarpDataSliderPosition);
+
+
+			if (GUILayout.Button ("create WarpExits"))
+			{
+//				GameObject goWarpExits = new GameObject ("WarpExits");
+//				goWarpExits.transform.position = new Vector3 (0f,0f,-18f);
+//				
+//				for (int i=0; i< warpexits.Count; i++)
+//				{
+//					if (warpexits[i] != null)
+//					{
+//						int xRef = warpexits[i].x;
+//						int yRef = warpexits[i].y;
+//
+//						GameObject currentWarpExit = new GameObject ("WarpExit " + warpexits[i].id);
+//						currentWarpExit.transform.SetParent (goWarpExits.transform);
+//
+//						SpriteRenderer currentSpriteRenderer = currentWarpExit.AddComponent<SpriteRenderer> ();
+//						currentSpriteRenderer.sprite = 
+//					}
+//					else
+//						Debug.LogError (this.ToString () + " warpexits [" + i + "] == NULL");
+//				}
+			}
+//			warpExitsTexture = new Texture2D (textureWidth,textureHeight, TextureFormat.Alpha8, false);
+//			for (int i=0; i< warpexits.Count; i++)
+//			{
+//				if (warpexits[i] != null)
+//				{
+//					int xRef = warpexits[i].x;
+//					int yRef = warpexits[i].y;
+//					for (int j=0; j < 9; j++)
+//					{
+////						warpExitsTexture.SetPixel (warpexits[i].x,warpex)
+//                   	}
+//				}
+//				else
+//					Debug.LogError (this.ToString () + " warpexits [" + i + "] == NULL");
+//			}
+
+			EditorGUILayout.EndScrollView();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndVertical();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndHorizontal();
+		}
+		else
+		{
+			EditorGUILayout.LabelField("warpexits empty");
 		}
 	}
 

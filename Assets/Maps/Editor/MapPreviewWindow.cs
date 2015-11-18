@@ -688,7 +688,31 @@ public class MapPreviewWindow : EditorWindow {
 					//					currenPlatformGO.transform.localPosition = Vector3.zero;
 					MovingPlatformScript currentPlatformScript = currenPlatformGO.AddComponent<MovingPlatformScript>();
 					currentPlatformScript.movingPlatform = currentPlatform;
-					
+
+					float offsetX = 0f;
+					float offsetY = 0f;
+
+					if (currentPlatform.path.iPathType == (short) MovingPathType.StraightPath)
+					{
+						// Start -> End -> Start ...
+						offsetX = currentPlatform.path.startX / 32.0f - 10f;
+						offsetY = 15f - currentPlatform.path.startY / 32.0f - 7.5f;
+
+					}
+					else if (currentPlatform.path.iPathType == (short) MovingPathType.StraightPathContinuous)
+					{
+						// Platform need to Beam!
+						// Start @ angle -> velocity
+						offsetX = currentPlatform.path.startX / 32.0f - 10f;
+						offsetY = 15f - currentPlatform.path.startY / 32.0f - 7.5f;
+					}
+					else if (currentPlatform.path.iPathType == (short) MovingPathType.EllipsePath)
+					{
+						// Center + r @ angle
+					}
+
+					currenPlatformGO.transform.position =  new Vector3 (offsetX, offsetY, 0f);
+
 					for(int y=0; y<currentPlatform.iPlatformHeight; y++)
 					{
 						for(int x=0; x<currentPlatform.iPlatformWidth; x++)
@@ -715,8 +739,11 @@ public class MapPreviewWindow : EditorWindow {
 								
 								GameObject currentPlatformTileGO = new GameObject(x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString );
 								currentPlatformTileGO.transform.SetParent(currenPlatformGO.transform);
-								Vector3 tileLocalPos = new Vector3(-Globals.MAPWIDTH*0.5f +x,		// x+1: pivot Right , x+0.5f: pivor Center, x: pivot Left
-								                                   Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
+//								Vector3 tileLocalPos = new Vector3(-Globals.MAPWIDTH*0.5f +x,		// x+1: pivot Right , x+0.5f: pivor Center, x: pivot Left
+//								                                   Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
+//								                                   0f);
+								Vector3 tileLocalPos = new Vector3(-currentPlatform.iPlatformWidth*0.5f +x,		// x+1: pivot Right , x+0.5f: pivor Center, x: pivot Left
+								                                   currentPlatform.iPlatformHeight*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
 								                                   0f);
 								currentPlatformTileGO.transform.localPosition = tileLocalPos;
 								
@@ -766,7 +793,71 @@ public class MapPreviewWindow : EditorWindow {
 		else
 			Debug.Log("Map: " + mapSO.mapName + " Platforms == NULL -> Map hat keine MovingPlatform");
 
+		WarpExitsPreview (mapSO, mapRootGO);
+
 		return mapRootGO;
+	}
+
+	public void WarpExitsPreview(Map mapSO, GameObject mapRootGO)
+	{
+		List<WarpExit> warpexits = mapSO.GetWarpExits ();
+		if(warpexits != null)
+		{
+			GameObject goWarpExits = new GameObject ("WarpExits");
+			goWarpExits.transform.SetParent (mapRootGO.transform);
+			goWarpExits.transform.localPosition = new Vector3 (0f,0f,-18f);
+			
+			for (int i=0; i< warpexits.Count; i++)
+			{
+				if (warpexits[i] != null)
+				{
+					int xRef = warpexits[i].x;
+					int yRef = warpexits[i].y;
+					
+
+
+					for (int j=0; j< warpexits[i].numblocks; j++)
+					{
+						GameObject currentWarpExit = new GameObject ("WarpExit " + warpexits[i].id + ", " + j);
+						currentWarpExit.transform.SetParent (goWarpExits.transform);
+
+						Vector3 offset = Vector3.zero;
+						if (warpexits[i].direction == (short)WarpExitDirection.WARP_EXIT_DOWN ||
+						    warpexits[i].direction == (short)WarpExitDirection.WARP_EXIT_UP)
+						{
+							offset.x = j*1f;
+						}
+						else if (warpexits[i].direction == (short)WarpExitDirection.WARP_EXIT_LEFT ||
+						         warpexits[i].direction == (short)WarpExitDirection.WARP_EXIT_RIGHT)
+						{
+							offset.y = j*-1f;
+							
+						}
+//						switch (warpexits[i].direction)
+//						{
+//						case (WarpExitDirection.WARP_EXIT_DOWN):
+//							{
+//							}
+//						}
+
+						//					float xPos = (((warpexits[i].x)) / 32f) - 10f;
+						//					float yPos = ((480-(warpexits[i].y)) / 32f) - 7.5f;
+						//					Vector3 cPos = new Vector3 (xPos, yPos, 0f);
+						float xPos = warpexits[i].warpx - 10.0f;
+						float yPos = -1f * warpexits[i].warpy + 6.5f;
+						Vector3 cPos = new Vector3 (xPos, yPos, 0f);
+						currentWarpExit.transform.localPosition = cPos + offset;
+						
+						SpriteRenderer currentSpriteRenderer = currentWarpExit.AddComponent<SpriteRenderer> ();
+						currentSpriteRenderer.sprite = g_TilesetManager.GetWarpArrow ().GetArrow(warpexits[i].direction, warpexits[i].connection);
+						currentSpriteRenderer.sortingLayerName = "MapDebug";
+					}
+
+				}
+				else
+					Debug.LogError (this.ToString () + " warpexits [" + i + "] == NULL");
+			}
+		}
 	}
 
 	void TileTypeToUnityTranslation(TileType tileType, GameObject tileGO)		// Polymorphy!
