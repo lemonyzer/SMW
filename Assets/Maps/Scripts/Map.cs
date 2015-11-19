@@ -263,7 +263,6 @@ public class MovingPlatform {
 		this.path = path;
 		this.fPreview = fPreview;
 	}
-	
 }
 
 [Serializable]
@@ -334,6 +333,11 @@ public class MovingPlatformPath {
 		this.startX = startX;
 		this.startY = startY;
 	}
+
+	public virtual float Velocity (float vel)
+	{
+		return velocity;
+	}
 }
 
 [Serializable]
@@ -355,7 +359,7 @@ public class StraightPath : MovingPlatformPath {
 	public StraightPath(float vel, float startX, float startY, float endX, float endY, bool preview) : 
 		base (vel, startX, startY, endX, endY, preview)
 	{
-		this.velocity = vel;
+		this.velocity = Velocity (vel);
 		this.startX = startX;
 		this.startY = startY;
 		this.endX = endX;
@@ -366,11 +370,16 @@ public class StraightPath : MovingPlatformPath {
 	public StraightPath(float vel, float startX, float startY, float angle, bool preview) : 
 		base (vel, startX, startY, angle, preview)
 	{
-		this.velocity = vel;
+		this.velocity = Velocity (vel);
 		this.startX = startX;
 		this.startY = startY;
 		this.angle = angle;
 		this.preview = preview;
+	}
+
+	public override float Velocity (float vel)
+	{
+		return velocity * 4.0f;
 	}
 }
 
@@ -393,11 +402,16 @@ public class StraightPathContinuous : StraightPath {
 	public StraightPathContinuous(float vel, float startX, float startY, float angle, bool preview) : 
 		base (vel, startX, startY, angle, preview)
 	{
-		this.velocity = vel;
+		this.velocity = Velocity (vel);
 		this.startX = startX;
 		this.startY = startY;
 		this.angle = angle;
 		this.preview = preview;
+	}
+
+	public override float Velocity (float vel)
+	{
+		return velocity * 4.0f;
 	}
 }
 
@@ -431,13 +445,18 @@ public class EllipsePath : MovingPlatformPath {
 	public EllipsePath (float vel, float dAngle, float dRadiusX, float dRadiusY, float dCenterX, float dCenterY, bool preview) : 
 		base (vel, dAngle, dRadiusX, dRadiusY, dCenterX, dCenterY, preview)
 	{
-		this.velocity = vel;
+		this.velocity = Velocity (vel);
 		this.dAngle = dAngle;
 		this.dRadiusX = dRadiusX;
 		this.dRadiusY = dRadiusY;
 		this.dCenterX = dCenterX;
 		this.dCenterY = dCenterY;
 		this.preview = preview;
+	}
+
+	public override float Velocity (float vel)
+	{
+		return velocity / 0.003f;
 	}
 }
 
@@ -647,6 +666,16 @@ public enum ImportErrorType {
 
 [Serializable]
 public class Map : ScriptableObject {
+
+	public static float TranslateEllipsePathVelocity (float velocity)
+	{
+		return velocity / 0.003f;
+	}
+
+	public static float TranslateStraightPathVelocity (float velocity)
+	{
+		return velocity * 4.0f;
+	}
 
 	[SerializeField]
 	public bool isImportSuccessful = false;

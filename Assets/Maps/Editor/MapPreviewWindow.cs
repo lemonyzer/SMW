@@ -696,6 +696,7 @@ public class MapPreviewWindow : EditorWindow {
 
 					if (currentPlatform.path.iPathType == (short) MovingPathType.StraightPath)
 					{
+						currenPlatformGO.name += " StraightPath"; 
 						// Start -> End -> Start ...
 						offsetX = currentPlatform.path.startX / 32.0f - 10f;
 						offsetY = 15f - currentPlatform.path.startY / 32.0f - 7.5f;
@@ -703,6 +704,7 @@ public class MapPreviewWindow : EditorWindow {
 					}
 					else if (currentPlatform.path.iPathType == (short) MovingPathType.StraightPathContinuous)
 					{
+						currenPlatformGO.name += " StraightPathCont"; 
 						// Platform need to Beam!
 						// Start @ angle -> velocity
 						offsetX = currentPlatform.path.startX / 32.0f - 10f;
@@ -710,6 +712,7 @@ public class MapPreviewWindow : EditorWindow {
 					}
 					else if (currentPlatform.path.iPathType == (short) MovingPathType.EllipsePath)
 					{
+						currenPlatformGO.name += " EllipsePath"; 
 						// Center + r @ angle
 						offsetX = currentPlatform.path.dCenterX / 32.0f - 10f;
 						offsetY = 15f - currentPlatform.path.dCenterY / 32.0f - 7.5f;
