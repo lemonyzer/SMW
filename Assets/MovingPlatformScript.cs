@@ -29,6 +29,12 @@ public class MovingPlatformScript : MonoBehaviour {
 	Vector3 center;
 
 	[SerializeField]
+	Vector3 radius;
+
+	[SerializeField]
+	Vector3 cRadius;
+
+	[SerializeField]
 	Vector3 axis;
 
 	// Use this for initialization
@@ -52,6 +58,10 @@ public class MovingPlatformScript : MonoBehaviour {
 			center.x = movingPlatform.path.dCenterX / 32f - 10f;
 			center.y = 15f - movingPlatform.path.dCenterY / 32f - 7.5f;
 			center.z = myTransform.position.z;
+
+			radius.x = movingPlatform.path.dRadiusX / 32.0f;
+			radius.y = movingPlatform.path.dRadiusY / 32.0f;
+			radius.z = myTransform.position.z;
 		}
 	}
 	
@@ -94,8 +104,34 @@ public class MovingPlatformScript : MonoBehaviour {
 		}
 		else if (movingPlatform.path.iPathType == (short) MovingPathType.EllipsePath)
 		{
-			myTransform.RotateAround (center, Vector3.forward, Time.deltaTime * movingPlatform.path.velocity);
-			myTransform.rotation = Quaternion.identity;
+			// Circle
+//			myTransform.RotateAround (center, Vector3.forward, Time.deltaTime * movingPlatform.path.velocity);
+//			myTransform.rotation = Quaternion.identity;
+
+			// Ellipse
+			movingPlatform.path.dAngle += movingPlatform.path.velocity * 0.003f;
+
+			cRadius.x = Mathf.Cos (movingPlatform.path.dAngle) * radius.x;
+			cRadius.y = Mathf.Sin (movingPlatform.path.dAngle) * radius.y;
+			cRadius.z = 0f;
+
+			myTransform.position = center + cRadius;
+
+			if (moveDirection.x >= 0.0f)
+			{
+				// obere Ellipsenhälfte
+
+			}
+
+			else
+			{
+				// untere Ellipsenhälfte
+			}
+
+//			Debug.DrawLine (startPos, cRadius);
+//			Debug.DrawLine (center, myTransform.position, Color.red);
+//			Debug.DrawLine (center, center+cRadius, Color.yellow);
+
 		}
 		
 	}
