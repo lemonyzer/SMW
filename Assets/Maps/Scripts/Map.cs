@@ -377,10 +377,10 @@ public class StraightPath : MovingPlatformPath {
 		this.preview = preview;
 	}
 
-	public override float Velocity (float vel)
-	{
-		return velocity * 4.0f;
-	}
+//	public override float Velocity (float vel)
+//	{
+//		return velocity * 4.0f;
+//	}
 }
 
 [Serializable]
@@ -409,10 +409,10 @@ public class StraightPathContinuous : StraightPath {
 		this.preview = preview;
 	}
 
-	public override float Velocity (float vel)
-	{
-		return velocity * 4.0f;
-	}
+//	public override float Velocity (float vel)
+//	{
+//		return velocity * 4.0f;
+//	}
 }
 
 [Serializable]
@@ -454,10 +454,10 @@ public class EllipsePath : MovingPlatformPath {
 		this.preview = preview;
 	}
 
-	public override float Velocity (float vel)
-	{
-		return velocity / 0.003f;
-	}
+//	public override float Velocity (float vel)
+//	{
+//		return velocity / 0.003f;
+//	}
 }
 
 [Serializable]

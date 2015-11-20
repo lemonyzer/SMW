@@ -51,7 +51,8 @@ public class MovingPlatformScript : MonoBehaviour {
 		}
 		else if (movingPlatform.path.iPathType == (short) MovingPathType.StraightPathContinuous)
 		{
-
+			moveDirection.x = Mathf.Cos (movingPlatform.path.angle);
+			moveDirection.y = Mathf.Sin (movingPlatform.path.angle);
 		}
 		else if (movingPlatform.path.iPathType == (short) MovingPathType.EllipsePath)
 		{
@@ -80,7 +81,7 @@ public class MovingPlatformScript : MonoBehaviour {
 			if (hinweg)
 			{
 				diff = endPos - myTransform.position;
-				if (diff.magnitude < 0.1f)
+				if (diff.sqrMagnitude < 0.1f)
 					hinweg = !hinweg;
 				else
 					myTransform.Translate (moveDirection * Time.deltaTime * movingPlatform.path.velocity); 
@@ -88,19 +89,44 @@ public class MovingPlatformScript : MonoBehaviour {
 			else
 			{
 				diff = startPos - myTransform.position;
-				if (diff.magnitude < 0.1f)
+				if (diff.sqrMagnitude < 0.1f)
 					hinweg = !hinweg;
 				else
 					myTransform.Translate (-1 * moveDirection * Time.deltaTime * movingPlatform.path.velocity); 
 			}
 
 
+			Debug.DrawLine (startPos + Vector3.left, startPos + Vector3.right);
+			Debug.DrawLine (startPos + Vector3.up, startPos + Vector3.down);
 
+			Debug.DrawLine (endPos + Vector3.left, endPos + Vector3.right);
+			Debug.DrawLine (endPos + Vector3.up, endPos + Vector3.down);
 
 		}
 		else if (movingPlatform.path.iPathType == (short) MovingPathType.StraightPathContinuous)
 		{
+			myTransform.Translate (moveDirection * Time.deltaTime * movingPlatform.path.velocity);
 
+			// 20 + 20/2 = 30
+			// 15 + 15/2 = 22,5
+
+			if (myTransform.position.x <= -20f)
+			{
+				myTransform.position += new Vector3(20f,0f,0f);
+			}
+			else if (myTransform.position.x >= 20f)
+			{
+				myTransform.position += new Vector3(-20f,0f,0f);
+			}
+
+			if (myTransform.position.y <= -15f)
+			{
+				myTransform.position += new Vector3(0f,15f,0f);
+			}
+			else if (myTransform.position.y >= 15f)
+			{
+				myTransform.position += new Vector3(0f,-15f,0f);
+			}
 		}
 		else if (movingPlatform.path.iPathType == (short) MovingPathType.EllipsePath)
 		{
@@ -109,7 +135,7 @@ public class MovingPlatformScript : MonoBehaviour {
 //			myTransform.rotation = Quaternion.identity;
 
 			// Ellipse
-			movingPlatform.path.dAngle += movingPlatform.path.velocity * 0.003f;
+			movingPlatform.path.dAngle += movingPlatform.path.velocity;
 
 			cRadius.x = Mathf.Cos (movingPlatform.path.dAngle) * radius.x;
 			cRadius.y = Mathf.Sin (movingPlatform.path.dAngle) * radius.y;
