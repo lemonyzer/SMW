@@ -100,19 +100,59 @@ public class MapTile
 };
 
 [Serializable]
+public class SwitchBlock
+{
+	[SerializeField]
+	public short x;
+
+	[SerializeField]
+	public short y;
+
+	[SerializeField]
+	public short iType;
+	//	public short iSettings[NUM_BLOCK_SETTINGS];
+	[SerializeField]
+	public short iSettings;
+	[SerializeField]
+	public bool fHidden;
+	
+	public SwitchBlock()
+	{
+//		iSettings = new short[Globals.NUM_BLOCK_SETTINGS];
+//		iSettings = new List<short> ();
+	}
+};
+
+[Serializable]
 public class MapBlock
 {
 	[SerializeField]
 	public short iType;
 	//	public short iSettings[NUM_BLOCK_SETTINGS];
 	[SerializeField]
-	public short[] iSettings;
+	private List<short> iSettings;
 	[SerializeField]
 	public bool fHidden;
 
 	public MapBlock()
 	{
-		iSettings = new short[Globals.NUM_BLOCK_SETTINGS];
+//		iSettings = new short[Globals.NUM_BLOCK_SETTINGS];
+		iSettings = new List<short> ();
+	}
+
+	public void AddSetting (short settingsItem)
+	{
+		iSettings.Add (settingsItem);
+	}
+
+	public short GetSetting (int index)
+	{
+		return iSettings[index];
+	}
+
+	public int SettingsCount ()
+	{
+		return iSettings.Count;
 	}
 };
 
@@ -157,6 +197,16 @@ public class WarpMap
 	int width;
 	[SerializeField]
 	Warp[] warpMap;
+
+	public int GetHeight()
+	{
+		return height;
+	}
+
+	public int GetWidth()
+	{
+		return width;
+	}
 	
 	public WarpMap (int x, int y)
 	{
@@ -871,6 +921,8 @@ public class Map : ScriptableObject {
 
 	[SerializeField]
 	int iNumSwitchBlockData;
+	[SerializeField]
+	List<MapBlock> switchBlocks;
 
 	[SerializeField]
 	int maxConnection;
@@ -1498,6 +1550,7 @@ public class Map : ScriptableObject {
 	}
 	void ReadingSwitchBlockStateData(BinaryReader binReader, ReadType iReadType)
 	{
+		switchBlocks = new List<MapBlock> ();
 		//Read switch block state data
 		iNumSwitchBlockData = ReadInt(binReader);
 		if (iNumSwitchBlockData > 0)
@@ -1507,9 +1560,9 @@ public class Map : ScriptableObject {
 				short iCol = ReadByteAsShort(binReader);
 				short iRow = ReadByteAsShort(binReader);
 
-				Debug.Log("ExtendedDataBlocks ("+ iBlock +") wird in ObjectData [x=" + iCol + ", y=" + iRow + "] mit " + "1er" + " Setting eingelesen");
-				
-				objectdata.GetBlock(iCol,iRow).iSettings[0] = ReadByteAsShort(binReader);
+//				objectdata.GetBlock(iCol,iRow).iSettings[0] = ReadByteAsShort(binReader);
+				objectdata.GetBlock(iCol,iRow).AddSetting (ReadByteAsShort(binReader));
+				Debug.Log("ExtendedDataBlocks ("+ iBlock +") wurde in ObjectData [x=" + iCol + ", y=" + iRow + "] mit Setting: " + objectdata.GetBlock(iCol,iRow).GetSetting(0) + " eingelesen");
 			}
 		}
 	}
@@ -1676,7 +1729,8 @@ public class Map : ScriptableObject {
 			for(short iSetting = 0; iSetting < iNumSettings; iSetting++)
 			{
 				//				objectdata[iCol,iRow] = new MapBlock();
-				objectdata.GetBlock(iCol,iRow).iSettings[iSetting] = ReadByteAsShort(binReader);
+//				objectdata.GetBlock(iCol,iRow).iSettings[iSetting] = ReadByteAsShort(binReader);
+				objectdata.GetBlock(iCol,iRow).AddSetting (ReadByteAsShort(binReader));
 			}
 		}
 	}
@@ -1995,7 +2049,7 @@ public class Map : ScriptableObject {
 			//		EditorGUILayout.EndScrollView();
 		}
 		
-		fShowObjectData = UnityEditor.EditorGUILayout.Foldout(fShowObjectData,"Preview Objectdata");
+		fShowObjectData = UnityEditor.EditorGUILayout.Foldout(fShowObjectData,"Preview Objectdata: (Type, Settings)");
 		if(fShowObjectData)
 		{
 			//		previewObjectDataSliderPosition = EditorGUILayout.BeginScrollView(previewObjectDataSliderPosition);	
@@ -2009,7 +2063,7 @@ public class Map : ScriptableObject {
 //			//		OnGUI_Preview_PlatformTiles();
 //		}
 
-		fShowWarpData = UnityEditor.EditorGUILayout.Foldout(fShowWarpData,"Preview Warp Data");
+		fShowWarpData = UnityEditor.EditorGUILayout.Foldout(fShowWarpData,"Preview Warp Data: (ID,Connection,Direction)");
 		if(fShowWarpData)
 		{
 			OnGUI_Preview_WarpData ();
@@ -2113,14 +2167,57 @@ public class Map : ScriptableObject {
 					{
 						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iSettings.ToString()+","+mapBlock.iType.ToString("D2");
 						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iType.ToString("D2");
-						mapBlockString += mapBlock.fHidden ? "1" : "0";
-						mapBlockString += "\n" + mapBlock.iType.ToString("D3") + "\n";
-						
-						for(int i=0; i<mapBlock.iSettings.Length; i++)
+						if (mapBlock.iType != (short) 255)
 						{
-							if(mapBlock.iSettings[i] != 0)
-								mapBlockString += mapBlock.iSettings[i].ToString("D2") + ",";
+							mapBlockString += mapBlock.iType.ToString("D3") + "\n";
 						}
+						else
+							mapBlockString += "\n";
+
+						mapBlockString += mapBlock.fHidden ? "1" : "0";
+
+						string settingsString = "";
+						for(int i=0; i<mapBlock.SettingsCount (); i++)
+						{
+							if(mapBlock.GetSetting (i) != 0)
+								settingsString += mapBlock.GetSetting (i).ToString("D2") + ",";
+						}
+						if (mapBlock.iType == (short) 1)
+						{
+							// PowerUp Block [?]
+							if (settingsString.Length > 3)
+							{
+								mapBlockString += "\n[?]";
+	//							mapBlockString += settingsString.Substring(0,2);
+							}
+						}
+						else if (mapBlock.iType >= (short) 7 &&
+						         mapBlock.iType <= (short) 10)
+						{
+							// ON-Switch [ON]
+							mapBlockString += "\nON" + settingsString;
+						}
+						else if (mapBlock.iType >= (short) 22 &&
+						         mapBlock.iType <= (short) 25)
+						{
+							// OFF-Switch [OFF]
+							mapBlockString += "\nOFF" + settingsString;
+						}
+						else if (mapBlock.iType >= (short) 11 &&
+						         mapBlock.iType <= (short) 14)
+						{
+							// ON/OFF Block [!]
+							if (mapBlock.GetSetting (0) == (short) 0)
+							{
+								mapBlockString += "\n" + "[]";
+							}
+							else if (mapBlock.GetSetting (0) == (short) 1)
+							{
+								mapBlockString += "\n" + "[!]";
+							}
+						}
+						else
+							mapBlockString += "\n";
 						
 					}
 					
@@ -2130,11 +2227,11 @@ public class Map : ScriptableObject {
 				EditorGUILayout.EndHorizontal();
 			}
 			EditorGUILayout.EndScrollView();
-			EditorGUILayout.Space();
-			GUILayout.Space(20);
+//			EditorGUILayout.Space();
+//			GUILayout.Space(20);
 			EditorGUILayout.EndVertical();
-			EditorGUILayout.Space();
-			GUILayout.Space(20);
+//			EditorGUILayout.Space();
+//			GUILayout.Space(20);
 			EditorGUILayout.EndHorizontal();
 		}
 		else
@@ -2173,12 +2270,14 @@ public class Map : ScriptableObject {
 						//						mapBlockString += mapBlock.fHidden.ToString()+","+mapBlock.iType.ToString("D2");
 						elementString += element.id + ",";
 						if (element.connection == (short)-1)
-							elementString += "x" + ",";
+							elementString += ",";
 						else
 							elementString += element.connection + ",";
 
 						if (element.direction == (short)-1)
-							elementString += "x";
+						{
+//							elementString += "";
+						}
 						else
 							elementString += element.direction;
 //						elementString += element.direction;

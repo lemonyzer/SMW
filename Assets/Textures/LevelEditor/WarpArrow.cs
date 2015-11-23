@@ -46,8 +46,18 @@ public class WarpArrow : ScriptableObject {
 		UnityEditor.EditorUtility.SetDirty (this);
 	}
 
-	public Sprite GetArrow (int direction, int connection)
+	public Sprite GetExitArrow (int direction, int connection)
 	{
 		return warpArrows [direction*10 + connection];
+	}
+	public Sprite GetEnterArrow (int direction, int connection)
+	{
+		if (direction != -1)
+		{
+			int dir = (direction + 2) % 4;
+			return GetExitArrow (dir, connection);
+		}
+		else
+			return null;
 	}
 }

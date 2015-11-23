@@ -601,6 +601,8 @@ public class MapPreviewWindow : EditorWindow {
 		// Platforms Translated + Raw
 		CreatePlatformGOs (mapSO, mapRootGO, layer, useAssetSubSprites);
 
+		WarpsPreview (mapSO, mapRootGO);
+
 		WarpExitsPreview (mapSO, mapRootGO);
 
 		return mapRootGO;
@@ -777,6 +779,63 @@ public class MapPreviewWindow : EditorWindow {
 		}
 	}
 
+	public void WarpsPreview(Map mapSO, GameObject mapRootGO)
+	{
+		WarpMap warpdata = mapSO.GetWarpMap ();
+		if(warpdata != null)
+		{
+			GameObject goWarps = new GameObject ("Warps");
+			goWarps.transform.SetParent (mapRootGO.transform);
+			goWarps.transform.localPosition = new Vector3 (0f,0f,-18f);
+			
+			for (int y=0; y< warpdata.GetHeight (); y++)
+			{
+				for (int x=0; x< warpdata.GetWidth (); x++)
+				{
+					Warp currentWarp = warpdata.GetField (x,y);
+					if (currentWarp != null)
+					{
+						if (currentWarp.connection != (short) -1)
+						{
+							GameObject currentWarpGO = new GameObject ("Warp " + currentWarp.id);
+						
+							currentWarpGO.transform.SetParent (goWarps.transform);
+							
+							Vector3 offset = Vector3.zero;
+							if (currentWarp.direction == (short)WarpEnterDirection.WARP_DOWN ||
+							    currentWarp.direction == (short)WarpEnterDirection.WARP_UP)
+							{
+//								offset.x = 0.5f;
+								offset.y = 0.5f;
+							}
+							else if (currentWarp.direction == (short)WarpEnterDirection.WARP_LEFT ||
+							         currentWarp.direction == (short)WarpEnterDirection.WARP_RIGHT)
+							{
+								offset.x = .5f;
+//								offset.y = -.5f;
+							}
+								
+							float xPos = x - 10.0f;
+							float yPos = -1f * y + 6.5f;
+							Vector3 cPos = new Vector3 (xPos, yPos, 0f);
+							currentWarpGO.transform.localPosition = cPos + offset;
+//							currentWarpGO.transform.Rotate (Vector3.forward, 180f);
+							
+							SpriteRenderer currentSpriteRenderer = currentWarpGO.AddComponent<SpriteRenderer> ();
+							currentSpriteRenderer.sprite = g_TilesetManager.GetWarpArrow ().GetEnterArrow(currentWarp.direction, currentWarp.connection);
+							currentSpriteRenderer.sortingLayerName = "MapDebug";
+							currentSpriteRenderer.color = new Color (0,0,1,.75f);
+						}
+
+						
+					}
+					else
+						Debug.LogError (this.ToString () + " warpdata [" + x + ", " + y + "] == NULL");
+				}
+			}
+		}
+	}
+
 	public void WarpExitsPreview(Map mapSO, GameObject mapRootGO)
 	{
 		List<WarpExit> warpexits = mapSO.GetWarpExits ();
@@ -828,7 +887,7 @@ public class MapPreviewWindow : EditorWindow {
 						currentWarpExit.transform.localPosition = cPos + offset;
 						
 						SpriteRenderer currentSpriteRenderer = currentWarpExit.AddComponent<SpriteRenderer> ();
-						currentSpriteRenderer.sprite = g_TilesetManager.GetWarpArrow ().GetArrow(warpexits[i].direction, warpexits[i].connection);
+						currentSpriteRenderer.sprite = g_TilesetManager.GetWarpArrow ().GetExitArrow(warpexits[i].direction, warpexits[i].connection);
 						currentSpriteRenderer.sortingLayerName = "MapDebug";
 					}
 
