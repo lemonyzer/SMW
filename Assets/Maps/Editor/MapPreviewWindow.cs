@@ -249,6 +249,25 @@ public class MapPreviewWindow : EditorWindow {
 		//				EditorApplication.SaveAssets();
 	}
 
+	void CreateBackground (GameObject mapRootGO, Map mapSO, string backgroundAssetFolderPath)
+	{
+		// Map Background
+		SpriteRenderer backgroundSpriteRenderer = mapRootGO.AddComponent<SpriteRenderer>();
+		backgroundSpriteRenderer.sortingLayerName = "MapBackgroundLayer";
+		Sprite backgroundSprite;
+		string backgroundFilename = mapSO.GetBackgroundFilename();
+		if(string.IsNullOrEmpty(mapSO.GetBackgroundFilename()))
+		{
+			backgroundFilename = "Land_Classic.png";
+		}
+		backgroundSprite = (Sprite) AssetDatabase.LoadAssetAtPath(backgroundAssetFolderPath +"/"+ backgroundFilename, typeof(Sprite));
+		
+		if(backgroundSprite == null)
+			Debug.LogError("Map: " + mapSO.mapName + " Background " + backgroundFilename + " not Found in " + backgroundAssetFolderPath );
+		
+		backgroundSpriteRenderer.sprite = backgroundSprite;
+	}
+
 	GameObject CreateUnityMap(Map mapSO, string backgroundAssetFolderPath, bool useAssetSubSprites, bool dontTranslateUnknown, bool setNotValidToUnknown, bool setTileTypeForNonValidTiles)
 	{
 		if(mapSO == null)
@@ -289,22 +308,11 @@ public class MapPreviewWindow : EditorWindow {
 		GameObject mapRootGO = new GameObject(mapSO.mapName + (w_UseAssetSubSpritesToggle ? "_AssetSubSprites" : "_no"));
 		mapRootGO.tag = Tags.tag_Map;
 		mapRootGO.transform.position = Vector3.zero;
+
 		// Map Background
-		SpriteRenderer backgroundSpriteRenderer = mapRootGO.AddComponent<SpriteRenderer>();
-		backgroundSpriteRenderer.sortingLayerName = "MapBackgroundLayer";
-		Sprite backgroundSprite;
-		string backgroundFilename = mapSO.GetBackgroundFilename();
-		if(string.IsNullOrEmpty(mapSO.GetBackgroundFilename()))
-		{
-			backgroundFilename = "Land_Classic.png";
-		}
-		backgroundSprite = (Sprite) AssetDatabase.LoadAssetAtPath(backgroundAssetFolderPath +"/"+ backgroundFilename, typeof(Sprite));
+		CreateBackground (mapRootGO, mapSO, backgroundAssetFolderPath);
 
-		if(backgroundSprite == null)
-			Debug.LogError("Map: " + mapSO.mapName + " Background " + backgroundFilename + " not Found in " + backgroundAssetFolderPath );
-
-		backgroundSpriteRenderer.sprite = backgroundSprite;
-
+		// Tiles Layer 0-4 & Animated Layer
 		GameObject animatedLayerGO = new GameObject("Animated Layer");
 		animatedLayerGO.transform.SetParent(mapRootGO.transform);
 		animatedLayerGO.transform.localPosition = new Vector3(0f,0f,-10f);
@@ -534,29 +542,65 @@ public class MapPreviewWindow : EditorWindow {
 					MapBlock currenObjectDataMapBlock = mapObjectData.GetBlock(x,y);
 					if(currenObjectDataMapBlock != null)
 					{
-						string tileTypeString = ""+ ((TileType) currenObjectDataMapBlock.iType);
-						GameObject currentTileGO = new GameObject(x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString );
-						currentTileGO.transform.SetParent(mapObjectDataLayerGO.transform);
-						Vector3 tileLocalPos = new Vector3(-Globals.MAPWIDTH*0.5f +x,		// x+1: pivot Right , x+0.5f: pivor Center, x: pivot Left
-						                                   Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
-						                                   0f);
-						currentTileGO.transform.localPosition = tileLocalPos;
-
-						TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
-						currenTileScript.mapBlock = currenObjectDataMapBlock;
-
 						if (currenObjectDataMapBlock.iType != 255)
 						{
+							string tileTypeString = ""+ ((TileType) currenObjectDataMapBlock.iType);
+							GameObject currentTileGO = new GameObject(x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString );
+							currentTileGO.transform.SetParent(mapObjectDataLayerGO.transform);
+							Vector3 tileLocalPos = new Vector3(-Globals.MAPWIDTH*0.5f +x,		// x+1: pivot Right , x+0.5f: pivor Center, x: pivot Left
+							                                   Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
+							                                   0f);
+							currentTileGO.transform.localPosition = tileLocalPos;
+
+							TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
+							currenTileScript.SetMapBlock (currenObjectDataMapBlock);
+
+
 							SpriteRenderer currentTileSprite = currentTileGO.AddComponent<SpriteRenderer>();
 							currentTileSprite.sprite = g_TilesetManager.GetBlockSprite (currenObjectDataMapBlock.iType);
 							currentTileSprite.sortingLayerName = "MapObjectDataLayer";
 							if (currenObjectDataMapBlock.fHidden)
 								currentTileSprite.color = new Color (1,1,1,0.5f);
-						}
+
+//							MapBlock mapBlock = currenObjectDataMapBlock;
+//
+//							if (mapBlock.iType == (short) 1)
+//							{
+//								// PowerUp Block [?]
+//
+//							}
+//							else if (mapBlock.iType >= (short) 7 &&
+//							         mapBlock.iType <= (short) 10)
+//							{
+//								// ON-Switch [ON]
+//							}
+//							else if (mapBlock.iType >= (short) 22 &&
+//							         mapBlock.iType <= (short) 25)
+//							{
+//								// OFF-Switch [OFF]
+//							}
+//							else if (mapBlock.iType >= (short) 11 &&
+//							         mapBlock.iType <= (short) 14)
+//							{
+//								// ON [!] /OFF Block [ ]
+//								if (mapBlock.GetSetting (0) == (short) 0)
+//								{
+//									// "[ ]";
+//								}
+//								else if (mapBlock.GetSetting (0) == (short) 1)
+//								{
+//									// "[!]";
+//								}
+//							}
+//							else
+//							{
+//
+//							}
 						//currenTileScript.Add(currentMapBlock)
 						//currenTileScript.Add(currentTilesetTile)
 						//currenTileScript.Add(currentMapTile)
 						//currenTileScript.Add(currentMovingPlatform)
+						}
 					}
 				}
 			}
@@ -581,16 +625,19 @@ public class MapPreviewWindow : EditorWindow {
 					MapTile currentMapDataTopTile = mapDataTop.GetTile(x,y);
 					if (currentMapDataTopTile != null)
 					{
-						string tileTypeString = "" + currentMapDataTopTile.iType;
-						GameObject currentTileGO = new GameObject(x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString );
-						currentTileGO.transform.SetParent(mapDataTopLayerGO.transform);
-						Vector3 tileLocalPos = new Vector3(-Globals.MAPWIDTH*0.5f +x,		// x+1: pivot Right , x+0.5f: pivor Center, x: pivot Left
-						                                   Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
-						                                   0f);
-						currentTileGO.transform.localPosition = tileLocalPos;
+						if (currentMapDataTopTile.iType != TileType.tile_nonsolid)
+						{
+							string tileTypeString = "" + currentMapDataTopTile.iType;
+							GameObject currentTileGO = new GameObject(x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString );
+							currentTileGO.transform.SetParent(mapDataTopLayerGO.transform);
+							Vector3 tileLocalPos = new Vector3(-Globals.MAPWIDTH*0.5f +x,		// x+1: pivot Right , x+0.5f: pivor Center, x: pivot Left
+							                                   Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
+							                                   0f);
+							currentTileGO.transform.localPosition = tileLocalPos;
 
-						TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
-						currenTileScript.mapTile = currentMapDataTopTile;
+							TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
+							currenTileScript.mapTile = currentMapDataTopTile;
+						}
 					}
 				}
 			}
@@ -604,6 +651,9 @@ public class MapPreviewWindow : EditorWindow {
 		WarpsPreview (mapSO, mapRootGO);
 
 		WarpExitsPreview (mapSO, mapRootGO);
+
+		mapSO.ConnectSwitchBlocks ();
+		EditorUtility.SetDirty (mapSO);
 
 		return mapRootGO;
 	}

@@ -99,27 +99,99 @@ public class MapTile
 	public int iFlags;
 };
 
+
 [Serializable]
 public class SwitchBlock
 {
 	[SerializeField]
-	public short x;
-
-	[SerializeField]
-	public short y;
-
-	[SerializeField]
-	public short iType;
-	//	public short iSettings[NUM_BLOCK_SETTINGS];
-	[SerializeField]
-	public short iSettings;
-	[SerializeField]
-	public bool fHidden;
+	public int x;
 	
-	public SwitchBlock()
+	[SerializeField]
+	public int y;
+
+	[SerializeField]
+	MapBlock mapBlock;
+
+	public SwitchBlock (int x, int y, MapBlock block)
 	{
+		this.x = x;
+		this.y = y;
+		this.mapBlock = block;
+	}
+}
+
+[Serializable]
+public class OnOffBlock
+{
+	[SerializeField]
+	int x;
+	[SerializeField]
+	int y;
+
+	public OnOffBlock (int x, int y, bool state)
+	{
+		this.x = x;
+		this.y = y;
+		this.state = state;
+	}
+
+	public int X {
+		get {return x;}
+		private set {x = value;}
+	}
+	
+	public int Y {
+		get {return y;}
+		private set {y = value;}
+	}
+	
+	[SerializeField]
+	bool state;
+
+	public bool State {
+		get {return state;}
+		set {state = value;}
+	}
+}
+
+[Serializable]
+public class OnOffSwitchBlock
+{
+	[SerializeField]
+	List<SwitchBlock> blocks;
+
+	[SerializeField]
+	List<OnOffBlock> switches;
+
+//	[SerializeField]
+//	int x;
+//	[SerializeField]
+//	int y;
+
+	[SerializeField]
+	bool state;
+	
+	public OnOffSwitchBlock()
+	{
+		blocks = new List<SwitchBlock> ();
+		switches = new List<OnOffBlock> ();
 //		iSettings = new short[Globals.NUM_BLOCK_SETTINGS];
 //		iSettings = new List<short> ();
+	}
+
+	public void AddSwitch (int x, int y, bool state)
+	{
+		switches.Add (new OnOffBlock (x, y, state));
+	}
+	
+	public bool State {
+		get {return state;}
+		set {state = value;}
+	}
+
+	public void AddBlock (SwitchBlock block)
+	{
+		blocks.Add (block);
 	}
 };
 
@@ -165,6 +237,13 @@ public class MapBlockLayer
 	int width;
 	[SerializeField]
 	MapBlock[] mapBlocksData;
+
+	public int Height {
+		get { return height; }
+	}
+	public int Width {
+		get { return width; }
+	}
 	
 	public MapBlockLayer (int x, int y)
 	{
@@ -180,7 +259,13 @@ public class MapBlockLayer
 	}
 	
 	public MapBlock GetBlock (int x, int y) {
-		return mapBlocksData [x + y*width];
+		if (x >= 0 &&
+		    x < width &&
+		    y >= 0 &&
+		    y < height)
+			return mapBlocksData [x + y*width];
+		else
+			return null;
 	}
 	
 	public void SetBlock (int x, int y, MapBlock mapBlock) {
@@ -808,6 +893,80 @@ public class Map : ScriptableObject {
 		return warpexits;
 	}
 
+	public void ConnectSwitchBlocks ()
+	{
+		switchBlocks = new List<OnOffSwitchBlock> ();
+		
+		for (int i=0; i< 4; i++)
+		{
+			switchBlocks.Add (new OnOffSwitchBlock ());
+		}
+		for (int y=0; y< objectdata.Height; y++)
+		{
+			for (int x=0; x< objectdata.Width; x++)
+			{
+				MapBlock mapBlock = objectdata.GetBlock (x,y);
+				bool state = false;
+				if (mapBlock.iType == (short) 1)
+				{
+					// PowerUp Block [?]
+
+				}
+				else if (mapBlock.iType >= (short) 7 &&
+				         mapBlock.iType <= (short) 10)
+				{
+					// ON-Switch [ON]
+					if (iSwitches[mapBlock.iType-7] == 0)
+					{
+						state = false;
+//						switchBlocks[mapBlock.iType-7].State = false;
+					}
+					else if (iSwitches[mapBlock.iType-7] == 1)
+					{
+						state = true;
+//						switchBlocks[mapBlock.iType-7].State = true;
+					}
+
+					switchBlocks[mapBlock.iType-7].AddSwitch (x, y, state);
+					switchBlocks[mapBlock.iType-7].State = state;
+					
+					
+				}
+				else if (mapBlock.iType >= (short) 22 &&
+				         mapBlock.iType <= (short) 25)
+				{
+					// OFF-Switch [OFF]
+					if (iSwitches[mapBlock.iType-22] == 0)
+					{
+						state = false;
+					}
+					else if (iSwitches[mapBlock.iType-22] == 1)
+					{
+						state = true;
+					}
+
+					switchBlocks[mapBlock.iType-22].AddSwitch (x, y, state);
+					switchBlocks[mapBlock.iType-22].State = state;
+					
+				}
+				else if (mapBlock.iType >= (short) 11 &&
+				         mapBlock.iType <= (short) 14)
+				{
+					switchBlocks[mapBlock.iType-11].AddBlock (new SwitchBlock (x, y, mapBlock));
+					// ON/OFF Block [!]
+//					if (mapBlock.GetSetting (0) == (short) 0)
+//					{
+//						// [ ] 
+//					}
+//					else if (mapBlock.GetSetting (0) == (short) 1)
+//					{
+//						// [!]
+//					}
+				}
+			}
+		}	
+	}
+
 
 	//Converts the tile type into the flags that this tile carries (solid + ice + death, etc)
 //	short[] g_iTileTypeConversion = new short[Globals.NUMTILETYPES] = {0, 1, 2, 5, 121, 9, 17, 33, 65, 6, 21, 37, 69, 3961, 265, 529, 1057, 2113, 4096};
@@ -922,7 +1081,7 @@ public class Map : ScriptableObject {
 	[SerializeField]
 	int iNumSwitchBlockData;
 	[SerializeField]
-	List<MapBlock> switchBlocks;
+	List<OnOffSwitchBlock> switchBlocks;
 
 	[SerializeField]
 	int maxConnection;
@@ -1550,7 +1709,8 @@ public class Map : ScriptableObject {
 	}
 	void ReadingSwitchBlockStateData(BinaryReader binReader, ReadType iReadType)
 	{
-		switchBlocks = new List<MapBlock> ();
+		switchBlocks = new List<OnOffSwitchBlock> ();
+//		switchBlocks.Add ();
 		//Read switch block state data
 		iNumSwitchBlockData = ReadInt(binReader);
 		if (iNumSwitchBlockData > 0)
@@ -1562,6 +1722,7 @@ public class Map : ScriptableObject {
 
 //				objectdata.GetBlock(iCol,iRow).iSettings[0] = ReadByteAsShort(binReader);
 				objectdata.GetBlock(iCol,iRow).AddSetting (ReadByteAsShort(binReader));
+//				switchBlocks.Add ();
 				Debug.Log("ExtendedDataBlocks ("+ iBlock +") wurde in ObjectData [x=" + iCol + ", y=" + iRow + "] mit Setting: " + objectdata.GetBlock(iCol,iRow).GetSetting(0) + " eingelesen");
 			}
 		}
@@ -2195,7 +2356,10 @@ public class Map : ScriptableObject {
 						         mapBlock.iType <= (short) 10)
 						{
 							// ON-Switch [ON]
-							mapBlockString += "\nON" + settingsString;
+							if (iSwitches[mapBlock.iType-7] == 0)
+								mapBlockString += "\nOFF" + settingsString;
+							else if (iSwitches[mapBlock.iType-7] == 1)
+								mapBlockString += "\nON" + settingsString;
 						}
 						else if (mapBlock.iType >= (short) 22 &&
 						         mapBlock.iType <= (short) 25)
