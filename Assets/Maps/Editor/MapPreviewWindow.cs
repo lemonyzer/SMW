@@ -526,6 +526,10 @@ public class MapPreviewWindow : EditorWindow {
 		}
 
 		// ObjectData
+//		// create 4 SwitchConnections
+		mapSO.CreateSwitchConnections ();
+		EditorUtility.SetDirty (mapSO);
+
 		int layer = Globals.MAPLAYERS;			
 		layer++;									// +1 because Background and Layer 0 are two different layers 
 		MapBlockLayer mapObjectData = mapSO.GetObjectData();
@@ -534,6 +538,8 @@ public class MapPreviewWindow : EditorWindow {
 			GameObject mapObjectDataLayerGO = new GameObject("ObjectData");
 			mapObjectDataLayerGO.transform.SetParent(mapRootGO.transform);
 			mapObjectDataLayerGO.transform.localPosition = new Vector3(0f,0f,(layer)*-2f);		//(l+1) (trenne layer von background)
+
+			string spriteRendererLayer = "MapObjectDataLayer";
 
 			for(int y=0; y<Globals.MAPHEIGHT; y++)
 			{
@@ -554,48 +560,97 @@ public class MapPreviewWindow : EditorWindow {
 
 							TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
 							currenTileScript.SetMapBlock (currenObjectDataMapBlock);
+							MapBlock mapBlock = currenObjectDataMapBlock;
+
+							if (mapBlock.iType == (short) 1)
+							{
+								// PowerUp Block [?]
+								// global settings: enabled powerups
+								SpriteRenderer currentTileSprite = currentTileGO.GetComponent<SpriteRenderer>();
+								if (currentTileSprite == null)
+								{
+									currentTileSprite = currentTileGO.AddComponent<SpriteRenderer>();
+									currentTileSprite.sprite = g_TilesetManager.GetBlockSprite (currenObjectDataMapBlock.iType);
+								}
+								currentTileSprite.sortingLayerName = spriteRendererLayer;
+							}
+							else if (mapBlock.iType >= (short) 7 &&
+							         mapBlock.iType <= (short) 10)
+							{
+								// ON-Switch [ON]
+								CreateSwitchGO (mapSO, mapBlock,currentTileGO, spriteRendererLayer);
+//								SwitchConnection currSwitchConnection = mapSO.SwitchConnections[mapBlock.iType-7];
+//								OnOffSwitchBlockScript ioSwitchScript = currentTileGO.AddComponent<OnOffSwitchBlockScript> ();
+//								bool state = false;
+//								Sprite defaultStateSprite;
+//								Sprite otherStateSprite;
+//								if (mapSO.SwitchStates[mapBlock.iType-7] == 0)
+//								{
+//									state = false;
+//									defaultStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType+15);
+//									otherStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+//								}
+//								else // if (mapSO.SwitchStates[mapBlock.iType-7] == 1)
+//								{
+//									state = true;
+//									defaultStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+//									otherStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType+15);
+//								}
+//
+//								ioSwitchScript.CreateBlock (state,defaultStateSprite,otherStateSprite, currSwitchConnection, spriteRendererLayer);
+//								currSwitchConnection.AddSwitchScript (ioSwitchScript);
+							}
+							else if (mapBlock.iType >= (short) 22 &&
+							         mapBlock.iType <= (short) 25)
+							{
+								// OFF-Switch [OFF]
+								CreateSwitchGO (mapSO, mapBlock,currentTileGO, spriteRendererLayer);
+							}
+							else if (mapBlock.iType >= (short) 11 &&
+							         mapBlock.iType <= (short) 14)
+							{
+								CreateSwitchTargetGO (mapSO, mapBlock, currentTileGO, spriteRendererLayer);
+								// ON [!] /OFF Block [ ]
+								if (mapBlock.GetSetting (0) == (short) 0)
+								{
+									// "[ ]";
+								}
+								else if (mapBlock.GetSetting (0) == (short) 1)
+								{
+									// "[!]";
+								}
+							}
+							else if (mapBlock.iType >= (short) 26 &&
+							         mapBlock.iType <= (short) 29)
+							{
+								CreateSwitchTargetGO (mapSO, mapBlock, currentTileGO, spriteRendererLayer);
+								// ON [!] /OFF Block [ ]
+								if (mapBlock.GetSetting (0) == (short) 0)
+								{
+									// "[ ]";
+								}
+								else if (mapBlock.GetSetting (0) == (short) 1)
+								{
+									// "[!]";
+								}
+							}
+							else
+							{
+
+							}
 
 
-							SpriteRenderer currentTileSprite = currentTileGO.AddComponent<SpriteRenderer>();
-							currentTileSprite.sprite = g_TilesetManager.GetBlockSprite (currenObjectDataMapBlock.iType);
-							currentTileSprite.sortingLayerName = "MapObjectDataLayer";
 							if (currenObjectDataMapBlock.fHidden)
+							{
+								SpriteRenderer currentTileSprite = currentTileGO.GetComponent<SpriteRenderer>();
+								if (currentTileSprite == null)
+								{
+									currentTileSprite = currentTileGO.AddComponent<SpriteRenderer>();
+									currentTileSprite.sprite = g_TilesetManager.GetBlockSprite (currenObjectDataMapBlock.iType);
+								}
+								currentTileSprite.sortingLayerName = spriteRendererLayer;
 								currentTileSprite.color = new Color (1,1,1,0.5f);
-
-//							MapBlock mapBlock = currenObjectDataMapBlock;
-//
-//							if (mapBlock.iType == (short) 1)
-//							{
-//								// PowerUp Block [?]
-//
-//							}
-//							else if (mapBlock.iType >= (short) 7 &&
-//							         mapBlock.iType <= (short) 10)
-//							{
-//								// ON-Switch [ON]
-//							}
-//							else if (mapBlock.iType >= (short) 22 &&
-//							         mapBlock.iType <= (short) 25)
-//							{
-//								// OFF-Switch [OFF]
-//							}
-//							else if (mapBlock.iType >= (short) 11 &&
-//							         mapBlock.iType <= (short) 14)
-//							{
-//								// ON [!] /OFF Block [ ]
-//								if (mapBlock.GetSetting (0) == (short) 0)
-//								{
-//									// "[ ]";
-//								}
-//								else if (mapBlock.GetSetting (0) == (short) 1)
-//								{
-//									// "[!]";
-//								}
-//							}
-//							else
-//							{
-//
-//							}
+							}
 						//currenTileScript.Add(currentMapBlock)
 						//currenTileScript.Add(currentTilesetTile)
 						//currenTileScript.Add(currentMapTile)
@@ -652,10 +707,82 @@ public class MapPreviewWindow : EditorWindow {
 
 		WarpExitsPreview (mapSO, mapRootGO);
 
-		mapSO.ConnectSwitchBlocks ();
-		EditorUtility.SetDirty (mapSO);
+//		mapSO.ConnectSwitchBlocks ();
+//		EditorUtility.SetDirty (mapSO);
 
 		return mapRootGO;
+	}
+
+	public void CreateSwitchGO (Map mapSO, MapBlock mapBlock, GameObject currentTileGO, string spriteRendererLayer)
+	{
+		int sub = 0;
+		if (mapBlock.iType >= (short) 7 &&
+		    mapBlock.iType <= (short) 10)
+		{
+			sub = 7;
+		}
+		else if (mapBlock.iType >= (short) 22 &&
+		         mapBlock.iType <= (short) 25)
+		{
+			sub = 22;
+		}
+
+		SwitchConnection currSwitchConnection = mapSO.SwitchConnections[mapBlock.iType-sub];
+		OnOffSwitchBlockScript ioSwitchScript = currentTileGO.AddComponent<OnOffSwitchBlockScript> ();
+		bool state = false;
+		Sprite defaultStateSprite;
+		Sprite otherStateSprite;
+		if (mapSO.SwitchStates[mapBlock.iType-sub] == 0)
+		{
+			state = false;
+			defaultStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType+15);
+			otherStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+		}
+		else 
+		{
+			state = true;
+			defaultStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+			otherStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType+15);
+		}
+		
+		ioSwitchScript.CreateBlock (state,defaultStateSprite,otherStateSprite, currSwitchConnection, spriteRendererLayer);
+		currSwitchConnection.AddSwitchScript (ioSwitchScript);
+	}
+
+	public void CreateSwitchTargetGO (Map mapSO, MapBlock mapBlock, GameObject currentTileGO, string spriteRendererLayer)
+	{
+		int sub = 0;
+		if (mapBlock.iType >= (short) 11 &&
+		    mapBlock.iType <= (short) 14)
+		{
+			sub = 11;
+		}
+		else if (mapBlock.iType >= (short) 26 &&
+		         mapBlock.iType <= (short) 29)
+		{
+			sub = 26;
+		}
+		
+		SwitchConnection currSwitchConnection = mapSO.SwitchConnections[mapBlock.iType-sub];
+		SwitchTargetBlockScript switchTargetScript = currentTileGO.AddComponent<SwitchTargetBlockScript> ();
+		bool state = false;
+		Sprite defaultStateSprite;
+		Sprite otherStateSprite;
+		if (mapSO.SwitchStates[mapBlock.iType-sub] == 0)
+		{
+			state = false;
+			defaultStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType+15);
+			otherStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+		}
+		else 
+		{
+			state = true;
+			defaultStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+			otherStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType+15);
+		}
+		
+		switchTargetScript.CreateBlock (state,defaultStateSprite,otherStateSprite, spriteRendererLayer);
+		currSwitchConnection.AddBlockScript (switchTargetScript);
 	}
 
 	public void CreatePlatformGOs (Map mapSO, GameObject mapRootGO, int layer, bool useAssetSubSprites)

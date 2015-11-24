@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SwitchableBlockScript : MonoBehaviour {
+public class SwitchTargetBlockScript : MonoBehaviour {
 
 	public MapBlock mapBlock;
-	public Sprite currentStateSprite;
 	public Sprite defaultStateSprite;
 	public Sprite switchStateSprite;
 	public SpriteRenderer blockSpriteRenderer;
@@ -13,8 +12,9 @@ public class SwitchableBlockScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Init () {
-		blockSpriteRenderer = this.GetComponent<SpriteRenderer> ();
-		myCollider = this.GetComponent<BoxCollider2D> ();
+		blockSpriteRenderer = this.gameObject.AddComponent<SpriteRenderer> ();
+		myCollider = this.gameObject.AddComponent<BoxCollider2D> ();
+		myCollider.offset += new Vector2 (+0.5f,+0.5f);
 	}
 
 	void Start () 
@@ -22,7 +22,7 @@ public class SwitchableBlockScript : MonoBehaviour {
 
 	}
 
-	public void CreateBlock (bool state, Sprite defaultSprite, Sprite otherSprite)
+	public void CreateBlock (bool state, Sprite defaultSprite, Sprite otherSprite, string spriteLayer)
 	{
 		Init ();
 		on = state;
@@ -38,8 +38,9 @@ public class SwitchableBlockScript : MonoBehaviour {
 //			myCollider.enabled = true;
 //		}
 		defaultStateSprite = defaultSprite;
-		currentStateSprite = defaultSprite;
 		switchStateSprite = otherSprite;
+		blockSpriteRenderer.sprite = defaultSprite;
+		blockSpriteRenderer.sortingLayerName = spriteLayer;
 	}
 
 	public void Switch ()
@@ -55,5 +56,6 @@ public class SwitchableBlockScript : MonoBehaviour {
 			blockSpriteRenderer.sprite = defaultStateSprite;
 		}
 		on = !on;
+		myCollider.enabled = on;
 	}
 }

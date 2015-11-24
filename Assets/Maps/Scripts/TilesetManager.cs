@@ -106,12 +106,17 @@ public class TilesetManager : ScriptableObject {
 		return blockTileset;
 	}
 
-	int blockTileSetWidth = 16;
+	[SerializeField]
+	int blockTileSetWidth = 15;
 
 	public Sprite GetBlockSprite (int index)
 	{
 		int x = index % blockTileSetWidth;
 		int y = 0;
+//		Debug.LogWarning ("blockTileSetWidth= " + blockTileSetWidth);
+//		Debug.LogWarning ("index= " + index);
+//		Debug.LogWarning ("x= " + x);
+//		Debug.LogWarning ("y= " + y);
 		for (int i=0; i<3; i++) 
 		{
 			if (index >= blockTileSetWidth*i && 
@@ -121,6 +126,7 @@ public class TilesetManager : ScriptableObject {
 				break;
 			}
 		}
+//		Debug.LogWarning ("yT= " + y);
 		return blockTileset.GetTileSprite (x, y);
 	}
 

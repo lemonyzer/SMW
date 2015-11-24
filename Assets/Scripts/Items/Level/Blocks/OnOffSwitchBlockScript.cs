@@ -4,11 +4,14 @@ using System.Collections.Generic;
 
 public class OnOffSwitchBlockScript : MonoBehaviour {
 
+//	[SerializeField]
+//	List<SwitchTargetBlockScript> targetBlocks;
+
 	[SerializeField]
-	List<SwitchableBlockScript> switchBlocks;
+	SwitchConnection switchConnection;
 	
 	public MapBlock mapBlock;
-	public Sprite currentStateSprite;
+//	public Sprite currentStateSprite;
 	public Sprite defaultStateSprite;
 	public Sprite switchStateSprite;
 	public SpriteRenderer blockSpriteRenderer;
@@ -17,18 +20,20 @@ public class OnOffSwitchBlockScript : MonoBehaviour {
 
 	public void PreInit ()
 	{
-		if (switchBlocks == null)
-			switchBlocks = new List<SwitchableBlockScript> ();
+//		if (targetBlocks == null)
+//			targetBlocks = new List<SwitchTargetBlockScript> ();
 
-		blockSpriteRenderer = this.GetComponent<SpriteRenderer> ();
+		blockSpriteRenderer = this.gameObject.AddComponent <SpriteRenderer> ();
+		myCollider = this.gameObject.AddComponent <BoxCollider2D> ();
+		myCollider.offset += new Vector2 (+0.5f,+0.5f);
 	}
 
-	public void AddBlock (SwitchableBlockScript block)
-	{
-		switchBlocks.Add (block);
-	}
+//	public void AddBlock (SwitchTargetBlockScript block)
+//	{
+//		targetBlocks.Add (block);
+//	}
 
-	public void CreateBlock (bool state, Sprite defaultSprite, Sprite otherSprite)
+	public void CreateBlock (bool state, Sprite defaultSprite, Sprite otherSprite, SwitchConnection switchConnection, string spriteLayer)
 	{
 		PreInit ();
 		on = state;
@@ -44,8 +49,11 @@ public class OnOffSwitchBlockScript : MonoBehaviour {
 		//			myCollider.enabled = true;
 		//		}
 		defaultStateSprite = defaultSprite;
-		currentStateSprite = defaultSprite;
 		switchStateSprite = otherSprite;
+		blockSpriteRenderer.sprite = defaultStateSprite;
+		blockSpriteRenderer.sortingLayerName = spriteLayer;
+
+		this.switchConnection = switchConnection;
 	}
 	
 	public void Switch ()
@@ -64,16 +72,16 @@ public class OnOffSwitchBlockScript : MonoBehaviour {
 	
 	}
 
-	void TriggerSwitch ()
-	{
-		for (int i=0; i<switchBlocks.Count; i++)
-		{
-			if (switchBlocks[i] != null)
-			{
-				switchBlocks[i].Switch ();
-			}
-		}
-	}
+//	void TriggerSwitch ()
+//	{
+//		for (int i=0; i<targetBlocks.Count; i++)
+//		{
+//			if (targetBlocks[i] != null)
+//			{
+//				targetBlocks[i].Switch ();
+//			}
+//		}
+//	}
 	
 	void OnTriggerEnter2D(Collider2D other)
 	{
@@ -87,7 +95,7 @@ public class OnOffSwitchBlockScript : MonoBehaviour {
 				{
 					//if(other.gameObject.transform.parent.rigidbody2D.velocity.y >= 0f)			// nur zerstören wenn Spieler nach oben springt
 					//{
-					TriggerSwitch ();
+//					TriggerSwitch ();
 					//						if(hasPowerUp)
 					//						{
 					//							if(Network.peerType == NetworkPeerType.Disconnected)
