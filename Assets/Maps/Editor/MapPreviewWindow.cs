@@ -70,9 +70,11 @@ public class MapPreviewWindow : EditorWindow {
 
 //	public GUISkin guiSkin;
 //	public GUIStyle textFieldStlye;
+	Vector2 windowScrollPos;
 
 	void OnGUI()
 	{
+		windowScrollPos = EditorGUILayout.BeginScrollView(windowScrollPos);
 		//EditorGUILayout.Space(10);
 		GUILayout.BeginHorizontal();
 		GUILayout.Space(10);
@@ -212,6 +214,7 @@ public class MapPreviewWindow : EditorWindow {
 
 
 //		Repaint();
+		EditorGUILayout.EndScrollView ();
 	}
 
 	Map OpenMapFile(string mapFilePath, bool isBatch)
@@ -561,11 +564,9 @@ public class MapPreviewWindow : EditorWindow {
 							TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
 							currenTileScript.SetMapBlock (currenObjectDataMapBlock);
 							MapBlock mapBlock = currenObjectDataMapBlock;
-
-							if (mapBlock.iType == (short) 1)
+							if (mapBlock.iType < (short) 7 ||
+							    mapBlock.iType > (short) 14 && mapBlock.iType < (short) 22)
 							{
-								// PowerUp Block [?]
-								// global settings: enabled powerups
 								SpriteRenderer currentTileSprite = currentTileGO.GetComponent<SpriteRenderer>();
 								if (currentTileSprite == null)
 								{
@@ -573,6 +574,27 @@ public class MapPreviewWindow : EditorWindow {
 									currentTileSprite.sprite = g_TilesetManager.GetBlockSprite (currenObjectDataMapBlock.iType);
 								}
 								currentTileSprite.sortingLayerName = spriteRendererLayer;
+
+								if (mapBlock.iType == (short) 0)
+								{
+									// BreakableBlock [#]
+									BreakableBlock blockScript = currentTileGO.AddComponent <BreakableBlock> ();
+									blockScript.CreateBlock ();
+								}
+								else if (mapBlock.iType == (short) 1)
+								{
+									// PowerUp Block [?]
+									// global settings: enabled powerups
+									PowerUpBlock blockScript = currentTileGO.AddComponent <PowerUpBlock> ();
+									blockScript.CreateBlock ();
+									
+								}
+								else if (mapBlock.iType == (short) 2)
+								{
+									// PowerUp Block [?]
+									// global settings: enabled powerups
+									
+								}
 							}
 							else if (mapBlock.iType >= (short) 7 &&
 							         mapBlock.iType <= (short) 10)
@@ -952,6 +974,38 @@ public class MapPreviewWindow : EditorWindow {
 		}
 		else
 			Debug.Log("Map: " + mapSO.mapName + " Platforms == NULL -> Map hat keine MovingPlatform");
+	}
+
+	public void CreateHazards (Map mapSO)
+	{
+		MapHazard[] hazards = mapSO.GetHazards ();
+
+		for (int i=0; i< hazards.Length; i++)
+		{
+			MapHazard currHazard = hazards[i];
+			if (currHazard != null)
+			{
+				GameObject hazardGO = new GameObject ("" + currHazard.itype);
+
+				if (currHazard.itype == HazardType.bullet_bill)
+				{
+				}
+				else if (currHazard.itype == HazardType.fireball_string)
+				{
+				}
+				else if (currHazard.itype == HazardType.flame_cannon)
+				{
+				}
+				else if (currHazard.itype == HazardType.pirhana_plants)
+				{
+				}
+				else if (currHazard.itype == HazardType.rotodisc)
+				{
+				}
+
+			}
+		}
+		//if(HazardType.bullet_bill
 	}
 
 	[SerializeField]

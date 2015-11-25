@@ -51,6 +51,10 @@ public class PowerUpBlock : MonoBehaviour {
 //	
 //	}
 
+	public void CreateBlock () {
+
+	}
+
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if(Network.isServer || Network.peerType == NetworkPeerType.Disconnected)
@@ -90,13 +94,14 @@ public class PowerUpBlock : MonoBehaviour {
 	bool HeadTriggerUnderBlock(Collider2D other)
 	{
 		//BoxCollider2D headCollider = other.gameObject.GetComponent<BoxCollider2D>();
-		float blockBottomPos = this.transform.position.y - this.transform.localScale.y*0.5f;
+//		float blockBottomPos = this.transform.position.y - this.transform.localScale.y*0.5f;
+		float blockBottomPos = this.transform.position.y;
 		float headTriggerUpEdgePos = other.transform.position.y + ((BoxCollider2D)other).size.y*0.5f;// + ((BoxCollider2D)other).center.y;
 
 #if UNITY_EDITOR
-		Debug.DrawLine(Vector3.zero, new Vector3(5,5,0), Color.red, 5f);
-		Debug.DrawLine(Vector3.zero, new Vector3(5,4.5f,0), Color.magenta, 5f);
-		Debug.DrawLine(Vector3.zero, new Vector3(5,5.5f,0), Color.blue, 5f);
+//		Debug.DrawLine(Vector3.zero, new Vector3(5,5,0), Color.red, 5f);
+//		Debug.DrawLine(Vector3.zero, new Vector3(5,4.5f,0), Color.magenta, 5f);
+//		Debug.DrawLine(Vector3.zero, new Vector3(5,5.5f,0), Color.blue, 5f);
 #endif
 
 		//				Debug.Log("Block bottom Position: " + blockBottomPos);

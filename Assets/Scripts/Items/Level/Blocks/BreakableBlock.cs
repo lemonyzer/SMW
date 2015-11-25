@@ -28,12 +28,22 @@ public class BreakableBlock : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
+	}
+
+	void PreInit () {
+		myBlockCollider = this.gameObject.AddComponent<BoxCollider2D>();
+		this.gameObject.layer = LayerMask.NameToLayer (Layer.blockLayerName);
+	}
+
+	public void CreateBlock () {
+		PreInit ();
 	
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if(Network.isServer)
+		if(Network.isServer || Network.peerType == NetworkPeerType.Disconnected)
 		{
 			if(breakTriggered)
 				return;
@@ -51,7 +61,10 @@ public class BreakableBlock : MonoBehaviour {
 //					{
 //						other.gameObject.transform.parent.rigidbody2D.velocity = Vector2.zero;	// collision simulieren (player stoppt bei trigger erkennung kurz)
 						breakTriggered = true;	
-						myNView.RPC("Breaking", RPCMode.AllBuffered, (float)Network.time);				// all buffered, level is changeing!!
+						if (Network.peerType == NetworkPeerType.Disconnected)
+							BreakEffekt ();
+						else
+							myNView.RPC("Breaking", RPCMode.AllBuffered, (float)Network.time);				// all buffered, level is changeing!!
 //					}
 //					else
 //					{
@@ -65,7 +78,11 @@ public class BreakableBlock : MonoBehaviour {
 	bool HeadTriggerUnderBlock(Collider2D other)
 	{
 		//BoxCollider2D headCollider = other.gameObject.GetComponent<BoxCollider2D>();
-		float blockBottomPos = this.transform.position.y - this.transform.localScale.y*0.5f;
+		float blockBottomPos = this.transform.position.y;
+//		if (this.transform.position.y < 0)
+//			blockBottomPos = this.transform.position.y + this.transform.localScale.y*0.5f;
+//		else
+//			blockBottomPos = this.transform.position.y - this.transform.localScale.y*0.5f;
 		float headTriggerUpEdgePos = other.transform.position.y + ((BoxCollider2D)other).size.y*0.5f;
 		
 						Debug.Log("Block bottom Position: " + blockBottomPos);
@@ -120,6 +137,11 @@ public class BreakableBlock : MonoBehaviour {
 		Destroy(cloneTopRight,destroyedBlockPrefabStayTime);
 		Destroy(cloneBottomLeft,destroyedBlockPrefabStayTime);
 		Destroy(cloneBottomRight,destroyedBlockPrefabStayTime);
+
+		myBlock.GetComponent<Renderer>().enabled = false;
+		myBlockCollider.enabled = false;
+		//		myTriggerZone.enabled = false;
+		this.enabled = false;
 	}
 
 	[RPC]

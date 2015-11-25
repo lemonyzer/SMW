@@ -674,7 +674,7 @@ public class MapItem
 [Serializable]
 public class MapHazard
 {
-	public short itype;
+	public HazardType itype;
 	public short ix;
 	public short iy;
 	
@@ -927,6 +927,11 @@ public class Map : ScriptableObject {
 	public List<WarpExit> GetWarpExits ()
 	{
 		return warpexits;
+	}
+
+	public MapHazard[] GetHazards ()
+	{
+		return mapHazards;
 	}
 
 	public void CreateSwitchConnections () {
@@ -1668,7 +1673,7 @@ public class Map : ScriptableObject {
 			for(short iMapHazard = 0; iMapHazard < iNumMapHazards; iMapHazard++)
 			{
 				mapHazards[iMapHazard] = new MapHazard();
-				mapHazards[iMapHazard].itype = (short) ReadInt(binReader);
+				mapHazards[iMapHazard].itype = (HazardType) ReadInt(binReader);
 				mapHazards[iMapHazard].ix = (short) ReadInt(binReader);
 				mapHazards[iMapHazard].iy = (short) ReadInt(binReader);
 				
