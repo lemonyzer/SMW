@@ -207,6 +207,28 @@ public class SwitchConnection
 	{
 		targetBlocksScripts.Add (blockScript);
 	}
+
+	public void Switch ()
+	{
+		for (int i=0; i< targetBlocksScripts.Count; i++)
+		{
+			if (targetBlocksScripts[i] != null)
+			{
+				targetBlocksScripts[i].Switch ();
+			}
+			else
+				Debug.LogError ("targetBlocksScripts[" + i + "] == NULL");
+		}
+		for (int i=0; i< switchScripts.Count; i++)
+		{
+			if (switchScripts[i] != null)
+			{
+				switchScripts[i].Switch ();
+			}
+			else
+				Debug.LogError ("switchScripts[" + i + "] == NULL");
+		}
+	}
 };
 
 [Serializable]

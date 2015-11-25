@@ -4,8 +4,8 @@ using System.Collections;
 public class SwitchTargetBlockScript : MonoBehaviour {
 
 	public MapBlock mapBlock;
-	public Sprite defaultStateSprite;
-	public Sprite switchStateSprite;
+	public Sprite onStateSprite;
+	public Sprite offStateSprite;
 	public SpriteRenderer blockSpriteRenderer;
 	public BoxCollider2D myCollider;
 	public bool on;
@@ -22,7 +22,7 @@ public class SwitchTargetBlockScript : MonoBehaviour {
 
 	}
 
-	public void CreateBlock (bool state, Sprite defaultSprite, Sprite otherSprite, string spriteLayer)
+	public void CreateBlock (bool state, Sprite onSprite, Sprite offSprite, string spriteLayer)
 	{
 		Init ();
 		on = state;
@@ -37,25 +37,30 @@ public class SwitchTargetBlockScript : MonoBehaviour {
 //		{
 //			myCollider.enabled = true;
 //		}
-		defaultStateSprite = defaultSprite;
-		switchStateSprite = otherSprite;
-		blockSpriteRenderer.sprite = defaultSprite;
+		onStateSprite = onSprite;
+		offStateSprite = offSprite;
+		if (on)
+			blockSpriteRenderer.sprite = onSprite;
+		else
+			blockSpriteRenderer.sprite = offSprite;
+			
 		blockSpriteRenderer.sortingLayerName = spriteLayer;
+		this.gameObject.layer = LayerMask.NameToLayer (Layer.blockLayerName);
+		
 	}
 
 	public void Switch ()
 	{
+//		Debug.Log (this.ToString () + " switching from " + on + " to " + !on );
+		on = !on;
 		if (on)
 		{
-			// was on, now off
-			blockSpriteRenderer.sprite = switchStateSprite;
+			blockSpriteRenderer.sprite = onStateSprite;
 		}
 		else
 		{
-			// was off, now on
-			blockSpriteRenderer.sprite = defaultStateSprite;
+			blockSpriteRenderer.sprite = offStateSprite;
 		}
-		on = !on;
 		myCollider.enabled = on;
 	}
 }

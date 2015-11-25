@@ -611,32 +611,38 @@ public class MapPreviewWindow : EditorWindow {
 							{
 								CreateSwitchTargetGO (mapSO, mapBlock, currentTileGO, spriteRendererLayer);
 								// ON [!] /OFF Block [ ]
-								if (mapBlock.GetSetting (0) == (short) 0)
-								{
-									// "[ ]";
-								}
-								else if (mapBlock.GetSetting (0) == (short) 1)
-								{
-									// "[!]";
-								}
+//								if (mapBlock.GetSetting (0) == (short) 0)
+//								{
+//									// "[ ]";
+//								}
+//								else if (mapBlock.GetSetting (0) == (short) 1)
+//								{
+//									// "[!]";
+//								}
 							}
 							else if (mapBlock.iType >= (short) 26 &&
 							         mapBlock.iType <= (short) 29)
 							{
 								CreateSwitchTargetGO (mapSO, mapBlock, currentTileGO, spriteRendererLayer);
 								// ON [!] /OFF Block [ ]
-								if (mapBlock.GetSetting (0) == (short) 0)
-								{
-									// "[ ]";
-								}
-								else if (mapBlock.GetSetting (0) == (short) 1)
-								{
-									// "[!]";
-								}
+//								if (mapBlock.GetSetting (0) == (short) 0)
+//								{
+//									// "[ ]";
+//								}
+//								else if (mapBlock.GetSetting (0) == (short) 1)
+//								{
+//									// "[!]";
+//								}
 							}
 							else
 							{
-
+								SpriteRenderer currentTileSprite = currentTileGO.GetComponent<SpriteRenderer>();
+								if (currentTileSprite == null)
+								{
+									currentTileSprite = currentTileGO.AddComponent<SpriteRenderer>();
+									currentTileSprite.sprite = g_TilesetManager.GetBlockSprite (currenObjectDataMapBlock.iType);
+								}
+								currentTileSprite.sortingLayerName = spriteRendererLayer;
 							}
 
 
@@ -716,6 +722,7 @@ public class MapPreviewWindow : EditorWindow {
 	public void CreateSwitchGO (Map mapSO, MapBlock mapBlock, GameObject currentTileGO, string spriteRendererLayer)
 	{
 		int sub = 0;
+		int addBlockNum = 15;
 		if (mapBlock.iType >= (short) 7 &&
 		    mapBlock.iType <= (short) 10)
 		{
@@ -725,33 +732,36 @@ public class MapPreviewWindow : EditorWindow {
 		         mapBlock.iType <= (short) 25)
 		{
 			sub = 22;
+			addBlockNum *= -1;
 		}
 
 		SwitchConnection currSwitchConnection = mapSO.SwitchConnections[mapBlock.iType-sub];
 		OnOffSwitchBlockScript ioSwitchScript = currentTileGO.AddComponent<OnOffSwitchBlockScript> ();
 		bool state = false;
-		Sprite defaultStateSprite;
-		Sprite otherStateSprite;
+		Sprite onStateSprite;
+		Sprite offStateSprite;
 		if (mapSO.SwitchStates[mapBlock.iType-sub] == 0)
 		{
 			state = false;
-			defaultStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType+15);
-			otherStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+			onStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
 		}
 		else 
 		{
 			state = true;
-			defaultStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
-			otherStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType+15);
+			onStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
 		}
-		
-		ioSwitchScript.CreateBlock (state,defaultStateSprite,otherStateSprite, currSwitchConnection, spriteRendererLayer);
+
+		currSwitchConnection.State = state;
+		ioSwitchScript.CreateBlock (state,onStateSprite,offStateSprite, currSwitchConnection, spriteRendererLayer);
 		currSwitchConnection.AddSwitchScript (ioSwitchScript);
 	}
 
 	public void CreateSwitchTargetGO (Map mapSO, MapBlock mapBlock, GameObject currentTileGO, string spriteRendererLayer)
 	{
 		int sub = 0;
+		int addBlockNum = 15;
 		if (mapBlock.iType >= (short) 11 &&
 		    mapBlock.iType <= (short) 14)
 		{
@@ -761,27 +771,28 @@ public class MapPreviewWindow : EditorWindow {
 		         mapBlock.iType <= (short) 29)
 		{
 			sub = 26;
+			addBlockNum *= -1;
 		}
 		
 		SwitchConnection currSwitchConnection = mapSO.SwitchConnections[mapBlock.iType-sub];
 		SwitchTargetBlockScript switchTargetScript = currentTileGO.AddComponent<SwitchTargetBlockScript> ();
 		bool state = false;
-		Sprite defaultStateSprite;
-		Sprite otherStateSprite;
+		Sprite onStateSprite;
+		Sprite offStateSprite;
 		if (mapSO.SwitchStates[mapBlock.iType-sub] == 0)
 		{
 			state = false;
-			defaultStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType+15);
-			otherStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+			onStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
 		}
 		else 
 		{
 			state = true;
-			defaultStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
-			otherStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType+15);
+			onStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
 		}
 		
-		switchTargetScript.CreateBlock (state,defaultStateSprite,otherStateSprite, spriteRendererLayer);
+		switchTargetScript.CreateBlock (state,onStateSprite,offStateSprite, spriteRendererLayer);
 		currSwitchConnection.AddBlockScript (switchTargetScript);
 	}
 
@@ -906,10 +917,21 @@ public class MapPreviewWindow : EditorWindow {
 										tileSprite = tileSet.GetNewCreatetTileSprite(tilePosX, tilePosY);	
 									tileRenderer.sprite = tileSprite;
 								}
-								
+
+
 								TileType currentTileType = tileSet.GetTileType((short)tilePosX, (short)tilePosY);
-								
-								TileTypeToUnityTranslation(currentTileType, currentPlatformTileGO);
+								//TODO
+//								TileTypeToUnityTranslation(currentTileType, currentPlatformTileGO);
+								//TODO
+								TileTypeToUnityTranslation(currentMapTile.iType, currentPlatformTileGO);
+
+
+								TileScript tileScript = currentPlatformTileGO.AddComponent <TileScript> ();
+								tileScript.mapTile = currentMapTile;
+								tileScript.tileSet = tileSet;
+								tileScript.tilesetPosX = tilePosX;
+								tileScript.tilesetPosY = tilePosY;
+								tileScript.tileType = currentTileType;
 							}
 							
 						}
@@ -1083,6 +1105,7 @@ public class MapPreviewWindow : EditorWindow {
 		{
 			// Block
 			BoxCollider2D box = tileGO.AddComponent<BoxCollider2D>();
+			tileGO.layer = LayerMask.NameToLayer (Layer.groundLayerName);
 			box.isTrigger = false;
 		}
 		else if(tileType == TileType.tile_solid_on_top)
@@ -1090,6 +1113,8 @@ public class MapPreviewWindow : EditorWindow {
 			// JumpOnPlatform
 			tileGO.layer = LayerMask.NameToLayer(Layer.jumpAblePlatformLayerName);
 			BoxCollider2D box = tileGO.AddComponent<BoxCollider2D>();
+			box.size = new Vector2 (1f,0.1f);
+			box.offset = new Vector2 (0.5f,0.95f);
 			box.isTrigger = false;
 		}
 		else if(tileType == TileType.tile_nonsolid)
@@ -1323,8 +1348,10 @@ public class MapPreviewWindow : EditorWindow {
 
 				Map currentBatchMap = OpenMapFile(currentAbsMapPath, true);
 				GameObject currentBatchMapGO = CreateUnityMap(currentBatchMap, backgroundAssetFolderPath, w_UseAssetSubSpritesToggle, w_DontTranslationUnknown, w_SetNotValidToUnknown, w_SetTileTypeForNonValidTiles);
-
-				currentBatchMapGO.SetActive(false);
+				if (currentBatchMapGO != null)
+					currentBatchMapGO.SetActive(false);
+				else
+					Debug.LogError ("CreateUnityMap failed: " + f.FullName);
 
 			}
 			AssetDatabase.SaveAssets();
