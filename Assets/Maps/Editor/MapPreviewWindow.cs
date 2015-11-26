@@ -585,8 +585,64 @@ public class MapPreviewWindow : EditorWindow {
 								{
 									// PowerUp Block [?]
 									// global settings: enabled powerups
+
+									List<string> relFilePathList = new List<string> ();
+									List<GameObject> powerUpGOs = new List<GameObject> ();
+									
+									string powerUpsFolderPath = Application.dataPath + "/Resources/Items/";
+									FileInfo[] info = GetFileList (powerUpsFolderPath, "*.prefab");
+									if (info != null)
+									{
+//										Debug.Log ("Test " + info.ToString());
+										for (int i=0; i<info.Length; i++)
+										{
+//											Debug.Log ("info [" + i + "]");
+											
+											if (info[i] != null)
+											{
+//												Debug.Log ("info [" + i + "] = " + info[i]);
+												
+												string absPath = info[i].FullName;//.Substring( Application.dataPath.Length-1 );
+												string relPath = "";
+
+//												Debug.LogWarning (System.IO.Path.GetFullPath (Application.dataPath));
+//												Debug.LogWarning (System.IO.Path.GetFullPath (absPath));
+
+												if (absPath.StartsWith(System.IO.Path.GetFullPath(Application.dataPath))) {
+													relPath=  "Assets" + absPath.Substring(Application.dataPath.Length);
+													relFilePathList.Add (relPath);
+													GameObject assetGo = AssetDatabase.LoadAssetAtPath<GameObject> (relPath);
+													powerUpGOs.Add (assetGo);
+//													Debug.Log ("==\n" + Application.dataPath + "\n" + absPath + "\n" + relPath);
+												}
+												else
+												{
+													Debug.Log ("!=\n" +Application.dataPath + "\n" + absPath);
+												}
+//												Debug.Log ("datPath = " + Application.dataPath);
+//												Debug.Log ("absPath = " + absPath);
+//												Debug.Log ("relPath = " + relPath);
+											}
+										}
+									}
+									else 
+										Debug.LogError ("keine Dateien (PowerUps) gefunden");
+//									GameObject[] powerUpGOs = (GameObject[]) AssetDatabase.LoadAllAssetsAtPath (powerUpsFolderPath);
+
+//									string[] assetsPaths = AssetDatabase.GetAllAssetPaths ();
+//									foreach (string assetPath in assetsPaths) {
+//										if (assetPath.Contains (powerUpsFolderPath)) {
+//											powerUpsFolderPath.Add(assetPath);
+//										}   
+//									}
+
+//									for (int i=0; i<powerUpGOs.Count; i++)
+//									{
+//										Debug.Log ("GO gefunden: " + powerUpGOs[i].name);
+//									}
+
 									PowerUpBlock blockScript = currentTileGO.AddComponent <PowerUpBlock> ();
-									blockScript.CreateBlock ();
+									blockScript.CreateBlock (powerUpGOs.ToArray ());
 									
 								}
 								else if (mapBlock.iType == (short) 2)
@@ -1252,7 +1308,7 @@ public class MapPreviewWindow : EditorWindow {
 				batch_LastWorkingMapsImportPath = batch_MapsImportPath;
 				//absolutenPath in EditorPrefs speichern 
 				EditorPrefs.SetString(EP_lastBatchMapsImportFolder, batch_LastWorkingMapsImportPath);
-				window_Batch_FileInfo = GetFileList(batch_MapsImportPath);
+				window_Batch_FileInfo = GetFileList(batch_MapsImportPath, "*.map");
 			}
 			else
 			{
@@ -1309,12 +1365,12 @@ public class MapPreviewWindow : EditorWindow {
 
 	FileInfo[] window_Batch_FileInfo = null;
 	
-	FileInfo[] GetFileList (string absPath)
+	FileInfo[] GetFileList (string absPath, string fileEnd)
 	{
 		if (!string.IsNullOrEmpty(absPath))
 		{
 			DirectoryInfo dir = new DirectoryInfo(absPath);
-			FileInfo[] info = dir.GetFiles("*.map");
+			FileInfo[] info = dir.GetFiles(fileEnd);
 			
 			
 			// Einmalige ausgabe auf Console
@@ -1363,7 +1419,7 @@ public class MapPreviewWindow : EditorWindow {
 		}
 		
 		//TODO DONE ordner auf existenz prüfen
-		FileInfo[] info = GetFileList(importPath);
+		FileInfo[] info = GetFileList(importPath, "*.map");
 
 		if(info == null)
 		{

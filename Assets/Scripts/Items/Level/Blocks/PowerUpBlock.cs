@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PowerUpBlock : MonoBehaviour {
 
@@ -9,11 +10,17 @@ public class PowerUpBlock : MonoBehaviour {
 
 	public AudioClip powerUpReleaseSound;
 	public AudioClip powerUpReloadedSound;
-	
+
+//	public string powerUpsPath;
 	public GameObject[] powerups;
+//	public Object[] powerups2;
+//	public List<GameObject> powerups3;
+//	public List<Pref> powerups4;
 //	public float powerUpStayTime = 8.0f;
 
 	private Animator anim;
+//	public Object animController;
+	public RuntimeAnimatorController animController;
 
 	private GameObject powerupClone;
 
@@ -51,8 +58,32 @@ public class PowerUpBlock : MonoBehaviour {
 //	
 //	}
 
-	public void CreateBlock () {
+	public void CreateBlock (GameObject[] powerUps) {
 
+		//init Animator & Animator Controller
+		anim = this.gameObject.AddComponent<Animator> ();
+		anim.runtimeAnimatorController = animController;
+
+		// Renderer
+//		blockSpriteRenderer = this.gameObject.AddComponent<SpriteRenderer>();
+		blockSpriteRenderer = this.gameObject.GetComponent<SpriteRenderer>();
+
+		// BoxCollider
+		BoxCollider2D blockCollider = this.gameObject.AddComponent<BoxCollider2D> ();
+
+		// Layer
+		this.gameObject.layer = LayerMask.NameToLayer (Layer.blockLayerName);
+
+		// PowerUps...
+		//"Assets/Resources/Items/..."
+		this.powerups = powerUps;
+//		for(int i=0; i< powerUps.Length; i++)
+//		{
+//			if (powerUps[i] != null)
+//			{
+//
+//			}
+//		}
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -190,9 +221,13 @@ public class PowerUpBlock : MonoBehaviour {
 			{
 				
 			}
-			if(powerupClone.GetComponent<ItemScript>().autoDestroy)
+			ItemScript itemScript = powerupClone.GetComponent<ItemScript>();
+			if (itemScript != null)
 			{
-				powerupClone.GetComponent<ItemScript>().StartDestroyTimer();
+				if(itemScript.autoDestroy)
+				{
+					itemScript.StartDestroyTimer();
+				}
 			}
 		}
 

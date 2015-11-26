@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: 4f8cfd1e1664c574087d04c0680b3602
+timeCreated: 1448542949
+licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
@@ -7,7 +9,10 @@ MonoImporter:
       type: 3}
   - powerUpReloadedSound: {fileID: 8300000, guid: 22cd03809c013a245bdf6c341b9653ab,
       type: 3}
-  - powerup: {instanceID: 0}
+  - animController: {fileID: 9100000, guid: b760ebaf12ef49844b707a0e1e357bf7, type: 2}
+  - animContr: {fileID: 9100000, guid: b760ebaf12ef49844b707a0e1e357bf7, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
