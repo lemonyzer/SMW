@@ -13,6 +13,11 @@ using System.Collections.Generic;
 
 public class CharacterCreationHelper : EditorWindow {
 
+	[MenuItem ("Window/Character Editor %#e")]
+	static void Init () {
+		GetWindow (typeof (CharacterCreationHelper));
+	}
+
 	public SmwCharacterGenerics window_SmwCharacterGenerics;
 	public SmwCharacterList window_SmwCharacterList;
 	private int viewIndex = 1;
@@ -171,11 +176,6 @@ public class CharacterCreationHelper : EditorWindow {
 	public int pixelPerUnit = 32;
 	public int pixelSizeWidth = 32;
 	public int pixelSizeHeight = 32;
-
-	[MenuItem ("Window/Character Editor %#e")]
-	static void Init () {
-		GetWindow (typeof (CharacterCreationHelper));
-	}
 
 
 	bool SpriteIsPrepared(TextureImporter myImporter)

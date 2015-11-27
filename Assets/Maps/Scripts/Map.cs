@@ -674,12 +674,21 @@ public class MapItem
 [Serializable]
 public class MapHazard
 {
-	public HazardType itype;
+	public HazardType iType;
 	public short ix;
 	public short iy;
 	
 	public short[] iparam = new short[Globals.NUMMAPHAZARDPARAMS];
 	public float[] dparam = new float[Globals.NUMMAPHAZARDPARAMS];
+	
+	// dparam[0] == velocity
+	// dparam[1] == angle
+	// dparam[2] == radius
+
+	// dAngle == Angle
+
+	// iparam[0] == freq
+	// iparam[1] == direction
 };
 
 [Serializable]
@@ -787,7 +796,11 @@ public enum HazardType {
 	rotodisc = 1,
 	bullet_bill = 2,
 	flame_cannon = 3,
-	pirhana_plants = 4
+	pirhana_plants_0_random = 4,	//	(green shooter)		Face the green fireball plant in a random direction
+	pirhana_plants_1_target = 5,	// 	(red shooter)		face the plant towards the nearest player
+	pirhana_plants_2_animated = 6,	// 	(red eater)			Animate if these are animated plants
+	pirhana_plants_3_animated = 7,	// 	(green eater) 		Animate if these are animated plants 
+	count = 8
 };
 
 [Serializable]
@@ -1673,7 +1686,12 @@ public class Map : ScriptableObject {
 			for(short iMapHazard = 0; iMapHazard < iNumMapHazards; iMapHazard++)
 			{
 				mapHazards[iMapHazard] = new MapHazard();
-				mapHazards[iMapHazard].itype = (HazardType) ReadInt(binReader);
+				int hazardType = ReadInt(binReader);
+				if (hazardType < 0 || hazardType >= (int) HazardType.count)
+				{
+					Debug.LogError ("unknown hazardtype: " + hazardType);
+				}
+				mapHazards[iMapHazard].iType = (HazardType) hazardType;
 				mapHazards[iMapHazard].ix = (short) ReadInt(binReader);
 				mapHazards[iMapHazard].iy = (short) ReadInt(binReader);
 				
@@ -2530,58 +2548,35 @@ public class Map : ScriptableObject {
 		}
 	}
 
-	Vector2 previewWarpExitsSliderPosition = Vector2.zero;
+	Vector2 previewHazardsSliderPosition = Vector2.zero;
 
 //	Texture2D warpExitsTexture;
 //	int textureWidth = 640;
 //	int textureHeight = 480;
 
-	public void OnGUI_Preview_WarpExits()
+	public void OnGUI_Preview_Hazards()
 	{
-		if(warpexits != null)
+		if(mapHazards != null)
 		{
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical();
-			previewWarpDataSliderPosition = EditorGUILayout.BeginScrollView(previewWarpDataSliderPosition);
+			previewHazardsSliderPosition = EditorGUILayout.BeginScrollView(previewHazardsSliderPosition);
 
-
-			if (GUILayout.Button ("create WarpExits"))
+			for (int x=0; x< 20; x++)
 			{
-//				GameObject goWarpExits = new GameObject ("WarpExits");
-//				goWarpExits.transform.position = new Vector3 (0f,0f,-18f);
-//				
-//				for (int i=0; i< warpexits.Count; i++)
-//				{
-//					if (warpexits[i] != null)
-//					{
-//						int xRef = warpexits[i].x;
-//						int yRef = warpexits[i].y;
-//
-//						GameObject currentWarpExit = new GameObject ("WarpExit " + warpexits[i].id);
-//						currentWarpExit.transform.SetParent (goWarpExits.transform);
-//
-//						SpriteRenderer currentSpriteRenderer = currentWarpExit.AddComponent<SpriteRenderer> ();
-//						currentSpriteRenderer.sprite = 
-//					}
-//					else
-//						Debug.LogError (this.ToString () + " warpexits [" + i + "] == NULL");
-//				}
+				for (int y=0; y< 15; y++)
+				{
+					for (int i=0; i< mapHazards.Length; i++)
+					{
+						if (mapHazards[i] != null)
+						{
+
+						}
+						else
+							Debug.LogError (this.ToString () + " warpexits [" + i + "] == NULL");
+					}
+				}
 			}
-//			warpExitsTexture = new Texture2D (textureWidth,textureHeight, TextureFormat.Alpha8, false);
-//			for (int i=0; i< warpexits.Count; i++)
-//			{
-//				if (warpexits[i] != null)
-//				{
-//					int xRef = warpexits[i].x;
-//					int yRef = warpexits[i].y;
-//					for (int j=0; j < 9; j++)
-//					{
-////						warpExitsTexture.SetPixel (warpexits[i].x,warpex)
-//                   	}
-//				}
-//				else
-//					Debug.LogError (this.ToString () + " warpexits [" + i + "] == NULL");
-//			}
 
 			EditorGUILayout.EndScrollView();
 			EditorGUILayout.Space();
@@ -2593,7 +2588,7 @@ public class Map : ScriptableObject {
 		}
 		else
 		{
-			EditorGUILayout.LabelField("warpexits empty");
+			EditorGUILayout.LabelField("hazards empty");
 		}
 	}
 

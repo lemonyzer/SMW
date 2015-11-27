@@ -2,8 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Hazard : MonoBehaviour {
+[System.Serializable]
+public class Hazard {
 
+	[SerializeField]
 	public HazardType type;
+	[SerializeField]
 	public List<Sprite> projectile;
+
+	[SerializeField]
+	public Sprite previewSprite;
 }

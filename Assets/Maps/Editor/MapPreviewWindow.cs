@@ -11,12 +11,14 @@ public class MapPreviewWindow : EditorWindow {
 	#region Variables
 	static MapPreviewWindow currWindow;
 	TilesetManager g_TilesetManager;
+	Hazards g_HazardManager;
 	Map m_CurrentMap;
 	bool w_UseAssetSubSpritesToggle = true;
 	bool w_DontTranslationUnknown = true;
 	bool w_SetNotValidToUnknown = true;
 	bool w_SetTileTypeForNonValidTiles = true;
 	string EP_TilesetManagerKey = "EP_tilesetManagerKey";
+	string EP_HazardManagerKey = "EP_HazardManagerKey";
 	public static string EP_BackgroundAssetFolderPathKey = "EP_BackgroundAssetFolderPathKey";
 	string w_BackgroundAssetFolderPath = "";
 	string m_LastBackgroundAssetFolderPath = "";
@@ -61,7 +63,12 @@ public class MapPreviewWindow : EditorWindow {
 			string objectPath = EditorPrefs.GetString(EP_TilesetManagerKey);
 			g_TilesetManager = AssetDatabase.LoadAssetAtPath(objectPath, typeof(TilesetManager)) as TilesetManager;
 		}
-
+		if(EditorPrefs.HasKey(EP_HazardManagerKey))
+		{
+			string objectPath = EditorPrefs.GetString(EP_HazardManagerKey);
+			g_HazardManager = AssetDatabase.LoadAssetAtPath(objectPath, typeof(Hazards)) as Hazards;
+		}
+		
 		if(EditorPrefs.HasKey(EP_BackgroundAssetFolderPathKey))
 		{
 			w_BackgroundAssetFolderPath = EditorPrefs.GetString(EP_BackgroundAssetFolderPathKey);
@@ -96,6 +103,16 @@ public class MapPreviewWindow : EditorWindow {
 			{
 				EditorPrefs.SetString(EP_TilesetManagerKey, AssetDatabase.GetAssetPath(g_TilesetManager));
 				Debug.Log("Path " + AssetDatabase.GetAssetPath(g_TilesetManager)+ " saved in EditorPrefs("+EP_TilesetManagerKey+")");
+			}
+		}
+		EditorGUI.BeginChangeCheck();
+		g_HazardManager = (Hazards) EditorGUILayout.ObjectField("HazardManager", g_HazardManager, typeof(Hazards), false, GUILayout.ExpandWidth(true));
+		if(EditorGUI.EndChangeCheck())
+		{
+			if(g_HazardManager != null)
+			{
+				EditorPrefs.SetString(EP_HazardManagerKey, AssetDatabase.GetAssetPath(g_HazardManager));
+				Debug.Log("Path " + AssetDatabase.GetAssetPath(g_HazardManager)+ " saved in EditorPrefs("+EP_HazardManagerKey+")");
 			}
 		}
 		GUILayout.BeginHorizontal();
@@ -787,6 +804,8 @@ public class MapPreviewWindow : EditorWindow {
 		// Platforms Translated + Raw
 		CreatePlatformGOs (mapSO, mapRootGO, layer, useAssetSubSprites);
 
+		CreateHazards (mapSO, mapRootGO);
+
 		WarpsPreview (mapSO, mapRootGO);
 
 		WarpExitsPreview (mapSO, mapRootGO);
@@ -1032,38 +1051,98 @@ public class MapPreviewWindow : EditorWindow {
 			Debug.Log("Map: " + mapSO.mapName + " Platforms == NULL -> Map hat keine MovingPlatform");
 	}
 
-	public void CreateHazards (Map mapSO)
+	public void CreateHazards (Map mapSO, GameObject mapRootGO)
 	{
 		MapHazard[] hazards = mapSO.GetHazards ();
 
+		GameObject hazardsRoot = new GameObject ("Hazards");
+		hazardsRoot.transform.SetParent (mapRootGO.transform);
+
 		for (int i=0; i< hazards.Length; i++)
 		{
+//			GameObject hazardGO = new GameObject ("Hazard " + i + " (" +  + ")");
 			MapHazard currHazard = hazards[i];
 			if (currHazard != null)
 			{
-				GameObject hazardGO = new GameObject ("" + currHazard.itype);
+				GameObject hazardGO = new GameObject (i + " " + currHazard.iType);
+				hazardGO.transform.SetParent (hazardsRoot.transform);
 
-				if (currHazard.itype == HazardType.bullet_bill)
+				Vector3 originalPos = new Vector3 (currHazard.ix,currHazard.iy,0f);
+				originalPos.x = ((int)(originalPos.x)) << 4; 		// bitwise Left shift operator
+				originalPos.y = ((int)(originalPos.y)) << 4;			// bitwise Left shift operator
+				hazardGO.transform.position = TransformPixelPositionToUnityWorldPosition (originalPos);
+
+
+				Hazard listHazard = g_HazardManager.GetHazard (currHazard.iType);
+				
+				if (currHazard.iType == HazardType.bullet_bill)
+				{
+					SpriteRenderer sr = hazardGO.AddComponent<SpriteRenderer> ();
+					sr.sortingLayerName = "MapDebug";
+					sr.sprite = listHazard.previewSprite;
+				}
+				else if (currHazard.iType == HazardType.fireball_string)
 				{
 				}
-				else if (currHazard.itype == HazardType.fireball_string)
+				else if (currHazard.iType == HazardType.flame_cannon)
 				{
 				}
-				else if (currHazard.itype == HazardType.flame_cannon)
+				else if (currHazard.iType == HazardType.pirhana_plants_0_random || 
+				         currHazard.iType == HazardType.pirhana_plants_1_target ||
+				         currHazard.iType == HazardType.pirhana_plants_2_animated ||
+				         currHazard.iType == HazardType.pirhana_plants_3_animated)
+				{
+					PirhanaPlantScript pirhanaPlantScript = hazardGO.AddComponent <PirhanaPlantScript> ();
+					// listHazard hat previewSprite
+					pirhanaPlantScript.CreateHazard (listHazard);
+				}
+				else if (currHazard.iType == HazardType.rotodisc)
 				{
 				}
-				else if (currHazard.itype == HazardType.pirhana_plants)
-				{
-				}
-				else if (currHazard.itype == HazardType.rotodisc)
-				{
-				}
+
+//				GameObject clone = GameObject.Instantiate (hazardGO);
+//				clone.transform.SetParent (hazardsRoot.transform);
+//				clone.transform.position = TransformPixelPositionToUnityWorldPosition (originalPos);
 
 			}
 		}
 		//if(HazardType.bullet_bill
 	}
 
+	public Vector3 TransformHazardPositionToPixelPosition (Vector3 originalHazardPosition)
+	{
+		Vector3 pixelPosition = Vector3.zero;
+		pixelPosition.x = ((int) originalHazardPosition.x) << 4;
+		pixelPosition.y = +32 + ((int) originalHazardPosition.y) << 4;
+		return pixelPosition;
+	}
+
+	public Vector3 TransformPixelPositionToUnityWorldPosition (Vector3 originalPixelPosition)
+	{
+		Vector3 unityPosition = Vector3.zero;
+		unityPosition.x = TransformXPosToUnityXPosition (originalPixelPosition.x /32.0f);
+		unityPosition.y = TransformYPosToUnityYPosition (originalPixelPosition.y /32.0f);
+		return unityPosition;
+	}
+	
+	public Vector3 TransformPositionToUnityPosition (Vector3 originalPosition)
+	{
+		Vector3 unityPosition = Vector3.zero;
+		unityPosition.x = TransformXPosToUnityXPosition (originalPosition.x);
+		unityPosition.y = TransformYPosToUnityYPosition (originalPosition.y);
+		return unityPosition;
+	}
+
+	public float TransformXPosToUnityXPosition (float originalXPosition)
+	{
+		return originalXPosition - 10.0f;
+	}
+
+	public float TransformYPosToUnityYPosition (float originalYPosition)
+	{
+		return 15f - originalYPosition - 7.5f;
+	}
+	
 	[SerializeField]
 	Vector3[] clonePositions = { new Vector3(0f,15f,0f), new Vector3(20f,0f,0f), new Vector3(0f,-15f,0f), new Vector3(-20f,0f,0f)};
 
