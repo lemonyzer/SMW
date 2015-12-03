@@ -33,11 +33,12 @@ public class OnOffSwitchBlockScript : MonoBehaviour {
 //		targetBlocks.Add (block);
 //	}
 
-	public void CreateBlock (bool state, Sprite onSprite, Sprite offSprite, SwitchConnection switchConnection, string spriteLayer)
+	public void CreateBlock (MapBlock mapBlock, bool state, Sprite onSprite, Sprite offSprite, SwitchConnection switchConnection, string spriteLayer)
 	{
 		PreInit ();
 		on = state;
-		
+
+		this.mapBlock = mapBlock;
 //		myCollider.enabled = on;
 		
 		//		if (on)

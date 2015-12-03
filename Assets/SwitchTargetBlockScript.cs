@@ -22,9 +22,11 @@ public class SwitchTargetBlockScript : MonoBehaviour {
 
 	}
 
-	public void CreateBlock (bool state, Sprite onSprite, Sprite offSprite, string spriteLayer)
+	public void CreateBlock (MapBlock mapBlock, bool state, Sprite onSprite, Sprite offSprite, string spriteLayer)
 	{
 		Init ();
+
+		this.mapBlock = mapBlock;
 		on = state;
 
 		myCollider.enabled = on;

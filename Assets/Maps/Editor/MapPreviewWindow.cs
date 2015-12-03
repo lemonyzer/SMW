@@ -79,6 +79,9 @@ public class MapPreviewWindow : EditorWindow {
 //	public GUIStyle textFieldStlye;
 	Vector2 windowScrollPos;
 
+	bool fShowMapTop = false;
+	
+
 	void OnGUI()
 	{
 		windowScrollPos = EditorGUILayout.BeginScrollView(windowScrollPos);
@@ -200,6 +203,11 @@ public class MapPreviewWindow : EditorWindow {
 				CreateUnityMap(m_CurrentMap, w_BackgroundAssetFolderPath, w_UseAssetSubSpritesToggle, w_DontTranslationUnknown, w_SetNotValidToUnknown, w_SetTileTypeForNonValidTiles);
 			}
 			m_CurrentMap.OnGUI_Preview();
+			fShowMapTop = UnityEditor.EditorGUILayout.Foldout(fShowMapTop,"Preview Map Top Data: (Type, Flag)");
+			if(fShowMapTop)
+			{
+				m_CurrentMap.OnGUI_Preview_MapTop (g_TilesetManager);
+			}
 		}
 
 //		if (GUILayout.Button("Select TileManager", GUILayout.ExpandWidth(false)))
@@ -850,8 +858,8 @@ public class MapPreviewWindow : EditorWindow {
 			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
 		}
 
-		currSwitchConnection.State = state;
-		ioSwitchScript.CreateBlock (state,onStateSprite,offStateSprite, currSwitchConnection, spriteRendererLayer);
+//		currSwitchConnection.State = state;
+		ioSwitchScript.CreateBlock (mapBlock, state, onStateSprite, offStateSprite, currSwitchConnection, spriteRendererLayer);
 		currSwitchConnection.AddSwitchScript (ioSwitchScript);
 	}
 
@@ -874,22 +882,53 @@ public class MapPreviewWindow : EditorWindow {
 		SwitchConnection currSwitchConnection = mapSO.SwitchConnections[mapBlock.iType-sub];
 		SwitchTargetBlockScript switchTargetScript = currentTileGO.AddComponent<SwitchTargetBlockScript> ();
 		bool state = false;
-		Sprite onStateSprite;
-		Sprite offStateSprite;
-		if (mapSO.SwitchStates[mapBlock.iType-sub] == 0)
+		Sprite onStateSprite = null;
+		Sprite offStateSprite = null;
+
+//		/**
+//		 * TODO DONE same color, different blocks! same color different initstatus! [!] & [ ] - [ON] & [OFF]
+//		 **/
+//		// ON/OFF Block [!]
+//		if (mapBlock.GetSetting (0) == (short) 0)
+//		{
+//			mapBlockString += "\n" + "[]";
+//		}
+//		else if (mapBlock.GetSetting (0) == (short) 1)
+//		{
+//			mapBlockString += "\n" + "[!]";
+//		}
+
+		if (mapBlock.GetSetting (0) == (short) 0)
 		{
 			state = false;
 			onStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
 			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
 		}
-		else 
+		else if (mapBlock.GetSetting (0) == (short) 1)
 		{
 			state = true;
 			onStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
 			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
 		}
+		else 
+		{
+			Debug.LogError (this.ToString () + " ?!!! STATE FALSE OR TRUE ?!!!!");
+		}
+
+//		if (mapSO.SwitchStates[mapBlock.iType-sub] == 0)
+//		{
+//			state = false;
+//			onStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+//			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
+//		}
+//		else 
+//		{
+//			state = true;
+//			onStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
+//			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
+//		}
 		
-		switchTargetScript.CreateBlock (state,onStateSprite,offStateSprite, spriteRendererLayer);
+		switchTargetScript.CreateBlock (mapBlock ,state,onStateSprite,offStateSprite, spriteRendererLayer);
 		currSwitchConnection.AddBlockScript (switchTargetScript);
 	}
 
@@ -1094,7 +1133,7 @@ public class MapPreviewWindow : EditorWindow {
 				{
 					PirhanaPlantScript pirhanaPlantScript = hazardGO.AddComponent <PirhanaPlantScript> ();
 					// listHazard hat previewSprite
-					pirhanaPlantScript.CreateHazard (listHazard);
+					pirhanaPlantScript.CreateHazard (listHazard, currHazard);
 				}
 				else if (currHazard.iType == HazardType.rotodisc)
 				{

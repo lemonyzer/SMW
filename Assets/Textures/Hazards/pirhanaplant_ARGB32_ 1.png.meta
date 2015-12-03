@@ -1,0 +1,326 @@
+fileFormatVersion: 2
+guid: 2051a087476c7d341ad91edb87c99af6
+timeCreated: 1448652203
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: pirhanaplant_ARGB32__0
+    21300002: pirhanaplant_ARGB32__1
+    21300004: pirhanaplant_ARGB32__2
+    21300006: pirhanaplant_ARGB32__3
+    21300008: pirhanaplant_ARGB32__4
+    21300010: pirhanaplant_ARGB32__5
+    21300012: pirhanaplant_ARGB32__6
+    21300014: pirhanaplant_ARGB32__7
+    21300016: pirhanaplant_ARGB32__8
+    21300018: pirhanaplant_ARGB32__9
+    21300020: pirhanaplant_ARGB32__10
+    21300022: pirhanaplant_ARGB32__11
+    21300024: pirhanaplant_ARGB32__12
+    21300026: pirhanaplant_ARGB32__13
+    21300028: pirhanaplant_ARGB32__14
+    21300030: pirhanaplant_ARGB32__15
+    21300032: pirhanaplant_ARGB32__16
+    21300034: pirhanaplant_ARGB32__17
+    21300036: pirhanaplant_ARGB32__18
+    21300038: pirhanaplant_ARGB32__19
+    21300040: pirhanaplant_ARGB32__20
+    21300042: pirhanaplant_ARGB32__21
+    21300044: pirhanaplant_ARGB32__22
+    21300046: pirhanaplant_ARGB32__23
+    21300048: pirhanaplant_ARGB32__24
+    21300050: pirhanaplant_ARGB32__25
+    21300052: pirhanaplant_ARGB32__26
+    21300054: pirhanaplant_ARGB32__27
+    21300056: pirhanaplant_ARGB32__28
+    21300058: pirhanaplant_ARGB32__29
+    21300060: pirhanaplant_ARGB32__30
+    21300062: pirhanaplant_ARGB32__31
+    21300064: pirhanaplant_ARGB32__32
+    21300066: pirhanaplant_ARGB32__33
+    21300068: pirhanaplant_ARGB32__34
+    21300070: pirhanaplant_ARGB32__35
+    21300072: pirhanaplant_ARGB32__36
+    21300074: pirhanaplant_ARGB32__37
+    21300076: pirhanaplant_ARGB32__38
+    21300078: pirhanaplant_ARGB32__39
+    21300080: pirhanaplant_ARGB32__40
+    21300082: pirhanaplant_ARGB32__41
+    21300084: pirhanaplant_ARGB32__42
+    21300086: pirhanaplant_ARGB32__43
+    21300088: pirhanaplant_ARGB32__44
+    21300090: pirhanaplant_ARGB32__45
+    21300092: pirhanaplant_ARGB32__46
+    21300094: pirhanaplant_ARGB32__47
+    21300096: pirhanaplant_ARGB32__48
+    21300098: pirhanaplant_ARGB32__49
+    21300100: pirhanaplant_ARGB32__50
+    21300102: pirhanaplant_ARGB32__51
+    21300104: pirhanaplant_ARGB32__52
+    21300106: pirhanaplant_ARGB32__53
+    21300108: pirhanaplant_ARGB32__54
+    21300110: pirhanaplant_ARGB32__55
+    21300112: pirhanaplant_ARGB32__56
+    21300114: pirhanaplant_ARGB32__57
+    21300116: pirhanaplant_ARGB32__58
+    21300118: pirhanaplant_ARGB32__59
+    21300120: pirhanaplant_ARGB32__60
+    21300122: pirhanaplant_ARGB32__61
+    21300124: pirhanaplant_ARGB32__62
+    21300126: pirhanaplant_ARGB32__63
+    21300128: pirhanaplant_ARGB32__64
+    21300130: pirhanaplant_ARGB32__65
+    21300132: pirhanaplant_ARGB32__66
+    21300134: pirhanaplant_ARGB32__67
+    21300136: pirhanaplant_ARGB32__68
+    21300138: pirhanaplant_ARGB32__69
+    21300140: pirhanaplant_ARGB32__70
+    21300142: pirhanaplant_ARGB32__71
+    21300144: pirhanaplant_ARGB32__72
+    21300146: pirhanaplant_ARGB32__73
+    21300148: pirhanaplant_ARGB32__74
+    21300150: pirhanaplant_ARGB32__75
+    21300152: pirhanaplant_ARGB32__76
+    21300154: pirhanaplant_ARGB32__77
+    21300156: pirhanaplant_ARGB32__78
+    21300158: pirhanaplant_ARGB32__79
+    21300160: pirhanaplant_ARGB32__80
+    21300162: pirhanaplant_ARGB32__81
+    21300164: pirhanaplant_ARGB32__82
+    21300166: pirhanaplant_ARGB32__83
+    21300168: pirhanaplant_ARGB32_ 1_0
+    21300170: pirhanaplant_ARGB32_ 1_1
+    21300172: pirhanaplant_ARGB32_ 1_2
+    21300174: pirhanaplant_ARGB32_ 1_3
+    21300176: pirhanaplant_ARGB32_ 1_11
+    21300178: pirhanaplant_ARGB32_ 1_12
+    21300180: pirhanaplant_ARGB32_ 1_13
+    21300182: pirhanaplant_ARGB32_ 1_14
+    21300184: pirhanaplant_ARGB32_ 1_22
+    21300186: pirhanaplant_ARGB32_ 1_23
+    21300188: pirhanaplant_ARGB32_ 1_24
+    21300190: pirhanaplant_ARGB32_ 1_25
+    21300192: pirhanaplant_ARGB32_ 1_30
+    21300194: pirhanaplant_ARGB32_ 1_33
+    21300196: pirhanaplant_ARGB32_ 1_34
+    21300198: pirhanaplant_ARGB32_ 1_35
+    21300200: pirhanaplant_ARGB32_ 1_36
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 0
+    mipMapFadeDistanceEnd: 0
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 4
+  cubemapConvolutionExponent: 0
+  seamlessCubemap: 0
+  textureFormat: 5
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: 0
+    aniso: 0
+    mipBias: 0
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 0
+  spriteMode: 2
+  spriteExtrude: 0
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0, y: 0}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 32
+  alphaIsTransparency: 1
+  textureType: 5
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: pirhanaplant_ARGB32_ 1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 208
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 208
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 208
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 208
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 160
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_12
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 160
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_13
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 160
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_14
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 160
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_22
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 32
+        height: 64
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_23
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 32
+        height: 64
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_24
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 32
+        height: 64
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_25
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 32
+        height: 64
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_30
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 112
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_33
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_34
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 48
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_35
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 48
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pirhanaplant_ARGB32_ 1_36
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 32
+        height: 48
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

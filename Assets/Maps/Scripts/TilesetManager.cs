@@ -23,6 +23,9 @@ public class TilesetManager : ScriptableObject {
 	[SerializeField]
 	WarpArrow warpArrows;
 
+	[SerializeField]
+	public List<string> typeConversions;
+
 	public void OnEnable()
 	{
 		Debug.Log(this.ToString() + " OnEnable()");

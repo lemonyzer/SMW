@@ -172,8 +172,8 @@ public class SwitchConnection
 //	[SerializeField]
 //	int y;
 
-	[SerializeField]
-	bool state;
+//	[SerializeField]
+//	bool state;
 	
 	public SwitchConnection()
 	{
@@ -194,10 +194,10 @@ public class SwitchConnection
 		switchScripts.Add (switchScript);
 	}
 	
-	public bool State {
-		get {return state;}
-		set {state = value;}
-	}
+//	public bool State {
+//		get {return state;}
+//		set {state = value;}
+//	}
 
 	public void AddBlock (SwitchTargetBlock block)
 	{
@@ -986,7 +986,7 @@ public class Map : ScriptableObject {
 					}
 
 					switchConnections[mapBlock.iType-7].AddSwitch (x, y, state);
-					switchConnections[mapBlock.iType-7].State = state;
+//					switchConnections[mapBlock.iType-7].State = state;
 					
 					
 				}
@@ -1004,7 +1004,7 @@ public class Map : ScriptableObject {
 					}
 
 					switchConnections[mapBlock.iType-22].AddSwitch (x, y, state);
-					switchConnections[mapBlock.iType-22].State = state;
+//					switchConnections[mapBlock.iType-22].State = state;
 					
 				}
 				else if (mapBlock.iType >= (short) 11 &&
@@ -2260,6 +2260,7 @@ public class Map : ScriptableObject {
 	bool fShowMapData = false;
 //	bool fShowPlatformData = false;
 	bool fShowWarpData = false;
+	bool fShowMapTop = false;
 //	bool fShowWarpExits = false;
 	bool fShowObjectData = false;
 
@@ -2300,6 +2301,13 @@ public class Map : ScriptableObject {
 		{
 			OnGUI_Preview_WarpData ();
 		}
+
+//		fShowMapTop = UnityEditor.EditorGUILayout.Foldout(fShowMapTop,"Preview Map Top Data: (Type, Flag)");
+//		if(fShowMapTop)
+//		{
+//			OnGUI_Preview_MapTop ();
+//		}
+
 
 //		fShowWarpExits = UnityEditor.EditorGUILayout.Foldout(fShowWarpExits,"Preview Warp Exits");
 //		if(fShowWarpExits)
@@ -2545,6 +2553,58 @@ public class Map : ScriptableObject {
 		else
 		{
 			EditorGUILayout.LabelField("warpdata empty");
+		}
+	}
+
+	Vector2 previewMapTopDataSliderPosition = Vector2.zero;
+
+
+	
+	public void OnGUI_Preview_MapTop(TilesetManager tileSetManager)
+	{
+		if(mapdatatop != null)
+		{
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.BeginVertical();
+			previewMapTopDataSliderPosition = EditorGUILayout.BeginScrollView(previewMapTopDataSliderPosition);
+			for(int y = 0; y < Globals.MAPHEIGHT; y++)
+			{
+				EditorGUILayout.BeginHorizontal();
+				for(int x = 0; x < Globals.MAPWIDTH; x++)
+				{
+					
+					string elementString = "";
+
+					MapTile element = GetMapDataTop ().GetTile (x,y);
+
+
+					if( element == null)
+					{
+						GUILayout.Label("null");
+					}
+					else
+					{
+
+						elementString += tileSetManager.typeConversions[(int)element.iType] + ",";
+						elementString += element.iFlags;
+					}
+					
+					EditorGUILayout.TextArea(elementString);
+					
+				}
+				EditorGUILayout.EndHorizontal();
+			}
+			EditorGUILayout.EndScrollView();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndVertical();
+			EditorGUILayout.Space();
+			GUILayout.Space(20);
+			EditorGUILayout.EndHorizontal();
+		}
+		else
+		{
+			EditorGUILayout.LabelField("mapdatatop empty");
 		}
 	}
 
