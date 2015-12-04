@@ -1073,8 +1073,13 @@ public class MapPreviewWindow : EditorWindow {
 
 		for(int y=0; y< platformData.iPlatformHeight; y++)
 		{
+//			Debug.Log ("<color=magenta>y=" + y + "</color>");
+
 			for(int x=0; x< platformData.iPlatformWidth; x++)
 			{
+				Debug.Log ("<color=red><b>"+x+"</b></color=red>");
+				x = x + 0;
+
 				MapTile currentStartRefTile = platformData.platformTileTypes.GetTile (x, y);
 				
 //				if (currentStartRefTile.iType == TileType.tile_nonsolid)
@@ -1083,19 +1088,30 @@ public class MapPreviewWindow : EditorWindow {
 				int currentWidth = 1;	// FIX was  = 0
 				int restWidth = platformData.iPlatformWidth - x;
 
+//				Debug.Log ("<color=blue>x=" + x + ", y= " + y + "= " + currentStartRefTile.iType + "=?=</color>");
 
-				for (int a=1; a< restWidth; a++)
+				bool valid = true;
+
+				for (int xa=1; xa< restWidth && valid; xa++)
 				{
-					MapTile currentTile = platformData.platformTileTypes.GetTile (x+a, y);
+					MapTile currentTile = platformData.platformTileTypes.GetTile (x+xa, y);
+//					Debug.Log ("<b><color=lime>" + xa + "/" + restWidth + "</color></b>" );
 					
-					currentWidth = a;
+					currentWidth = xa;
 					if (currentTile.iType != currentStartRefTile.iType)
 					{
-						break;
+//						Debug.Log ("<color=red>!=" + "x+a=" + (x+xa) + ", y= " + y + "= " + currentTile.iType + "</color>" );
+//						break;
+						valid = false;
+					}
+					else
+					{
+//						Debug.Log ("<color=green>==" + "x+a=" + (x+xa) + ", y= " + y + "= " + currentTile.iType + "</color>" );
+						currentWidth++; // TODO FIX +1 da letzter (letzer == rand) nicht mehr gecheckt wird
 					}
 				}
 
-				GameObject currentColliderGO = new GameObject (currentStartRefTile.iType + " " + platformData.iPlatformWidth + "/" + platformData.iPlatformHeight + " (" +x+ "," +y+ ") " + currentWidth);
+				GameObject currentColliderGO = new GameObject ( restWidth + " " + currentStartRefTile.iType + " " + platformData.iPlatformWidth + "/" + platformData.iPlatformHeight + " (" +x+ "," +y+ ") " + currentWidth);
 				currentColliderGO.transform.SetParent (platformColliders.transform, false);
 
 				if (currentStartRefTile.iType == TileType.tile_solid)
@@ -1109,13 +1125,14 @@ public class MapPreviewWindow : EditorWindow {
 				else if (currentStartRefTile.iType == TileType.tile_solid_on_top)
 				{
 					BoxCollider2D box = currentColliderGO.AddComponent <BoxCollider2D> ();
-					box.size = new Vector2 (currentWidth+1f,0.1f);
+					box.size = new Vector2 (currentWidth,0.1f);
 					box.offset = new Vector2 (0f,-0.05f);
 					currentColliderGO.layer = LayerMask.NameToLayer (Layer.jumpAblePlatformLayerName);
 				}
 
+//				Debug.Log ("<color=grey><b>+" + currentWidth + "</b></color>" );
 				x += currentWidth-1;
-
+				Debug.Log ("<color=magenta><b>"+x+"</b></color=red>");
 			}
 		}
 	}
@@ -1214,7 +1231,7 @@ public class MapPreviewWindow : EditorWindow {
 						}
 						else
 						{
-
+							currentWidth++; // TODO FIX
 						}
 					}
 
@@ -1223,7 +1240,7 @@ public class MapPreviewWindow : EditorWindow {
 					TileTypeToUnityTranslation (currentElement.iType, currentCollider, x, y, currentWidth );
 
 					// TODO attention TODO!!
-					x += currentWidth;
+					x += currentWidth-1;
 
 //					for (int a=0; a< restWidth; a++)
 //					{
