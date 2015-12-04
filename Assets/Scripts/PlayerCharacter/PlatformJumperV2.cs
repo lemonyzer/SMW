@@ -21,7 +21,7 @@ public class PlatformJumperV2 : MonoBehaviour {
 	GameObject gameController;
 	PlatformCharacter myPlatformCharacter;
 	Layer layer;
-	LayerMask jumpOnPlatform;
+	public LayerMask jumpOnPlatform;
 
 	SpriteRenderer spriteRenderer;
 
@@ -93,7 +93,7 @@ public class PlatformJumperV2 : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if(myPlatformCharacter.isDead)
 		{
 			//if headjumped
@@ -142,6 +142,7 @@ public class PlatformJumperV2 : MonoBehaviour {
 		{
 			Physics2D.IgnoreCollision(bodyCollider, platformColliderIgnoringArray[0], true);
 			Physics2D.IgnoreCollision(groundStopper, platformColliderIgnoringArray[0], true);
+			Debug.DrawLine (transform.position, platformColliderIgnoringArray[0].transform.position, Color.green, 1f);
 		}
 
 		Color color = Color.red;
@@ -170,6 +171,7 @@ public class PlatformJumperV2 : MonoBehaviour {
 		{
 			Physics2D.IgnoreCollision(bodyCollider, platformColliderConsideringArray[0], false);
 			Physics2D.IgnoreCollision(groundStopper, platformColliderConsideringArray[0], false);
+			Debug.DrawLine (transform.position, platformColliderConsideringArray[0].transform.position, Color.magenta, 1f);
 		}
 		color = Color.green;
 		#if UNITY_EDITOR

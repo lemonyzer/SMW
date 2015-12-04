@@ -880,6 +880,11 @@ public class MapPreviewWindow : EditorWindow {
 		Sprite onStateSprite = null;
 		Sprite offStateSprite = null;
 
+		if (mapBlock.SettingsCount () < 1)
+		{
+			Debug.LogError(this.ToString () + " mapBlock (Switch) has no Settings", currentTileGO);
+			return; 
+		}
 
 		if (mapBlock.GetSetting (0) == (short) 0)
 		{
@@ -956,8 +961,17 @@ public class MapPreviewWindow : EditorWindow {
 					}
 					
 					currenPlatformGO.transform.position =  new Vector3 (offsetX, offsetY, 0f);
+//					Vector3 additionalOffsetToCenter = Vector3.zero;
+//					additionalOffsetToCenter.x = -currentPlatform.iPlatformWidth *0.5f;
+//					additionalOffsetToCenter.y = currentPlatform.iPlatformHeight *0.5f;
+//					currenPlatformGO.transform.position += additionalOffsetToCenter;
 
+					// Create Colliders (merged)
 					CreatePlatformColliders (currenPlatformGO, currentPlatform);
+
+					// Create Sprites
+					GameObject currentPlatformGOSprites = new GameObject ("Sprites");
+					currentPlatformGOSprites.transform.SetParent (currenPlatformGO.transform, false);
 					
 					for(int y=0; y<currentPlatform.iPlatformHeight; y++)
 					{
@@ -984,7 +998,7 @@ public class MapPreviewWindow : EditorWindow {
 									tileTypeString += "NULL";
 								
 								GameObject currentPlatformTileGO = new GameObject(x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString );
-								currentPlatformTileGO.transform.SetParent(currenPlatformGO.transform);
+								currentPlatformTileGO.transform.SetParent(currentPlatformGOSprites.transform);
 								//								Vector3 tileLocalPos = new Vector3(-Globals.MAPWIDTH*0.5f +x,		// x+1: pivot Right , x+0.5f: pivor Center, x: pivot Left
 								//								                                   Globals.MAPHEIGHT*0.5f -(y+1),	// y-1: pivot Bottom, y-0.5f: pivot Center, y: pivot Top //TODO Tileset SlicedSprite Pivot setzen!
 								//								                                   0f);
@@ -1035,6 +1049,18 @@ public class MapPreviewWindow : EditorWindow {
 //								TileTypeToUnityTranslation(currentTileType, currentPlatformTileGO);
 								//TODO replaced by merging collider algorithm
 //								TileTypeToUnityTranslation(currentMapTile.iType, currentPlatformTileGO);
+
+								// Debug
+								GameObject child = new GameObject (currentMapTile.iType + "");
+								child.transform.SetParent (currentPlatformTileGO.transform, false);
+								if (currentMapTile.iType != TileType.tile_nonsolid)
+								{
+									SpriteRenderer tileTypeRenderer = child.AddComponent <SpriteRenderer> ();
+									tileTypeRenderer.sprite = g_TilesetManager.GetLevelEditorTileTypeTileset ().GetTileSprite ((int)currentMapTile.iType-1,0);
+									tileTypeRenderer.sortingLayerName = "MapDebug";
+									tileTypeRenderer.color = new Color (1,1,1,0.6f);
+								}
+								// Debug
 
 
 								TileScript tileScript = currentPlatformTileGO.AddComponent <TileScript> ();
@@ -1119,14 +1145,44 @@ public class MapPreviewWindow : EditorWindow {
 					BoxCollider2D box = currentColliderGO.AddComponent <BoxCollider2D> ();
 //					box.bounds = new Vector2 ();
 					box.size = new Vector2 (currentWidth,1f);
-					box.offset = new Vector2 (-0.5f,0.5f);
+//					box.offset = refPoint + startPoint + currentPoint;
+					
+					//Calc offset
+					Vector2 startPoint = new Vector2 (-platformData.iPlatformWidth*0.5f, platformData.iPlatformHeight*0.5f -1);
+//					Vector2 refPoint =  (Vector2) currentColliderGO.transform.position;
+//					Vector2 refPoint2 =  TransformPixelPositionToUnityWorldPosition( new Vector2 (platformData.path.startX,platformData.path.startY));
+					Vector2 currentPoint = new Vector2 (x,-y);
+//					Debug.Log ("NEW", currentColliderGO);
+//					Debug.Log ("refPoint = " + refPoint, currentColliderGO);
+//					Debug.Log ("refPoint2 = " + refPoint2, currentColliderGO);
+//					Debug.Log ("startPoint = " + startPoint, currentColliderGO);
+//					Debug.Log ("currentPoint = " + currentPoint, currentColliderGO);
+//					Debug.Log ("offset = " + refPoint + startPoint + currentPoint, currentColliderGO);
+
+					Vector2 platformMergeShift = Vector2.zero;
+					platformMergeShift.x = currentWidth *0.5f;
+					platformMergeShift.y = 0.5f;
+					
+					box.offset = startPoint + currentPoint + platformMergeShift;
 					currentColliderGO.layer = LayerMask.NameToLayer (Layer.groundLayerName);
 				}
 				else if (currentStartRefTile.iType == TileType.tile_solid_on_top)
 				{
 					BoxCollider2D box = currentColliderGO.AddComponent <BoxCollider2D> ();
 					box.size = new Vector2 (currentWidth,0.1f);
-					box.offset = new Vector2 (0f,-0.05f);
+
+					//Calc offset
+					Vector2 startPoint = new Vector2 (-platformData.iPlatformWidth*0.5f, platformData.iPlatformHeight*0.5f -1);
+//					Vector2 refPoint =  (Vector2) currentColliderGO.transform.position;
+					Vector2 currentPoint = new Vector2 (x,-y);
+
+					Vector2 platformMergeShift = Vector2.zero;
+					platformMergeShift.x = currentWidth *0.5f;	// halbe breite
+					platformMergeShift.y = 0.5f + (0.5f - box.size.y*0.5f);	// halbe höhe (==immer 1/2) + ...
+
+					box.offset = startPoint + currentPoint + platformMergeShift;
+					
+//					box.offset = new Vector2 (-platformData.iPlatformWidth*0.5f, platformData.iPlatformHeight*0.5f -0.05f) + new Vector2 (x,-y) + (Vector2) currentColliderGO.transform.position;
 					currentColliderGO.layer = LayerMask.NameToLayer (Layer.jumpAblePlatformLayerName);
 				}
 
@@ -1140,6 +1196,12 @@ public class MapPreviewWindow : EditorWindow {
 	public void CreateHazards (Map mapSO, GameObject mapRootGO)
 	{
 		MapHazard[] hazards = mapSO.GetHazards ();
+
+		if (hazards == null)
+		{
+			Debug.Log ("keine Hazards!");
+			return;
+		}
 
 		GameObject hazardsRoot = new GameObject ("Hazards");
 		hazardsRoot.transform.SetParent (mapRootGO.transform);

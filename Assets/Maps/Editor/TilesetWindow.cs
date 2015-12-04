@@ -35,7 +35,8 @@ public class TilesetWindow : EditorWindow {
 		Tileset newTilesetAsset = ScriptableObject.CreateInstance<Tileset>();
 		newTilesetAsset.tilesetName = tilesetName;
 		newTilesetAsset.TilesetSprite = tilesetSprite;
-		newTilesetAsset.TileTypes = tileTypesList.ToArray();
+		if (tileTypesList != null)
+			newTilesetAsset.TileTypes = tileTypesList.ToArray();
 		newTilesetAsset.tilePivot = tilePivot;
 		AssetDatabase.CreateAsset(newTilesetAsset, "Assets/Maps/tileset_" + tilesetName + ".asset"); //TODO dateiname nur gültige zeichen
 		AssetDatabase.SaveAssets();
@@ -207,12 +208,27 @@ public class TilesetWindow : EditorWindow {
 								GUI.enabled = false;
 							}
 						}
+						GUILayout.BeginHorizontal ();
 						if (GUILayout.Button("Create Tileset from Sprite & TLS File", GUILayout.ExpandWidth(false)))
 						{
 							currentTileset = Create(w_TilesetName, w_TilesetSprite, w_TilesetTileTypesList, GetPivotValue(w_TileSpriteAlignment, w_customTilePivotOffset));
 							//							EditorUtility.FocusProjectWindow();							<-- Satck Overflow
 							//							Selection.activeObject = currentTileset;
 						}
+						bool lastState = GUI.enabled;
+						if (true)
+						{
+							//TODO
+							GUI.enabled = true;
+						}
+						if (GUILayout.Button("Create Tileset from Sprite without TLS File", GUILayout.ExpandWidth(false)))
+						{
+							currentTileset = Create(w_TilesetName, w_TilesetSprite, null, GetPivotValue(w_TileSpriteAlignment, w_customTilePivotOffset));
+							//							EditorUtility.FocusProjectWindow();							<-- Satck Overflow
+							//							Selection.activeObject = currentTileset;
+						}
+						GUI.enabled = lastState;
+						GUILayout.EndHorizontal ();
 					}
 					GUILayout.EndVertical();
 					GUI.enabled = true;

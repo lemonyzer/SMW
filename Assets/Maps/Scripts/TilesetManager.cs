@@ -18,6 +18,8 @@ public class TilesetManager : ScriptableObject {
 	[SerializeField]
 	Tileset blockTileset;
 	[SerializeField]
+	Tileset levelEditorTileTypeTileset;
+	[SerializeField]
 	Tileset unknownTileset;
 //	Tileset tClassicTileset;
 	[SerializeField]
@@ -107,6 +109,11 @@ public class TilesetManager : ScriptableObject {
 	public Tileset GetBlockTileset ()
 	{
 		return blockTileset;
+	}
+
+	public Tileset GetLevelEditorTileTypeTileset ()
+	{
+		return levelEditorTileTypeTileset;;
 	}
 
 	[SerializeField]
