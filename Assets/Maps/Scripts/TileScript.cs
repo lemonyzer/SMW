@@ -11,6 +11,7 @@ public class TileScript : MonoBehaviour {
 	public TilesetTile tilesetTile;
 	public MapTile mapTile;
 	private MapBlock mapBlock;
+	public TileType defaultTileType;
 	public TileType tileType;
 	public TileTypeFlag tileTypeFlag;
 

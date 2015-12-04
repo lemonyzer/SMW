@@ -353,15 +353,7 @@ public class MapPreviewWindow : EditorWindow {
 			{
 				for(int x=0; x<Globals.MAPWIDTH; x++)
 				{
-//					GameObject currentTileGO = new GameObject("Tile_" + x.ToString("D2") + " " + y.ToString("D2"));
-//					Transform currentTileTransform = currentTileGO.transform;
-//					currentTileTransform.SetParent(currentMapLayerGO.transform);
-//					//currentTileTransform.position
-//					Vector3 tilePos = new Vector3(-Globals.MAPWIDTH*0.5f +x,
-//					                              Globals.MAPHEIGHT*0.5f -y,
-//					                              0f);
-//					currentTileTransform.localPosition = tilePos;
-					//TilesetTile currenTilesetTile = mapData[x,y,l];
+
 					TilesetTile currentRawTilesetTile = mapDataRaw[l].GetTile(x,y);
 					if(currentRawTilesetTile != null)
 					{
@@ -531,16 +523,17 @@ public class MapPreviewWindow : EditorWindow {
 								currentSpriteRenderer.sprite = tileSprite;
 							}
 
-							if (useTileType)
-							{
-								TileType currentTileType = tileSet.GetTileType((short)tilePosX, (short)tilePosY);
-								
-								TileTypeToUnityTranslation(currentTileType, currentTileGO);
-								
-								TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
-								currenTileScript.tileSet = tileSet;
-								currenTileScript.tileType = currentTileType;
-							}
+							// TODO OBSOLETE!!!
+//							if (useTileType)
+//							{
+//								TileType currentTileType = tileSet.GetTileType((short)tilePosX, (short)tilePosY);
+//								
+//								TileTypeToUnityTranslation(currentTileType, currentTileGO);
+//								
+//								TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
+//								currenTileScript.tileSet = tileSet;
+//								currenTileScript.tileType = currentTileType;
+//							}
 						}
                         
                     }
@@ -809,6 +802,9 @@ public class MapPreviewWindow : EditorWindow {
 		else
 			Debug.LogError("Map: " + mapSO.mapName + " GetMapDataTop == NULL");
 
+		//
+		CreateMapCollider (mapSO, mapRootGO);
+
 		// Platforms Translated + Raw
 		CreatePlatformGOs (mapSO, mapRootGO, layer, useAssetSubSprites);
 
@@ -858,7 +854,6 @@ public class MapPreviewWindow : EditorWindow {
 			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
 		}
 
-//		currSwitchConnection.State = state;
 		ioSwitchScript.CreateBlock (mapBlock, state, onStateSprite, offStateSprite, currSwitchConnection, spriteRendererLayer);
 		currSwitchConnection.AddSwitchScript (ioSwitchScript);
 	}
@@ -885,18 +880,6 @@ public class MapPreviewWindow : EditorWindow {
 		Sprite onStateSprite = null;
 		Sprite offStateSprite = null;
 
-//		/**
-//		 * TODO DONE same color, different blocks! same color different initstatus! [!] & [ ] - [ON] & [OFF]
-//		 **/
-//		// ON/OFF Block [!]
-//		if (mapBlock.GetSetting (0) == (short) 0)
-//		{
-//			mapBlockString += "\n" + "[]";
-//		}
-//		else if (mapBlock.GetSetting (0) == (short) 1)
-//		{
-//			mapBlockString += "\n" + "[!]";
-//		}
 
 		if (mapBlock.GetSetting (0) == (short) 0)
 		{
@@ -914,19 +897,6 @@ public class MapPreviewWindow : EditorWindow {
 		{
 			Debug.LogError (this.ToString () + " ?!!! STATE FALSE OR TRUE ?!!!!");
 		}
-
-//		if (mapSO.SwitchStates[mapBlock.iType-sub] == 0)
-//		{
-//			state = false;
-//			onStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
-//			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
-//		}
-//		else 
-//		{
-//			state = true;
-//			onStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType);
-//			offStateSprite = g_TilesetManager.GetBlockSprite (mapBlock.iType + addBlockNum);
-//		}
 		
 		switchTargetScript.CreateBlock (mapBlock ,state,onStateSprite,offStateSprite, spriteRendererLayer);
 		currSwitchConnection.AddBlockScript (switchTargetScript);
@@ -986,6 +956,8 @@ public class MapPreviewWindow : EditorWindow {
 					}
 					
 					currenPlatformGO.transform.position =  new Vector3 (offsetX, offsetY, 0f);
+
+					CreatePlatformColliders (currenPlatformGO, currentPlatform);
 					
 					for(int y=0; y<currentPlatform.iPlatformHeight; y++)
 					{
@@ -1054,12 +1026,15 @@ public class MapPreviewWindow : EditorWindow {
 									tileRenderer.sprite = tileSprite;
 								}
 
-
-								TileType currentTileType = tileSet.GetTileType((short)tilePosX, (short)tilePosY);
+								// WRONG
+//								TileType currentTileType = tileSet.GetTileType((short)tilePosX, (short)tilePosY);
+								// FIX:
+								TileType currentTileType = currentMapTile.iType;
+								TileType defaultTileType = tileSet.GetTileType((short)tilePosX, (short)tilePosY);
 								//TODO
 //								TileTypeToUnityTranslation(currentTileType, currentPlatformTileGO);
-								//TODO
-								TileTypeToUnityTranslation(currentMapTile.iType, currentPlatformTileGO);
+								//TODO replaced by merging collider algorithm
+//								TileTypeToUnityTranslation(currentMapTile.iType, currentPlatformTileGO);
 
 
 								TileScript tileScript = currentPlatformTileGO.AddComponent <TileScript> ();
@@ -1068,6 +1043,7 @@ public class MapPreviewWindow : EditorWindow {
 								tileScript.tilesetPosX = tilePosX;
 								tileScript.tilesetPosY = tilePosY;
 								tileScript.tileType = currentTileType;
+								tileScript.defaultTileType = defaultTileType;
 							}
 							
 						}
@@ -1088,6 +1064,60 @@ public class MapPreviewWindow : EditorWindow {
 		}
 		else
 			Debug.Log("Map: " + mapSO.mapName + " Platforms == NULL -> Map hat keine MovingPlatform");
+	}
+
+	public void CreatePlatformColliders (GameObject platformGO, MovingPlatform platformData)
+	{
+		GameObject platformColliders = new GameObject ("Colliders");
+		platformColliders.transform.SetParent (platformGO.transform, false);
+
+		for(int y=0; y< platformData.iPlatformHeight; y++)
+		{
+			for(int x=0; x< platformData.iPlatformWidth; x++)
+			{
+				MapTile currentStartRefTile = platformData.platformTileTypes.GetTile (x, y);
+				
+//				if (currentStartRefTile.iType == TileType.tile_nonsolid)
+//					continue;
+
+				int currentWidth = 1;	// FIX was  = 0
+				int restWidth = platformData.iPlatformWidth - x;
+
+
+				for (int a=1; a< restWidth; a++)
+				{
+					MapTile currentTile = platformData.platformTileTypes.GetTile (x+a, y);
+					
+					currentWidth = a;
+					if (currentTile.iType != currentStartRefTile.iType)
+					{
+						break;
+					}
+				}
+
+				GameObject currentColliderGO = new GameObject (currentStartRefTile.iType + " " + platformData.iPlatformWidth + "/" + platformData.iPlatformHeight + " (" +x+ "," +y+ ") " + currentWidth);
+				currentColliderGO.transform.SetParent (platformColliders.transform, false);
+
+				if (currentStartRefTile.iType == TileType.tile_solid)
+				{
+					BoxCollider2D box = currentColliderGO.AddComponent <BoxCollider2D> ();
+//					box.bounds = new Vector2 ();
+					box.size = new Vector2 (currentWidth,1f);
+					box.offset = new Vector2 (-0.5f,0.5f);
+					currentColliderGO.layer = LayerMask.NameToLayer (Layer.groundLayerName);
+				}
+				else if (currentStartRefTile.iType == TileType.tile_solid_on_top)
+				{
+					BoxCollider2D box = currentColliderGO.AddComponent <BoxCollider2D> ();
+					box.size = new Vector2 (currentWidth+1f,0.1f);
+					box.offset = new Vector2 (0f,-0.05f);
+					currentColliderGO.layer = LayerMask.NameToLayer (Layer.jumpAblePlatformLayerName);
+				}
+
+				x += currentWidth-1;
+
+			}
+		}
 	}
 
 	public void CreateHazards (Map mapSO, GameObject mapRootGO)
@@ -1146,6 +1176,85 @@ public class MapPreviewWindow : EditorWindow {
 			}
 		}
 		//if(HazardType.bullet_bill
+	}
+
+	public void CreateMapCollider (Map mapSO, GameObject mapRootGO)
+	{
+		MapTopLayer mapDataTop = mapSO.GetMapDataTop();
+
+		if (mapDataTop != null)
+		{
+			GameObject colliders = new GameObject ("Colliders");
+			colliders.transform.SetParent (mapRootGO.transform);
+			
+			for(int y=0; y< Globals.MAPHEIGHT; y++)
+			{
+				for(int x=0; x< Globals.MAPWIDTH; x++)
+				{
+					MapTile currentElement = mapDataTop.GetTile (x,y);
+
+					if (currentElement.iType == TileType.tile_nonsolid)
+						continue;
+
+					int restWidth = Globals.MAPWIDTH - x;
+					int restHeight = Globals.MAPHEIGHT - y;
+
+					int currentWidth = 1;
+					int currentHeight = 1;
+
+					bool otherTypeFound = false;
+
+					for (int a=1; a< restWidth; a++)
+					{
+						currentWidth = a;
+						if (currentElement.iType != mapDataTop.GetTile (x+a, y).iType)
+						{
+							otherTypeFound = true;
+							break;
+						}
+						else
+						{
+
+						}
+					}
+
+					GameObject currentCollider = new GameObject (currentElement.iType + " " + currentWidth);
+					currentCollider.transform.SetParent (colliders.transform);
+					TileTypeToUnityTranslation (currentElement.iType, currentCollider, x, y, currentWidth );
+
+					// TODO attention TODO!!
+					x += currentWidth;
+
+//					for (int a=0; a< restWidth; a++)
+//					{
+//						for (int b=0; b< restHeight; b++)
+//						{
+//							if (currentElement.iType != mapDataTop.GetTile (x+a, y+b).iType)
+//							{
+//								currentWidth = b+1;
+//								otherTypeFound = true;
+//								break;
+//							}
+//						}
+//
+//						if (a==0)
+//						{
+//
+//						}
+//						else 
+//						{
+//							if (otherTypeFound)
+//								break;
+//						}
+//					}
+
+				}
+			}
+		}
+		else
+		{
+			Debug.LogError ("map top data emtpy, cant create colliders!!!");
+		}
 	}
 
 	public Vector3 TransformHazardPositionToPixelPosition (Vector3 originalHazardPosition)
@@ -1343,6 +1452,54 @@ public class MapPreviewWindow : EditorWindow {
 			BoxCollider2D box = tileGO.AddComponent<BoxCollider2D>();
 			box.size = new Vector2 (1f,0.1f);
 			box.offset = new Vector2 (0.5f,0.95f);
+			box.isTrigger = false;
+		}
+		else if(tileType == TileType.tile_nonsolid)
+		{
+			// nothing but Sprite
+		}
+	}
+
+	void TileTypeToUnityTranslation(TileType tileType, GameObject tileGO, int x, int y, int width)		// Polymorphy!
+	{
+		Vector3 position = new Vector3 (x,y,0f);
+		position = TransformPositionToUnityPosition (position);
+		position.x += width * 0.5f;
+
+		Vector3 colliderPositionOffset = new Vector3 (0f,-0.5f,0f);
+		tileGO.transform.position = position + colliderPositionOffset;
+
+		Vector3 scale = Vector3.one;
+		scale.x = width;
+		tileGO.transform.localScale = scale;
+
+		// Polymorphie
+		// tileType.AddComponent(tileGO);
+		if(tileType == TileType.tile_solid)
+		{
+			// Block
+			BoxCollider2D box = tileGO.AddComponent<BoxCollider2D>();
+			tileGO.layer = LayerMask.NameToLayer (Layer.groundLayerName);
+			box.isTrigger = false;
+		}
+		else if(tileType == TileType.tile_ice)
+		{
+			// Block
+			BoxCollider2D box = tileGO.AddComponent<BoxCollider2D>();
+			tileGO.layer = LayerMask.NameToLayer (Layer.groundLayerName);
+			box.isTrigger = false;
+
+			PhysicsMaterial2D icy = new PhysicsMaterial2D ("Icey");
+			icy.friction = 0.5f;
+			box.sharedMaterial = icy;
+		}
+		else if(tileType == TileType.tile_solid_on_top)
+		{
+			// JumpOnPlatform
+			tileGO.layer = LayerMask.NameToLayer(Layer.jumpAblePlatformLayerName);
+			BoxCollider2D box = tileGO.AddComponent<BoxCollider2D>();
+			box.size = new Vector2 (1f,0.1f);
+			box.offset = new Vector2 (0f,0.45f);
 			box.isTrigger = false;
 		}
 		else if(tileType == TileType.tile_nonsolid)
