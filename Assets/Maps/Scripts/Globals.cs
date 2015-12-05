@@ -68,7 +68,8 @@ public enum TileType {
 	tile_super_death_left = 16, 
 	tile_super_death_right = 17, 
 	tile_player_death = 18, 
-	tile_gap = 19
+	tile_gap = 19,
+	tile_NA = 20
 };
 
 public enum TileTypeFlag {

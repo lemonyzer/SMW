@@ -2042,11 +2042,11 @@ public class Map : ScriptableObject {
 				
 				for(short iCol = 0; iCol < iPlatformWidth; iCol++)
 				{
-					Debug.Log("\tPlatform iCol = " + iCol);
+//					Debug.Log("\tPlatform iCol = " + iCol);
 					
 					for(short iRow = 0; iRow < iPlatformHeight; iRow++)
 					{
-						Debug.Log("\tPlatform iRow = " + iRow);
+//						Debug.Log("\tPlatform iRow = " + iRow);
 						
 						//TilesetTile * tile = &tiles[iCol][iRow];
 //						platformTiles[iCol,iRow] = new TilesetTile();
@@ -2062,7 +2062,7 @@ public class Map : ScriptableObject {
 						
 						if(VersionIsEqualOrAfter(version, 1, 8, 0, 0))
 						{
-							Debug.LogWarning("\tVersionIsEqualOrAfter = 1, 8, 0, 0");
+//							Debug.LogWarning("\tVersionIsEqualOrAfter = 1, 8, 0, 0");
 							platformTile.iTilesetID = ReadByteAsShort(binReader);
 							platformTile.iCol = ReadByteAsShort(binReader);
 							platformTile.iRow = ReadByteAsShort(binReader);
@@ -2107,7 +2107,7 @@ public class Map : ScriptableObject {
 						}
 						else
 						{
-							Debug.LogWarning("\tVersionIsBefore < 1, 8, 0, 0");
+//							Debug.LogWarning("\tVersionIsBefore < 1, 8, 0, 0");
 							short iTile = (short) ReadInt(binReader);
 							TileType type;
 							

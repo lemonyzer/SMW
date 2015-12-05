@@ -972,6 +972,10 @@ public class MapPreviewWindow : EditorWindow {
 					// Create Sprites
 					GameObject currentPlatformGOSprites = new GameObject ("Sprites");
 					currentPlatformGOSprites.transform.SetParent (currenPlatformGO.transform, false);
+
+					// Visible MapTopData (TileType)
+					GameObject currentPlatformGOTileTypes = new GameObject ("TileTypes");
+					currentPlatformGOTileTypes.transform.SetParent (currenPlatformGO.transform, false);
 					
 					for(int y=0; y<currentPlatform.iPlatformHeight; y++)
 					{
@@ -989,6 +993,9 @@ public class MapPreviewWindow : EditorWindow {
 								{
 									animated = true;
 									currentTilesetTileTranslated.iTilesetID = Globals.TILESETANIMATED;
+									currentTilesetTileTranslated.iCol = currentTilesetTileRaw.iCol;
+									currentTilesetTileTranslated.iRow = currentTilesetTileRaw.iRow;
+//									Debug.Log (this.ToString () + " ANIMATED", go);
 								}
 								
 								string tileTypeString = "";
@@ -1044,15 +1051,28 @@ public class MapPreviewWindow : EditorWindow {
 //								TileType currentTileType = tileSet.GetTileType((short)tilePosX, (short)tilePosY);
 								// FIX:
 								TileType currentTileType = currentMapTile.iType;
-								TileType defaultTileType = tileSet.GetTileType((short)tilePosX, (short)tilePosY);
+								TileType defaultTileType;
+								bool useDefaultTileType = true;
+								if (animated)
+								{
+									useDefaultTileType = false;
+									defaultTileType = TileType.tile_NA;
+								}
+								else
+								{
+									defaultTileType = tileSet.GetTileType((short)tilePosX, (short)tilePosY);
+								}
 								//TODO
 //								TileTypeToUnityTranslation(currentTileType, currentPlatformTileGO);
 								//TODO replaced by merging collider algorithm
 //								TileTypeToUnityTranslation(currentMapTile.iType, currentPlatformTileGO);
 
 								// Debug
-								GameObject child = new GameObject (currentMapTile.iType + "");
-								child.transform.SetParent (currentPlatformTileGO.transform, false);
+//								GameObject child = new GameObject (currentMapTile.iType + "");
+								GameObject child = new GameObject (x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString);
+								child.transform.SetParent (currentPlatformGOTileTypes.transform, false);
+								child.transform.position = currentPlatformTileGO.transform.position;
+								child.layer = LayerMask.NameToLayer ("Debug");
 								if (currentMapTile.iType != TileType.tile_nonsolid)
 								{
 									SpriteRenderer tileTypeRenderer = child.AddComponent <SpriteRenderer> ();
@@ -1069,7 +1089,11 @@ public class MapPreviewWindow : EditorWindow {
 								tileScript.tilesetPosX = tilePosX;
 								tileScript.tilesetPosY = tilePosY;
 								tileScript.tileType = currentTileType;
-								tileScript.defaultTileType = defaultTileType;
+								if (useDefaultTileType)
+									tileScript.defaultTileType = defaultTileType;
+								else 
+									tileScript.defaultTileType = defaultTileType;
+									
 							}
 							
 						}
