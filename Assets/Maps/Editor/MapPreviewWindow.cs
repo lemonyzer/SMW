@@ -774,7 +774,11 @@ public class MapPreviewWindow : EditorWindow {
 			GameObject mapDataTopLayerGO = new GameObject("MapDataTop");
 			mapDataTopLayerGO.transform.SetParent(mapRootGO.transform);
 			mapDataTopLayerGO.transform.localPosition = new Vector3(0f,0f,(layer)*-2f);		//(l+1) (trenne layer von background)
+
+			GameObject mapDataTopLayerTileTypesGO = new GameObject("TileTypes");
+			mapDataTopLayerTileTypesGO.transform.SetParent(mapDataTopLayerGO.transform);
 			
+
 			for(int y=0; y<Globals.MAPHEIGHT; y++)
 			{
 				for(int x=0; x<Globals.MAPWIDTH; x++)
@@ -794,6 +798,8 @@ public class MapPreviewWindow : EditorWindow {
 
 							TileScript currenTileScript = currentTileGO.AddComponent<TileScript>();
 							currenTileScript.mapTile = currentMapDataTopTile;
+
+							CreateTileTypeSprite (mapDataTopLayerTileTypesGO, tileLocalPos, currentMapDataTopTile, x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString);
 						}
 					}
 				}
@@ -1069,17 +1075,18 @@ public class MapPreviewWindow : EditorWindow {
 
 								// Debug
 //								GameObject child = new GameObject (currentMapTile.iType + "");
-								GameObject child = new GameObject (x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString);
-								child.transform.SetParent (currentPlatformGOTileTypes.transform, false);
-								child.transform.position = currentPlatformTileGO.transform.position;
-								child.layer = LayerMask.NameToLayer ("Debug");
-								if (currentMapTile.iType != TileType.tile_nonsolid)
-								{
-									SpriteRenderer tileTypeRenderer = child.AddComponent <SpriteRenderer> ();
-									tileTypeRenderer.sprite = g_TilesetManager.GetLevelEditorTileTypeTileset ().GetTileSprite ((int)currentMapTile.iType-1,0);
-									tileTypeRenderer.sortingLayerName = "MapDebug";
-									tileTypeRenderer.color = new Color (1,1,1,0.6f);
-								}
+//								GameObject child = new GameObject (x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString);
+//								child.transform.SetParent (currentPlatformGOTileTypes.transform, false);
+//								child.transform.position = currentPlatformTileGO.transform.position;
+//								child.layer = LayerMask.NameToLayer ("Debug");
+//								if (currentMapTile.iType != TileType.tile_nonsolid)
+//								{
+//									SpriteRenderer tileTypeRenderer = child.AddComponent <SpriteRenderer> ();
+//									tileTypeRenderer.sprite = g_TilesetManager.GetLevelEditorTileTypeTileset ().GetTileSprite ((int)currentMapTile.iType-1,0);
+//									tileTypeRenderer.sortingLayerName = "MapDebug";
+//									tileTypeRenderer.color = new Color (1,1,1,0.6f);
+//								}
+								CreateTileTypeSprite (currentPlatformGOTileTypes, currentPlatformTileGO.transform.position, currentMapTile, x.ToString("D2") + " " + y.ToString("D2") + " " + tileTypeString); 
 								// Debug
 
 
@@ -1114,6 +1121,21 @@ public class MapPreviewWindow : EditorWindow {
 		}
 		else
 			Debug.Log("Map: " + mapSO.mapName + " Platforms == NULL -> Map hat keine MovingPlatform");
+	}
+
+	public void CreateTileTypeSprite (GameObject parentGO, Vector3 position, MapTile currentMapTile, string goName)
+	{
+		GameObject child = new GameObject (goName);
+		child.transform.SetParent (parentGO.transform, false);
+		child.transform.position = position;
+		child.layer = LayerMask.NameToLayer ("Debug");
+		if (currentMapTile.iType != TileType.tile_nonsolid)
+		{
+			SpriteRenderer tileTypeRenderer = child.AddComponent <SpriteRenderer> ();
+			tileTypeRenderer.sprite = g_TilesetManager.GetLevelEditorTileTypeTileset ().GetTileSprite ((int)currentMapTile.iType-1,0);
+			tileTypeRenderer.sortingLayerName = "MapDebug";
+			tileTypeRenderer.color = new Color (1,1,1,0.6f);
+		}
 	}
 
 	public void CreatePlatformColliders (GameObject platformGO, MovingPlatform platformData)
@@ -1240,9 +1262,9 @@ public class MapPreviewWindow : EditorWindow {
 				hazardGO.transform.SetParent (hazardsRoot.transform);
 
 				Vector3 originalPos = new Vector3 (currHazard.ix,currHazard.iy,0f);
-				originalPos.x = ((int)(originalPos.x)) << 4; 		// bitwise Left shift operator
-				originalPos.y = ((int)(originalPos.y)) << 4;			// bitwise Left shift operator
-				hazardGO.transform.position = TransformPixelPositionToUnityWorldPosition (originalPos);
+				Vector3 translatedPos = Vector3.zero;
+//				originalPos.x = ((int)(originalPos.x)) << 4; 		// bitwise Left shift operator
+//				originalPos.y = ((int)(originalPos.y)) << 4;			// bitwise Left shift operator
 
 
 				Hazard listHazard = g_HazardManager.GetHazard (currHazard.iType);
@@ -1252,25 +1274,78 @@ public class MapPreviewWindow : EditorWindow {
 					SpriteRenderer sr = hazardGO.AddComponent<SpriteRenderer> ();
 					sr.sortingLayerName = "MapDebug";
 					sr.sprite = listHazard.previewSprite;
+
+					translatedPos = TransformHazardPositionToUnityWorld (originalPos);
+					
 				}
 				else if (currHazard.iType == HazardType.fireball_string)
 				{
+					translatedPos = TransformOrbitHazardPositionToUnityWorld (originalPos);
+
+					MovingPlatformScript movingScript = hazardGO.AddComponent <MovingPlatformScript> ();
+
+					float vel = currHazard.dparam[0];
+					float angle = currHazard.dparam[1];
+					float radius = currHazard.iparam[0] * 0.5f * 32f;
+
+					Vector2 center = GetPixelPositionFromUnityWorld (hazardGO.transform.position);
+
+					MovingPlatformPath path = new MovingPlatformPath( vel, angle, radius, radius, center.x, center.y, true );
+					path.iPathType = (int) MovingPathType.HazardString;
+					movingScript.movingPlatform = new MovingPlatform(null,null,null, currHazard.iparam[0], 1, 1,path,true);
+
+					// iparm[0] == fireball string länge
+					for (int k=0; k< currHazard.iparam[0]; k++)
+					{
+
+						float distance = listHazard.previewSprite.bounds.size.x + 0.2f;		// distance between string elements
+//						Debug.Log ("NEW");
+//						Debug.Log ("center =" + listHazard.previewSprite.bounds.center);
+//						Debug.Log ("extents =" + listHazard.previewSprite.bounds.extents);
+//						Debug.Log ("size =" + listHazard.previewSprite.bounds.size);
+
+						GameObject stringPart = new GameObject (currHazard.iType + " " + k);
+						stringPart.transform.SetParent (hazardGO.transform);
+						stringPart.transform.localPosition = new Vector3 (k*distance, 0f, 0f);
+
+						Vector3 offset = - listHazard.previewSprite.bounds.center;
+//						offset.x = -listHazard.previewSprite.bounds.center.x;
+//						offset.y = listHazard.previewSprite.bounds.center.y;
+
+
+
+						stringPart.transform.localPosition += offset;
+
+						SpriteRenderer renderer = stringPart.AddComponent <SpriteRenderer> ();
+						renderer.sortingLayerName = "Hazards";
+						AnimatedTile animScript = stringPart.AddComponent <AnimatedTile> ();
+
+						animScript.reverseAnim = false;
+						animScript.SetAnimation (listHazard.projectile.ToArray());
+					}
+					
 				}
 				else if (currHazard.iType == HazardType.flame_cannon)
 				{
+					translatedPos = TransformHazardPositionToUnityWorld (originalPos);
 				}
 				else if (currHazard.iType == HazardType.pirhana_plants_0_random || 
 				         currHazard.iType == HazardType.pirhana_plants_1_target ||
 				         currHazard.iType == HazardType.pirhana_plants_2_animated ||
 				         currHazard.iType == HazardType.pirhana_plants_3_animated)
 				{
+					translatedPos = TransformHazardPositionToUnityWorld (originalPos);
 					PirhanaPlantScript pirhanaPlantScript = hazardGO.AddComponent <PirhanaPlantScript> ();
 					// listHazard hat previewSprite
 					pirhanaPlantScript.CreateHazard (listHazard, currHazard);
+					
 				}
 				else if (currHazard.iType == HazardType.rotodisc)
 				{
+					translatedPos = TransformOrbitHazardPositionToUnityWorld (originalPos);
 				}
+
+				hazardGO.transform.position = translatedPos;
 
 //				GameObject clone = GameObject.Instantiate (hazardGO);
 //				clone.transform.SetParent (hazardsRoot.transform);
@@ -1360,15 +1435,48 @@ public class MapPreviewWindow : EditorWindow {
 		}
 	}
 
-	public Vector3 TransformHazardPositionToPixelPosition (Vector3 originalHazardPosition)
+	public static Vector2 GetPixelPositionFromUnityWorld (Vector2 originalWorldPosition)
 	{
-		Vector3 pixelPosition = Vector3.zero;
-		pixelPosition.x = ((int) originalHazardPosition.x) << 4;
-		pixelPosition.y = +32 + ((int) originalHazardPosition.y) << 4;
+		Vector2 pixelPosition;
+		pixelPosition.x = (originalWorldPosition.x + 10f) * 32;
+		pixelPosition.y = (-originalWorldPosition.y + 7.5f) * 32;
+
+		// -10, 7.5 ->  0,0
+		// -10, 6.5 ->  0,32
+		// -10, 0 ->  0,32
+		
 		return pixelPosition;
 	}
 
-	public Vector3 TransformPixelPositionToUnityWorldPosition (Vector3 originalPixelPosition)
+	public static Vector3 TransformOrbitHazardPositionToUnityWorld (Vector3 originalHazardPosition)
+	{
+		return TransformPixelPositionToUnityWorldPosition(TransformOrbitHazardPositionToPixelPosition(originalHazardPosition));
+	}
+
+	public static Vector3 TransformHazardPositionToUnityWorld (Vector3 originalHazardPosition)
+	{
+		return TransformPixelPositionToUnityWorldPosition(TransformHazardPositionToPixelPosition(originalHazardPosition));
+	}
+	
+	public static Vector3 TransformOrbitHazardPositionToPixelPosition (Vector3 originalHazardPosition)
+	{
+		Vector3 pixelPosition = Vector3.zero;
+		pixelPosition.x = (((int) originalHazardPosition.x) << 4) + 16;
+		pixelPosition.y = (((int) originalHazardPosition.y) << 4) + 16;
+		Debug.Log ("pixelPosition = " + pixelPosition);
+		return pixelPosition;
+	}
+	
+	public static Vector3 TransformHazardPositionToPixelPosition (Vector3 originalHazardPosition)
+	{
+		Vector3 pixelPosition = Vector3.zero;
+		pixelPosition.x = ((int) originalHazardPosition.x) << 4;
+		pixelPosition.y = +32 + (((int) originalHazardPosition.y) << 4);
+		Debug.Log ("pixelPosition = " + pixelPosition);
+		return pixelPosition;
+	}
+
+	public static Vector3 TransformPixelPositionToUnityWorldPosition (Vector3 originalPixelPosition)
 	{
 		Vector3 unityPosition = Vector3.zero;
 		unityPosition.x = TransformXPosToUnityXPosition (originalPixelPosition.x /32.0f);
@@ -1376,7 +1484,7 @@ public class MapPreviewWindow : EditorWindow {
 		return unityPosition;
 	}
 	
-	public Vector3 TransformPositionToUnityPosition (Vector3 originalPosition)
+	public static Vector3 TransformPositionToUnityPosition (Vector3 originalPosition)
 	{
 		Vector3 unityPosition = Vector3.zero;
 		unityPosition.x = TransformXPosToUnityXPosition (originalPosition.x);
@@ -1384,12 +1492,12 @@ public class MapPreviewWindow : EditorWindow {
 		return unityPosition;
 	}
 
-	public float TransformXPosToUnityXPosition (float originalXPosition)
+	public static float TransformXPosToUnityXPosition (float originalXPosition)
 	{
 		return originalXPosition - 10.0f;
 	}
 
-	public float TransformYPosToUnityYPosition (float originalYPosition)
+	public static float TransformYPosToUnityYPosition (float originalYPosition)
 	{
 		return 15f - originalYPosition - 7.5f;
 	}
@@ -1595,6 +1703,35 @@ public class MapPreviewWindow : EditorWindow {
 			PhysicsMaterial2D icy = new PhysicsMaterial2D ("Icey");
 			icy.friction = 0.5f;
 			box.sharedMaterial = icy;
+		}
+		else if (tileType == TileType.tile_death)
+		{
+			BoxCollider2D box = tileGO.AddComponent<BoxCollider2D>();
+			tileGO.layer = LayerMask.NameToLayer (Layer.deathLayerName);
+			box.isTrigger = true;
+		}
+		else if (tileType == TileType.tile_death_on_bottom ||
+		         tileType == TileType.tile_death_on_left ||
+		         tileType == TileType.tile_death_on_right ||
+		         tileType == TileType.tile_death_on_top)
+		{
+			BoxCollider2D box = tileGO.AddComponent<BoxCollider2D>();
+			tileGO.layer = LayerMask.NameToLayer (Layer.deathLayerName);
+			box.isTrigger = true;
+		}
+		else if (tileType == TileType.tile_player_death)
+		{
+			
+		}
+		else if (tileType == TileType.tile_super_death ||
+		         tileType == TileType.tile_super_death_bottom ||
+		         tileType == TileType.tile_super_death_left ||
+		         tileType == TileType.tile_super_death_right ||
+		         tileType == TileType.tile_super_death_top)
+		{
+			BoxCollider2D box = tileGO.AddComponent<BoxCollider2D>();
+			tileGO.layer = LayerMask.NameToLayer (Layer.superDeathLayerName);
+			box.isTrigger = true;
 		}
 		else if(tileType == TileType.tile_solid_on_top)
 		{

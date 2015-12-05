@@ -787,7 +787,8 @@ public class SDL_Rect
 public enum MovingPathType {
 	StraightPath = 0,
 	StraightPathContinuous = 1,
-	EllipsePath = 2
+	EllipsePath = 2,
+	HazardString = 3
 };
 
 [Serializable]

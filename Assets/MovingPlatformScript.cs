@@ -64,6 +64,22 @@ public class MovingPlatformScript : MonoBehaviour {
 			radius.y = movingPlatform.path.dRadiusY / 32.0f;
 			radius.z = myTransform.position.z;
 		}
+		else if (movingPlatform.path.iPathType == (short) MovingPathType.HazardString)
+		{
+			center.x = movingPlatform.path.dCenterX / 32f - 10f;
+			center.y = 15f - movingPlatform.path.dCenterY / 32f - 7.5f;
+			center.z = myTransform.position.z;
+			
+			radius.x = movingPlatform.path.dRadiusX / 32.0f;
+			radius.y = movingPlatform.path.dRadiusY / 32.0f;
+			radius.z = myTransform.position.z;
+
+			movingPlatform.path.velocity *= 1f/Time.fixedDeltaTime *2*35;
+
+//			movingPlatform.path.dAngle += movingPlatform.path.velocity;
+			// TODO check, first rotation!
+			myTransform.RotateAround (myTransform.position, Vector3.forward, movingPlatform.path.dAngle);
+		}
 	}
 	
 	// Update is called once per frame
@@ -158,6 +174,12 @@ public class MovingPlatformScript : MonoBehaviour {
 //			Debug.DrawLine (center, myTransform.position, Color.red);
 //			Debug.DrawLine (center, center+cRadius, Color.yellow);
 
+		}
+		else if (movingPlatform.path.iPathType == (short) MovingPathType.HazardString)
+		{
+//			movingPlatform.path.dAngle += movingPlatform.path.velocity;
+//			myTransform.RotateAround (myTransform.position, Vector3.forward, movingPlatform.path.dAngle);
+			myTransform.RotateAround (myTransform.position, Vector3.forward, Time.deltaTime * movingPlatform.path.velocity);
 		}
 		
 	}

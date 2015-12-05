@@ -12,6 +12,8 @@ public class Layer : MonoBehaviour {
 	public static LayerMask whatIsWall;
 
 	public static int defaultLayer;
+	public static int deathLayer;
+	public static int superDeathLayer;
 	public static int player;
 
 //	public int player1;
@@ -26,6 +28,7 @@ public class Layer : MonoBehaviour {
 	public static int item;
 
 	public static int ground;
+	public static int groundIcyLayer;
 //	public int tagAble;
 //	public int floor;
 	public static int block;
@@ -41,6 +44,8 @@ public class Layer : MonoBehaviour {
 
 
 	public const string defaultLayerName = "Default";
+	public const string deathLayerName = "Death";
+	public const string superDeathLayerName = "SuperDeath";
 	public const string playerLayerName = "Player";
 
 //	public const string player1LayerName = "Player1";
@@ -57,6 +62,7 @@ public class Layer : MonoBehaviour {
 //	public const string enemyLayerName = "Enemy";
 
 	public const string groundLayerName = "Ground";
+	public const string groundIcyLayerName = "GroundIcy";
 //	public const string tagAbleLayerName = "TagAble";
 //	public const string floorLayerName = "Floor";
 	public const string blockLayerName = "Block";
@@ -73,6 +79,8 @@ public class Layer : MonoBehaviour {
 		Debug.LogWarning(this.ToString() + ": Awake() - init public layer integers, scripts layer instantiation have to be AFTER this initialisation, NOT IN AWAKE!!!" );
 
 		defaultLayer = LayerMask.NameToLayer(defaultLayerName);
+		deathLayer = LayerMask.NameToLayer(deathLayerName);
+		superDeathLayer = LayerMask.NameToLayer(superDeathLayerName);
 		player = LayerMask.NameToLayer(playerLayerName);
 //		player1 = LayerMask.NameToLayer(player1LayerName);
 //		player2 = LayerMask.NameToLayer(player2LayerName);
@@ -99,6 +107,7 @@ public class Layer : MonoBehaviour {
 //		enemy = LayerMask.NameToLayer(enemyLayerName);
 
 		ground = LayerMask.NameToLayer(groundLayerName);
+		groundIcyLayer = LayerMask.NameToLayer (groundIcyLayerName);
 //		tagAble = LayerMask.NameToLayer(tagAbleLayerName);
 //		floor = LayerMask.NameToLayer(floorLayerName);
 		block = LayerMask.NameToLayer(blockLayerName);
