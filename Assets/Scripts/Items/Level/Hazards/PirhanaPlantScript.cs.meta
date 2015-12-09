@@ -1,10 +1,20 @@
 fileFormatVersion: 2
 guid: c4a5f69875635694f971ed7c4cf6f991
-timeCreated: 1448630443
+timeCreated: 1449580435
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - greenEatingAnimatorController: {fileID: 9100000, guid: edf2d63270534864fa6c92ef5c78ccc4,
+      type: 2}
+  - redShootingPrihanaAnimatorController: {fileID: 9100000, guid: e5b4b709f7cb0184f96827f219b0c1cf,
+      type: 2}
+  - greenShootingPrihanaAnimatorController: {fileID: 9100000, guid: e5b4b709f7cb0184f96827f219b0c1cf,
+      type: 2}
+  - redEatingAnimatorController: {fileID: 9100000, guid: e5b4b709f7cb0184f96827f219b0c1cf,
+      type: 2}
+  - hazardRenderer: {instanceID: 0}
+  - hazardCollider: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

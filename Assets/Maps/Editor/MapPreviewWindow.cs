@@ -491,6 +491,7 @@ public class MapPreviewWindow : EditorWindow {
 								if(translatedTile.iTilesetID == Globals.TILESETANIMATED)
 								{
 									currentTileGO.transform.SetParent(animatedLayerGO.transform, true);
+									currentSpriteRenderer.sortingLayerName = "MapTileAnimated";
 //									Vector3 animTilePos = currentTileGO.transform.localPosition;
 //									animTilePos.z = -10;
 //									currentTileGO.transform.localPosition = animTilePos;
@@ -1271,12 +1272,13 @@ public class MapPreviewWindow : EditorWindow {
 				
 				if (currHazard.iType == HazardType.bullet_bill)
 				{
-					SpriteRenderer sr = hazardGO.AddComponent<SpriteRenderer> ();
-					sr.sortingLayerName = "MapDebug";
-					sr.sprite = listHazard.previewSprite;
+//					SpriteRenderer sr = hazardGO.AddComponent<SpriteRenderer> ();
+//					sr.sortingLayerName = "MapDebug";
+//					sr.sprite = listHazard.previewSprite;
 
 					translatedPos = TransformHazardPositionToUnityWorld (originalPos);
-					
+					BulletBillScript script = hazardGO.AddComponent <BulletBillScript> ();
+					script.hazard = currHazard;
 				}
 				else if (currHazard.iType == HazardType.fireball_string)
 				{
@@ -1286,11 +1288,37 @@ public class MapPreviewWindow : EditorWindow {
 
 					float vel = currHazard.dparam[0];
 					float angle = currHazard.dparam[1];
-					float radius = currHazard.iparam[0] * 0.5f * 32f;
+
+					// w = 32
+					// w = 18
+					// d = 0.2 == 32/5 = 6.4
+					// l = 2 -> r =  (l * w + (l-1) * d)/ 2
+
+					// 1 = 32f
+					// r = 18f + iparm[0] * 32f * 0.2f * 0.5f
+
+					bool depthTest = false;
+					float duration = 2f;
+					Color color = Color.green;
+
+					Vector3 refPos = hazardGO.transform.position;
+					Debug.DrawLine (refPos + Vector3.up * 20f, refPos + Vector3.down * 20f, color, duration, depthTest);
+					Debug.DrawLine (refPos + Vector3.left * 20f, refPos + Vector3.right * 20f, color, duration, depthTest);
+					Debug.Log ("size =" + listHazard.previewSprite.bounds.size);
+					
+//					float radiusInPixel = currHazard.iparam[0] * 0.5f * 32f;		// nicht 100% genau
+					float width = listHazard.previewSprite.bounds.size.x * 32f;
+					float quantity = currHazard.iparam[0];
+					float distanceBetween = 0.2f * 32f;
+					float durchmesserInPixel = quantity * width;
+					if (quantity > 1)
+						durchmesserInPixel += (quantity-1)*distanceBetween;
+
+					float radiusInPixel = durchmesserInPixel * 0.5f;
 
 					Vector2 center = GetPixelPositionFromUnityWorld (hazardGO.transform.position);
 
-					MovingPlatformPath path = new MovingPlatformPath( vel, angle, radius, radius, center.x, center.y, true );
+					MovingPlatformPath path = new MovingPlatformPath( vel, angle, radiusInPixel, radiusInPixel, center.x, center.y, true );
 					path.iPathType = (int) MovingPathType.HazardString;
 					movingScript.movingPlatform = new MovingPlatform(null,null,null, currHazard.iparam[0], 1, 1,path,true);
 
@@ -1323,6 +1351,15 @@ public class MapPreviewWindow : EditorWindow {
 						animScript.reverseAnim = false;
 						animScript.SetAnimation (listHazard.projectile.ToArray());
 					}
+
+
+					refPos.x += durchmesserInPixel / 32f;
+					Debug.DrawLine (refPos + Vector3.up, refPos + Vector3.down, color, duration, depthTest);
+					Debug.DrawLine (refPos + Vector3.left, refPos + Vector3.right, color, duration, depthTest);
+
+					refPos.x += radiusInPixel / 32f;
+					Debug.DrawLine (refPos + Vector3.up, refPos + Vector3.down, color, duration, depthTest);
+					Debug.DrawLine (refPos + Vector3.left, refPos + Vector3.right, color, duration, depthTest);
 					
 				}
 				else if (currHazard.iType == HazardType.flame_cannon)
@@ -1338,7 +1375,17 @@ public class MapPreviewWindow : EditorWindow {
 					PirhanaPlantScript pirhanaPlantScript = hazardGO.AddComponent <PirhanaPlantScript> ();
 					// listHazard hat previewSprite
 					pirhanaPlantScript.CreateHazard (listHazard, currHazard);
+
+					// 32 ==> 1
+					// pirhana sprite height = 48 pixel
+					// 48 ==> 48/32
+
+					translatedPos.y += hazardGO.transform.localScale.y * -1* 48f/32f;
 					
+					if (currHazard.iparam[1] == (short) PirhanaDirection.downwards)
+					{
+						translatedPos += Vector3.up;
+					}
 				}
 				else if (currHazard.iType == HazardType.rotodisc)
 				{
@@ -1463,7 +1510,7 @@ public class MapPreviewWindow : EditorWindow {
 		Vector3 pixelPosition = Vector3.zero;
 		pixelPosition.x = (((int) originalHazardPosition.x) << 4) + 16;
 		pixelPosition.y = (((int) originalHazardPosition.y) << 4) + 16;
-		Debug.Log ("pixelPosition = " + pixelPosition);
+//		Debug.Log ("pixelPosition = " + pixelPosition);
 		return pixelPosition;
 	}
 	
@@ -1472,7 +1519,7 @@ public class MapPreviewWindow : EditorWindow {
 		Vector3 pixelPosition = Vector3.zero;
 		pixelPosition.x = ((int) originalHazardPosition.x) << 4;
 		pixelPosition.y = +32 + (((int) originalHazardPosition.y) << 4);
-		Debug.Log ("pixelPosition = " + pixelPosition);
+//		Debug.Log ("pixelPosition = " + pixelPosition);
 		return pixelPosition;
 	}
 

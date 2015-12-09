@@ -52,7 +52,12 @@ public class MovingPlatformScript : MonoBehaviour {
 		else if (movingPlatform.path.iPathType == (short) MovingPathType.StraightPathContinuous)
 		{
 			moveDirection.x = Mathf.Cos (movingPlatform.path.angle);
-			moveDirection.y = Mathf.Sin (movingPlatform.path.angle);
+			if (Mathf.Abs (moveDirection.x) < 0.001)
+				moveDirection.x = 0;
+
+			moveDirection.y = -1* Mathf.Sin (movingPlatform.path.angle);
+			if (Mathf.Abs (moveDirection.y) < 0.001)
+				moveDirection.y = 0;
 		}
 		else if (movingPlatform.path.iPathType == (short) MovingPathType.EllipsePath)
 		{

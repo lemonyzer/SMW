@@ -687,8 +687,12 @@ public class MapHazard
 
 	// dAngle == Angle
 
+	//* Pirhana
 	// iparam[0] == freq
 	// iparam[1] == direction
+	
+	//* Bullet Bill
+	// iparam[1] == direction * velocity
 };
 
 [Serializable]
