@@ -1365,6 +1365,7 @@ public class MapPreviewWindow : EditorWindow {
 				else if (currHazard.iType == HazardType.flame_cannon)
 				{
 					translatedPos = TransformHazardPositionToUnityWorld (originalPos);
+					hazardGO.AddComponent <FlameCannonScript> ().Create (currHazard, listHazard);
 				}
 				else if (currHazard.iType == HazardType.pirhana_plants_0_random || 
 				         currHazard.iType == HazardType.pirhana_plants_1_target ||
