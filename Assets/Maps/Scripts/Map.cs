@@ -44,7 +44,7 @@ public class MapLayer
 		{
 			tiles[i] = new TilesetTile ();
 		}
-		Debug.Log (this.ToString () + " width = " + width);
+//		Debug.Log (this.ToString () + " width = " + width);
 	}
 
 	public TilesetTile GetTile (int x, int y) {
@@ -291,7 +291,7 @@ public class MapBlockLayer
 		{
 			mapBlocksData[i] = new MapBlock ();
 		}
-		Debug.Log (this.ToString () + " width = " + width);
+//		Debug.Log (this.ToString () + " width = " + width);
 	}
 	
 	public MapBlock GetBlock (int x, int y) {
@@ -371,7 +371,7 @@ public class MapDataFlags
 		{
 			mapData[i] = new bool ();
 		}
-		Debug.Log (this.ToString () + " width = " + width);
+//		Debug.Log (this.ToString () + " width = " + width);
 	}
 	
 	public bool GetField (int x, int y) {

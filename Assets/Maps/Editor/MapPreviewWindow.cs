@@ -937,6 +937,11 @@ public class MapPreviewWindow : EditorWindow {
 					//					currenPlatformGO.transform.localPosition = Vector3.zero;
 					MovingPlatformScript currentPlatformScript = currenPlatformGO.AddComponent<MovingPlatformScript>();
 					currentPlatformScript.movingPlatform = currentPlatform;
+
+					// TODO grip on platforms
+//					Rigidbody2D rb2d = currenPlatformGO.AddComponent<Rigidbody2D> ();
+//					rb2d.gravityScale = 0f;
+//					rb2d.fixedAngle = true;
 					
 					float offsetX = 0f;
 					float offsetY = 0f;
@@ -1150,7 +1155,7 @@ public class MapPreviewWindow : EditorWindow {
 
 			for(int x=0; x< platformData.iPlatformWidth; x++)
 			{
-				Debug.Log ("<color=red><b>"+x+"</b></color=red>");
+//				Debug.Log ("<color=red><b>"+x+"</b></color=red>");
 				x = x + 0;
 
 				MapTile currentStartRefTile = platformData.platformTileTypes.GetTile (x, y);
@@ -1235,7 +1240,7 @@ public class MapPreviewWindow : EditorWindow {
 
 //				Debug.Log ("<color=grey><b>+" + currentWidth + "</b></color>" );
 				x += currentWidth-1;
-				Debug.Log ("<color=magenta><b>"+x+"</b></color=red>");
+//				Debug.Log ("<color=magenta><b>"+x+"</b></color=red>");
 			}
 		}
 	}
@@ -1946,7 +1951,7 @@ public class MapPreviewWindow : EditorWindow {
 				// relative pfad angabe
 //relPath		string currentMapPath = f.FullName.Substring(Application.dataPath.Length - "Assets".Length);
 				string currentMapPath = f.FullName;		//absPath
-				Debug.Log("currentMapPath=" + currentMapPath);
+//				Debug.Log("currentMapPath=" + currentMapPath);
 				
 //				string mapName = GetMapNameFromFileName(f.Name);
 //				if(mapName != null)
