@@ -41,6 +41,11 @@ public class MainMenu : MonoBehaviour {
 		nextLevel = Scenes.unityNetworkRace;
 	}
 
+	public void MapTest()
+	{
+		nextLevel = Scenes.mapTest;
+	}
+
 //	void OnGUI() {
 //
 //		// links oben

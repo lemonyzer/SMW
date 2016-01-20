@@ -43,7 +43,9 @@ public class WarpArrow : ScriptableObject {
 			warpArrows.Add (west[i]);
 		}
 		init = true;
+				#if UNITY_EDITOR
 		UnityEditor.EditorUtility.SetDirty (this);
+				#endif
 	}
 
 	public Sprite GetExitArrow (int direction, int connection)

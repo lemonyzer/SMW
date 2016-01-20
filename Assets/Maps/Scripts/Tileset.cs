@@ -28,6 +28,8 @@ public class Tileset : ScriptableObject {
 	[SerializeField]
 	private Sprite tileset;
 	[SerializeField]
+	private Sprite[] tilesetArray;
+	[SerializeField]
 	private int width;
 	[SerializeField]
 	private int height;
@@ -144,72 +146,155 @@ public class Tileset : ScriptableObject {
 		return subSprite;
 	}
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
+//	public Sprite[] GetAnimationTileSprites(int x, int y)
+//	{
+//		string assetRelativPath = UnityEditor.AssetDatabase.GetAssetPath(tileset);
+//		UnityEngine.Object[] assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(assetRelativPath);			// TODO store this array in ScriptableObject, doesnt need to load it for every Tile of the map
+//		
+//		int subSpritePos = 0;
+//		if(animatedTileset)
+//			subSpritePos = x*animatedWidth + y*Mathf.FloorToInt(width/tileWidth);
+//		else
+//			Debug.LogError(tilesetName + " i'm not the animated Tileset");
+//		
+//		subSpritePos++;	// root Asset is no SubSprite (sliced Sprite)
+//		if(subSpritePos+animatedWidth > assets.Length)
+//		{
+//			Debug.LogError("Sub Sprite Pos + animationWidth " + subSpritePos+"+"+animatedWidth + " > " + assets.Length + " Tileset Array Length");
+//		}
+//		else
+//		{
+//			Sprite[] animationSprites = new Sprite[animatedWidth];
+//			for(int i=0;i<animationSprites.Length;i++)
+//			{
+//				animationSprites[i] = new Sprite(); 
+//				animationSprites[i] = assets[subSpritePos+i] as Sprite;
+//			}
+//			return animationSprites;
+//		}
+//		return null;
+//	}
+//
+//	public Sprite GetTileSprite(int x, int y)
+//	{
+//		string assetRelativPath = UnityEditor.AssetDatabase.GetAssetPath(tileset);
+//		UnityEngine.Object[] assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(assetRelativPath);			// TODO store this array in ScriptableObject, doesnt need to load it for every Tile of the map
+//
+//		int subSpritePos = 0;
+//		if(animatedTileset)
+//			subSpritePos = x*animatedWidth + y*Mathf.FloorToInt(width/tileWidth);
+//		else
+//			subSpritePos = x + y*Mathf.FloorToInt(width/tileWidth);
+//
+//		subSpritePos++;	// root Asset is no SubSprite (sliced Sprite)
+//		if(subSpritePos > assets.Length)
+//		{
+//			Debug.LogError("Sub Sprite Pos " + subSpritePos + " > " + assets.Length + " Tileset Array Length");
+//		}
+//		else
+//		{
+////			Debug.Log("Sub Sprite Pos " + subSpritePos + ", Tileset Array Length" + assets.Length);
+//			Sprite sprite = new Sprite();
+//			sprite = assets[subSpritePos] as Sprite;
+//			return sprite;
+////			return (Sprite) assets[subSpritePos];
+////			return assets[subSpritePos] as Sprite;
+//		}
+//		return null;
+//	}
+//				
+//#endif
+
 	public Sprite[] GetAnimationTileSprites(int x, int y)
 	{
-		string assetRelativPath = UnityEditor.AssetDatabase.GetAssetPath(tileset);
-		UnityEngine.Object[] assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(assetRelativPath);			// TODO store this array in ScriptableObject, doesnt need to load it for every Tile of the map
-		
-		int subSpritePos = 0;
-		if(animatedTileset)
-			subSpritePos = x*animatedWidth + y*Mathf.FloorToInt(width/tileWidth);
-		else
-			Debug.LogError(tilesetName + " i'm not the animated Tileset");
-		
-		subSpritePos++;	// root Asset is no SubSprite (sliced Sprite)
-		if(subSpritePos+animatedWidth > assets.Length)
-		{
-			Debug.LogError("Sub Sprite Pos + animationWidth " + subSpritePos+"+"+animatedWidth + " > " + assets.Length + " Tileset Array Length");
-		}
-		else
-		{
-			Sprite[] animationSprites = new Sprite[animatedWidth];
-			for(int i=0;i<animationSprites.Length;i++)
+
+			int subSpritePos = 0;
+			if(animatedTileset)
+					subSpritePos = x*animatedWidth + y*Mathf.FloorToInt(width/tileWidth);
+			else
+					Debug.LogError(tilesetName + " i'm not the animated Tileset");
+
+//			subSpritePos++;	// root Asset is no SubSprite (sliced Sprite)
+			if(subSpritePos+animatedWidth > tilesetArray.Length)
 			{
-				animationSprites[i] = new Sprite(); 
-				animationSprites[i] = assets[subSpritePos+i] as Sprite;
+					Debug.LogError("Sub Sprite Pos + animationWidth " + subSpritePos+"+"+animatedWidth + " > " + tilesetArray.Length + " Tileset Array Length");
 			}
-			return animationSprites;
-		}
-		return null;
+			else
+			{
+					Sprite[] animationSprites = new Sprite[animatedWidth];
+					for(int i=0;i<animationSprites.Length;i++)
+					{
+							animationSprites[i] = new Sprite(); 
+							animationSprites[i] = tilesetArray[subSpritePos+i];
+					}
+					return animationSprites;
+			}
+			return null;
 	}
+
 	public Sprite GetTileSprite(int x, int y)
 	{
-		string assetRelativPath = UnityEditor.AssetDatabase.GetAssetPath(tileset);
-		UnityEngine.Object[] assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(assetRelativPath);			// TODO store this array in ScriptableObject, doesnt need to load it for every Tile of the map
+			
+			int subSpritePos = 0;
+			if(animatedTileset)
+					subSpritePos = x*animatedWidth + y*Mathf.FloorToInt(width/tileWidth);
+			else
+					subSpritePos = x + y*Mathf.FloorToInt(width/tileWidth);
 
-		int subSpritePos = 0;
-		if(animatedTileset)
-			subSpritePos = x*animatedWidth + y*Mathf.FloorToInt(width/tileWidth);
-		else
-			subSpritePos = x + y*Mathf.FloorToInt(width/tileWidth);
-
-		subSpritePos++;	// root Asset is no SubSprite (sliced Sprite)
-		if(subSpritePos > assets.Length)
-		{
-			Debug.LogError("Sub Sprite Pos " + subSpritePos + " > " + assets.Length + " Tileset Array Length");
-		}
-		else
-		{
-//			Debug.Log("Sub Sprite Pos " + subSpritePos + ", Tileset Array Length" + assets.Length);
-			Sprite sprite = new Sprite();
-			sprite = assets[subSpritePos] as Sprite;
-			return sprite;
-//			return (Sprite) assets[subSpritePos];
-//			return assets[subSpritePos] as Sprite;
-		}
-		return null;
+//			subSpritePos++;	// root Asset is no SubSprite (sliced Sprite)
+				if(subSpritePos > tilesetArray.Length)
+			{
+						Debug.LogError("Sub Sprite Pos " + subSpritePos + " > " + tilesetArray.Length + " Tileset Array Length");
+			}
+			else
+			{
+					//			Debug.Log("Sub Sprite Pos " + subSpritePos + ", Tileset Array Length" + assets.Length);
+					Sprite sprite = new Sprite();
+						sprite = tilesetArray[subSpritePos];
+					return sprite;
+					//			return (Sprite) assets[subSpritePos];
+					//			return assets[subSpritePos] as Sprite;
+			}
+			return null;
 	}
-#endif
+
+	void Init ()
+	{
+		#if UNITY_EDITOR
+		bool reInit = false;
+		if (tilesetArray == null ||
+			tilesetArray.Length == 0 ||
+			reInit)
+		{
+			if (tileset != null)
+			{
+				string assetRelativPath = UnityEditor.AssetDatabase.GetAssetPath(tileset);
+				UnityEngine.Object[] assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(assetRelativPath);			// TODO store this array in ScriptableObject, doesnt need to load it for every Tile of the map
+				//tilesetArray = assets as Sprite[];
+				int offset = 1;
+				tilesetArray = new Sprite[assets.Length-offset];		// -1 root Asset is no SubSprite
+				for (int i=offset; i< assets.Length; i++)
+				{
+					tilesetArray[i-offset] = assets[i] as Sprite;
+				}
+				UnityEditor.EditorUtility.SetDirty (this);
+				Debug.Log("<color=red>" + this.ToString() + " tilesetArray initilized!</color>", this);
+			}
+		}
+		#endif
+	}
+
 	public void OnEnable()
 	{
-		Debug.Log(this.ToString() + " OnEnable()");
+		Debug.Log(this.ToString() + " OnEnable()", this);
 		if(tilePivot == null)
 		{
 			Debug.LogWarning("tilePivot not set, set default Value!");
 			tilePivot = new Vector2 (0f,0f);
 		}
-
+		
+		Init ();
 	}
 
 	public TileType GetTileType(short iTileCol, short iTileRow)

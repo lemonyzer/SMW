@@ -7,6 +7,7 @@ public class Scenes : MonoBehaviour {
 	public const string SingleplayerMenu = "SingleplayerMenu";
 
 	public const string sandbox = "sandbox";
+	public const string mapTest = "mapTest";
 
 //	public const string singleplayer = "Singleplayer";
 //	public const string spSumo = "sp";

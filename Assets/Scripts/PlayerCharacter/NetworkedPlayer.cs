@@ -102,6 +102,9 @@ public class NetworkedPlayer : MonoBehaviour
 
 	bool initialComplete = false;
 
+	[SerializeField] private bool useUnityPhysics = true;
+	
+
 	void Start()
 	{
 		if(Network.peerType == NetworkPeerType.Disconnected)
@@ -136,6 +139,11 @@ public class NetworkedPlayer : MonoBehaviour
 	float inputToRPCDelay = 0f;
 	void FixedUpdate()
 	{
+		if (useUnityPhysics)
+		{
+			return;
+		}
+
 		if(Network.peerType == NetworkPeerType.Disconnected)
 			return;
 
@@ -675,6 +683,7 @@ public class NetworkedPlayer : MonoBehaviour
 											// not used because i'm now using OnSerilizeNetworkView (send 15 times per second) and is unreliable
 	void Update()
 	{
+
 		if(Network.peerType == NetworkPeerType.Disconnected)
 			return;
 

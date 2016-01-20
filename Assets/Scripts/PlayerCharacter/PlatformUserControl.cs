@@ -148,7 +148,7 @@ public class PlatformUserControl : MonoBehaviour {
 	public bool inputPower = false;
 
 	// jump needs single klick, or key pressing
-	private bool keyPressed = true;
+	private bool keyPressed = false;
 	
 	/**
 	* Input Touch

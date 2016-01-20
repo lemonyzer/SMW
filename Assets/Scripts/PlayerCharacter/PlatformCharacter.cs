@@ -5,6 +5,7 @@ public class PlatformCharacter : MonoBehaviour {
 
 	//TODO überschreibt vererbung, zum cachen
 	new public Transform transform;
+	public Rigidbody2D rb2d;
 
 	[SerializeField]
 	private SmwCharacter myCharScriptableObject;
@@ -250,6 +251,8 @@ public class PlatformCharacter : MonoBehaviour {
 //		gameSceneManager = gameController.GetComponent<GameSceneManager>();
 
 		//LayerMasks();	// <-- wichtig in Start... Awake ist zu früh
+		rb2d = GetComponent<Rigidbody2D>();
+		rb2d.gravityScale = 1;
 	}
 
 //	void LayerMasks()
@@ -514,6 +517,10 @@ public class PlatformCharacter : MonoBehaviour {
 	[SerializeField]
 	private bool overrideGroundedValue = false;
 
+	private bool useUnityPhysics = true;
+	private float rigibodyMoveForce = 40f; // 7
+	private float rigibodyJumpForce = 1000f; // 7
+	private float rigibodyMaxSpeed = 7.5f; // 7
 
 	/// <summary>
 	/// Simulation, first checks Position (ground, walled states)
@@ -526,65 +533,92 @@ public class PlatformCharacter : MonoBehaviour {
 		// Position checken (inAir -> jump nicht möglich)
 		CheckPosition();
 
-		if(isDead)
+		if (!useUnityPhysics)
 		{
-			moveDirection.x = 0f;
-			if(kinematic)
+			if(isDead)
 			{
-				moveDirection.y = 0f;
-			}
-			else
-			{
-				if(overrideGrounded)
+				moveDirection.x = 0f;
+				if(kinematic)
 				{
-					if(overrideGroundedValue)
+					moveDirection.y = 0f;
+				}
+				else
+				{
+					if(overrideGrounded)
 					{
-						//grounded (overriden)
-						moveDirection.y = 0f;
+						if(overrideGroundedValue)
+						{
+							//grounded (overriden)
+							moveDirection.y = 0f;
+						}
+						else
+						{
+							moveDirection.y -= gravity * Time.fixedDeltaTime;
+						}
 					}
 					else
 					{
-						moveDirection.y -= gravity * Time.fixedDeltaTime;
+						if(grounded)
+							moveDirection.y = 0f;			// fix: HeadJumped, fall on ground
+						else
+							moveDirection.y -= gravity * Time.fixedDeltaTime;
+					}
+				}
+				transform.Translate( moveDirection * Time.fixedDeltaTime );
+			}
+			else
+			{
+				moveDirection.x = inputScript.GetInputHorizontal() * currentSpeed;	// Horizontal Movement
+
+				// Vertical Movement
+				if(grounded)
+				{
+					if(moveDirection.y <=0)			// jump fix
+					{
+						moveDirection.y = 0;
+					}
+
+					if(inputScript.inputJump && moveDirection.y == 0)				//  && moveDirection.y <= 0
+					{
+		//				if(moveDirection.y <= 0f)			// verhindern das sound öfter abgespielt wird!! .... achtung sprung wird trotzdem öfter asugeführt kann  
+						SyncJump();
+						moveDirection.y = jumpPower;
 					}
 				}
 				else
 				{
-					if(grounded)
-						moveDirection.y = 0f;			// fix: HeadJumped, fall on ground
+					if(kinematic)
+						moveDirection.y = 0f;
 					else
 						moveDirection.y -= gravity * Time.fixedDeltaTime;
 				}
+
+				transform.Translate( moveDirection * Time.fixedDeltaTime );
 			}
-			transform.Translate( moveDirection * Time.fixedDeltaTime );
 		}
 		else
 		{
-			moveDirection.x = inputScript.GetInputHorizontal() * currentSpeed;	// Horizontal Movement
+			//TODO
+			// NEW
+			//TODO
+			moveDirection.x = inputScript.GetInputHorizontal();
+			// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
+			if(moveDirection.x * rb2d.velocity.x < rigibodyMaxSpeed)
+				// ... add a force to the player.
+				rb2d.AddForce(Vector2.right * moveDirection.x * rigibodyMoveForce);
 
-			// Vertical Movement
-			if(grounded)
+			if(grounded && (rb2d.velocity.y <= 0.1f))
 			{
-				if(moveDirection.y <=0)			// jump fix
+				if (inputScript.inputJump)
 				{
-					moveDirection.y = 0;
-				}
-
-				if(inputScript.inputJump && moveDirection.y == 0)				//  && moveDirection.y <= 0
-				{
-	//				if(moveDirection.y <= 0f)			// verhindern das sound öfter abgespielt wird!! .... achtung sprung wird trotzdem öfter asugeführt kann  
 					SyncJump();
-					moveDirection.y = jumpPower;
+					moveDirection.y = rigibodyJumpForce;
+
+					// Add a vertical force to the player.
+					rb2d.AddForce(new Vector2(0f, rigibodyJumpForce));
+					moveDirection.y = 0f;
 				}
 			}
-			else
-			{
-				if(kinematic)
-					moveDirection.y = 0f;
-				else
-					moveDirection.y -= gravity * Time.fixedDeltaTime;
-			}
-
-			transform.Translate( moveDirection * Time.fixedDeltaTime );
 		}
 		CheckBeam ();
 		CheckPosition();
