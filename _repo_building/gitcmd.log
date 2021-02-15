@@ -1,0 +1,482 @@
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.05 UnityNetwork.rar" --date "Thu, 05 Jun 2014 04:02:36 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.07.rar" --date "Sat, 07 Jun 2014 03:53:22 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.10.rar" --date "Tue, 10 Jun 2014 18:11:21 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.11, vor Ramstein.rar" --date "Wed, 11 Jun 2014 12:21:26 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.12, Bouncing .rar" --date "Fri, 13 Jun 2014 01:47:17 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.15, 11.06 mit LAN.rar" --date "Sun, 15 Jun 2014 20:46:41 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.16, 11.06 mit LAN.rar" --date "Mon, 16 Jun 2014 03:44:51 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.16_WeekEndFusion.rar" --date "Mon, 16 Jun 2014 15:33:51 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.16_PlayerScriptPhotonFusion.rar" --date "Mon, 16 Jun 2014 17:55:07 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.18_SP_PlatformCharacter.rar" --date "Wed, 18 Jun 2014 03:14:00 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.19_Blocks_PowerUps.rar" --date "Thu, 19 Jun 2014 05:38:02 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.21_beforeLAN.rar" --date "Sat, 21 Jun 2014 14:04:12 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.24_LAN_w_Rigidbody2D.rar" --date "Tue, 24 Jun 2014 01:15:22 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.25_1_Lobby_SpriteController.rar" --date "Wed, 25 Jun 2014 14:23:37 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.25_2_MultiplayerLobby.rar" --date "Wed, 25 Jun 2014 21:40:07 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.25_3_MultiplayerLobby_PrefabID_released_OnDisconnect.rar" --date "Wed, 25 Jun 2014 22:18:28 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.26_1_MultiplayerLobby_PlayerHasCharacterSelected.rar" --date "Thu, 26 Jun 2014 03:17:02 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.26_2_MultiplayerLobby_before_PrefabSelected_GameInstantiate.rar" --date "Thu, 26 Jun 2014 04:05:10 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.26_3_MultiplayerLobby_PrefabSelected.rar" --date "Thu, 26 Jun 2014 05:54:59 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.26_4_MultiplayerLobby_PrefabSelectAble_NetworkInstantiation.rar" --date "Thu, 26 Jun 2014 17:52:48 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.26_5_MultiplayerLobby_central_SpriteAndPlayerText.rar" --date "Thu, 26 Jun 2014 19:07:48 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.27_1_SpriteController.rar" --date "Fri, 27 Jun 2014 03:10:22 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.27_2_SpriteController_waitForAnimation.rar" --date "Fri, 27 Jun 2014 04:15:45 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.27_3_MultipleCharacterWithAnimator.rar" --date "Fri, 27 Jun 2014 16:20:05 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.27_4_LayerController.rar" --date "Fri, 27 Jun 2014 22:49:12 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.28_1_PlayerPrefs_reading_wont_Work.rar" --date "Sat, 28 Jun 2014 04:13:49 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.28_2_characterDictonary_PlayerPrefs_error_found.rar" --date "Sat, 28 Jun 2014 04:57:08 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.28_3_characterDictonary_PlayerPrefs_error_found.rar" --date "Sat, 28 Jun 2014 04:57:46 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.28_4_PlayerPrefs_error_found_instantiationerror.rar" --date "Sat, 28 Jun 2014 05:20:38 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.30_1_PlayerPrefs_SinglePlayer_added.rar" --date "Mon, 30 Jun 2014 02:08:05 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.30_2_AlotWorksCodeInspectionNeeded.rar" --date "Mon, 30 Jun 2014 02:53:53 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.06.30_3_LevelEditorUpdated.rar" --date "Mon, 30 Jun 2014 22:07:15 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.02_1_GameControllerAndBigSmallChanges.rar" --date "Wed, 02 Jul 2014 02:58:22 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.02_2_GameControllerWithBigChanges.rar" --date "Wed, 02 Jul 2014 05:17:27 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.03_1_InventoryFirstStep.rar" --date "Thu, 03 Jul 2014 03:50:24 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.03_2_PowerUps.rar" --date "Thu, 03 Jul 2014 18:34:50 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.04_1_PowerUps.rar" --date "Fri, 04 Jul 2014 03:06:42 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.04_2_AIsmarter.rar" --date "Fri, 04 Jul 2014 04:24:00 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.06_1_AnimationRage.rar" --date "Sun, 06 Jul 2014 14:50:16 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.07_1_ReSpawnScript_AnimationControllerV2_RandomAI.rar" --date "Mon, 07 Jul 2014 14:48:33 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.07_2_LAN.rar" --date "Mon, 07 Jul 2014 19:37:22 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.08_1_UpdatedToPhotonFree_check.rar" --date "Tue, 08 Jul 2014 05:12:45 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.09_1_HUGH_UPDATE_ScriptableObjects.rar" --date "Wed, 09 Jul 2014 05:26:00 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.09_2_TidyUp.rar" --date "Wed, 09 Jul 2014 06:06:45 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.09_3_Upcoming Hugh Change .rar" --date "Wed, 09 Jul 2014 16:11:13 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.09_3_HughUpdateFinished_BugsExpected.rar" --date "Wed, 09 Jul 2014 18:16:47 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.09_4_HughUpdateFinished_BugsExpected_Works.rar" --date "Wed, 09 Jul 2014 19:27:08 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.10_1_LAN_BugsExpected_Works.rar" --date "Thu, 10 Jul 2014 02:10:21 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.10_2_LAN_BugsExpected_Works.rar" --date "Thu, 10 Jul 2014 03:35:56 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.07.10_3_TidyUp_in_Assets.rar" --date "Thu, 10 Jul 2014 03:57:32 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.06_1_clean.rar" --date "Wed, 06 Aug 2014 02:54:40 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.07_1_animation bugfixes, platformjumper v2, layer fix.rar" --date "Thu, 07 Aug 2014 03:56:59 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.15_1_nothingShouldBeChanged.rar" --date "Fri, 15 Aug 2014 14:23:43 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.15_2_startanimation.rar" --date "Fri, 15 Aug 2014 18:32:30 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.15_3_respawn.rar" --date "Fri, 15 Aug 2014 23:57:59 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.16_1_player layer, jumperv2 groundstopper fix, collision masteronly .rar" --date "Sat, 16 Aug 2014 04:29:46 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.16_2_powerUps, only bottom collision.rar" --date "Sat, 16 Aug 2014 23:57:04 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.17_1_ragemode_mario.rar" --date "Sun, 17 Aug 2014 04:39:05 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.17_2_ragemode_mostly_done.rar" --date "Sun, 17 Aug 2014 20:30:31 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.17_3_nothingChanged.rar" --date "Sun, 17 Aug 2014 20:50:17 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.18_1_Network_ChangingMovement.rar" --date "Mon, 18 Aug 2014 15:47:36 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.19_1_other Network Movement.rar" --date "Tue, 19 Aug 2014 20:32:15 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.20_1_other Network Movement_with_jump_and_gravity.rar" --date "Wed, 20 Aug 2014 00:38:45 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.21_1_some changes Dont know SHIT SHIT.rar" --date "Thu, 21 Aug 2014 00:19:10 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.21_2_UnityNetwork_engineering.rar" --date "Thu, 21 Aug 2014 03:10:34 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.21_3_UnityNetwork_engineering.rar" --date "Thu, 21 Aug 2014 05:37:09 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.22_1_UnityNetwork_MoveAnimationOnServerWorks.rar" --date "Fri, 22 Aug 2014 04:16:06 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.23_1_UnityNetwork_LocalClientChar_and_OtherClientChar_BoxCollider_position.rar" --date "Sat, 23 Aug 2014 03:59:35 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.23_2_UnityNetwork_Extrapolation.rar" --date "Sat, 23 Aug 2014 20:08:41 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.23_3_UnityNetwork_NetworkConnectionStats_CharacterRemoveFix.rar" --date "Sat, 23 Aug 2014 23:12:02 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.24_1_UnityNetwork_PlatformJumperV4_fuckingPhysics.rar" --date "Sun, 24 Aug 2014 03:36:02 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.24_2_UnityNetwork_PlatformJumperV4_fixed_CheckPosition_fix.rar" --date "Sun, 24 Aug 2014 13:33:36 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.24_3_UnityNetwork_ConnectionStats__localPlayer_correctPosCount_added.rar" --date "Sun, 24 Aug 2014 13:54:24 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.24_4_UnityNetwork_new_ConnectionStats_added.rar" --date "Sun, 24 Aug 2014 21:43:41 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.25_1_UnityNetwork_wrong_bugfixes_already_commented.rar" --date "Mon, 25 Aug 2014 04:35:50 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.08.25_2_UnityNetwork_useReplayAfterPosCorrection_fixed_but_commented.rar" --date "Mon, 25 Aug 2014 16:04:20 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.02_1_UnityNetwork_BeamInterpolationFix_LastReceivedPos_NetworkInterpolationSimulation.rar" --date "Tue, 02 Sep 2014 00:02:39 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.02_2_UnityNetwork_ALOTofCHANGES.rar" --date "Tue, 02 Sep 2014 16:26:00 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.03_1_UnityNetwork_OtherClientCharacterSimulationFix_twoPredictionMethods.rar" --date "Wed, 03 Sep 2014 23:33:07 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.03_2_UnityNetwork_prediction_moved_to_update.rar" --date "Wed, 03 Sep 2014 23:48:25 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.04_1_UnityNetwork_nothing_new_thingAboutSimulationOnLocalCharacter.rar" --date "Thu, 04 Sep 2014 13:24:32 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.05_1_UnityNetwork_sth_changed_NEED_FIX_FOR_DESYNCS.rar" --date "Fri, 05 Sep 2014 12:29:28 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.05_2_UnityNetwork_DESYNCS_SOLUTION_ACCEPT_AND_APPLY.rar" --date "Fri, 05 Sep 2014 14:05:50 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.05_3_UnityNetwork_Correction_with_moveDirection_gravity_and_lastHorizontalSpeed.rar" --date "Fri, 05 Sep 2014 14:43:28 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.05_4_UnityNetwork_workingOnPowerUp_PositionTrouble.rar" --date "Fri, 05 Sep 2014 19:25:34 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.06_1_UnityNetwork_FireBall spawning works_spawnPosition_needFix.rar" --date "Sat, 06 Sep 2014 00:46:15 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.06_2_UnityNetwork_FireBallspawningFIXED_spawnDirectionNeedsFix100ms_physicsNEEDfix.rar" --date "Sat, 06 Sep 2014 03:57:24 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.07_1_UnityNetwork_CollectingPowerUps_FireFlower,RageModus.rar" --date "Sun, 07 Sep 2014 04:15:56 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.08_1_UnityNetwork_PhysicsInWork_ExcelSheet.rar" --date "Mon, 08 Sep 2014 04:51:17 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.09_1_UnityNetwork_PhysicsInWork_WordSheet_Part2.rar" --date "Tue, 09 Sep 2014 12:32:39 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.10_1_UnityNetwork_NetworkedAnimation_inProgress.rar" --date "Wed, 10 Sep 2014 01:30:51 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.10_2_UnityNetwork_NetworkedAnimation_toVerify.rar" --date "Wed, 10 Sep 2014 03:31:36 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.10_3_UnityNetwork_NetworkedAnimation_colliderenabledcorrection_pwerUpKillVictimAnimation_andMore_toVerify2.rar" --date "Wed, 10 Sep 2014 17:01:25 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.11_1_UnityNetwork_PerformanceUpdate_PlatformJumper_nonAlloc_GroundCheck_nonAlloc_.rar" --date "Thu, 11 Sep 2014 02:56:56 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.11_2_UnityNetwork_VERIFY_isKINEMATIC_BUG_FIXED_VERIFY_otherChanges.rar" --date "Thu, 11 Sep 2014 04:21:28 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.11_3_UnityNetwork_PhysicEngineOnLocalPlayerUsed_20msInputLag_otherChanges.rar" --date "Thu, 11 Sep 2014 18:35:51 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.12_1_UnityNetwork_Race.rar" --date "Fri, 12 Sep 2014 04:09:32 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.12_2_UnityNetwork_small bugfixes and raceCam.rar" --date "Fri, 12 Sep 2014 19:31:57 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.15_1_UnityNetwork_verify.rar" --date "Mon, 15 Sep 2014 03:13:07 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.15_2_UnityNetwork_verify2.rar" --date "Mon, 15 Sep 2014 04:04:22 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.18_3_UnityNetwork_workingOnNAT-Traversal_verify3.rar" --date "Thu, 18 Sep 2014 15:34:31 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.22_4_UnityNetwork_workingOnNAT-Traversal_verify4.rar" --date "Mon, 22 Sep 2014 21:48:29 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.23_5_UnityNetwork_workingOnNAT-Traversal_verify5.rar" --date "Tue, 23 Sep 2014 00:13:14 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.23_5_fork_UnityNetwork_Server_headless.rar" --date "Tue, 23 Sep 2014 02:00:15 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.24_5_fork_UnityNetwork_Client_workingOnNAT-Traversal-UPNP_verify6.rar" --date "Tue, 23 Sep 2014 20:09:16 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.25_6_Server_Client_PowerUps_Polymorphie_verify6.rar" --date "Thu, 25 Sep 2014 16:45:19 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.26_7_Polymorphie_verify7.rar" --date "Fri, 26 Sep 2014 04:34:25 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.26_8_Polymorphie_verify8.rar" --date "Fri, 26 Sep 2014 05:52:44 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.26_9_Polymorphie_verify9.rar" --date "Fri, 26 Sep 2014 21:04:49 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.27_10_Broken_Polymorphie.rar" --date "Sat, 27 Sep 2014 00:31:26 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.27_11_Broken_Polymorphie_withoutMonoBehaviour_If_Stackoverflow.rar" --date "Sat, 27 Sep 2014 02:32:28 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.27_12_Broken_Polymorphie_withMonoBehaviour_If.rar" --date "Sat, 27 Sep 2014 03:04:46 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.09.27_13 CHANGES 11to13 Umzug Patrick Miriam.rar" --date "Tue, 30 Sep 2014 14:06:36 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.10.02_14_Item_and_Power_Polymorphie_StarAndFlower.rar" --date "Thu, 02 Oct 2014 02:38:22 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.10.02_15_Item_and_Power_Polymorphie_StarAndFlower_NOTHINGCHANGEDverify.rar" --date "Fri, 03 Oct 2014 19:18:18 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2014.10.10_16_VorstellungBachelorThema.rar" --date "Fri, 10 Oct 2014 01:20:23 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.11_1_Unity5_newUI_aLotOfBugs.rar" --date "Wed, 11 Mar 2015 23:50:16 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.12_1_Unity5_smallChanges, Transition fix AnimatorV2.rar" --date "Thu, 12 Mar 2015 02:04:29 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.17_1_Unity5_newLobby,worldPositionStays.rar" --date "Tue, 17 Mar 2015 04:25:14 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.18_1_Unity5_Connect_ScrollList.rar" --date "Wed, 18 Mar 2015 02:43:04 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.19_1_Unity5_Button_Events.rar" --date "Thu, 19 Mar 2015 04:35:13 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.19_2_Unity5_Button_WorkingOnSelectionToGameTranslation.rar" --date "Thu, 19 Mar 2015 23:42:26 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.20_1_Unity5_BigStep_Standalone_Managers_Component-based-programming_.rar" --date "Fri, 20 Mar 2015 03:07:51 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.20_2_Unity5_Standalone_Managers_Component-based-programming_smallFixes_+KillEvents_.rar" --date "Fri, 20 Mar 2015 04:45:03 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.20_3_Unity5_smallChanges_beforeVenue11.rar" --date "Fri, 20 Mar 2015 14:47:33 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.23_1_Unity5_NewClassSystem_Projectile_and_AuthoritativeProjectile.rar" --date "Mon, 23 Mar 2015 03:26:30 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.23_2_Unity5_smallFixes(PowerBlock Animation, FireBall Movement).rar" --date "Mon, 23 Mar 2015 04:47:00 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.23_3_Unity5_added_IceWand_NetworkedPlayer_PredictionChanged_CHECK.rar" --date "Mon, 23 Mar 2015 23:55:42 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.24_1_Unity5_Projectile_SpawnSpeed_modified.rar" --date "Tue, 24 Mar 2015 05:20:13 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.27_1_Unity5_Kirby_Seamless_Teleport_Projectile_FireBall_PlatformJumper_Destroy.rar" --date "Fri, 27 Mar 2015 03:29:40 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.27_2_Unity5_Projectile_Spawn_Explosion_and_Hit_Sound_Hit_Animation.rar" --date "Fri, 27 Mar 2015 05:18:07 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.27_3_Unity5_BombProjectile_Explosion_with_Hit_FIX.rar" --date "Fri, 27 Mar 2015 05:40:56 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.28_1_Unity5_static_Layer_and_HashID.rar" --date "Sat, 28 Mar 2015 06:06:21 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.28_2_Unity5_MovementFix_PlatformCharacter_CentralAttackTrigger.rar" --date "Sat, 28 Mar 2015 19:38:33 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.03.29_1_Unity5_CloudsAdded_Bot_UIStatsSlot_BUG_unsync_Player_.rar" --date "Sun, 29 Mar 2015 20:27:37 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.01_1_Unity5_IceWalledAnimation_newItemIDClassModel_timeStamp_.rar" --date "Wed, 01 Apr 2015 23:37:27 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.03_1_Unity5_EditorScripting_ScriptableObjects_AutoCharCreation_INWORK_.rar" --date "Fri, 03 Apr 2015 00:13:12 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.03_2_Unity5_EditorScripting_ScriptableObjects_AutoCharCreation_INWORK_.rar" --date "Fri, 03 Apr 2015 01:54:37 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.03_3_Unity5_assetdatabase_destroyed_NEED_LOAD_BACKUP_.rar" --date "Fri, 03 Apr 2015 03:33:47 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.03_3_Unity5_EditorScripting_ScriptableObjects_AutoCharCreation_NEED_LOAD_BACKUP_.rar" --date "Fri, 03 Apr 2015 03:33:47 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.03_4_Unity5_EditorScripting_LoadAllAsset_Working_Recovered_(04.01_1)_.rar" --date "Fri, 03 Apr 2015 04:14:42 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.03_5_Unity5_scripted_AnimatorController_bigStep_nowTest_.rar" --date "Fri, 03 Apr 2015 18:56:07 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.03_6_Unity5_scripted_AnimationClips_saveAssets_.rar" --date "Fri, 03 Apr 2015 22:55:20 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.04_1_Unity5_createPrefab_newError_.rar" --date "Sat, 04 Apr 2015 02:10:37 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.04_2_Unity5_createPrefab_before_Test_.rar" --date "Sat, 04 Apr 2015 02:34:47 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.04_3_Unity5_createPrefab_Works_now_SetupCharLibraryAndGUI_.rar" --date "Sat, 04 Apr 2015 03:25:09 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.04_4_Unity5_createPrefab_moreGenericWay_inWork_.rar" --date "Sat, 04 Apr 2015 18:57:37 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.04_5_Unity5_createPrefab_moreGenericWay_and_EditorGUI_inWork__.rar" --date "Sat, 04 Apr 2015 22:21:39 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.05_1_Unity5_createPrefab_moreGenericWayV2_scriptsDontWork_nextNewWay_with_GO_for_childData_inWork__.rar" --date "Sun, 05 Apr 2015 00:20:37 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.05_2_Unity5_createPrefab_moreGenericWayV3_Works_Next_FullCharacterWithAnims.rar" --date "Sun, 05 Apr 2015 02:30:10 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.05_3_Unity5_CharacterGenerics_CharacterList_Character_almost.rar" --date "Sun, 05 Apr 2015 06:52:10 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.05_4_Unity5_Combined_SetDirty_needs_reWork_now_createMultipleAtOnce.rar" --date "Sun, 05 Apr 2015 08:29:59 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.05_5_Unity5_StartBatchImport_finish_nowTest.rar" --date "Sun, 05 Apr 2015 11:50:10 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.05_6_Unity5_StartBatchImport_WORKS.rar" --date "Sun, 05 Apr 2015 12:18:37 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.05_7_Unity5_StartBatchImport_WORKS_smallFixes_CHECK_gn8.rar" --date "Sun, 05 Apr 2015 12:47:49 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.05_8_Venue11_Unity5_PerformceSlice_fix_neue_Abfragen_addToList_inUse_netPlayer_gn8.rar" --date "Sun, 05 Apr 2015 23:32:04 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.06_1_Venue11_Unity5_alotChanged_and_fixed.rar" --date "Mon, 06 Apr 2015 08:22:38 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.06_2_Venue11_Unity5_auto_SetID_after_batch_complete.rar" --date "Mon, 06 Apr 2015 08:50:34 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.06_3_Unity5_Fixes.rar" --date "Mon, 06 Apr 2015 21:06:51 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.06_4_Unity5_AnimationClip_fixes_FPS_LoopTime.rar" --date "Mon, 06 Apr 2015 23:15:54 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.07_1_Unity5_FIX defaultWeight and blendingMode.rar" --date "Tue, 07 Apr 2015 01:00:50 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.07_2_Unity5_Big_FIX_Added_StateMachineBahviours.rar" --date "Tue, 07 Apr 2015 03:55:09 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.07_3_Unity5_small_FIXES_alpha05.rar" --date "Tue, 07 Apr 2015 05:35:13 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.07_4_Unity5_small_FIXES_alpha05_BACKUP.rar" --date "Tue, 07 Apr 2015 05:35:45 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.08_1_Changes.rar" --date "Wed, 08 Apr 2015 17:20:39 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.09_1_ShaderTest_And_Direkt_Texture_ColorChange_CHECK.rar" --date "Thu, 09 Apr 2015 06:26:58 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.10_1_Working_with_Textures_and_TextureFormats_CHECK.rar" --date "Fri, 10 Apr 2015 03:50:23 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.10_2_Working_with_Textures_and_TextureFormats_CantFindError_CHECK.rar" --date "Fri, 10 Apr 2015 08:14:05 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.10_3_Working_with_Textures_and_TextureFormats_Sprite.Create_was_1_Error_CHECK.rar" --date "Fri, 10 Apr 2015 17:44:13 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.10_3 to 2015.04.07_5 Changes_ONLY.rar" --date "Fri, 10 Apr 2015 18:28:41 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.11_1 Unity5_TeamColor_implemented.rar" --date "Sat, 11 Apr 2015 00:17:01 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.11_2 Unity5_SwitchTeamButton_implemented.rar" --date "Sat, 11 Apr 2015 01:16:40 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.11_3 Unity5_NextTeam_implemented.rar" --date "Sat, 11 Apr 2015 02:00:49 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.11_3 Unity5_NextTeam_implemented_BACKUP.rar" --date "Sat, 11 Apr 2015 02:01:33 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.11_4 Unity5_Character_Preview_with_FindTag_implemented.rar" --date "Sat, 11 Apr 2015 04:59:49 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.11_5 Unity5_Character_Preview_with_FindTag_UpdateSlection_Fix.rar" --date "Sat, 11 Apr 2015 05:18:37 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.11_6 Unity5_Menu_CharacterSelection_complete_noReadyBtn.rar" --date "Sat, 11 Apr 2015 18:08:45 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.11_6 Unity5_Menu_CharacterSelection_complete_noReadyBtn_Backup.rar" --date "Sat, 11 Apr 2015 18:09:17 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.12_1 Unity5_ALOT_NetworkStuff_Changed.rar" --date "Sun, 12 Apr 2015 00:29:37 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.12_2 Unity5_ALOT_NetworkStuff_Changed_ALLBUFFERED_Part1.rar" --date "Sun, 12 Apr 2015 01:39:45 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.12_3 Unity5_ALOT_NetworkStuff_Changed_ALLBUFFERED_Part2.rar" --date "Sun, 12 Apr 2015 01:45:47 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.12_4 Unity5_ALOT_NetworkStuff_Changed_ALLBUFFERED_Part3___SHIT__CHECK.rar" --date "Sun, 12 Apr 2015 03:03:30 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.12_5 Unity5_ALOT_NetworkStuff_Changed_ALLBUFFERED_Part3___SHIT__CHECKED.rar" --date "Sun, 12 Apr 2015 04:17:07 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.12_5 Unity5_only_build_number_0.687_update.rar" --date "Sun, 12 Apr 2015 04:44:16 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.12_6 Unity5_NetworkLoadLevel_FIX_NoBufferInCharacterSelection_LoadGameBuffered_0.698.rar" --date "Sun, 12 Apr 2015 21:34:49 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.12_6 Unity5_NetworkLoadLevel_FIX_NoBufferInCharacterSelection_LoadGameBuffered_0.698_Backup.rar" --date "Sun, 12 Apr 2015 21:36:07 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.12_7 Unity5_HeavyChanges_NetworkLoadLevel_userName_.rar" --date "Sun, 12 Apr 2015 23:14:32 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.13_1 Unity5_Double_UI_Slots_Fix_OnInputFieldChange_build_701_public_.rar" --date "Mon, 13 Apr 2015 00:26:36 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.13_2 Unity5_StillErrors_RPC_from_CSS-to-GS_failed_build_704.rar" --date "Mon, 13 Apr 2015 02:49:50 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.13_3 Unity5_GameController_has_same_ViewID_in_both_scenes_worksBetter_build_0.706.rar" --date "Mon, 13 Apr 2015 04:21:34 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.14_1 Unity5_NetworkedPlayer_DataTweaks_part1.rar" --date "Tue, 14 Apr 2015 08:19:41 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.14_2 Unity5_NetworkedPlayer_DataTweaks_part2_build0.711.rar" --date "Tue, 14 Apr 2015 11:21:21 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.04.17_1_UnityNetwork_WORKING_ON_READING_MAPS.rar" --date "Fri, 17 Apr 2015 18:07:41 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.04.17_2_UnityNetwork_WORKING_ON_READING_MAPS_part2.rar" --date "Fri, 17 Apr 2015 21:11:52 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.04.17_3_UnityNetwork_WORKING_ON_READING_MAPS_part3.rar" --date "Fri, 17 Apr 2015 23:50:57 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.04.17_4_UnityNetwork_WORKING_ON_READING_MAPS_part3_Assets.rar" --date "Fri, 17 Apr 2015 23:51:23 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.18_2 Unity5_WORKING_ON_READING_MAPS_part4.rar" --date "Sat, 18 Apr 2015 03:15:43 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.18_11_WORKING_ON_READING_MAPS_part5.rar" --date "Sat, 18 Apr 2015 14:49:24 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.18_12_WORKING_ON_READING_MAPS_part6.rar" --date "Sat, 18 Apr 2015 18:59:14 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.18_13_WORKING_ON_READING_MAPS_part7.rar" --date "Sun, 19 Apr 2015 00:02:08 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.19_14_WORKING_ON_READING_MAPS_customMapData_part8_.rar" --date "Sun, 19 Apr 2015 06:44:42 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.19_15_MAPS_loading_and_creating_works_part9_.rar" --date "Sun, 19 Apr 2015 23:28:18 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.20_16_MAPS_loading_and_creating_works_part10_fixes_workingOnOtherTilesets.rar" --date "Mon, 20 Apr 2015 03:09:05 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.20_17_ALOT-Added_still_TilesetBug_part11.rar" --date "Mon, 20 Apr 2015 05:02:44 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.20_18_ALOT-Added_still_TilesetBug_part12_AssetsOnly.rar" --date "Mon, 20 Apr 2015 06:32:44 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.20_19_ALOT-Added_NEXT_ModularImport_part13.rar" --date "Mon, 20 Apr 2015 17:09:27 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.20_20_ALOT-Added_ModularImport_part14.rar" --date "Mon, 20 Apr 2015 19:03:06 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.20_21_ALOT-Added_ModularImport_part15.rar" --date "Mon, 20 Apr 2015 20:30:04 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.20_22_ReadingMovingPlatforms-Implemented_part16.rar" --date "Mon, 20 Apr 2015 22:01:16 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.21_23_Showing_MapData_TileSetTypes_ObjectData_MapDataTop_MovingPlatforms_part17.rar" --date "Tue, 21 Apr 2015 03:28:02 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.21_23_Showing_MapData_TileSetTypes_ObjectData_MapDataTop_MovingPlatforms_part17-Backup.rar" --date "Tue, 21 Apr 2015 03:28:38 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.21_24_Update_TilesetWindow_fixes_part18.rar" --date "Tue, 21 Apr 2015 22:00:27 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.21_25_BATCH_Map_Import_Works_part19.rar" --date "Tue, 21 Apr 2015 23:27:49 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.22_26_SceneViewHandle_AND_HOT_FIX_calculate_tiletype_position_part20.rar" --date "Wed, 22 Apr 2015 04:04:45 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.22_26-27 Between.rar" --date "Wed, 22 Apr 2015 18:45:54 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.22_27_use_RawMapData_AnimatedTileset_UnknownTileset_to_Create_UnityMap_part21.rar" --date "Wed, 22 Apr 2015 20:03:47 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.22_28_HideNonTileset_StaticAnimationTile_works_part22.rar" --date "Wed, 22 Apr 2015 21:49:48 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars 2015.04.23_29_AnimationTilesetWindow_added_TileAnimation_works_PlatformAnimation_too_part23.rar" --date "Thu, 23 Apr 2015 18:50:35 +0200"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.17_UnityNetwork_WorkingOnPersistentMapData.rar" --date "Tue, 17 Nov 2015 20:49:11 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.18_UnityNetwork_WorkingOnMovingPlatform.rar" --date "Wed, 18 Nov 2015 19:59:22 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.18_2_UnityNetwork_WorkingOnMovingPlatform_HiddenBlockFix.rar" --date "Wed, 18 Nov 2015 23:23:01 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.19_UnityNetwork_WorkingOnMovingPlatform_MovingScript.rar" --date "Thu, 19 Nov 2015 23:19:36 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.20_UnityNetwork_WorkingOnMovingPlatform_MovingScript_Fix.rar" --date "Fri, 20 Nov 2015 22:59:44 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.21_UnityNetwork_WorkingOnMovingPlatform_MovingScript_SQRFix.rar" --date "Sat, 21 Nov 2015 00:50:55 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.23_UnityNetwork_WorkingOnWarps_and_Switches.rar" --date "Mon, 23 Nov 2015 15:26:24 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.24_UnityNetwork_WorkingOnSwitches.rar" --date "Tue, 24 Nov 2015 01:01:31 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.24_2_UnityNetwork_WorkingOnSwitches_BlockSpriteFix.rar" --date "Tue, 24 Nov 2015 16:05:57 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.25_UnityNetwork_Fixes_TileType_JumpOnPlatform.rar" --date "Wed, 25 Nov 2015 12:10:29 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.25_2_UnityNetwork_WorkingOnHazards.rar" --date "Wed, 25 Nov 2015 22:30:53 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.26_UnityNetwork_WorkingOnPowerUpBlock.rar" --date "Thu, 26 Nov 2015 16:35:04 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.11.27_UnityNetwork_WorkingOnHazards_PirhaniaPlants.rar" --date "Fri, 27 Nov 2015 17:30:10 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.12.03_UnityNetwork_before_adopting_correct_maplayout.rar" --date "Thu, 03 Dec 2015 16:10:34 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.12.04_UnityNetwork_workingOnMergingColliders.rar" --date "Fri, 04 Dec 2015 01:47:18 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.12.04_2_UnityNetwork_workingOnMergingColliders_InfinitLoopFix_StilBoundsBUG.rar" --date "Fri, 04 Dec 2015 03:52:07 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.12.04_3_UnityNetwork_MergingCollidersDone_need_cleanup.rar" --date "Fri, 04 Dec 2015 20:06:18 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.12.05_UnityNetwork_AnimatedPlatformsFixed.rar" --date "Sat, 05 Dec 2015 03:35:36 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.12.05_2_UnityNetwork_HazardFireString_Added.rar" --date "Sat, 05 Dec 2015 23:29:10 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.12.09_UnityNetwork_Fixes_BulletBill_added.rar" --date "Wed, 09 Dec 2015 01:47:36 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.12.11_UnityNetwork_GOPos_SpriteBounds_BoxCollider_Bounds.rar" --date "Fri, 11 Dec 2015 16:46:46 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2015.12.16_UnityNetwork_before_switching_to_unityphysics.rar" --date "Wed, 16 Dec 2015 15:23:44 +0100"
+repo.git.add(A=True)
+repo.git.commit (git commit) --allow-empty -m "SuperMarioWars_2016.01.20_UnityNetwork_MapClass_TidyUp_BuildingtFix.rar" --date "Wed, 20 Jan 2016 12:33:58 +0100"
